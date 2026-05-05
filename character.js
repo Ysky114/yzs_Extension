@@ -831,7 +831,7 @@ const characters = {
 	Byakuren_yzs: {
 		sex: "female",
 		group: "shu",
-		hp: 6,
+		hp: 5,
 		skills: ["chaoren_yzs", "youxingsheng_yzs"],
 		names: "圣白莲",
 		img: "extension/一中杀/image/Byakuren_yzs.png",

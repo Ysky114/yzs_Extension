@@ -19,7 +19,7 @@ export default async (b) => {
         let success = false;
         for (const u of [p, ...pList.filter(x => x !== p)]) {
             try {
-                const r = await fetch(`${u}https://raw.githubusercontent.com/Antarctics/GirlsBand-Noname-Expansion/refs/heads/main/manifest.json`);
+				const r = await fetch(`${u}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/manifest.json`);
                 if (r.ok) {
                     m = JSON.parse(await r.text());
                     p = u;
@@ -74,7 +74,7 @@ export default async (b) => {
                 prog.setProgressValue(i + 1);
                 prog.setFileName(`正在下载：${f}`);
 
-                const r = await fetch(`${p}https://raw.githubusercontent.com/Antarctics/GirlsBand-Noname-Expansion/refs/heads/main/${f}`);
+				const r = await fetch(`${p}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/${f}`);
                 if (!r.ok) throw new Error(`下载失败: ${f}`);
 
                 const data = await r.arrayBuffer();

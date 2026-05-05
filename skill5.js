@@ -6794,6 +6794,119 @@ const skills = {
 				style.remove();
 			}, 800);
 		},
+		group: ["xushici_yzs_sing1"],
+		subSkill: {
+			sing: {
+				charlotte: true,
+				onremove:true,
+			},
+			sing1: {
+				name:"九纲",
+				enable: "phaseUse",
+				position: "h",
+				filter(event, player) {
+					if (player.getStorage("xushici_yzs_sing")?.length) return false;
+					return player.countCards("h")
+				},
+				prompt:`咒词咏唱：你可完整念出咒词，增加【虚式·茈】的伤害。(连续弃置4张相同花色的手牌)`,
+				filterCard(card, player) {
+					return true;
+				},
+				selectCard: 1,
+				check(card) {
+					const player = _status.event.player;
+					return 6 - get.value(card,player);
+				},
+				async content(event, trigger, player) {
+					player.addTempSkill("xushici_yzs_sing");
+					player.addTempSkill("xushici_yzs_sing2");
+					player.setStorage("xushici_yzs_sing",[get.suit(event.cards[0])])
+					player.$fullscreenpop("九纲", "thunder");
+				}
+			},
+			sing2: {
+				name: "偏光",
+				enable: "phaseUse",
+				position: "h",
+				filter(event, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits||!suits.length) return false;
+					return player.countCards("h", { suit: suits[0]})
+				},
+				prompt: `咒词咏唱：你可完整念出咒词，增加【虚式·茈】的伤害。(连续弃置4张相同花色的手牌)`,
+				filterCard(card, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits || !suits.length) return false;
+					return get.suit(card, player) == suits[0];
+				},
+				selectCard: 1,
+				check(card) {
+					const player = _status.event.player;
+					return 6 - get.value(card, player);
+				},
+				async content(event, trigger, player) {
+					player.removeSkill("xushici_yzs_sing2")
+					player.addTempSkill("xushici_yzs_sing3");
+					player.$fullscreenpop("偏光", "thunder");
+				},
+			},
+			sing3: {
+				name: "乌与声明",
+				enable: "phaseUse",
+				position: "h",
+				filter(event, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits || !suits.length) return false;
+					return player.countCards("h", { suit: suits[0] })
+				},
+				prompt: `咒词咏唱：你可完整念出咒词，增加【虚式·茈】的伤害。(连续弃置4张相同花色的手牌)`,
+				filterCard(card, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits || !suits.length) return false;
+					return get.suit(card, player) == suits[0];
+				},
+				selectCard: 1,
+				check(card) {
+					const player = _status.event.player;
+					return 6 - get.value(card, player);
+				},
+				async content(event, trigger, player) {
+					player.removeSkill("xushici_yzs_sing3")
+					player.addTempSkill("xushici_yzs_sing4");
+					player.$fullscreenpop("乌与声明", "thunder");
+				},
+			},
+			sing4: {
+				name: "表里之间",
+				enable: "phaseUse",
+				position: "h",
+				filter(event, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits || !suits.length) return false;
+					return player.countCards("h", { suit: suits[0] })
+				},
+				prompt: `咒词咏唱：你可完整念出咒词，增加【虚式·茈】的伤害。(连续弃置4张相同花色的手牌)`,
+				filterCard(card, player) {
+					let suits = player.getStorage("xushici_yzs_sing");
+					if (!suits || !suits.length) return false;
+					return get.suit(card, player) == suits[0];
+				},
+				selectCard: 1,
+				check(card) {
+					const player = _status.event.player;
+					return 6 - get.value(card, player);
+				},
+				async content(event, trigger, player) {
+					player.removeSkill("xushici_yzs_sing4")
+					player.addTempSkill("xushici_yzs_sing5");
+					player.$fullscreenpop("表里之间", "thunder");
+				},
+			},
+			sing5: {
+				charlotte: true,
+				onremove:true,
+			}
+		},
 		audio: "ext:一中杀/audio/skill:1",
 		nobracket: true,
 		enable: "phaseUse",
@@ -6869,6 +6982,10 @@ const skills = {
 				event.baseDamage = 0;
 			}
 			if (event.cards?.length && typeof get.number(event.cards[0]) == "number") event.baseDamage += get.number(event.cards[0]);
+			if (player.hasSkill("xushici_yzs_sing5")) {
+				player.removeSkill("xushici_yzs_sing5");
+				event.baseDamage *= 2;
+			}
 			game.broadcastAll(() => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";

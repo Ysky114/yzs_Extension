@@ -3992,7 +3992,7 @@ const skills = {
 		forced: true,
 		init: function (player, skill) {
 			if (Array.isArray(player.storage.chaoren_yzs)) return;
-			player.storage.chaoren_yzs = ["chaoren_yzs_SPSX", "chaoren_yzs_MPS", "chaoren_yzs_JGJL"]
+			player.storage.chaoren_yzs = ["chaoren_yzs_SPSX", "chaoren_yzs_MPS"]
 			player.markSkill("chaoren_yzs")
 		},
 		trigger: {
@@ -4001,7 +4001,7 @@ const skills = {
 		async content(event, trigger, player) {
 			player.logSkill("chaoren_yzs_name1")
 			let results = [];
-			let num = player.countMark("chaoren_yzs_num") + 3;
+			let num = player.countMark("chaoren_yzs_num") + 2;
 			let numOf6 = 1;
 			while (num--) {
 				let r = await player.yzs_throw().forResult()
@@ -4081,9 +4081,9 @@ const skills = {
 				if (!player.countMark("chaoren_yzs_CSS")) return num;
 				return num + player.countMark("chaoren_yzs_CSS") - 1;
 			},
-			globalTo: function (from, to, distance) {
+			/*globalTo: function (from, to, distance) {
 				return distance + to.countMark("chaoren_yzs_FYJL");
-			},
+			},*/
 		},
 	},
 	youxingsheng_yzs: {
@@ -4091,7 +4091,7 @@ const skills = {
 		locked: true,
 		init: function (player, skill) {
 			if (Array.isArray(player.storage.youxingsheng_yzs)) return;
-			player.storage.youxingsheng_yzs = ["chaoren_yzs_CSS", "chaoren_yzs_FYJL", "chaoren_yzs_XYS"]
+			player.storage.youxingsheng_yzs = ["chaoren_yzs_CSS", "chaoren_yzs_JGJL", "chaoren_yzs_XYS"]
 			player.markSkill("youxingsheng_yzs")
 		},
 		forced: true,

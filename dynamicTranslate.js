@@ -191,7 +191,7 @@ const dynamicTranslates = {
 			chaoren_yzs_XYS: `【杀】需响应数`,
 		}
 		const storage = player.storage.chaoren_yzs
-		let str = `锁定技：回合开始时，你投掷${player.countMark("chaoren_yzs_num") + 3}枚骰子，然后将投掷结果从高至低依次填入你以下数值：（无对应结果的项数值不变，至少为1）<br><small>`;
+		let str = `锁定技：回合开始时，你投掷${player.countMark("chaoren_yzs_num") + 2}枚骰子，然后将投掷结果从高至低依次填入你以下数值：（无对应结果的项数值不变，至少为1）<br><small>`;
 		for (let i = 0; i < storage.length; i++) {
 			str += map[storage[i]];
 			str+=player.countMark(storage[i]) > 0 ? `(${player.countMark(storage[i])})` : ``;
