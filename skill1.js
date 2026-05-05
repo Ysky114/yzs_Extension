@@ -10515,10 +10515,12 @@ const skills = {
 								.set("prompt", "【权柄】：请选择一项")
 								.set("choiceList", ["摸1张牌", "将【权柄】全部翻至正面"])
 								.forResult();
-							player.popup(control);
-							game.log(player, "选择了", "#g" + result.control);
+							if (result?.control) {
+								player.popup(result.control);
+								game.log(player, "选择了", "#g" + result.control);
+							}
 							let length = 0;
-							if (result.control == "摸牌") {
+							if (result?.control == "摸牌") {
 								await player.draw();
 							} else {
 								const downs = player.getExpansions("quanbing_yzs_down");
@@ -10538,7 +10540,7 @@ const skills = {
 									heart: "shenglian_yzs",
 									diamond: "xinghui_yzs",
 								}
-								let result = await player.judge().forResult();
+								let result = await player.judge("quanbing_yzs").forResult();
 								await player.restoreSkill(map[result.suit])
 								player.unmarkSkill(map[result.suit])
 							}

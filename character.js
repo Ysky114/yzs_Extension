@@ -45,6 +45,7 @@ const characters = {
 		skills: ["first_bomb_yzs", "BitetheDust_yzs"],
 		names: "吉良吉涛",
 		img: "extension/一中杀/image/JiLiangJiTao_yzs.png",
+		BGM: "Great Days",
 	},
 
 	shenChangzhang_yzs: {
@@ -366,6 +367,7 @@ const characters = {
 		skills: ["Zoltraak_yzs", "Defend_yzs", "suyin_yzs"],
 		names: "菲伦",
 		img: "extension/一中杀/image/Fern_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	Marisa_yzs: {
@@ -407,6 +409,7 @@ const characters = {
 		skills: ["nuoruo_yzs", "monvdeyuxiang_yzs", "siwanghuigui_yzs"],
 		names: "菜月昴",
 		img: "extension/一中杀/image/NatsukiSubaru_yzs.png",
+		BGM: "STYX HELIX",
 	},
 
 	EastYang_yzs: {
@@ -543,6 +546,7 @@ const characters = {
 		skills: ["buxijinjun_yzs", "huimiezitai_yzs", "jiandun_yzs"],
 		names: "博卓卡斯替",
 		img: "extension/一中杀/image/Patriot_yzs.png",
+		BGM: "End Like This",
 	},
 
 	DreamWitch_yzs: {
@@ -712,6 +716,7 @@ const characters = {
 		skills: ["guangbo_yzs", "CrimsonShadow_yzs", "GuiltyDemon_yzs"],
 		names: "阿拉斯托",
 		img: "extension/一中杀/image/Alastor_yzs.png",
+		BGM: "Insane",
 	},
 
 	jianSheng_yzs: {
@@ -759,6 +764,7 @@ const characters = {
 		skills: ["tonglv_yzs", "cangfa_yzs","tanbao_yzs"],
 		names: "芙莉莲",
 		img: "extension/一中杀/image/Frieren_yzs.png",
+		BGM: "勇者",
 	},
 
 	Himmel_yzs: {
@@ -769,6 +775,7 @@ const characters = {
 		names: "辛美尔",
 		img: "extension/一中杀/image/Himmel_yzs.png",
 		dieAudios: ["ext:一中杀/audio/die/Himmel_yzs.mp3"],
+		BGM: "勇者",
 	},
 
 	Youmu_yzs: {
@@ -846,6 +853,7 @@ const characters = {
 		skills: ["CityWill_yzs", "FreeWill_yzs", "LiberationTide_yzs"],
 		names: "阳 比斯莫克",
 		img: "extension/一中杀/image/Yan_yzs.png",
+		BGM: "Children of the City",
 	},
 
 	Riko_yzs: {
@@ -1346,6 +1354,7 @@ const characters = {
 		skills: ["zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs","jie_yzs","ba_yzs","fumoyuchuzi_yzs"],
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
+		BGM: "Malevolent Shrine",
 	},
 
 	Makora_yzs: {
@@ -1355,6 +1364,7 @@ const characters = {
 		skills: ["hundunyutiaohe_yzs", "tuimozhijian_yzs"],
 		names: "魔虚罗",
 		img: "extension/一中杀/image/Makora_yzs.png",
+		BGM: "Malevolent Shrine",
 	//	isUnseen: true,
 	},
 
@@ -1365,6 +1375,7 @@ const characters = {
 		skills: ["zuzhouzhiwang_yzs", "liangmianguishen_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "fumoyuchuzi_yzs"],
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
+		BGM: "Malevolent Shrine",
 	//	isUnseen: true,
 	},
 
@@ -1375,6 +1386,7 @@ const characters = {
 		skills: ["SixEyes_yzs", "wuxiaxianshushi_yzs", "xushici_yzs", "fanzhuanshushi_yzs", "wuliangkongchu_yzs"],
 		names: "五条悟",
 		img: "extension/一中杀/image/GojoSatoru_yzs.png",
+		BGM: "AIZO",
 	//	isUnseen: true,
 	},
 };

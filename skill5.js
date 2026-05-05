@@ -4951,6 +4951,17 @@ const skills = {
 		}
 	},
 	shizhongyingfashu_yzs: {
+		getYing(count) {
+			var cards = [];
+			if (typeof count != "number") {
+				count = 1;
+			}
+			while (count--) {
+				let card = game.createCard("ying", "spade", Math.ceil(13*Math.random()));
+				cards.push(card);
+			}
+			return cards;
+		},
 		cards: ["yuquan_yzs", "ye_yzs", "dashe_yzs", "hama_yzs", "manxiang_yzs", "tuotu_yzs", "guanniu_yzs","yuanlu_yzs","huzang_yzs","moxuluo_yzs"],
 		group: ["shizhongyingfashu_yzs_targeted", "shizhongyingfashu_yzs_use","shizhongyingfashu_yzs_break"],
 		subSkill: {
@@ -5100,7 +5111,7 @@ const skills = {
 					const result = await player.chooseButton([str, [list, "vcard"]])
 						.forResult();
 					if (result?.bool && result.links?.length) {
-						game.log(result.links[0][2])
+					//	game.log(result.links[0][2])
 						lib.card[get.name(trigger.card)].shizhongyingfashu_yzs_effect(player, result.links[0][2]);
 					}
 				},
@@ -5121,7 +5132,7 @@ const skills = {
 					return !lib.skill.shizhongyingfashu_yzs.cards.includes(get.name(event.card));
 				},
 				async content(event, trigger, player) {
-					await player.gain(lib.card.ying.getYing(), "gain2");
+					await player.gain(lib.skill.shizhongyingfashu_yzs.getYing(), "gain2");
 				}
 			},
 			targeted: {
@@ -5134,7 +5145,7 @@ const skills = {
 				filter(event, player) {
 					const evt = event.getParent();
 					if (evt?.targets?.length) {
-						return event.player != player && game.hasPlayer(cur => cur.name == "Makora_yzs" && !evt.targets.includes(cur));
+						return event.player != player && game.hasPlayer(cur => cur.name == "Makora_yzs" && !evt.targets.includes(cur)&&cur!=evt.player);
 					}
 					return false;
 				},
@@ -5927,7 +5938,7 @@ const skills = {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
 		},
 		async content(event, trigger, player) {
-			if (!_status._yzsDomain || event.cards.length > _status._yzsDomain) {
+			if (!_status._yzsDomain ||typeof _status._yzsDomainCount!="number" || event.cards.length > _status._yzsDomainCount) {
 				game.broadcastAll((time) => {
 					var video = document.createElement("VIDEO");
 					video.className = "anime";
@@ -6294,7 +6305,6 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:1",
 		locked: true,
-		nobracket: true,
 		forced: true,
 		popup:false,
 		persevereSkill: true,
@@ -6500,7 +6510,7 @@ const skills = {
 		forced: true,
 		priority: -23,
 		trigger: {
-			global: "phaseBegin"
+			player: ["phaseEnd"]
 		},
 		filter(event, player) {
 			return true;
@@ -6510,8 +6520,8 @@ const skills = {
 				//你对其他角色的态度
 				if (to.hasSkill("zuzhouzhiwang_yzs"))return -999
 			};
-			await player.draw(2);
-			if (player.countCards("h") > 6) await player.chooseToDiscard(player.countCards("h") - 6, true)
+			await player.drawTo(6);
+	//		if (player.countCards("h") > 6) await player.chooseToDiscard(player.countCards("h") - 6, true)
 		}
 	},
 	wuxiaxianshushi_yzs: {
@@ -6858,7 +6868,7 @@ const skills = {
 			if (typeof event.baseDamage !== "number") {
 				event.baseDamage = 0;
 			}
-			if (event.cards?.length && typeof get.number(event.cards[0]) == "number") event.baseDamage += 2*get.number(event.cards[0]);
+			if (event.cards?.length && typeof get.number(event.cards[0]) == "number") event.baseDamage += get.number(event.cards[0]);
 			game.broadcastAll(() => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";
@@ -6985,7 +6995,14 @@ const skills = {
 			return true;
 		},
 		async content(event, trigger, player) {
-			if (player.hasSkill("hundunyutiaohe_yzs")) player.addMark("hundunyutiaohe_yzs_wuliangkongchu_yzs_skill", 1, false);
+			if (player.hasSkill("hundunyutiaohe_yzs")) {
+				player.addMark("hundunyutiaohe_yzs_wuliangkongchu_yzs_skill", 1, false);
+				if (player.countMark("hundunyutiaohe_yzs_wuliangkongchu_yzs_skill") == 2) {
+					game.log(player, "适应了","wuliangkongchu_yzs")
+					game.trySkillAudio("hundunyutiaohe_yzs")
+					player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
+				}
+			}
 			const skills = player.getSkills(null, false, false).filter(skill => {
 				let info = get.info(skill);
 				if (!info || info.charlotte || get.skillInfoTranslation(skill, player).length == 0) {

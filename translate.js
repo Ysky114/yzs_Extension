@@ -1625,8 +1625,8 @@ const translates = {
 	zuzhouzhiwang_yzs: `诅咒之王`,
 	zuzhouzhiwang_yzs_info: `锁定技：每回合开始时你摸牌至4张，然后若为你的回合，你选择1名其他角色，除其以外的其他角色依次可调离并摸1张牌`,
 	shizhongyingfashu_yzs: `十种影法术`,
-	shizhongyingfashu_yzs_info: `锁定技：你使用非式神牌时获得1张【影】。<br>你可将对应消耗数量的【影】当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
-	每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标，你可将目标转移给“魔虚罗”。`,
+	shizhongyingfashu_yzs_info: `锁定技：你使用非式神牌时获得1张点数随机的【影】。<br>你可将对应消耗数量的【影】当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
+	每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标或使用者，你可将目标转移给“魔虚罗”。`,
 	fanzhuanshushi_yzs: `反转术式`,
 	fanzhuanshushi_yzs_info: `锁定技：你可将2张手牌当做【桃】对自己使用，若这两张牌点数相同，结算后你可恢复一个已失效的技能。`,
 	jie_yzs: `解`,
@@ -1638,7 +1638,7 @@ const translates = {
 	fumoyuchuzi_yzs_skill: `伏魔御厨子`,
 	fumoyuchuzi_yzs_skill_info: `领域主人使用的牌不可响应。领域主人以外的角色的回合结束时，领域主人对其发动${get.poptip("jie_yzs")}`,
 
-	hundunyutiaohe_yzs: `混沌与调和`,
+	hundunyutiaohe_yzs: `适应`,
 	hundunyutiaohe_yzs_info: `持恒技：你每对1名其他角色累计造成2次伤害，你“${get.poptip("adapt_yzs")}”其1次。<br>
 	其他角色的牌或技能对你生效2次后，你“适应”之。`,
 	tuimozhijian_yzs: `退魔之剑`,
@@ -1649,12 +1649,12 @@ const translates = {
 
 	challenger_yzs:`你才是挑战者`,
 	SixEyes_yzs: `六眼`,
-	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。每回合开始时你摸2张牌，然后弃牌至手牌数为6。`,
+	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至6张。`,
 	wuxiaxianshushi_yzs: `无下限术式`,
 	wuxiaxianshushi_yzs_info: `若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
 你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
 	xushici_yzs: `虚式·茈`,
-	xushici_yzs_info: `出牌阶段，你可弃置点数相同的${get.poptip("wtwCang_yzs")}和${get.poptip("wtwHe_yzs")}各1张，然后对1名其他角色造成X(这两张牌的点数之和)点伤害。无论如何本技能本回合失效。`,
+	xushici_yzs_info: `出牌阶段，你可弃置点数相同的${get.poptip("wtwCang_yzs")}和${get.poptip("wtwHe_yzs")}各1张，然后对1名其他角色造成X(这两张牌的点数)点伤害。无论如何本技能本回合失效。`,
 	wuliangkongchu_yzs: `无量空处`,
 	_wuliangkongchu_yzs_skill:`无量空处`,
 	wuliangkongchu_yzs_info: `${get.poptip("lingyuzhankai_yzs")}：所有其他角色进行非强制的选取会无效并结束出牌阶段。其他角色的回合结束时，其领域技失效。`,

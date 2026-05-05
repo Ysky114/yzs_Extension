@@ -6041,7 +6041,6 @@ const skills = {
 					if (!event.card || event.card.name != "sha") return false;
 					if (!event.cards || !event.cards.length) return false;
 					let evt = event.getParent();
-					game.log(evt.name);
 					if (evt.name != "chooseToUse") return false;
 					return true
 				},
@@ -6278,9 +6277,10 @@ const skills = {
 		},
 		async gain(player) {
 			if (!player.hasSkill("GodgivenSwordsmanship_yzs") || player.isTempBanned("GodgivenSwordsmanship_yzs")) return;
-			player.addMark("GodgivenSwordsmanship_yzs");
+			player.addMark("GodgivenSwordsmanship_yzs", 1, false);
+			game.log(player, `获得了1点【技】，当前有${player.countMark("GodgivenSwordsmanship_yzs") }/3点【技】`)
 			if (player.countMark("GodgivenSwordsmanship_yzs") >= 3) {
-				player.clearMark("GodgivenSwordsmanship_yzs");
+				player.clearMark("GodgivenSwordsmanship_yzs",false);
 				player.popup("通神")
 				player.addSkill("GodgivenSwordsmanship_yzs_tongshen")
 				game.broadcastAll(function (target) {

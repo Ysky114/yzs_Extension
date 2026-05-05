@@ -1318,10 +1318,25 @@ const skills = {
 				}, duration);
 			}, player);
 			await new Promise(r => setTimeout(r, 4110))
-			if (player.storage.BitetheDust == 1) game.broadcastAll(() => {
+			if (player.storage.BitetheDust == 1) game.broadcastAll((time) => {
 				_status.tempMusic = `ext:一中杀/audio/Great Days.mp3`;
+
+				// 2. 调用播放逻辑
 				game.playBackgroundMusic();
-			});
+
+				// 3. 核心修改：等待音频加载并跳转时间
+				if (ui.backgroundMusic) {
+					// 如果音频已经加载完成（通常是本地资源），直接跳转
+					if (ui.backgroundMusic.readyState >= 2) {
+						ui.backgroundMusic.currentTime = time;
+					} else {
+						// 否则监听加载完成事件
+						ui.backgroundMusic.addEventListener('canplay', function () {
+							this.currentTime = time;
+						}, { once: true });
+					}
+				}
+			},164);
 			if (trigger.player == player) {
 				player.recover(2 / player.storage.BitetheDust);
 				player.draw(4 / player.storage.BitetheDust);
@@ -6856,6 +6871,10 @@ const skills = {
 			let target = await player.chooseTarget("审判", "选择 1 名角色，展示其所有手牌。其获得其手牌黑色花色数+1点【审判点数】", true)
 				.set("filterTarget", (card, player, target) => {
 					return !(target.hasSkill("hidden_yzs"));
+				})
+				.set("ai", function (target) {
+					var att = get.attitude(_status.event.player, target);
+					return -(att+target.countCards("h")/2);
 				})
 				.forResult()
 			if (!target.bool) {

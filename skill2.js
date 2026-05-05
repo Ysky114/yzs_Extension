@@ -3345,7 +3345,7 @@ const skills = {
 				},
 				filter(event, player) {
 					if (event.player == player) return false;
-					const players = game.filterPlayer();
+					const players = game.players;
 					if (players.length <= 2) return false;
 					return true;
 				},
@@ -4215,7 +4215,7 @@ const skills = {
 		},
 		filter(event, player) {
 			if (event.player == player) return false;
-			const players = game.filterPlayer();
+			const players = game.players;
 			if (players.length <= 2) return false;
 			return true;
 		},

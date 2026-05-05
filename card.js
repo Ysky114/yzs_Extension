@@ -495,7 +495,6 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						}
 					},
 					basic: {
-						order: 7.4,
 						useful: 0.6,
 						value(card, player) {
 							let num = player.countCards("h", c => card != c && (get.type(c) == "trick" || get.type(c) == "delay"))
@@ -1890,7 +1889,76 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					}
 					if (typeof get.number(event.card) == "number") event.baseDamage += get.number(event.card) - 1;
 					await player.draw(event.baseDamage);
-					await event.target.damage(1);
+					const target = event.target;
+					if (typeof event.shaRequired !== "number" || !event.shaRequired || event.shaRequired < 0) {
+						event.shaRequired = 1;
+					}
+					while (event.shaRequired > 0) {
+						let result = { bool: false };
+						if (!event.directHit) {
+							const next = target.chooseToRespond();
+							next.set("filterCard", function (card, player) {
+								if (get.name(card) !== "sha") {
+									return false;
+								}
+								return lib.filter.cardRespondable(card, player);
+							});
+							if (event.shaRequired > 1) {
+								next.set("prompt2", "共需打出" + event.shaRequired + "张【杀】");
+							}
+							next.set("ai", function (card) {
+								if (get.event().toRespond) {
+									return get.order(card);
+								}
+								return -1;
+							});
+							next.set(
+								"toRespond",
+								(() => {
+									if (target.hasSkillTag("noSha", null, "respond")) {
+										return false;
+									}
+									if (target.hasSkillTag("useSha", null, "respond")) {
+										return true;
+									}
+									if (event.baseDamage <= 0 || player.hasSkillTag("notricksource", null, event) || target.hasSkillTag("notrick", null, event)) {
+										return false;
+									}
+									if (event.baseDamage >= target.hp + (player.hasSkillTag("jueqing", false, target) || target.hasSkill("gangzhi") ? 0 : target.hujia)) {
+										return true;
+									}
+									const damage = get.damageEffect(target, player, target);
+									if (damage >= 0) {
+										return false;
+									}
+									if (
+										event.shaRequired > 1 &&
+										!target.hasSkillTag("freeSha", null, {
+											player: player,
+											card: event.card,
+											type: "respond",
+										}) &&
+										event.shaRequired > target.mayHaveSha(target, "respond", null, "count")
+									) {
+										return false;
+									}
+									// if (target.hasSkill("naman")) {
+									//     return true;
+									// }
+									return true;
+								})()
+							);
+							next.set("respondTo", [player, event.card]);
+							next.autochoose = lib.filter.autoRespondSha;
+							result = await next.forResult();
+						}
+						if (!result?.bool) {
+							await target.damage(1);
+							break;
+						} else {
+							event.shaRequired--;
+						}
+					}
 				},
 				ai: {
 					basic: {
@@ -2000,7 +2068,76 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					if (event.target.countDiscardableCards(player, pos)) {
 						await player.discardPlayerCard(pos, event.target, event.baseDamage, true, vis).set("target", event.target).set("complexSelect", false).set("ai", lib.card.guohe.ai.button);
 					}
-					await event.target.damage(1);
+					const target = event.target;
+					if (typeof event.shaRequired !== "number" || !event.shaRequired || event.shaRequired < 0) {
+						event.shaRequired = 1;
+					}
+					while (event.shaRequired > 0) {
+						let result = { bool: false };
+						if (!event.directHit) {
+							const next = target.chooseToRespond();
+							next.set("filterCard", function (card, player) {
+								if (get.name(card) !== "sha") {
+									return false;
+								}
+								return lib.filter.cardRespondable(card, player);
+							});
+							if (event.shaRequired > 1) {
+								next.set("prompt2", "共需打出" + event.shaRequired + "张【杀】");
+							}
+							next.set("ai", function (card) {
+								if (get.event().toRespond) {
+									return get.order(card);
+								}
+								return -1;
+							});
+							next.set(
+								"toRespond",
+								(() => {
+									if (target.hasSkillTag("noSha", null, "respond")) {
+										return false;
+									}
+									if (target.hasSkillTag("useSha", null, "respond")) {
+										return true;
+									}
+									if (event.baseDamage <= 0 || player.hasSkillTag("notricksource", null, event) || target.hasSkillTag("notrick", null, event)) {
+										return false;
+									}
+									if (event.baseDamage >= target.hp + (player.hasSkillTag("jueqing", false, target) || target.hasSkill("gangzhi") ? 0 : target.hujia)) {
+										return true;
+									}
+									const damage = get.damageEffect(target, player, target);
+									if (damage >= 0) {
+										return false;
+									}
+									if (
+										event.shaRequired > 1 &&
+										!target.hasSkillTag("freeSha", null, {
+											player: player,
+											card: event.card,
+											type: "respond",
+										}) &&
+										event.shaRequired > target.mayHaveSha(target, "respond", null, "count")
+									) {
+										return false;
+									}
+									// if (target.hasSkill("naman")) {
+									//     return true;
+									// }
+									return true;
+								})()
+							);
+							next.set("respondTo", [player, event.card]);
+							next.autochoose = lib.filter.autoRespondSha;
+							result = await next.forResult();
+						}
+						if (!result?.bool) {
+							await target.damage(1);
+							break;
+						} else {
+							event.shaRequired--;
+						}
+					}
 				},
 				ai: {
 					basic: {
@@ -2412,7 +2549,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				async content(event, trigger, player) {
 					if (typeof event.baseDamage !== "number") {
-						event.baseDamage = 1;
+						event.baseDamage = 0;
 					}
 					if (player.storage?.guanniu_yzs?.includes(get.name(event.card))) event.baseDamage++;
 
@@ -4114,9 +4251,9 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			FullMoon_yzs: `盈月`,
 			FullMoon_yzs_info: `回合开始时，若“星环”中最多为：<br><font color="#f9e99e">【盈月】</font>：若当前为额定回合，回合结束后你执行额外回合。<br><font color="#f9e99e">【盈月】</font>：每移去其下2张牌，你分配0点伤害。`,
 			wtwCang_yzs: `苍`,
-			wtwCang_yzs_info: `出牌阶段对对1名其他角色使用。你摸此牌点数张牌，然后对目标角色造成1点伤害。`,
+			wtwCang_yzs_info: `出牌阶段对对1名其他角色使用。你摸此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
 			wtwHe_yzs: `赫`,
-			wtwHe_yzs_info: `出牌阶段对1名其他角色使用。你弃置目标角色此牌点数张牌，然后对其造成1点伤害。`,
+			wtwHe_yzs_info: `出牌阶段对1名其他角色使用。你弃置目标角色此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
 			yuquan_yzs: `玉犬`,
 			yuquan_yzs_info: `消耗1：出牌阶段限2次：对1名其他角色使用。观看目标角色1张手牌。<br>融合：目标牌选取牌时目标明牌。`,
 			ye_yzs: `鵺`,
