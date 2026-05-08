@@ -1,6 +1,6 @@
 {
-  "version": "0.90",
-  "update": "新宿决战+在线更新",
+  "version": "0.90.1",
+  "update": "五条悟加强",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -476,9 +476,9 @@
     "character.js": "9f972f28e9becef3a594e654239db1f4ecfa21a1",
     "dynamicTranslate.js": "6fbc8b28d45942ece8e455db51dd2bf2f7a880da",
     "extension.css": "4cc7be121837bda8f2ab72d950c08c43367cb487",
-    "extension.js": "6c64e0bc48d6f9db52f491bdcf711b82c1ad82cb",
+    "extension.js": "e13cc50880509204281ec816c2f3f4a3a53d7398",
     "func/settle.js": "a6b948dd7a526839b1a41cb780cddf38bf32024b",
-    "func/trigger.js": "2bada86a1f955dcd36bef0e409049edf8a4af162",
+    "func/trigger.js": "4ecaa380cb74d8cd2c1c845ad0bc30d1d683fc6e",
     "image/AdmiredWitch_yzs.png": "7aa1424e93435d7ae1a0e8822773f929e588e8de",
     "image/aiqi_yzs_discard.png": "6dbb7e741cc9dd7f50ec0613dd533c6b8ccb4fbb",
     "image/AiSi_yzs.png": "4a242b4c265fa10cdf36b61f7935a2adf11df43c",
