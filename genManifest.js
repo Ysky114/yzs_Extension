@@ -11,7 +11,7 @@ const UPDATE_NOTE = '五条悟加强'; // 更新说明
 function walkDir(dir, baseDir, fileList = []) {
 	const entries = fs.readdirSync(dir, { withFileTypes: true });
 	for (const entry of entries) {
-		if (entry.name === OUTPUT || entry.name === 'genManifest.js') continue; // 忽略自身
+		if (entry.name === OUTPUT ) continue;
 		const fullPath = path.join(dir, entry.name);
 		const relativePath = path.relative(baseDir, fullPath).replace(/\\/g, '/');
 		if (entry.isDirectory()) {
