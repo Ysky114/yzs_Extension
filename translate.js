@@ -6,6 +6,8 @@ const translates = {
 	otherworldPack_yzs: "异界七罪",
 	touhouPack_yzs: "东方策异闻",
 	reverse1999Pack_yzs: "重返未来",
+	FrierenPack_yzs: `葬送的芙莉莲`,
+	MadeInAbyssPack_yzs: `来自深渊`,
 	SCPPack_yzs:`SCP`,
 	BOSSPack_yzs: "BOSS包",
 	SpecialPack_yzs:`彩蛋`,

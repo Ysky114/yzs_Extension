@@ -9754,7 +9754,7 @@ const skills = {
 	},
 	"wiseStone_yzs": {
 		nobracket: true,
-		group: ["wiseStone_yzs_wushuang", "wiseStone_yzs_sha", "wiseStone_yzs_lose","wiseStone_yzs_lose2", "wiseStone_yzs_use"],
+		group: ["wiseStone_yzs_wushuang", "wiseStone_yzs_sha", "wiseStone_yzs_lose", "wiseStone_yzs_lose2", "wiseStone_yzs_gain","wiseStone_yzs_use"],
 		subSkill: {
 			Dbuff2: {
 				charlotte: true,
@@ -9951,6 +9951,23 @@ const skills = {
 						trigger.wiseStone_yzs = true;
 					}
 				},
+			},
+			gain: {
+				priority: 41,
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				forced: true,
+				filter(event, player) {
+					return (event.name != "phase" || game.phaseNumber == 0) && !player.countExpansions("wiseStone_yzs")
+				},
+				async content(event, trigger, player) {
+					const cards = get.cards(3);
+					let next = player.addToExpansion(cards, "draw")
+					next.gaintag.add("wiseStone_yzs");
+					await next;
+				}
 			},
 			use: {
 				name: "藏书",

@@ -1871,7 +1871,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				type: "trick",
 				cardcolor: "black",
 				enable(card, player) {
-					return player.hasSkill("wuxiaxianshushi_yzs");
+					return player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs");
 				},
 				selectTarget: 1,
 				postAi(targets) {
@@ -2046,7 +2046,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				type: "trick",
 				cardcolor: "red",
 				enable(card, player) {
-					return player.hasSkill("wuxiaxianshushi_yzs");
+					return player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs");
 				},
 				selectTarget: 1,
 				postAi(targets) {

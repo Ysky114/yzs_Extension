@@ -4622,6 +4622,7 @@ const skills = {
 				filter(event, player) {
 					if (event.player.storage?.isSub) return false;
 					if (event.player == player) return false;
+					if (game.players.some(cur => cur.name == "GojoSatoru_yzs")) return false;
 					return !_status.zuzhouzhiwang_yzs_kill;
 				},
 				async content(event, trigger, player) {
@@ -7030,7 +7031,7 @@ const skills = {
 				}, 1500)
 			}
 			if (event.baseDamage >= 5) {
-			//	player.playEffectOL(lib.skill.xushici_yzs.Effect, target);
+				player.playEffectOL(lib.skill.xushici_yzs.Effect, target);
 			}
 			await new Promise(r => setTimeout(r, 2000))
 
@@ -7048,7 +7049,7 @@ const skills = {
 		}
 	},
 	wuliangkongchu_yzs: {
-		audio: "ext:一中杀/audio/skill:1",
+	//	audio: "ext:一中杀/audio/skill:1",
 		locked: true,
 		nobracket: true,
 		enable: "phaseUse",
@@ -7067,6 +7068,44 @@ const skills = {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
 		},
 		async content(event, trigger, player) {
+			if (!_status._yzsDomain || typeof _status._yzsDomainCount != "number" || event.cards.length > _status._yzsDomainCount) {
+				game.broadcastAll((time) => {
+					var video = document.createElement("VIDEO");
+					video.className = "anime";
+
+					Object.assign(video, {
+						src: lib.assetURL + "/extension/一中杀/image/background/wuliangkongchu_yzs.MP4",
+						autoplay: true,//准备就绪后自动播放
+						loop: false,//是否循环播放
+						muted: false,//是否静音
+						preload: true,//是否提前加载
+					})
+					Object.assign(video.style, {
+						position: "fixed",
+						left: "0",
+						top: "0",
+						width: "100%",
+						height: "100%",
+						objectFit: "cover",
+						minWidth: "100vw",
+						minHeight: "100vh",
+						opacity: "0",//透明度
+						pointerEvents: "none",//不阻挡点击事件
+						zIndex: "2",
+						transition: "opacity 1s ease-out",
+					})
+					video.addEventListener("ended", () => {
+						video.style.opacity = "0";
+						setTimeout(() => {
+							document.body.removeChild(video);
+						}, 1000)//1s后移除视频
+					})
+					document.body.appendChild(video);
+					setTimeout(() => {
+						video.style.opacity = "1";
+					}, 50)
+				}, 0);
+			}
 			let result = await player.yzs_ExpandDomain(event.name, "thunder",event.cards.length).forResult();
 			if (result?.bool) {
 				game.broadcastAll(() => {

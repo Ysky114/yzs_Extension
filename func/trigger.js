@@ -2122,7 +2122,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				let parsedPath = "extension/一中杀/image/background/";
 				parsedPath += event.domain + ".png";
 				event.player.$fullscreenpop("领域展开", event.color);
-				await new Promise(r => setTimeout(r, 1500))
+				await new Promise(r => setTimeout(r, 2500))
 				event.player.$fullscreenpop(get.translation(event.domain),event.color);
 				await game.broadcastAll(
 					(formattedPath, domain, skill, player, count) => {

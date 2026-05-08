@@ -3346,7 +3346,7 @@ const skills = {
 				filter(event, player) {
 					if (event.player == player) return false;
 					const players = game.players;
-					if (players.length <= 2) return false;
+					if (players.length < 2) return false;
 					return true;
 				},
 				async content(event, trigger, player) {
