@@ -4216,6 +4216,7 @@ const skills = {
 		filter(event, player) {
 			if (event.player == player) return false;
 			const players = game.players;
+			if (player.hasSkill("zuzhouzhiwang_yzs") && !_status.zuzhouzhiwang_yzs_kill) return true;
 			if (players.length <= 2) return false;
 			return true;
 		},

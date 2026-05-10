@@ -4864,7 +4864,7 @@ const skills = {
 		enable: "chooseToUse",
 		hiddenCard: function (player, name) {
 			if (!player.countCards("h")) return
-			return (name == 'wuxie')
+			return name == 'wuxie'
 		},
 		filterCard: function (card) {
 			return get.type(card) == 'basic';

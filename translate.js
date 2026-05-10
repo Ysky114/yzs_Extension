@@ -8,6 +8,7 @@ const translates = {
 	reverse1999Pack_yzs: "重返未来",
 	FrierenPack_yzs: `葬送的芙莉莲`,
 	MadeInAbyssPack_yzs: `来自深渊`,
+	JujutsuKaisenPack_yzs:`咒术回战`,
 	SCPPack_yzs:`SCP`,
 	BOSSPack_yzs: "BOSS包",
 	SpecialPack_yzs:`彩蛋`,
@@ -160,6 +161,9 @@ const translates = {
 	Makora_yzs:`魔虚罗`,
 	RyomenSukuna_yzs: `两面宿傩`,
 	GojoSatoru_yzs: `五条悟`,
+	Sakuya_yzs: `十六夜咲夜`,
+	ZeninMaki_yzs: `禅院真希`,
+	ZeninNaoya_yzs:`禅院直哉`,
 
     // 技能台词
 
@@ -1056,7 +1060,7 @@ const translates = {
 	yongyi_yzs_info: `转换技：需要时，你可视为使用或打出：①普通【杀】 ②【闪】。 `,
 
 	guangyousheguainiao_yzs: `广有射怪鸟`,
-	guangyousheguainiao_yzs_info: `锁定技：出牌阶段开始时你获得2张符卡。<br>回合开始时，你摸你上一自轮次出牌阶段数张牌。<br>
+	guangyousheguainiao_yzs_info: `锁定技：出牌阶段开始时你获得2张${get.poptip("Fuka_yzs")}。<br>回合开始时，你摸你上一自轮次出牌阶段数张牌。<br>
     你有额外手牌区，称为<font color="#ffac27">“半灵”</font>(初始4张牌)，原本的手牌区称为<font color="#1fffc0">“妖梦”</font>。你的回合内和出牌阶段内你启用<font color="#1fffc0">妖梦</font>，否则启用<font color="#ffac27">半灵</font>。<br>
     每名角色的出牌阶段结束时，你移动<font color="#1fffc0">妖梦</font>X张牌至<font color="#ffac27">半灵</font>，若X≥4则你获得1张符卡，（X为你本阶段使用或重铸锦囊牌数）
 	然后若<font color="#ffac27">半灵</font>比<font color="#1fffc0">妖梦</font>恰多Y张牌，交换<font color="#1fffc0">妖梦</font>与<font color="#ffac27">半灵</font>的牌并获得1枚${get.poptip("guangyousheguainiao_yzs_ling")}标记。（Y为本自轮次获得【灵】标记数）<br>
@@ -1068,7 +1072,7 @@ const translates = {
 	guangyousheguainiao_yzs_ling_info:`拥有2枚时，你全部移除之并进行出牌阶段`,
 	liugenqingjingzhan_yzs: `六根清净斩`,
 	liugenqingjingzhan_yzs_backup:`六根清净斩`,
-	liugenqingjingzhan_yzs_info:`锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>符卡：无咏唱：你选择：①视为使用上一记录牌或摸1张牌；<br>
+	liugenqingjingzhan_yzs_info: `锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>${get.poptip("FukaSkill_yzs")}：${get.poptip("wuyongchang_yzs")}：你选择：①视为使用上一记录牌或摸1张牌；<br>
 ②将${get.poptip("guangyousheguainiao_yzs")}中一个牌名改为另一个，若二者因此相同，将1张牌当做被改变的牌使用或重铸；若否，摸或弃2张牌。`,
 
 	shane_yzs: `善恶`,
@@ -1527,7 +1531,9 @@ const translates = {
     若有人物准备阶段<font color="#f93838">【赤字】</font>达到6，本技能效果结算结束，然后<font color="#f93838">【赤字】</font>拥有者依次清除其全部<font color="#f93838">【赤字】</font>并失去1点体力；拥有<font color="#f93838">【赤字】</font>最多者额外失去1点体力。（你死亡后本技能依然结算）`,
 
 	qiehou_yzs: `窃喉`,
-	qiehou_yzs_info: `隐匿技：你于回合外登场时，可对当前回合角色发动本技能。你杀死其他角色后，可复制其1个通常技，或获得${get.poptip("paoxiao")}。`,
+	qiehou_yzs_info: `隐匿技：你于回合外登场时，可对当前回合角色发动本技能。你杀死其他角色后，可复制其1个通常技，或获得${get.poptip("qiehou_yzs_paoxiao")}。`,
+	qiehou_yzs_paoxiao: `咆哮`,
+	qiehou_yzs_paoxiao_info:`你使用【杀】无次数限制。`,
 	xunsheng_yzs: `循声`,
 	xunsheng_yzs_info: `你攻击范围内的角色的回合结束时，你可对其使用至多X张牌，然后摸使用牌数张牌。（X为其本回合造成伤害总值）`,
 	qianfu_yzs: `潜伏`,
@@ -1653,7 +1659,7 @@ const translates = {
 	SixEyes_yzs: `六眼`,
 	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至6张。`,
 	wuxiaxianshushi_yzs: `无下限术式`,
-	wuxiaxianshushi_yzs_info: `若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
+	wuxiaxianshushi_yzs_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
 你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
 	xushici_yzs: `虚式·茈`,
 	xushici_yzs_info: `出牌阶段，你可弃置点数相同的${get.poptip("wtwCang_yzs")}和${get.poptip("wtwHe_yzs")}各1张，然后对1名其他角色造成X(这两张牌的点数)点伤害。无论如何本技能本回合失效。`,
@@ -1662,6 +1668,26 @@ const translates = {
 	wuliangkongchu_yzs_info: `${get.poptip("lingyuzhankai_yzs")}：所有其他角色进行非强制的选取会无效并结束出牌阶段。其他角色的回合结束时，其领域技失效。`,
 	wuliangkongchu_yzs_skill: `无量空处`,
 	wuliangkongchu_yzs_skill_info: `领域主人以外的角色进行非强制的选取会无效并结束出牌阶段。领域主人以外的角色的回合结束时，其领域技失效`,
+
+	TheWorld_yzs: `世界`,
+	TheWorld_yzs_info: `锁定技：出牌阶段结束时，若你手牌数=手牌上限，你结束本回合并减少1点手牌上限（可为负值），然后执行额外回合。<br>
+    出牌阶段你使用的【杀】改为于你下一结束阶段结算。<br>${get.poptip("FukaSkill_yzs")}：你调整手牌数至手牌上限，然后若你因此摸/弃牌，你减少/增加1点手牌上限。`,
+	KillingDoll_yzs: `杀人玩偶`,
+	KillingDoll_yzs_info: `锁定技：回合开始时你获得1张${get.poptip("Fuka_yzs")}。<br>结束阶段开始时，你调整手牌上限至体力值。<br>
+    ${get.poptip("FukaSkill_yzs")}：若当前有风暴，终止之并摸2张牌；若否，转换至${get.poptip("WaterStorm")}或${get.poptip("WindStorm")}。`,
+
+	shuangzizhoufu_yzs: `双子咒缚`,
+	shuangzizhoufu_yzs_info: `锁定技：你受到非致命伤害时无视护甲。<br>你恢复体力后，若你护甲值<体力上限，你获得1点护甲。<br>
+    觉醒技：结束阶段，若你体力值为1且有护甲，你失去所有护甲，然后翻面并觉醒：你增加体力上限至6并恢复全部体力。`,
+	shuangzizhoufu_yzs_awake:`天与暴君`,
+	tianyubaojun_yzs: `天与暴君`,
+	tianyubaojun_yzs_info: `锁定技：你的摸牌数、出【杀】数和手牌上限为X（X为你体力上限）。`,
+
+	huizhen_yzs: `绘帧`,
+	huizhen_yzs_info: `出牌阶段开始时，你可声明你接下来使用或打出的3张牌的点数顺序，则你不依顺序使用或打出牌时，清除顺序且本回合不可再使用或打出牌。`,
+	toushezhoufa_yzs: `投射咒法`,
+	toushezhoufa_yzs_info: `你发动${get.poptip("huizhen_yzs")}时摸2张牌。<br>你对其他角色造成伤害时，可令其发动【绘帧】。<br>
+	你依顺序使用或打出完【绘帧】声明的点数后，可再次发动【绘帧】。<br>你的【杀】伤害为X（X为你本回合额外发动【绘帧】次数且至多为3）。`,
 };
 
 export default translates;

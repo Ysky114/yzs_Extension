@@ -1884,6 +1884,44 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					return true
 				},
 				async content(event, trigger, player) {
+					game.trySkillAudio("bagua_skill")
+					game.broadcastAll(() => {
+						var video = document.createElement("VIDEO");
+						video.className = "anime";
+
+						Object.assign(video, {
+							src: lib.assetURL + "/extension/一中杀/image/background/wtwCang_yzs.MP4",
+							autoplay: true,//准备就绪后自动播放
+							loop: false,//是否循环播放
+							muted: false,//是否静音
+							preload: true,//是否提前加载
+						})
+						Object.assign(video.style, {
+							position: "fixed",
+							left: "0",
+							top: "0",
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							minWidth: "100vw",
+							minHeight: "100vh",
+							opacity: "0",//透明度
+							pointerEvents: "none",//不阻挡点击事件
+							zIndex: "0",
+							transition: "opacity 1s ease-out",
+						})
+						video.addEventListener("ended", () => {
+							video.style.opacity = "0";
+							setTimeout(() => {
+								document.body.removeChild(video);
+							}, 1000)//1s后移除视频
+						})
+						document.body.appendChild(video);
+						setTimeout(() => {
+							video.style.opacity = "1";
+						}, 50)
+
+					});
 					if (typeof event.baseDamage !== "number") {
 						event.baseDamage = 1;
 					}
@@ -2059,6 +2097,44 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					return true
 				},
 				async content(event, trigger, player) {
+					game.trySkillAudio("rw_bagua_skill")
+					game.broadcastAll(() => {
+						var video = document.createElement("VIDEO");
+						video.className = "anime";
+
+						Object.assign(video, {
+							src: lib.assetURL + "/extension/一中杀/image/background/wtwHe_yzs.MP4",
+							autoplay: true,//准备就绪后自动播放
+							loop: false,//是否循环播放
+							muted: false,//是否静音
+							preload: true,//是否提前加载
+						})
+						Object.assign(video.style, {
+							position: "fixed",
+							left: "0",
+							top: "0",
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							minWidth: "100vw",
+							minHeight: "100vh",
+							opacity: "0",//透明度
+							pointerEvents: "none",//不阻挡点击事件
+							zIndex: "0",
+							transition: "opacity 1s ease-out",
+						})
+						video.addEventListener("ended", () => {
+							video.style.opacity = "0";
+							setTimeout(() => {
+								document.body.removeChild(video);
+							}, 1000)//1s后移除视频
+						})
+						document.body.appendChild(video);
+						setTimeout(() => {
+							video.style.opacity = "1";
+						}, 50)
+
+					});
 					if (typeof event.baseDamage !== "number") {
 						event.baseDamage = 1;
 					}

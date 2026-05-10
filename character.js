@@ -1350,7 +1350,7 @@ const characters = {
 	MegumiSukuna_yzs: {
 		sex: "male",
 		group: "shu",
-		hp: 19,
+		hp: 30,
 		skills: ["zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs","jie_yzs","ba_yzs","fumoyuchuzi_yzs"],
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
@@ -1365,13 +1365,13 @@ const characters = {
 		names: "魔虚罗",
 		img: "extension/一中杀/image/Makora_yzs.png",
 		BGM: "Malevolent Shrine",
-	//	isUnseen: true,
+		isUnseen: true,
 	},
 
 	RyomenSukuna_yzs: {
 		sex: "male",
 		group: "shu",
-		hp: 19,
+		hp: 30,
 		skills: ["zuzhouzhiwang_yzs", "liangmianguishen_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "fumoyuchuzi_yzs"],
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
@@ -1389,6 +1389,38 @@ const characters = {
 		BGM: "AIZO",
 	//	isUnseen: true,
 	},
+
+	Sakuya_yzs: {
+		sex: "female",
+		group: "wei",
+		hp: 3,
+		skills: ["TheWorld_yzs", "KillingDoll_yzs"],
+		names: "十六夜咲夜",
+		img: "extension/一中杀/image/Sakuya_yzs.png",
+		Fuka: 3,
+	},
+
+	ZeninMaki_yzs: {
+		sex: "female",
+		group: "wu",
+		hp: 3,
+		hujia:3,
+		skills: ["shuangzizhoufu_yzs", "tianyubaojun_yzs"],
+		names: "禅院真希",
+		img: "extension/一中杀/image/ZeninMaki_yzs.png",
+		BGM: "AIZO",
+	},
+
+	ZeninNaoya_yzs: {
+		sex: "male",
+		group: "wu",
+		hp: 4,
+		skills: ["huizhen_yzs", "toushezhoufa_yzs"],
+		names: "禅院直哉",
+		img: "extension/一中杀/image/ZeninNaoya_yzs.png",
+		BGM: "AIZO",
+		dieAudios: ["ext:一中杀/audio/die/ZeninNaoya_yzs.mp3"],
+	}
 };
 
 const characterSubstitutes = {
@@ -1526,7 +1558,10 @@ const characterTitles = {
 	MegumiSukuna_yzs: `史上最强咒术师`,
 	Makora_yzs:`八握剑 异戒神将`,
 	RyomenSukuna_yzs: `史上最强咒术师`,
-	GojoSatoru_yzs:`现代最强咒术师`,
+	GojoSatoru_yzs: `现代最强咒术师`,
+	Sakuya_yzs: `优雅而潇洒的从者`,
+	ZeninMaki_yzs: `缚咒的凶雁`,
+	ZeninNaoya_yzs:`名门的妄执`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1638,7 +1673,11 @@ const characterIntros = {
 	MegumiSukuna_yzs: `出自《咒术回战》的最终反派，推荐4名以上玩家挑战，技能描述与实际机制不完全相符，需要玩家自行探索攻略方式。`,
 	RyomenSukuna_yzs:`两面宿傩，日本漫画《咒术回战》及其衍生作品中的角色。千年前的诅咒之王，附身在虎杖悠仁的体内。本性好自由，不喜受任何人束缚，行动全凭心意，是真正的自由主义者`,
 	Makora_yzs:`魔虚罗，全称八握剑异戒神将魔虚罗，是日本漫画《咒术回战》及其衍生作品中的角色，属于咒术界御三家之一的禅院家所传承的珍宝，为十种影法术体系中的最强式神。其调伏仪式需双手前伸并诵读“布瑠部，由良由良，八握剑·异戒神将·魔虚罗”布瑠真言。该式神头部无眼且两侧呈四翼状，后脑附有尾巴，右臂装配退魔之剑，剑身附着正极咒力可瞬间湮灭咒灵，背部法轮转动时能逐步适应所有术式攻击，直至完全免疫。`,
-	GojoSatoru_yzs:`----------“会赢的。”<br><br>五条悟，日本漫画《咒术回战》及其衍生作品中的角色，特级咒术师，御三家之一五条家嫡子及家族实质代行者，东京都立咒术高等专门学校一年级班主任，现代最强咒术师`,
+	GojoSatoru_yzs: `----------“会赢的。”<br><br>五条悟，日本漫画《咒术回战》及其衍生作品中的角色，特级咒术师，御三家之一五条家嫡子及家族实质代行者，东京都立咒术高等专门学校一年级班主任，现代最强咒术师`,
+	Sakuya_yzs: `十六夜咲[xiào]夜，系列作品《东方Project》中的角色，侍奉吸血鬼蕾米莉亚·斯卡蕾特的女仆。作为《东方红魔乡》第5面的Boss初次登场，意图阻止前来惩戒主人的灵梦，被其惩罚了一番。在那之后偶尔也会顺应情势参加妖怪降伏。红魔馆住着主人蕾米莉亚、其妹妹芙兰朵露、客人的帕秋莉以及为了照顾她们而设的众多女仆，而统管她们的是作为馆中唯一一个人类的女仆长咲夜。其他的女仆都是些妖精因而无法胜任日常工作，实际上红魔馆的家务等等都是由咲夜在打理。支持着咲夜作为一名优秀的女仆，以及一名优秀的保镖的，是操纵时间的能力。她可以自由地操纵时间的流逝速度，在停止的时间中只有她自己可以自由移动，也可以做到使特定的物体所处的时间流逝的速度加快。但是，她无法做到使已过去的时间倒流，所以她无法抹去已发生的事件，也无法穿越时间回到过去。她充分运用这种能力，或独自处理了红魔馆所有的杂务，或使刚产的红酒变成陈年老酿，抑或表演一些信手拈来的戏法`,
+	ZeninMaki_yzs: `禅院真希是日本漫画《咒术回战》及其衍生作品中的角色，动画由小松未可子配音。她是东京都立咒术高等专门学校二年级学生，四级咒术师。她出身于咒术界御三家之一的禅院家，因没有咒力而备受家族轻视，于是离家前往东京求学。在咒术高专，她负责训练乙骨忧太等后辈的体术。作为“天与咒缚”的继承者，她以无咒力状态持咒具参与死灭洄游，曾与虎杖悠仁等人联手对抗宿傩。在妹妹真依牺牲后，她的封印被揭开，回到禅院家开始了复仇。最终，她与乙骨忧太结婚，并育有后代`,
+	ZeninNaoya_yzs: `禅院直哉是日本漫画《咒术回战》及其衍生作品中的角色，由声优游佐浩二配音。出身咒术界御三家之一的禅院家，担任组织“炳”的首领，为家主禅院直毘人之子，伏黑惠需称呼禅院直哉为叔叔，拥有特别1级术师资格。金发美男子造型，眼角上挑佩戴多枚耳钉，常穿黑色宽袖羽织搭配阔领衬衫与浅色宽松袴裤。TV动画第三季“死灭回游 前篇”于2026年1月8日首播，其角色PV中自称禅院家族长。作为禅院家嫡子，性格傲慢嚣张跋扈且蔑视女性，曾当面评价真希真依姐妹身材长相，长期欺凌堂妹真希姐妹。继承术式“投射咒法”可将1秒分割为24等份操控对手行动，在动画第三季与胀相的战斗中展现CGI渲染的现代视觉效果，其边战斗边撩头发的原创动作成为网络爆火梗图模板。蜕变为咒灵后获得3马赫音速移动能力。涉谷事变后成为新任家主，主张刺杀伏黑惠以解决禅院家危机。追击虎杖悠仁时被乙骨忧太击败并定下交易：以谎报虎杖死亡换取反转术式治疗。2026年冬季动画最受欢迎男角色排名中位列第五名，在官方人气投票中也获得第五名。后在禅院真希灭门禅院家的过程中与觉醒天予咒缚的真希对决，在企图突破极限速度击败真希的过程中被真希击碎下颚。重伤后被真希之母从背后刺杀，死后化为诅咒进入死灭回游樱岛结界复仇。因误判真希无咒力的特性而在展开领域“时胞月宫殿”时被彻底消灭。其死亡标志着禅院家守旧势力的瓦解，终结了自身对伏黑甚尔盲目崇拜的执念`,
+
 };
 const characterReplaces = {
 };
@@ -1657,10 +1696,11 @@ const characterSort = {
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
-	    "ReiujiUtsuho_yzs"],
+		"ReiujiUtsuho_yzs","Sakuya_yzs"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs",],
+	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs","ZeninNaoya_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs", "RyomenSukuna_yzs","GojoSatoru_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],
