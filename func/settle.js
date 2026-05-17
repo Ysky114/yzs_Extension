@@ -5,7 +5,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.poptip.add({
 		id: "adapt_yzs",
 		name: "适应",
-		info: `被适应的牌或技能对你无效（包括无视抵挡和减免伤害等）。你对你适应的角色造成伤害乘X（X为你对其适应的次数+1）`,
+		info: `被适应的牌或技能对你无效（包括无视抵挡和减免伤害等）。你对你适应的角色造成伤害+X（X为你对其适应的次数）`,
 	});
 	lib.poptip.add({
 		id: "lingyuzhankai_yzs",

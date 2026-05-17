@@ -1,5 +1,23 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	wuxiaxian_yzs(player) {
+		if (player.countMark("yuzhe_yzs")) return lib.translate["wuxiaxian_yzs_lv2_info"];
+		return lib.translate["wuxiaxian_yzs_info"];
+	},
+	gongming_yzs(player) {
+		let str = `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将该阶段加入下列描述：<br><small>[`
+		let list = player.getStorage("gongming_yzs");
+		if (list.length) {
+			for (let i = 0; i < list.length; i++) {
+				str += get.translation(list[i]);
+				if (i != list.length - 1) {
+					str+='、'
+				}
+			}
+		}
+		str += `]</small><br>额定回合结束后，你执行依次进行上述阶段的额外回合。`
+		return str;
+	},
 	ba_yzs(player) {
 		if (player.countMark("ba_yzs_weaken")) return `出牌阶段，你可视为使用无次数限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效。`
 		return `出牌阶段，你可视为使用无次数、距离限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效。`

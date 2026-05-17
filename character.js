@@ -1351,7 +1351,7 @@ const characters = {
 		sex: "male",
 		group: "shu",
 		hp: 30,
-		skills: ["zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs","jie_yzs","ba_yzs","fumoyuchuzi_yzs"],
+		skills: ["zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs","fumoyuchuzi_yzs"],
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
@@ -1372,7 +1372,7 @@ const characters = {
 		sex: "male",
 		group: "shu",
 		hp: 30,
-		skills: ["zuzhouzhiwang_yzs", "liangmianguishen_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "fumoyuchuzi_yzs"],
+		skills: ["zuzhouzhiwang_yzs", "liangmianguishen_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "zao_yzs", "fumoyuchuzi_yzs"],
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
@@ -1420,6 +1420,26 @@ const characters = {
 		img: "extension/一中杀/image/ZeninNaoya_yzs.png",
 		BGM: "AIZO",
 		dieAudios: ["ext:一中杀/audio/die/ZeninNaoya_yzs.mp3"],
+	},
+
+	GunTwins_yzs: {
+		sex: "double",
+		group: "shu",
+		hp: 3,
+		skills: ["gongming_yzs", "kuangji_yzs","feidan_yzs"],
+		names: "阳&曦",
+		img: "extension/一中杀/image/GunTwins_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/GunTwins_yzs.mp3"],
+	},
+
+	YoungGojo_yzs: {
+		sex: "male",
+		group: "wei",
+		hp: 3,
+		skills: ["SixEyes_yzs","wuxiaxian_yzs", "yuzhe_yzs"],
+		names: "五条悟",
+		img: "extension/一中杀/image/YoungGojo_yzs.png",
+		BGM: "AIZO",
 	}
 };
 
@@ -1561,11 +1581,14 @@ const characterTitles = {
 	GojoSatoru_yzs: `现代最强咒术师`,
 	Sakuya_yzs: `优雅而潇洒的从者`,
 	ZeninMaki_yzs: `缚咒的凶雁`,
-	ZeninNaoya_yzs:`名门的妄执`,
+	ZeninNaoya_yzs: `名门的妄执`,
+	GunTwins_yzs: `亡命的双铳`,
+	YoungGojo_yzs:`咒术界的新星`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
 	YouBeier_yzs: `三级魔法使，身着黑色连衣裙的少女。前往魔法都市奥伊萨斯特参加一级魔法使考试的考生之一，也是最终合格的六名考生之一。性格十分恶劣，喜欢说话，喜欢战斗，也喜欢缠着自己感兴趣的人。不太会主动动手杀人，但对于杀人也一度毫不抗拒；因性格和事迹而被认定是“问题儿童”“杀掉比较好的人”。拥有相当的魔法才能和战斗直觉，还拥有异于常人的精神力。掌握的魔法大都非常唯心，是“魔法的世界就是想象的世界”这一设定的最直接体现者之一。有一个做裁缝的姐姐。和菲伦、兰托在第一轮考试中被分在一组，在团队中承担活跃气氛和被兰托吐槽的工作。运气很差，又很笨拙，还会莫名其妙地害羞。名字源于德语，意为“恶劣的”。极少数名字是负面词汇的人类之一。`,
+	HuangJOJO_yzs:`作者高中时期隔壁班的班主任，深受学生爱戴，因为名字叫黄建军，故而外号黄JOJO。口头禅是“能力有大小”。`,
 	jealous_witch_yzs: "“W，你为何会变成这样？”——陈刀<br>“陈刀哥哥，从死亡中归来后，我明白了——我们的爱，即使死了——不，只有死了才能延续下去！”",
 	lianhua_yzs: `莲华（れんげ），游戏《美少女万华镜》及其衍生作品中的角色之一，由真中海配音。莲华，深见夏彦的引路人，居住在深山某旅店的人偶之屋中，并自称是房间的主人。虽然看上去是个小女孩，但是却有着非同一般的气场。给人以冷漠印象，有点毒舌。拥有能窥视普通人类所窥视不到的世界的奇妙万华镜`,
 	Remilia_Scarlet_yzs:`蕾米莉亚·斯卡蕾特，系列作品《东方Project》中的角色，于《东方红魔乡》作为六面BOSS首次登场。她是居住在红魔馆的吸血鬼，是红魔馆的主人，拥有操纵命运程度的能力。虽然年龄有500岁，但是性格像小孩子一样幼稚任性，而且非常高傲。吸血鬼异变和红雾异变的发起者，在东方红魔乡中作为最终BOSS被击败后于东方萃梦想中首次成为自机角色。`,
@@ -1677,6 +1700,8 @@ const characterIntros = {
 	Sakuya_yzs: `十六夜咲[xiào]夜，系列作品《东方Project》中的角色，侍奉吸血鬼蕾米莉亚·斯卡蕾特的女仆。作为《东方红魔乡》第5面的Boss初次登场，意图阻止前来惩戒主人的灵梦，被其惩罚了一番。在那之后偶尔也会顺应情势参加妖怪降伏。红魔馆住着主人蕾米莉亚、其妹妹芙兰朵露、客人的帕秋莉以及为了照顾她们而设的众多女仆，而统管她们的是作为馆中唯一一个人类的女仆长咲夜。其他的女仆都是些妖精因而无法胜任日常工作，实际上红魔馆的家务等等都是由咲夜在打理。支持着咲夜作为一名优秀的女仆，以及一名优秀的保镖的，是操纵时间的能力。她可以自由地操纵时间的流逝速度，在停止的时间中只有她自己可以自由移动，也可以做到使特定的物体所处的时间流逝的速度加快。但是，她无法做到使已过去的时间倒流，所以她无法抹去已发生的事件，也无法穿越时间回到过去。她充分运用这种能力，或独自处理了红魔馆所有的杂务，或使刚产的红酒变成陈年老酿，抑或表演一些信手拈来的戏法`,
 	ZeninMaki_yzs: `禅院真希是日本漫画《咒术回战》及其衍生作品中的角色，动画由小松未可子配音。她是东京都立咒术高等专门学校二年级学生，四级咒术师。她出身于咒术界御三家之一的禅院家，因没有咒力而备受家族轻视，于是离家前往东京求学。在咒术高专，她负责训练乙骨忧太等后辈的体术。作为“天与咒缚”的继承者，她以无咒力状态持咒具参与死灭洄游，曾与虎杖悠仁等人联手对抗宿傩。在妹妹真依牺牲后，她的封印被揭开，回到禅院家开始了复仇。最终，她与乙骨忧太结婚，并育有后代`,
 	ZeninNaoya_yzs: `禅院直哉是日本漫画《咒术回战》及其衍生作品中的角色，由声优游佐浩二配音。出身咒术界御三家之一的禅院家，担任组织“炳”的首领，为家主禅院直毘人之子，伏黑惠需称呼禅院直哉为叔叔，拥有特别1级术师资格。金发美男子造型，眼角上挑佩戴多枚耳钉，常穿黑色宽袖羽织搭配阔领衬衫与浅色宽松袴裤。TV动画第三季“死灭回游 前篇”于2026年1月8日首播，其角色PV中自称禅院家族长。作为禅院家嫡子，性格傲慢嚣张跋扈且蔑视女性，曾当面评价真希真依姐妹身材长相，长期欺凌堂妹真希姐妹。继承术式“投射咒法”可将1秒分割为24等份操控对手行动，在动画第三季与胀相的战斗中展现CGI渲染的现代视觉效果，其边战斗边撩头发的原创动作成为网络爆火梗图模板。蜕变为咒灵后获得3马赫音速移动能力。涉谷事变后成为新任家主，主张刺杀伏黑惠以解决禅院家危机。追击虎杖悠仁时被乙骨忧太击败并定下交易：以谎报虎杖死亡换取反转术式治疗。2026年冬季动画最受欢迎男角色排名中位列第五名，在官方人气投票中也获得第五名。后在禅院真希灭门禅院家的过程中与觉醒天予咒缚的真希对决，在企图突破极限速度击败真希的过程中被真希击碎下颚。重伤后被真希之母从背后刺杀，死后化为诅咒进入死灭回游樱岛结界复仇。因误判真希无咒力的特性而在展开领域“时胞月宫殿”时被彻底消灭。其死亡标志着禅院家守旧势力的瓦解，终结了自身对伏黑甚尔盲目崇拜的执念`,
+	GunTwins_yzs: ``,
+	YoungGojo_yzs:`五条悟，日本漫画《咒术回战》及其衍生作品中的角色，特级咒术师，御三家之一五条家嫡子及家族实质代行者，东京都立咒术高等专门学校一年级班主任，现代最强咒术师`,
 
 };
 const characterReplaces = {
@@ -1687,7 +1712,7 @@ const characterSort = {
 		"DaZuo_yzs", "ChenJiahao_yzs","YanLaFeng_yzs"],
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
-		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs","Rafau_yzs","Arlecchino_yzs",],
+		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs","GunTwins_yzs"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
@@ -1700,7 +1725,7 @@ const characterSort = {
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs",],
-	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs","ZeninNaoya_yzs"],
+	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs","YoungGojo_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs", "RyomenSukuna_yzs","GojoSatoru_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

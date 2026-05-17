@@ -1868,10 +1868,12 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				audio: "ext:一中杀/audio/card",
 				fullskin: true,
 				image: "ext:一中杀/image/card/wtwCang_yzs.png",
-				type: "trick",
+				type: "basic",
 				cardcolor: "black",
 				enable(card, player) {
-					return player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs");
+					if (player.hasSkill("wuxiaxian_yzs") && !player.isTempBanned("wuxiaxian_yzs")) return true;
+					if (player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs")) return true;
+					return false;
 				},
 				selectTarget: 1,
 				postAi(targets) {
@@ -1885,7 +1887,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				async content(event, trigger, player) {
 					game.trySkillAudio("bagua_skill")
-					game.broadcastAll(() => {
+					if (player.name =="GojoSatoru_yzs")game.broadcastAll(() => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
 
@@ -2081,10 +2083,12 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				audio: "ext:一中杀/audio/card",
 				fullskin: true,
 				image: "ext:一中杀/image/card/wtwHe_yzs.png",
-				type: "trick",
+				type: "basic",
 				cardcolor: "red",
 				enable(card, player) {
-					return player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs");
+					if (player.hasSkill("wuxiaxian_yzs") && !player.isTempBanned("wuxiaxian_yzs")) return true;
+					if (player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs")) return true;
+					return false;
 				},
 				selectTarget: 1,
 				postAi(targets) {
@@ -2098,7 +2102,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				async content(event, trigger, player) {
 					game.trySkillAudio("rw_bagua_skill")
-					game.broadcastAll(() => {
+					if (player.name == "GojoSatoru_yzs") game.broadcastAll(() => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
 
@@ -2940,7 +2944,8 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				allowMultiple: true,
 				image: "ext:一中杀/image/card/moxuluo_yzs.png",
 				filterTarget(card, player, target) {
-					if (game.hasPlayer(cur => cur.name == "Makora_yzs",true)) {
+					const player = game.filterPlayer(cur => !cur.storage.isSub);
+					if (player.some(cur => cur.name == "Makora_yzs",true)) {
 						return target.name == "Makora_yzs"
 					} else {
 						return true;
@@ -3236,11 +3241,17 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				equipSkill: true,
 				mod: {
 					playerEnabled(card, player, target) {
+						if (player.hasSkillTag("unequip2")) {
+							return ;
+						}
 						if (player == target && card.name == "tao") {
 							return false;
 						}
 					},
 					cardSavable(card, player) {
+						if (player.hasSkillTag("unequip2")) {
+							return;
+						}
 						if (player == _status.event.dying && card.name === "tao") {
 							return false;
 						}
@@ -3374,6 +3385,19 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				trigger: { player: "damageBegin4" },
 				filter(event, player) {
+					if (player.hasSkillTag("unequip2")) {
+						return false;
+					}
+					if (
+						event.source &&
+						event.source.hasSkillTag("unequip", false, {
+							name: event.card ? event.card.name : null,
+							target: player,
+							card: event.card,
+						})
+					) {
+						return false;
+					}
 					const munius = player.getVCards("e").filter(i => i.name == "fanlizhimeng_yzs_equip");
 					return munius && munius.length;
 				},
@@ -3501,6 +3525,19 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				forced: true,
 				filter(event, player) {
+					if (player.hasSkillTag("unequip2")) {
+						return false;
+					}
+					if (
+						event.source &&
+						event.source.hasSkillTag("unequip", false, {
+							name: event.card ? event.card.name : null,
+							target: player,
+							card: event.card,
+						})
+					) {
+						return false;
+					}
 					return get.type(event.card, "trick") == "trick";
 				},
 				content() {
@@ -4027,6 +4064,19 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				prompt2: `受到伤害时，若伤害来源不为其他角色，或你计算与伤害来源距离为X，你可令此伤害-1，然后你攻击范围±1。（X为你攻击范围且至少为1）`,
 				filter(event, player) {
+					if (player.hasSkillTag("unequip2")) {
+						return false;
+					}
+					if (
+						event.source &&
+						event.source.hasSkillTag("unequip", false, {
+							name: event.card ? event.card.name : null,
+							target: player,
+							card: event.card,
+						})
+					) {
+						return false;
+					}
 					if (!event.source || event.source == player) return true;
 					let range = player.getAttackRange();
 					if (range < 1) range = 1;

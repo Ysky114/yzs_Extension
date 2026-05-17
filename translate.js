@@ -163,7 +163,10 @@ const translates = {
 	GojoSatoru_yzs: `五条悟`,
 	Sakuya_yzs: `十六夜咲夜`,
 	ZeninMaki_yzs: `禅院真希`,
-	ZeninNaoya_yzs:`禅院直哉`,
+	ZeninNaoya_yzs: `禅院直哉`,
+	GunTwins_yzs: `阳&曦`,
+	YoungGojo_yzs:`五条悟`,
+
 
     // 技能台词
 
@@ -1633,14 +1636,16 @@ const translates = {
 	zuzhouzhiwang_yzs: `诅咒之王`,
 	zuzhouzhiwang_yzs_info: `锁定技：每回合开始时你摸牌至4张，然后若为你的回合，你选择1名其他角色，除其以外的其他角色依次可调离并摸1张牌`,
 	shizhongyingfashu_yzs: `十种影法术`,
-	shizhongyingfashu_yzs_info: `锁定技：你使用非式神牌时获得1张点数随机的【影】。<br>你可将对应消耗数量的【影】当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
+	shizhongyingfashu_yzs_info: `锁定技：你使用非式神非虚拟牌时获得1张点数随机的【影】。<br>你可将对应消耗数量的【影】当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
 	每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标或使用者，你可将目标转移给“魔虚罗”。`,
 	fanzhuanshushi_yzs: `反转术式`,
-	fanzhuanshushi_yzs_info: `锁定技：你可将2张手牌当做【桃】对自己使用，若这两张牌点数相同，结算后你可恢复一个已失效的技能。`,
+	fanzhuanshushi_yzs_info: `锁定技：你可将2张非【影】手牌当做【桃】对自己使用，若这两张牌点数相同，结算后你可恢复一个已失效的技能。`,
 	jie_yzs: `解`,
 	jie_yzs_info: `出牌阶段，你可弃置1名其他角色手牌区和装备区各1张牌，并对其造成1点伤害，然后本技能本回合失效。`,
 	ba_yzs: `捌`,
 	ba_yzs_info: `出牌阶段，你可视为使用无次数、距离限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效。`,
+	zao_yzs: `开`,
+	zao_yzs_info: `出牌阶段，你可对1名其他角色造成X点火焰伤害，然后本技能本回合失效。<br>X为满足的项数：①你横置②目标未横置③其他角色均横置。`,
 	fumoyuchuzi_yzs: `伏魔御厨子`,
 	fumoyuchuzi_yzs_info: `${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色的回合结束时，你对其发动${get.poptip("jie_yzs")}。`,
 	fumoyuchuzi_yzs_skill: `伏魔御厨子`,
@@ -1650,14 +1655,14 @@ const translates = {
 	hundunyutiaohe_yzs_info: `持恒技：你每对1名其他角色累计造成2次伤害，你“${get.poptip("adapt_yzs")}”其1次。<br>
 	其他角色的牌或技能对你生效2次后，你“适应”之。`,
 	tuimozhijian_yzs: `退魔之剑`,
-	tuimozhijian_yzs_info:`你攻击范围+2。你使用【杀】不可响应且无视防具。`,
+	tuimozhijian_yzs_info:`你攻击范围+2。你使用【杀】不可响应。`,
 
 	liangmianguishen_yzs: `两面鬼神`,
-	liangmianguishen_yzs_info: `锁定技：你的额定回合结束后，你执行额外回合。你出【杀】数+1。你无视翻面效果。`,
+	liangmianguishen_yzs_info: `锁定技：你摸牌数和出【杀】数翻倍。你无视翻面效果。你造成非属性伤害后，可横置受伤角色。`,
 
 	challenger_yzs:`你才是挑战者`,
 	SixEyes_yzs: `六眼`,
-	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至6张。`,
+	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至6张。<br>每回合开始时，你失去1点体力或令本技能本回合失效。`,
 	wuxiaxianshushi_yzs: `无下限术式`,
 	wuxiaxianshushi_yzs_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
 你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
@@ -1688,6 +1693,25 @@ const translates = {
 	toushezhoufa_yzs: `投射咒法`,
 	toushezhoufa_yzs_info: `你发动${get.poptip("huizhen_yzs")}时摸2张牌。<br>你对其他角色造成伤害时，可令其发动【绘帧】。<br>
 	你依顺序使用或打出完【绘帧】声明的点数后，可再次发动【绘帧】。<br>你的【杀】伤害为X（X为你本回合额外发动【绘帧】次数且至多为3）。`,
+
+	gongming_yzs: `共鸣`,
+	gongming_yzs_info: `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将该阶段加入下列描述：<br><small>[]</small><br>
+    额定回合结束后，你执行依次进行上述阶段的额外回合。`,
+	kuangji_yzs: `狂击`,
+	kuangji_yzs_info: `弃牌阶段若你本阶段弃牌，记录其中花色，本回合你使用花色记录过的牌无次数距离限制，然后移除对应记录；
+	若否，你可将1张♠手牌当做${get.poptip("kuangchangbaozha_yzs")}使用，然后摸1张牌。`,
+	feidan_yzs: `绯弹`,
+	feidan_yzs_info:`判定阶段若你延时区有牌，你可令任意角色执行【闪电】判定，判定牌生效前你可打出任意角色1张手牌代替；
+	若否，本阶段结束时，你可将1张♥手牌当做${get.poptip("xianzheyuyan_yzs")}使用。`,
+
+	wuxiaxian_yzs: `无下限`,
+	wuxiaxian_yzs_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
+每回合限1次：你连续使用点数严格递减的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}（X为中断前连续使用的牌数）。`,
+	wuxiaxian_yzs_lv2: `无下限`,
+	wuxiaxian_yzs_lv2_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
+每回合各限1次：你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
+	yuzhe_yzs: `玉折`,
+	yuzhe_yzs_info: `觉醒技：你发动过${get.poptip("wuxiaxian_yzs")}的回合内，你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
 };
 
 export default translates;

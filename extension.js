@@ -64,13 +64,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						`鹤元海可以反弹杀，打他时请确保你手里有闪！`,
 						`翔子有两个版本-审判翔和纯真翔，后者可以觉醒进化！`,
 						`千面李暮拥有高贵的开局无敌和随机技能，强而有力。`,
-						`六魂花是挑战boss，联机时最好事先约定好再掏。`,
+						`六魂花和宿傩是挑战boss，联机时最好事先约定好再掏。`,
 						"《一中杀》会时不时举办扩展联机，想玩的可以加群1015772605联系作者",
 						`《一中杀》中的部分武将存在羁绊彩蛋，比如辛美尔和芙莉莲。`,
 						`武器大师-车杳只需要发动武器技能就可以刷新大招，理论上限一回合十刀！`,
 						`希儿削废了。没有了。`,
 						`《一中杀》是支持联机游玩的扩展，你甚至可以操作召唤物和自己武将的复制体！`,
-						`如果你觉得《一中杀》的某个武将的名字和他的卡图、技能之间毫无关联，那他可能是恶搞向武将。`,
+						`《一中杀》中有很多恶搞向武将，此类武将的卡图仅作参考。`,
 						"三国杀是个很残酷的游戏，通常需要很多个玩家才能开始，但是只有一个玩家能玩。",
 						"如果你在生活中遇到了什么糟糕的事，想都不用想，肯定是三国杀干的",
 						"当你觉得一个武将是大作文时，你可以先不看他的技能，多挨打几次就知道了。",
@@ -580,9 +580,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"Sakuya_yzs",
-						"ZeninMaki_yzs",
-						"ZeninNaoya_yzs",
+						"GunTwins_yzs",
+						"YoungGojo_yzs",
 					]
 				},
 				{
@@ -681,12 +680,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.91</div><br>
+            <div style="color:#ffa348">• 版本号：v0.92</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.91",
+			version: "0.92",
 		},
 		files: {}, connect: true
 	}

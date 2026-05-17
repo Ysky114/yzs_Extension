@@ -6625,6 +6625,7 @@ const skills = {
 					source: "damageBegin1",
 				},
 				filter(event) {
+
 					if (event.parent.name == "_lianhuan" || event.parent.name == "_lianhuan2") {
 						return false;
 					}
@@ -6701,7 +6702,22 @@ const skills = {
 		trigger: {
 			player: ["damageBegin4"]
 		},
-		filter(event, player) { return true  },
+		filter(event, player) {
+			if (player.hasSkillTag("unequip2")) {
+				return false;
+			}
+			if (
+				event.source &&
+				event.source.hasSkillTag("unequip", false, {
+					name: event.card ? event.card.name : null,
+					target: player,
+					card: event.card,
+				})
+			) {
+				return false;
+			}
+			return true
+		},
 		async content(event, trigger, player) {
 			await trigger.cancel();
 			if (trigger.num <= 0) return;
