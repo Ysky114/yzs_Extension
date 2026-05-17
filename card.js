@@ -2944,8 +2944,8 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				allowMultiple: true,
 				image: "ext:一中杀/image/card/moxuluo_yzs.png",
 				filterTarget(card, player, target) {
-					const player = game.filterPlayer(cur => !cur.storage.isSub);
-					if (player.some(cur => cur.name == "Makora_yzs",true)) {
+					const players = game.filterPlayer(cur => !cur.storage.isSub);
+					if (players.some(cur => cur.name == "Makora_yzs",true)) {
 						return target.name == "Makora_yzs"
 					} else {
 						return true;
