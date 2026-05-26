@@ -764,7 +764,7 @@ const characters = {
 		skills: ["tonglv_yzs", "cangfa_yzs","tanbao_yzs"],
 		names: "芙莉莲",
 		img: "extension/一中杀/image/Frieren_yzs.png",
-		BGM: "勇者",
+		BGM: "lulu",
 	},
 
 	Himmel_yzs: {
@@ -775,7 +775,7 @@ const characters = {
 		names: "辛美尔",
 		img: "extension/一中杀/image/Himmel_yzs.png",
 		dieAudios: ["ext:一中杀/audio/die/Himmel_yzs.mp3"],
-		BGM: "勇者",
+		BGM: "lulu",
 	},
 
 	Youmu_yzs: {
@@ -1440,6 +1440,47 @@ const characters = {
 		names: "五条悟",
 		img: "extension/一中杀/image/YoungGojo_yzs.png",
 		BGM: "AIZO",
+	},
+
+	Tanya_yzs: {
+		sex: "female",
+		group: "shu",
+		hp: 3,
+		skills: ["eling_yzs", "shenyu_yzs", "tiandu_yzs"],
+		names: "谭雅",
+		img: "extension/一中杀/image/Tanya_yzs.png",
+		BGM: "Los! Los! Los!",
+	},
+
+	KunYee_yzs: {
+		sex: "male",
+		group: "wei",
+		hp: 4,
+		skills: ["cangyao_yzs", "zhenjian_yzs", "cangxingzhan_yzs"],
+		names: "昆伊",
+		img: "extension/一中杀/image/KunYee_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/KunYee_yzs.mp3"],
+	},
+
+	WangQian_yzs: {
+		sex: "female",
+		group: "wei",
+		hp: 4,
+		skills: ["xuansi_yzs", "tianmou_yzs", "chaoyuezhishou_yzs"],
+		names: "王千",
+		img: "extension/一中杀/image/WangQian_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/WangQian_yzs.mp3"],
+	},
+
+	QianmianDoll_yzs: {
+		sex: "male",
+		group: "wei",
+		hp: 2,
+		skills: ["Qianmiankui_yzs"],
+		names: "李暮",
+		img: "extension/一中杀/image/QianmianDoll_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/QianmianDoll_yzs.mp3"],
+		isUnseen: true,
 	}
 };
 
@@ -1583,7 +1624,11 @@ const characterTitles = {
 	ZeninMaki_yzs: `缚咒的凶雁`,
 	ZeninNaoya_yzs: `名门的妄执`,
 	GunTwins_yzs: `亡命的双铳`,
-	YoungGojo_yzs:`咒术界的新星`,
+	YoungGojo_yzs: `咒术界的新星`,
+	Tanya_yzs: `莱茵的恶魔`,
+	KunYee_yzs: `蓝之勇者`,
+	WangQian_yzs: `纵偶少女`,
+	QianmianDoll_yzs:`千面傀儡`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1702,6 +1747,10 @@ const characterIntros = {
 	ZeninNaoya_yzs: `禅院直哉是日本漫画《咒术回战》及其衍生作品中的角色，由声优游佐浩二配音。出身咒术界御三家之一的禅院家，担任组织“炳”的首领，为家主禅院直毘人之子，伏黑惠需称呼禅院直哉为叔叔，拥有特别1级术师资格。金发美男子造型，眼角上挑佩戴多枚耳钉，常穿黑色宽袖羽织搭配阔领衬衫与浅色宽松袴裤。TV动画第三季“死灭回游 前篇”于2026年1月8日首播，其角色PV中自称禅院家族长。作为禅院家嫡子，性格傲慢嚣张跋扈且蔑视女性，曾当面评价真希真依姐妹身材长相，长期欺凌堂妹真希姐妹。继承术式“投射咒法”可将1秒分割为24等份操控对手行动，在动画第三季与胀相的战斗中展现CGI渲染的现代视觉效果，其边战斗边撩头发的原创动作成为网络爆火梗图模板。蜕变为咒灵后获得3马赫音速移动能力。涉谷事变后成为新任家主，主张刺杀伏黑惠以解决禅院家危机。追击虎杖悠仁时被乙骨忧太击败并定下交易：以谎报虎杖死亡换取反转术式治疗。2026年冬季动画最受欢迎男角色排名中位列第五名，在官方人气投票中也获得第五名。后在禅院真希灭门禅院家的过程中与觉醒天予咒缚的真希对决，在企图突破极限速度击败真希的过程中被真希击碎下颚。重伤后被真希之母从背后刺杀，死后化为诅咒进入死灭回游樱岛结界复仇。因误判真希无咒力的特性而在展开领域“时胞月宫殿”时被彻底消灭。其死亡标志着禅院家守旧势力的瓦解，终结了自身对伏黑甚尔盲目崇拜的执念`,
 	GunTwins_yzs: ``,
 	YoungGojo_yzs:`五条悟，日本漫画《咒术回战》及其衍生作品中的角色，特级咒术师，御三家之一五条家嫡子及家族实质代行者，东京都立咒术高等专门学校一年级班主任，现代最强咒术师`,
+	Tanya_yzs: `谭雅·冯·提古雷查夫（ターニャ・フォン・デグレチャフ），是日本小说家カルロ・ゼン所著轻小说《幼女战记》及其衍生作品中的主人公。性别女，生日9月24日，年龄13岁，金色头发、蓝色眼眸（祈祷时转为金色）。配音包括悠木碧（日语TV）、鸟海浩辅（日语TV，前世）、Monica Rial（英语）、Leonard Hohm（德语，前世）等多语言声优。别名“白银”“莱茵的恶魔”“帝国军魔导师中最危险的存在”等，曾任帝国军第二〇三航空魔导大队大队长，军衔从少校晋升至准将。其前世为日本精英上班族，是绝对理性的唯物主义者、坚定的合理主义无神论者，因意外死亡后被神明转生为异世界幼女。为摆脱贫困加入帝国军，以第二名成绩提前军官学校毕业，凭借艾连穆姆九五式宝珠与战术能力成为王牌魔导师。主导组建参谋本部直属的第二〇三航空魔导大队，主导达基亚公国首都空袭等战役，13岁率部击溃六十万达基亚军并俘虏高级将官 [1-2]。统一历1926年率部在南方大陆发起攻打共和国军残党的战役，后因联邦国境出现大规模动员征兆而扩大战果。因作战风格残酷且部队拥有独立行动权，部分军官视其为“战争狂”，但其自称追求安全的后方职位。该角色以幼女外貌与冷酷战略形成强烈反差，战场表现屡获银翼突击章等荣誉。其思维模式与现代合理主义者身份，使其与帝国军传统军官产生根本性差异。在与联合王国主导的多国籍义勇军对抗中，遭遇为父复仇的玛丽·苏准尉`,
+	KunYee_yzs: ``,
+	WangQian_yzs: `——仰慕着上一代“千面”的人偶师，王千，让自己的杰作戴上了千面面具。`,
+	QianmianDoll_yzs:`——由此，人偶被赋予了灵魂，成为拥有李暮记忆的完美傀儡。`,
 
 };
 const characterReplaces = {
@@ -1712,7 +1761,8 @@ const characterSort = {
 		"DaZuo_yzs", "ChenJiahao_yzs","YanLaFeng_yzs"],
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
-		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs","GunTwins_yzs"],
+		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
+		"Tanya_yzs", "KunYee_yzs","WangQian_yzs"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",

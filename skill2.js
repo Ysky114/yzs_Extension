@@ -4216,7 +4216,7 @@ const skills = {
 		filter(event, player) {
 			if (event.player == player) return false;
 			const players = game.players;
-			if (player.hasSkill("zuzhouzhiwang_yzs") && !_status.zuzhouzhiwang_yzs_kill) return true;
+			if (player.hasSkill("zuzhouzhiwang_yzs") && !_status.zuzhouzhiwang_yzs_kill && !game.players.some(cur => cur.name == "GojoSatoru_yzs")) return true;
 			if (players.length <= 2) return false;
 			return true;
 		},
@@ -10163,26 +10163,17 @@ const skills = {
 					return typeof event.card.number == "number" 
 				},
 				async content(event, trigger, player) {
+					if (trigger.name == "useCard") {
+						if ([1, 11, 12, 13].includes(trigger.card?.number)) {
+							trigger.addCount = false;
+						}
+					}
 					await player.gainMaxHp();
 				},
 			},
 		},
 		priority: 666,
 		locked: true,
-		forced: true,
-		trigger: {
-			player: ["useCard"],
-		},
-		filter(event, player) {
-			if (typeof event.card.number != "number") return false;
-			return [1, 11, 12, 13].includes(event.card.number);
-		},
-		async content(event, trigger, player) {
-			trigger.addCount = false;
-			var stat = player.getStat().card,
-				name = trigger.card.name;
-			if (typeof stat[name] == "number") stat[name]--;
-		},
 		mod: {
 			aiOrder(card, player, num) {
 				if (card.name != "sha" || typeof card.number != "number") return num;

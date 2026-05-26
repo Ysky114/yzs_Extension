@@ -8,6 +8,7 @@ import skills2 from "./skill2.js";
 import skills3 from "./skill3.js";
 import skills4 from "./skill4.js";
 import skills5 from "./skill5.js";
+import skills6 from "./skill6.js";
 import translates from "./translate.js";
 import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
@@ -540,6 +541,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						...skills3,
 						...skills4,
 						...skills5,
+						...skills6,
 					},
 					translate: { ...translates, },
 				};
@@ -580,8 +582,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"GunTwins_yzs",
-						"YoungGojo_yzs",
+						"Tanya_yzs",
+						"KunYee_yzs",
+						"WangQian_yzs"
 					]
 				},
 				{
@@ -590,6 +593,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
+						"Macht_yzs",
 					]
 				},
 			];
@@ -608,6 +612,11 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					3: "gh-proxy国内镜像",
 					4: "tvv.tw镜像源",
 				}
+			},
+			update_method: {
+				name: `<font color="#2196f3">极速更新`,
+				init: false,
+				intro: "开启后，在线更新将跳过音频、视频和图片等大文件，仅更新 .js 和 .css 代码文件，显著加快更新速度。",
 			},
 			auto_update: {
 				name: `<font color="#e91e63">自动检测更新`,
@@ -680,12 +689,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.92</div><br>
+            <div style="color:#ffa348">• 版本号：v0.93</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.92",
+			version: "0.93",
 		},
 		files: {}, connect: true
 	}

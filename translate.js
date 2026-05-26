@@ -166,6 +166,9 @@ const translates = {
 	ZeninNaoya_yzs: `禅院直哉`,
 	GunTwins_yzs: `阳&曦`,
 	YoungGojo_yzs:`五条悟`,
+	Tanya_yzs: `谭雅`,
+	KunYee_yzs: `昆伊`,
+	WangQian_yzs: `王千`,
 
 
     // 技能台词
@@ -1712,6 +1715,35 @@ const translates = {
 每回合各限1次：你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
 	yuzhe_yzs: `玉折`,
 	yuzhe_yzs_info: `觉醒技：你发动过${get.poptip("wuxiaxian_yzs")}的回合内，你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
+
+	eling_yzs: `恶伶`,
+	eling_yzs_info: `你可将手牌当做【闪】或【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。`,
+	shenyu_yzs: `神谕`,
+	shenyu_yzs_info: `锁定技：你使用♠牌无次数距离限制。<br>结束阶段，你摸2张牌，然后判定【闪电】。`,
+	tiandu_yzs: `天妒`,
+	tiandu_yzs_info: `转换技：你的判定牌亮出后，你可：①获得之；②打出手牌代替之。`,
+
+	cangyao_yzs: `苍耀`,
+	cangyao_yzs_info: `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
+    出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
+    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：①摸1张牌 ②恢复1点体力 ③手牌点数+1（至多为K）。`,
+	zhenjian_yzs: `振剑`,
+	zhenjian_yzs_info: `你需响应牌时，可将【杀】当做【闪】或【无懈可击】使用或打出，然后摸1张牌。若响应的牌未指定你为目标，本回合本技能失效。`,
+	cangxingzhan_yzs: `苍星斩`,
+	cangxingzhan_yzs_info: `出牌阶段，你可将【杀】当做【过河拆桥】使用，然后目标角色视为对你使用【决斗】。若此牌对你造成了伤害，本回合本技能失效。 `,
+
+	xuansi_yzs: `悬丝`,
+	xuansi_yzs_info: `锁定技：准备阶段，若“${get.poptip("QianmianDoll_yzs")}”不在场，你可翻面，然后召唤其至任意座次。`,
+	tianmou_yzs: `天谋`,
+	tianmou_yzs_info: `其他角色使用即时牌指定目标时，你可依次重铸1张与之牌名、点数、花色相同的手牌，然后依次发动前重铸牌数项：<br>
+<font color="#adbeff">①弃置任意角色1张手牌</font> <font color="#ffb1b7">②为之增加或取消1个目标</font> <font color="#adbeff">③获得之</font>。`,
+	chaoyuezhishou_yzs: `超越之手`,
+	chaoyuezhishou_yzs_info: `你即将死亡时，可令1名其他角色翻面。<br>
+    出牌阶段限2次：你与1名手牌数之差≤2的角色交换手牌，手牌数减少的一方<font color="#ffb1b7">恢复1点体力</font>或<font color="#adbeff">视为对对方使用普通【杀】</font>。`,
+
+	Qianmiankui_yzs: `千面傀`,
+	Qianmiankui_yzs_info:`锁定技：你登场时或回合开始时，选择其他角色的1个通常技，你复制之至你下一回合开始或死亡。<br>
+    <font color="#ffb1b7">“王千”</font>或<font color="#adbeff">“千面傀儡”</font>的出牌阶段限1次：其可令二者之一失去1点体力，然后令二者之一：摸2张牌、本回合手牌上限视为4。`,
 };
 
 export default translates;

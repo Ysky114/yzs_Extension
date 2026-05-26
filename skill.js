@@ -78,6 +78,7 @@ const skills = {
 			}
 			const bgms = lib.config.all.background_music
 			game.broadcastAll(function (bgms) {
+				if (!lib.config.extension_一中杀_yzs_bgm) return ;
 				lib.config.all.background_music = bgms;
 				game.playBackgroundMusic()
 			}, bgms);

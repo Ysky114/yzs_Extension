@@ -249,4 +249,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		name: "魔虚罗",
 		info: `十种影法术中的最强式神，拥有适应万物的能力。`,
 	});
+	lib.poptip.add({
+		id: "QianmianDoll_yzs",
+		name: "千面傀儡",
+		info: `"纵偶少女-王千"的专属召唤物，初始体力值为2，手牌数为4。可以如同其他玩家一般出牌，拥有技能${get.poptip("Qianmiankui_yzs")}`,
+	});
 }

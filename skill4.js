@@ -1252,7 +1252,7 @@ const skills = {
 			let num = trigger.source.countMark("rg_treasure_targeted");
 			trigger.source.addSkill("rg_treasure_targeted");
 			trigger.source.addMark("rg_treasure_targeted", trigger.num > 0 ? 2 : 1, false);
-			let nums = [2, 5,8];
+			let nums = [2, 5,9];
 			let goon = false;
 			if (trigger.source.countMark("rg_treasure_targeted") >= nums[0] && num < nums[0]) goon = true;
 			if (trigger.source.countMark("rg_treasure_targeted") >= nums[1] && num < nums[1]) goon = true;
@@ -4084,7 +4084,7 @@ const skills = {
 		},
 		enable: ["chooseToUse", "chooseToRespond"],
 		filter(event, player) {
-			if (event.responded || event.qiuwen_yzs) return false;
+			if (event.responded) return false;
 			var list = ["wuxie", "shan"];
 			if (!list.length) {
 				return false;
@@ -4128,7 +4128,7 @@ const skills = {
 				};
 			},
 			prompt(links, player) {
-				return "将1张手牌当做【" + get.translation(links[0][2]) + "】使用或打出";
+				return "将1张黑色手牌当做【" + get.translation(links[0][2]) + "】使用或打出";
 			},
 		},
 		mod: {
@@ -9704,7 +9704,7 @@ const skills = {
 		mod: {
 			playerEnabled(card, player, target) {
 				if (card?.storage?.Deeagorze_yzs) {
-					return target.hasSkill("dianjin_yzs_buff")
+					if (!target.hasSkill("dianjin_yzs_buff")) return false;
 				}
 			},
 		},

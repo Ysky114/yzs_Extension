@@ -309,7 +309,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		next.prompt = '选择任意名角色的牌';
 		next.filterCard = lib.filter.all;
 		next.filterOk = null;
-		next.force = false;
+		next.forced = false;
 		next.ai = null;
 		next.selectCardPerOwner = undefined;
 		next.selectCard = undefined;
@@ -324,7 +324,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (config.prompt) next.prompt = config.prompt;
 			if (config.filterCard) next.filterCard = config.filterCard;
 			if (config.filterOk) next.filterOk = config.filterOk;
-			if (config.force) next.force = config.force;
+			if (config.forced) next.forced = config.forced;
 			if (config.ai) next.ai = config.ai;
 			if (config.selectCardPerOwner !== undefined) {
 				next.selectCardPerOwner = config.selectCardPerOwner;
@@ -350,7 +350,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		const visible = event.visible;
 		const prompt = event.prompt || '选择牌';
 		const filterCard = event.filterCard || lib.filter.all;
-		const force = event.force || false;
+		const forced = event.forced || false;
 		const ai = event.ai || null;
 		const perOwnerCfg = event.selectCardPerOwner;
 		const totalCfg = event.selectCard;
@@ -502,7 +502,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		};
 
 		// 选牌
-		const chooseResult = await player.chooseButton(selectBtn, force, dialog)
+		const chooseResult = await player.chooseButton(selectBtn, forced, dialog)
 			.set('filterButton', filterButton)
 			.set('filterOk', filterOk)
 			.set('ai', ai)
@@ -524,7 +524,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				}
 			}
 			event.result = { bool: true, cards: finalCards, owners: finalOwners, targets: players };
-		} else if (autoCards.length > 0 && (!force || selectBtn[0] === 0)) {
+		} else if (autoCards.length > 0 && (!forced || selectBtn[0] === 0)) {
 			event.result = { bool: true, cards: autoCards, owners: autoOwners, targets: players };
 		} else {
 			event.result = { bool: false };
@@ -2280,6 +2280,216 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			}
 		}
 	];//允许死亡不结算游戏，能够复活的武将死亡不会直接结束游戏
+
+	//召唤封装(抄自扩展《五花米线》)
+	lib.element.player.yzs_addPlayerOL = function (target, character, character2, isNext, config = {}) {
+		const next = game.createEvent("addPlayer");
+		next.player = this;
+		next.target = target;
+		next.rawPairs = [character, character2];
+		next.isNext = isNext;
+		config.source ??= this;
+		config.sourceSkill ??= get.sourceSkillFor(get.event().name);
+		config.dieRemove ??= true;
+		config.startCards ??= 4;
+		config.noCheckResult ??= false;
+		for (const i in config) {
+			next[i] = config[i];
+		}
+		next.setContent("yzs_addPlayerOL");
+		return next;
+	};
+	lib.element.content.yzs_addPlayerOL = async function (event, trigger, player) {
+		const result = {};
+		event.result = result;
+		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub } = event;
+		const newPlayer = await game.addPlayerOL(target, ...rawPairs, isNext, { source, animate });
+		result.target = newPlayer;
+
+		if (isControl) {
+			game.addGlobalSkill("yzs_autoswap");
+			if (get.itemtype(isControl) == "player") {
+				newPlayer._trueMe = isControl;
+			} else {
+				newPlayer._trueMe = source || player;
+			}
+			game.broadcastAll(function (newPlayer, source) {
+				if (!_status.yzs_autoswap) {
+					_status.yzs_autoswap = {};
+				}
+				else {
+					if (!_status.yzs_autoswap[newPlayer.playerid]) _status.yzs_autoswap[newPlayer.playerid] = [newPlayer.playerid]
+					_status.yzs_autoswap[newPlayer.playerid].push(source.playerid);
+					if (!_status.yzs_autoswap[source.playerid]) _status.yzs_autoswap[source.playerid] = [source.playerid]
+					_status.yzs_autoswap[source.playerid].push(newPlayer.playerid)
+				}
+				newPlayer._trueMe = source;
+				source._trueMe = newPlayer;
+			}, newPlayer, source)
+		}
+		if (dieRemove) {
+			newPlayer.addSkill("yzs_dieRemove");
+		}
+		if (isSub) {
+			newPlayer.storage.isSub = true;
+		}
+		const cards = get.cards(startCards, true);
+		newPlayer.directgain(cards);
+		newPlayer._start_cards = cards;
+		game.broadcastAll((player, target, source, sourceSkill, identity, noCheckResult) => {
+			target._sourceSkill = sourceSkill;
+			if (!identity) {
+				identity = (target.identity = (identity => {
+					switch (identity) {
+						case "zhu":
+						case "mingzhong":
+							return "zhong";
+						case "zhu_false":
+							return "zhong_false";
+						case "bZhu":
+							return "bZhong";
+						case "rZhu":
+							return "rZhong";
+						default:
+							return identity || "yzs_fellow";
+					}
+				})(source.identity));
+			} else {
+				target.identity = identity;
+			}
+			if (!lib.translate[identity]) {
+				lib.translate[identity] = "仆";
+			}
+			target.setIdentity();
+			if (get.mode() == 'guozhan') {
+				if (target.name2 == undefined) wtw.name2 = wtw.name1;
+			}
+			if (source?.side || (game.me && game.me.side) || get.mode() == 'versus') {
+				target.side = source.side;
+				target.node.identity.firstChild.innerHTML = source.node.identity.firstChild.innerHTML;
+				target.node.identity.dataset.color = source.node.identity.dataset.color;
+			}
+			target.skillH = [];
+			target.storage.zhibi = [];
+			target.storage.stratagem_expose = [];
+			target.storage.stratagem_fury = 0;
+			if (typeof source.ai?.shown === "number" && target.ai) {
+				target.ai.shown = source.ai.shown;
+			}
+			if (typeof source.side == "boolean") {
+				target.side = source.side;
+				/*target.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;*/
+				target.node.identity.dataset.color = source.node.identity.dataset.color;
+			}
+			if (noCheckResult) {
+				target._noCheckResult = true;
+			}
+			if (_status.yzs_addPlayerOL) {
+				return;
+			}
+			_status.yzs_addPlayerOL = true;
+			//检测游戏胜负
+			if (typeof game.checkResult === "function") {
+				const origin_checkResult = game.checkResult;
+				game.checkResult = function () {
+					const player = game.me._trueMe || game.me;
+					if (game.players.every(i => i["_source"] == player || i == player)) {
+						game.over(true);
+					} else if (get.mode() == "single") {
+						if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+							game.over(false);
+						}
+						return;
+					}
+					return origin_checkResult.apply(this, arguments);
+				};
+			}
+			if (typeof game.checkOnlineResult === "function") {
+				const origin_checkOnlineResult = game.checkOnlineResult;
+				game.checkOnlineResult = function (player) {
+					if (player._noCheckResult) {
+						return false;
+					}
+					if (game.players.every(i => i["_source"] == player || i == player)) {
+						game.over(true);
+					} else if (get.mode() == "single") {
+						return false;
+					}
+					return origin_checkOnlineResult.apply(this, arguments);
+				};
+			}
+			//敌友判定
+			//实际上只是友方，敌方不用写
+			if (typeof lib.element.player.getFriends === "function") {
+				const origin_getFriends = lib.element.player.getFriends;
+				const getFriends = function (func, includeDie) {
+					const player = this;
+					return [...origin_getFriends.apply(this, arguments), ...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => (target["_source"] || target) === (player["_source"] || player))]
+						.filter(i => i !== player || func === true)
+						.unique()
+						.sortBySeat(player);
+				};
+				lib.element.player.getFriends = getFriends;
+				[...game.players, ...game.dead].forEach(i => (i.getFriends = getFriends));
+			}
+			if (typeof lib.element.player.isFriendOf === "function") {
+				const origin_isFriendOf = lib.element.player.isFriendOf;
+				const isFriendOf = function (player) {
+					if ((this["_source"] || this) === (player["_source"] || player)) {
+						return true;
+					}
+					return origin_isFriendOf.apply(this, arguments);
+				};
+				lib.element.player.isFriendOf = isFriendOf;
+				[...game.players, ...game.dead].forEach(i => (i.isFriendOf = isFriendOf));
+			}
+			if (typeof lib.element.player.getEnemies === "function") {
+				const origin_getEnemies = lib.element.player.getEnemies;
+				const getEnemies = function (func, includeDie) {
+					if (this["_source"]) {
+						return this["_source"].getEnemies(func, includeDie);
+					} else {
+						const player = this;
+						return [
+							...origin_getEnemies.apply(this, arguments),
+							...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => {
+								return origin_getEnemies.apply(this, arguments).includes(target["_source"] || target);
+							}),
+						]
+							.filter(i => player != (i["_source"] || i))
+							.unique()
+							.sortBySeat(player);
+					}
+				};
+				lib.element.player.getEnemies = getEnemies;
+				[...game.players, ...game.dead].forEach(i => (i.getEnemies = getEnemies));
+			}
+		}, player, newPlayer, source, sourceSkill, identity, noCheckResult);
+		if (callback) {
+			await callback(event, newPlayer);
+		}
+	};
+	lib.element.player.yzs_removePlayerOL=function(target, config = {}) {
+		const next = game.createEvent("removePlayer");
+		next.player = this;
+		next.forceDie = true;
+		next.forceOut = true;
+		next.target = target || this;
+		config.source ??= this;
+		for (const i in config) {
+			next[i] = config[i];
+		}
+		next.setContent("yzs_removePlayerOL");
+		return next;
+	}
+	lib.element.content.yzs_removePlayerOL = async function (event, trigger, player) {
+		const { target, source, animate, callback } = event;
+		delete _status.yzs_autoswap[target.playerid];
+		await game.removePlayerOL(target, { animate });
+		if (callback) {
+			await callback(event, newPlayer);
+		}
+	}
 
 	//领域展开
 	lib.element.player.yzs_ExpandDomain = function () {

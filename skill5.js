@@ -4367,21 +4367,7 @@ const skills = {
 					const result = player.countCards("h") > max ? await player.chooseCard("赤荆之翼", `尽可能将至多<font color="#fd5656">${Math.min(player.countMark("chijingzhiyi_yzs_used") + 1, 3)}</font>张手牌加入你的【生命之契】`, "h", max, true)
 						.set("ai", (card) => {
 							let player = _status.event.player
-							if (get.tag(trigger.card, "respondSha")) {
-								if (player.countCards("h", {
-									name: "sha"
-								}) === 0) return 8 - get.value(card)
-								if (ui.selected.cards.filter(c => c.name == "sha").length >= player.countCards("h", card => card.name == "sha")) return false
-							} else if (get.tag(trigger.card, "respondShan")) {
-								if (player.countCards("h", {
-									name: "shan"
-								}) === 0) return 8 - get.value(card)
-								if (ui.selected.cards.filter(c => c.name == "shan").length >= player.countCards("h", card => card.name == "shan")) return false
-							} else if (get.tag(trigger.card, "damage") && player.hp < 2) {
-								if (card.name == "tao") return false
-								if (card.name == "jiu") return false
-							}
-							return 8 - get.value(card)
+							return 8 - get.value(card,player)
 						}).forResult() : { bool: true, cards: player.getCards("h") }
 					if (result?.bool && result?.cards?.length) {
 						let next = player.addToExpansion(result.cards, player, "give")
@@ -4403,21 +4389,7 @@ const skills = {
 						const result = player.countCards("h") > max ? await player.chooseCard("赤荆之翼", `尽可能将至多<font color="#fd5656">${Math.min(player.countMark("chijingzhiyi_yzs_used") + 1, 3)}</font>张手牌加入你的【生命之契】`, "h", max, true)
 							.set("ai", (card) => {
 								let player = _status.event.player
-								if (get.tag(trigger.card, "respondSha")) {
-									if (player.countCards("h", {
-										name: "sha"
-									}) === 0) return 8 - get.value(card)
-									if (ui.selected.cards.filter(c => c.name == "sha").length >= player.countCards("h", card => card.name == "sha")) return false
-								} else if (get.tag(trigger.card, "respondShan")) {
-									if (player.countCards("h", {
-										name: "shan"
-									}) === 0) return 8 - get.value(card)
-									if (ui.selected.cards.filter(c => c.name == "shan").length >= player.countCards("h", card => card.name == "shan")) return false
-								} else if (get.tag(trigger.card, "damage") && player.hp < 2) {
-									if (card.name == "tao") return false
-									if (card.name == "jiu") return false
-								}
-								return 8 - get.value(card)
+								return 8 - get.value(card, player)
 							}).forResult() : { bool: true, cards: player.getCards("h") }
 						if (result?.bool && result?.cards?.length) {
 							let next = player.addToExpansion(result.cards, player, "give")
@@ -4638,190 +4610,7 @@ const skills = {
 					_status.zuzhouzhiwang_yzs_kill = true;
 					const pos = trigger.player;
 					game.addGlobalSkill("wtw_auto")
-					if (!_status.GojoSatoru_yzs) {
-						if (!game.checkResult_GojoSatoru_yzs) {
-							game.checkResult_GojoSatoru_yzs = game.checkResult;
-							game.checkResult = function () {
-								const all = game.players.concat(game.dead);
-								const origin_Onion = all.filter(i => i == pos)[0];//最初的洋葱怪人
-								if (!origin_Onion) {
-									//	const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-									const targets = game.players.filter(i => i.isNoPlayer_GojoSatoru_yzs);
-									//		const hasRemain = game.players.some(i => i.isNoPlayer_GojoSatoru_yzs);//是否还有剩余的洋葱怪人
-									game.players.removeArray(targets);
-									//	if (isDead && hasRemain) game.players.add(origin_Onion);
-									game.checkResult_GojoSatoru_yzs();
-									//			if (isDead && hasRemain) game.players.remove(origin_Onion);
-									game.players.addArray(targets);
-									return;
-								}
-								if (!origin_Onion.origin_isAlive) {
-									origin_Onion.origin_isAlive = origin_Onion.isAlive
-								}
-								origin_Onion.isAlive = function () {
-									if (game.players.includes(this)) {
-										return true;
-									}
-									return this.origin_isAlive()
-								}
-								const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-								const targets = game.players.filter(i => i.isNoPlayer_GojoSatoru_yzs);
-								const hasRemain = game.players.some(i => i.isNoPlayer_GojoSatoru_yzs);//是否还有剩余的洋葱怪人
-								game.players.removeArray(targets);
-								if (isDead && hasRemain) game.players.add(origin_Onion);
-								game.checkResult_GojoSatoru_yzs();
-								if (isDead && hasRemain) game.players.remove(origin_Onion);
-								game.players.addArray(targets);
-								origin_Onion.isAlive = origin_Onion.origin_isAlive;
-							};
-						}
-						if (!game.checkOnlineResult_OnionCells_yzs) {
-							game.checkOnlineResult_OnionCells_yzs = game.checkOnlineResult;
-							game.checkOnlineResult = function (player) {
-								const all = game.players.concat(game.dead);
-								const origin_Onion = all.filter(i => i.hasSkill("OnionCells_yzs"))[0];//最初的洋葱怪人
-								if (!origin_Onion.origin_isAlive) {
-									origin_Onion.origin_isAlive = origin_Onion.isAlive
-									origin_Onion.isAlive = function () {
-										if (game.hasPlayer(i => i.isNoPlayer_OnionCells_yzs)) return true;
-										return this.origin_isAlive()
-									}
-								}
-								const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-								const targets = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);
-								const hasRemain = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);//是否还有剩余的洋葱怪人
-								game.players.removeArray(targets);
-								if (isDead && hasRemain) game.players.add(origin_Onion);
-								game.checkOnlineResult_OnionCells_yzs();
-								if (isDead && hasRemain) game.players.remove(origin_Onion);
-								game.players.addArray(targets);
-								origin_Onion.isAlive = origin_Onion.origin_isAlive;
-							};
-						}
-						game.broadcastAll(() => {
-							if (_status.GojoSatoru_yzs) return;
-							if (!game.checkResult_GojoSatoru_yzs) {
-								game.checkResult_GojoSatoru_yzs = game.checkResult;
-								game.checkResult = function () {
-									const all = game.players.concat(game.dead);
-									const origin_Onion = all.filter(i => i == pos)[0];//最初的洋葱怪人
-									if (!origin_Onion.origin_isAlive) {
-										origin_Onion.origin_isAlive = origin_Onion.isAlive
-									}
-									origin_Onion.isAlive = function () {
-										if (game.players.includes(this)) {
-											return true;
-										}
-										return this.origin_isAlive()
-									}
-									const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-									const targets = game.players.filter(i => i.isNoPlayer_GojoSatoru_yzs);
-									const hasRemain = game.players.some(i => i.isNoPlayer_GojoSatoru_yzs);//是否还有剩余的洋葱怪人
-									game.players.removeArray(targets);
-									if (isDead && hasRemain) game.players.add(origin_Onion);
-									game.checkResult_GojoSatoru_yzs();
-									if (isDead && hasRemain) game.players.remove(origin_Onion);
-									game.players.addArray(targets);
-									origin_Onion.isAlive = origin_Onion.origin_isAlive;
-								};
-							}
-							if (!game.checkOnlineResult_OnionCells_yzs) {
-								game.checkOnlineResult_OnionCells_yzs = game.checkOnlineResult;
-								game.checkOnlineResult = function (player) {
-									const all = game.players.concat(game.dead);
-									const origin_Onion = all.filter(i => i.hasSkill("OnionCells_yzs"))[0];//最初的洋葱怪人
-									if (!origin_Onion.origin_isAlive) {
-										origin_Onion.origin_isAlive = origin_Onion.isAlive
-										origin_Onion.isAlive = function () {
-											if (game.hasPlayer(i => i.isNoPlayer_OnionCells_yzs)) return true;
-											return this.origin_isAlive()
-										}
-									}
-									const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-									const targets = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);
-									const hasRemain = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);//是否还有剩余的洋葱怪人
-									game.players.removeArray(targets);
-									if (isDead && hasRemain) game.players.add(origin_Onion);
-									game.checkOnlineResult_OnionCells_yzs();
-									if (isDead && hasRemain) game.players.remove(origin_Onion);
-									game.players.addArray(targets);
-									origin_Onion.isAlive = origin_Onion.origin_isAlive;
-								};
-							}
-							_status.GojoSatoru_yzs = true;
-						});
-						if (!_status.postReconnect.GojoSatoru_yzs) {
-							_status.postReconnect.GojoSatoru_yzs = [
-								function () {
-									if (_status.GojoSatoru_yzs) return;
-									if (!game.checkResult_GojoSatoru_yzs) {
-										game.checkResult_GojoSatoru_yzs = game.checkResult;
-										game.checkResult = function () {
-											const all = game.players.concat(game.dead);
-											const origin_Onion = all.filter(i => i == pos)[0];//最初的洋葱怪人
-											if (!origin_Onion.origin_isAlive) {
-												origin_Onion.origin_isAlive = origin_Onion.isAlive
-											}
-											origin_Onion.isAlive = function () {
-												if (game.players.includes(this)) {
-													return true;
-												}
-												return this.origin_isAlive()
-											}
-											const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-											const targets = game.players.filter(i => i.isNoPlayer_GojoSatoru_yzs);
-											const hasRemain = game.players.some(i => i.isNoPlayer_GojoSatoru_yzs);//是否还有剩余的洋葱怪人
-											game.players.removeArray(targets);
-											if (isDead && hasRemain) game.players.add(origin_Onion);
-											game.checkResult_GojoSatoru_yzs();
-											if (isDead && hasRemain) game.players.remove(origin_Onion);
-											game.players.addArray(targets);
-											origin_Onion.isAlive = origin_Onion.origin_isAlive;
-										};
-									}
-									if (!game.checkOnlineResult_OnionCells_yzs) {
-										game.checkOnlineResult_OnionCells_yzs = game.checkOnlineResult;
-										game.checkOnlineResult = function (player) {
-											const all = game.players.concat(game.dead);
-											const origin_Onion = all.filter(i => i.hasSkill("OnionCells_yzs"))[0];//最初的洋葱怪人
-											if (!origin_Onion.origin_isAlive) {
-												origin_Onion.origin_isAlive = origin_Onion.isAlive
-												origin_Onion.isAlive = function () {
-													if (game.hasPlayer(i => i.isNoPlayer_OnionCells_yzs)) return true;
-													return this.origin_isAlive()
-												}
-											}
-											const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-											const targets = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);
-											const hasRemain = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);//是否还有剩余的洋葱怪人
-											game.players.removeArray(targets);
-											if (isDead && hasRemain) game.players.add(origin_Onion);
-											game.checkOnlineResult_OnionCells_yzs();
-											if (isDead && hasRemain) game.players.remove(origin_Onion);
-											game.players.addArray(targets);
-											origin_Onion.isAlive = origin_Onion.origin_isAlive;
-										};
-									}
-									_status.GojoSatoru_yzs = true;
-								},
-								[],
-							];
-						}
-					}
 
-					if (!get.attitude_GojoSatoru_yzs) {
-						get.attitude_GojoSatoru_yzs = get.attitude;
-						get.attitude = function (from, to) {
-							if (from && from?.getStorage("GojoSatoru_yzs_source", false)) {
-								from = from.getStorage("GojoSatoru_yzs_source", false);
-							}
-							if (to && to?.getStorage("GojoSatoru_yzs_source", false)) {
-								to = to.getStorage("GojoSatoru_yzs_source", false);
-							}
-							let att = get.attitude_GojoSatoru_yzs(from, to);
-							return att;
-						};
-					}
 					game.broadcastAll(() => {
 						ui.backgroundMusic.pause();
 						var video = document.createElement("VIDEO");
@@ -4861,6 +4650,19 @@ const skills = {
 					});
 					await new Promise(r => setTimeout(r, 14000))
 					const wtw = await game.addPlayerOL(pos, "GojoSatoru_yzs", null, true);
+					if (!get.attitude_GojoSatoru_yzs) {
+						get.attitude_GojoSatoru_yzs = get.attitude;
+						get.attitude = function (from, to) {
+							if (from && from?.getStorage("GojoSatoru_yzs_source", false)) {
+								from = from.getStorage("GojoSatoru_yzs_source", false);
+							}
+							if (to && to?.getStorage("GojoSatoru_yzs_source", false)) {
+								to = to.getStorage("GojoSatoru_yzs_source", false);
+							}
+							let att = get.attitude_GojoSatoru_yzs(from, to);
+							return att;
+						};
+					}
 					game.broadcastAll((wtw) => {
 						wtw.isNoPlayer_GojoSatoru_yzs = true;
 						wtw.dieAfter2 = function () { };
@@ -6090,6 +5892,7 @@ const skills = {
 							}, 50)
 
 						});
+						await new Promise(r => setTimeout(r, 2000))
 					}
 				},
 				ai: {
@@ -6751,6 +6554,9 @@ const skills = {
 		},
 		filter(event, player) {
 			return !event.hasNature() && !event.player.isLinked();
+		},
+		check(event, player) {
+			return get.effect(event.player, { name: "tiesuo" }, event.player, player) > 0;
 		},
 		async content(event, trigger, player) {
 			await trigger.player.link(true);
@@ -7579,7 +7385,7 @@ const skills = {
 					_status.tempMusic = `ext:一中杀/audio/雨爱.mp3`;
 					game.playBackgroundMusic();
 					ui.backgroundMusic.addEventListener('ended', () => {
-						delete _status.tempMusic;
+						_status.tempMusic = `ext:一中杀/audio/AIZO.mp3`;
 						game.playBackgroundMusic();
 					}, { once: true });
 				});
@@ -8353,7 +8159,15 @@ const skills = {
 				.set("choiceList1", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(i => i = i+0.1))
 				.set("choiceList2", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(i => i = i + 0.2))
 				.set("choiceList3", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map(i => i = i + 0.3))
-				.set("ai", button => Math.random())
+				.set("ai", button => {
+					const player = get.player();
+					const cards = player.getCards("h", card => get.number(card, player) == button.link && player.hasUseTarget(card));
+					if (cards.length) {
+						const numbers = cards.map(card => get.number(card, player));
+						return Math.max(...numbers);
+					}
+					return Math.random();
+				})
 				.forResult();
 			if (result?.links?.length) {
 				let orders = result.links;
@@ -8389,7 +8203,7 @@ const skills = {
 					return false;
 				},
 				async content(event, trigger, player) {
-					const num = player.getStat("skill").toushezhoufa_yzs;
+					const num = player.countMark("toushezhoufa_yzs_mark");
 					if (typeof trigger.baseDamage != "number") trigger.baseDamage = 0;
 					trigger.baseDamage += num - 1;
 				}
@@ -8406,6 +8220,9 @@ const skills = {
 				},
 				check(event, player) {
 					return get.attitude(player, event.player) <= 0;
+				},
+				filter(event, player) {
+					return event.player != player;
 				},
 				async content(event, trigger, player) {
 					await trigger.player.useSkill("huizhen_yzs")
@@ -8459,6 +8276,10 @@ const skills = {
 					},index);
 					await player.draw(2)
 				}
+			},
+			mark: {
+				onremove: true,
+				charlotte:true,
 			}
 		},
 		nobracket: true,
@@ -8471,6 +8292,8 @@ const skills = {
 			return player.isPhaseUsing();
 		},
 		async content(event, trigger, player) {
+			player.addTempSkill("toushezhoufa_yzs_mark")
+			player.addMark("toushezhoufa_yzs_mark", 1, false);
 			await player.useSkill("huizhen_yzs")
 		},
 		mod: {

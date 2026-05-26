@@ -1,5 +1,25 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	cangyao_yzs(player) {
+		const index = player.countMark("cangyao_yzs_zhuanlun") % 3;
+		let str = `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
+    出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
+    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：`;
+		if (index == 0) {
+			str +=`<span class="bluetext">①摸1张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`
+		} else if (index == 1) {
+			str += `①摸1张牌 <span class="bluetext">②恢复1点体力</span> ③手牌点数+1（至多为K）。`
+		} else if (index == 2) {
+			str += `①摸1张牌 ②恢复1点体力 <span class="bluetext">③手牌点数+1（至多为K）</span>。`
+		}
+		return str;
+	},
+	tiandu_yzs(player) {
+		if (player.storage?.tiandu_yzs) {
+			return `转换技：你的判定牌亮出后，你可：①获得之<span class="bluetext">②打出手牌代替之</span>。`
+		}
+		return `转换技：你的判定牌亮出后，你可：<span class="bluetext">①获得之</span>②打出手牌代替之。`
+	},
 	wuxiaxian_yzs(player) {
 		if (player.countMark("yuzhe_yzs")) return lib.translate["wuxiaxian_yzs_lv2_info"];
 		return lib.translate["wuxiaxian_yzs_info"];
@@ -17,6 +37,10 @@ const dynamicTranslates = {
 		}
 		str += `]</small><br>额定回合结束后，你执行依次进行上述阶段的额外回合。`
 		return str;
+	},
+	toushezhoufa_yzs(player) {
+		return `你发动${get.poptip("huizhen_yzs")}时摸2张牌。<br>你对其他角色造成伤害时，可令其发动【绘帧】。<br>
+	你依顺序使用或打出完【绘帧】声明的点数后，可再次发动【绘帧】。<br>你的【杀】伤害为X(${player.countMark("toushezhoufa_yzs_mark")})（X为你本回合额外发动【绘帧】次数且至多为3）。`
 	},
 	ba_yzs(player) {
 		if (player.countMark("ba_yzs_weaken")) return `出牌阶段，你可视为使用无次数限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效。`
@@ -52,6 +76,14 @@ const dynamicTranslates = {
     <span style="opacity:0.5">出牌阶段结束时，若你召引过全部风暴或进入过濒死，你觉醒：此后你发动${get.poptip("WeatherReport_yzs")}无视“单目标”和“锦囊”条件。</span>`
 		return `觉醒技：场上角色于其出牌阶段外对你使用牌时，你可弃置1张基本牌以取消其中一个目标。<br>
     出牌阶段结束时，若你召引过全部风暴或进入过濒死，你觉醒：此后你发动${get.poptip("WeatherReport_yzs")}无视“单目标”和“锦囊”条件。`
+	},
+	mengliao_yzs(player) {
+		if (player.storage?.tiandu_yzs) {
+			return `一张牌被无效时，你可给予使用者1张手牌，令其恢复1点体力。<br>
+    转换技：①：出牌阶段限1次：你视为使用${get.poptip("mengliaoshibian_yzs")}；<span class="bluetext">②：受到伤害后，你可视为使用【梦疗事变】。</span>`
+		}
+		return `一张牌被无效时，你可给予使用者1张手牌，令其恢复1点体力。<br>
+    转换技：<span class="bluetext">①：出牌阶段限1次：你视为使用${get.poptip("mengliaoshibian_yzs")}；</span>②：受到伤害后，你可视为使用【梦疗事变】。`
 	},
 	mengmie_yzs(player) {
 		if (player.countMark("mengmie_yzs_awake")) return `出牌阶段开始时你摸已损体力值张牌，然后弃至多体力值张手牌，本阶段你出【杀】数为因此弃牌数。<br><span style="opacity:0.5">觉醒技：你进入濒死时或【梦疗事变】被无效后，你觉醒：你获得${get.poptip("huange_yzs")}并选择：①：失去【梦疗】并恢复全部体力；②：失去1点体力和体力上限。</span>`;
