@@ -1,16 +1,59 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	Guanjun_Chimera_yzs(player) {
+		let str = `锁定技：你可替“淫欲囚医-管郡”承受伤害。`
+		if (player.hasSkill("kuangbao_yzs_paoxiao")) str += `你使用【杀】无次数限制。`;
+		return str;
+	},
+	newLife_yzs(player) {
+		let str = `锁定技：你杀死角色后获得其全部手牌并恢复1点体力。然后你永久获得序数＝你杀死角色数项的效果：<br>`;
+		if (player.hasSkill("newLife_yzs_item1")) {
+			str+=`<font color="#ffb9ce">`
+		}
+		str +=`①：收藏Ⅰ：【弹药包】：你手牌上限+4。<br>`
+		if (player.hasSkill("newLife_yzs_item1")) {
+			str += `</font>`
+		}
+		if (player.hasSkill("newLife_yzs_item2")) {
+			str += `<font color="#ffb9ce">`
+		}
+		str += `②：收藏Ⅱ：【人头马】：你摸牌数+1。“${get.poptip("GuanjunServant_yzs")}”摸牌数+1。<br>`
+		if (player.hasSkill("newLife_yzs_item2")) {
+			str += `</font>`
+		}
+		if (player.hasSkill("newLife_yzs_item3")) {
+			str += `<font color="#ffb9ce">`
+		}
+		str += `③：收藏Ⅲ：【奇美拉】：出牌阶段限1次：（你与“${get.poptip("GuanjunChimera_yzs")}”共用此次数），你可将X名手牌总数为N的“${get.poptip("GuanjunServant_yzs")}”
+或“奇美拉”融合为新的“奇美拉”，融合所用的手牌作为新的“奇美拉”的初始手牌（X≥2，N≥5）。然后你移动此“奇美拉”至任意座次。<br>`
+		if (player.hasSkill("newLife_yzs_item3")) {
+			str += `</font>`
+		}
+		if (player.hasSkill("newLife_yzs_item4")) {
+			str += `<font color="#ffb9ce">`
+		}
+		str += `④：收藏Ⅳ：【贤者之石】：“奇美拉”复制你的全部技能。`
+		if (player.hasSkill("newLife_yzs_item4")) {
+			str += `</font>`
+		}
+		return str;
+	},
+	Guanjun_servant_yzs(player) {
+		let str = `锁定技：你无出、弃牌阶段。`
+		if (player.hasSkill("ciyuanzhimen_yzs_summon_damage")) str += `你无视非指向性伤害。`;
+		return str;
+	},
 	cangyao_yzs(player) {
 		const index = player.countMark("cangyao_yzs_zhuanlun") % 3;
 		let str = `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
     出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
     ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：`;
 		if (index == 0) {
-			str +=`<span class="bluetext">①摸1张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`
+			str +=`<span class="bluetext">①摸2张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`
 		} else if (index == 1) {
-			str += `①摸1张牌 <span class="bluetext">②恢复1点体力</span> ③手牌点数+1（至多为K）。`
+			str += `①摸2张牌 <span class="bluetext">②恢复1点体力</span> ③手牌点数+1（至多为K）。`
 		} else if (index == 2) {
-			str += `①摸1张牌 ②恢复1点体力 <span class="bluetext">③手牌点数+1（至多为K）</span>。`
+			str += `①摸2张牌 ②恢复1点体力 <span class="bluetext">③手牌点数+1（至多为K）</span>。`
 		}
 		return str;
 	},

@@ -31,7 +31,7 @@ const characters = {
 
 	HuangJOJO_yzs: {
 		sex: "male",
-		group: "qun",
+		group: "jin",
 		hp: 4,
 		skills: ["nengliyoudaxiao_yzs", "huangjinzhixing_yzs"],
 		names: "建军",
@@ -115,7 +115,7 @@ const characters = {
 
 	wuyingYFY_yzs: {
 		sex: "male",
-		group: "wei",
+		group: "jin",
 		hp: 3,
 		skills: ["wuying_yzs", "shadowattack_yzs", "kill_yzs", "toutianhuanri_yzs"],
 		names: "翼飞羽",
@@ -165,7 +165,7 @@ const characters = {
 
 	AngryFeng_yzs: {
 		sex: "male",
-		group: "wei",
+		group: "jin",
 		hp: 4,
 		maxHp: 6,
 		skills: ["brokenheart_yzs", "yotouFeng_yzs", "yotouXi_yzs"],
@@ -352,7 +352,7 @@ const characters = {
 
 	Qianmian_Limu_yzs: {
 		sex: "male",
-		group: "wei",
+		group: "jin",
 		hp: 3,
 		skills: ["aoman_yzs", "qianmian_yzs", "tiance_yzs", "shenzhiyishou_yzs"],
 		names: "李暮",
@@ -362,7 +362,7 @@ const characters = {
 
 	Fern_yzs: {
 		sex: "female",
-		group: "wei",
+		group: "jin",
 		hp: 3,
 		skills: ["Zoltraak_yzs", "Defend_yzs", "suyin_yzs"],
 		names: "菲伦",
@@ -404,7 +404,7 @@ const characters = {
 
 	NatsukiSubaru_yzs: {
 		sex: "male",
-		group: "qun",
+		group: "jin",
 		hp: 4,
 		skills: ["nuoruo_yzs", "monvdeyuxiang_yzs", "siwanghuigui_yzs"],
 		names: "菜月昴",
@@ -811,7 +811,7 @@ const characters = {
 
 	OnionMan_yzs: {
 		sex: "male",
-		group: "qun",
+		group: "shu",
 		hp: 3,
 		skills: ["OnionCells_yzs", "Quirk_yzs","Absurd_yzs"],
 		names: "任瑞",
@@ -888,7 +888,7 @@ const characters = {
 
 	AomanSzy_yzs: {
 		sex: "male",
-		group: "qun",
+		group: "jin",
 		hp: 4,
 		skills: ["aoman_yzs", "jisu_yzs"],
 		names: "颂终弈",
@@ -1383,7 +1383,7 @@ const characters = {
 		sex: "male",
 		group: "wei",
 		hp: 10,
-		skills: ["SixEyes_yzs", "wuxiaxianshushi_yzs", "xushici_yzs", "fanzhuanshushi_yzs", "wuliangkongchu_yzs"],
+		skills: ["SixEyes_yzs", "wuxiaxianshushi_yzs", "xushici_yzs", "fanzhuanshushi_yzs", "wuliangkongchu_yzs","challenger_yzs"],
 		names: "五条悟",
 		img: "extension/一中杀/image/GojoSatoru_yzs.png",
 		BGM: "AIZO",
@@ -1425,7 +1425,7 @@ const characters = {
 	GunTwins_yzs: {
 		sex: "double",
 		group: "shu",
-		hp: 3,
+		hp: 4,
 		skills: ["gongming_yzs", "kuangji_yzs","feidan_yzs"],
 		names: "阳&曦",
 		img: "extension/一中杀/image/GunTwins_yzs.png",
@@ -1470,6 +1470,8 @@ const characters = {
 		names: "王千",
 		img: "extension/一中杀/image/WangQian_yzs.png",
 		dieAudios: ["ext:一中杀/audio/die/WangQian_yzs.mp3"],
+		DamageAudio: 3,
+		DamageAudio2: 2,
 	},
 
 	QianmianDoll_yzs: {
@@ -1479,9 +1481,82 @@ const characters = {
 		skills: ["Qianmiankui_yzs"],
 		names: "李暮",
 		img: "extension/一中杀/image/QianmianDoll_yzs.png",
-		dieAudios: ["ext:一中杀/audio/die/QianmianDoll_yzs.mp3"],
+		dieAudios: ["ext:一中杀/audio/die/Qianmian_Limu_yzs.mp3"],
 		isUnseen: true,
-	}
+	},
+
+	FushiguroToji_yzs: {
+		sex: "male",
+		group: "jin",
+		hp: 6,
+		skills: ["ziqi_yzs", "tianyubaojun_yzs"],
+		names: "伏黑甚尔",
+		img: "extension/一中杀/image/FushiguroToji_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/FushiguroToji_yzs.mp3"],
+		BGM: "AIZO",
+	},
+
+	Guanjun_yzs: {
+		sex: "female",
+		group: "qun",
+		hp: 4,
+		skills: ["newLife_yzs", "PinkAnesthesia_yzs", "mixiang_yzs","CharmingCommand_yzs"],
+		names: "管郡",
+		img: "extension/一中杀/image/Guanjun_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/Guanjun_yzs.mp3"],
+		DamageAudio: 3,
+		DamageAudio2: 2,
+	},
+
+	GuanjunServant_yzs1: {
+		sex: "male",
+		group: "qun",
+		hp: 1,
+		skills: ["Guanjun_servant_yzs"],
+		names: "仆从",
+		img: "extension/一中杀/image/GuanjunServant_yzs1.png",
+		isUnseen: true,
+	},
+
+	GuanjunServant_yzs2: {
+		sex: "male",
+		group: "qun",
+		hp: 1,
+		skills: ["Guanjun_servant_yzs"],
+		names: "仆从",
+		img: "extension/一中杀/image/GuanjunServant_yzs2.png",
+		isUnseen: true,
+	},
+
+	GuanjunServant_yzs3: {
+		sex: "male",
+		group: "qun",
+		hp: 1,
+		skills: ["Guanjun_servant_yzs"],
+		names: "仆从",
+		img: "extension/一中杀/image/GuanjunServant_yzs3.png",
+		isUnseen: true,
+	},
+
+	newLifeChimera_yzs: {
+		sex: "none",
+		group: "qun",
+		hp: 3,
+		skills: ["Guanjun_Chimera_yzs"],
+		names: "奇美拉",
+		img: "extension/一中杀/image/newLifeChimera_yzs.png",
+		isUnseen: true,
+	},
+
+	newLifeChimera_yzs1: {
+		sex: "none",
+		group: "qun",
+		hp: 3,
+		skills: ["Guanjun_Chimera_yzs","kuangbao_yzs_paoxiao"],
+		names: "奇美拉",
+		img: "extension/一中杀/image/newLifeChimera_yzs1.png",
+		isUnseen: true,
+	},
 };
 
 const characterSubstitutes = {
@@ -1628,7 +1703,9 @@ const characterTitles = {
 	Tanya_yzs: `莱茵的恶魔`,
 	KunYee_yzs: `蓝之勇者`,
 	WangQian_yzs: `纵偶少女`,
-	QianmianDoll_yzs:`千面傀儡`,
+	QianmianDoll_yzs: `千面傀儡`,
+	FushiguroToji_yzs: `不羁争强的狂兽`,
+	Guanjun_yzs:`淫欲囚医`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1747,10 +1824,13 @@ const characterIntros = {
 	ZeninNaoya_yzs: `禅院直哉是日本漫画《咒术回战》及其衍生作品中的角色，由声优游佐浩二配音。出身咒术界御三家之一的禅院家，担任组织“炳”的首领，为家主禅院直毘人之子，伏黑惠需称呼禅院直哉为叔叔，拥有特别1级术师资格。金发美男子造型，眼角上挑佩戴多枚耳钉，常穿黑色宽袖羽织搭配阔领衬衫与浅色宽松袴裤。TV动画第三季“死灭回游 前篇”于2026年1月8日首播，其角色PV中自称禅院家族长。作为禅院家嫡子，性格傲慢嚣张跋扈且蔑视女性，曾当面评价真希真依姐妹身材长相，长期欺凌堂妹真希姐妹。继承术式“投射咒法”可将1秒分割为24等份操控对手行动，在动画第三季与胀相的战斗中展现CGI渲染的现代视觉效果，其边战斗边撩头发的原创动作成为网络爆火梗图模板。蜕变为咒灵后获得3马赫音速移动能力。涉谷事变后成为新任家主，主张刺杀伏黑惠以解决禅院家危机。追击虎杖悠仁时被乙骨忧太击败并定下交易：以谎报虎杖死亡换取反转术式治疗。2026年冬季动画最受欢迎男角色排名中位列第五名，在官方人气投票中也获得第五名。后在禅院真希灭门禅院家的过程中与觉醒天予咒缚的真希对决，在企图突破极限速度击败真希的过程中被真希击碎下颚。重伤后被真希之母从背后刺杀，死后化为诅咒进入死灭回游樱岛结界复仇。因误判真希无咒力的特性而在展开领域“时胞月宫殿”时被彻底消灭。其死亡标志着禅院家守旧势力的瓦解，终结了自身对伏黑甚尔盲目崇拜的执念`,
 	GunTwins_yzs: ``,
 	YoungGojo_yzs:`五条悟，日本漫画《咒术回战》及其衍生作品中的角色，特级咒术师，御三家之一五条家嫡子及家族实质代行者，东京都立咒术高等专门学校一年级班主任，现代最强咒术师`,
-	Tanya_yzs: `谭雅·冯·提古雷查夫（ターニャ・フォン・デグレチャフ），是日本小说家カルロ・ゼン所著轻小说《幼女战记》及其衍生作品中的主人公。性别女，生日9月24日，年龄13岁，金色头发、蓝色眼眸（祈祷时转为金色）。配音包括悠木碧（日语TV）、鸟海浩辅（日语TV，前世）、Monica Rial（英语）、Leonard Hohm（德语，前世）等多语言声优。别名“白银”“莱茵的恶魔”“帝国军魔导师中最危险的存在”等，曾任帝国军第二〇三航空魔导大队大队长，军衔从少校晋升至准将。其前世为日本精英上班族，是绝对理性的唯物主义者、坚定的合理主义无神论者，因意外死亡后被神明转生为异世界幼女。为摆脱贫困加入帝国军，以第二名成绩提前军官学校毕业，凭借艾连穆姆九五式宝珠与战术能力成为王牌魔导师。主导组建参谋本部直属的第二〇三航空魔导大队，主导达基亚公国首都空袭等战役，13岁率部击溃六十万达基亚军并俘虏高级将官 [1-2]。统一历1926年率部在南方大陆发起攻打共和国军残党的战役，后因联邦国境出现大规模动员征兆而扩大战果。因作战风格残酷且部队拥有独立行动权，部分军官视其为“战争狂”，但其自称追求安全的后方职位。该角色以幼女外貌与冷酷战略形成强烈反差，战场表现屡获银翼突击章等荣誉。其思维模式与现代合理主义者身份，使其与帝国军传统军官产生根本性差异。在与联合王国主导的多国籍义勇军对抗中，遭遇为父复仇的玛丽·苏准尉`,
+	Tanya_yzs: `谭雅·冯·提古雷查夫（ターニャ・フォン・デグレチャフ），是日本小说家カルロ・ゼン所著轻小说《幼女战记》及其衍生作品中的主人公。性别女，生日9月24日，年龄13岁，金色头发、蓝色眼眸（祈祷时转为金色）。配音包括悠木碧（日语TV）、鸟海浩辅（日语TV，前世）、Monica Rial（英语）、Leonard Hohm（德语，前世）等多语言声优。别名“白银”“莱茵的恶魔”“帝国军魔导师中最危险的存在”等，曾任帝国军第二〇三航空魔导大队大队长，军衔从少校晋升至准将。其前世为日本精英上班族，是绝对理性的唯物主义者、坚定的合理主义无神论者，因意外死亡后被神明转生为异世界幼女。为摆脱贫困加入帝国军，以第二名成绩提前军官学校毕业，凭借艾连穆姆九五式宝珠与战术能力成为王牌魔导师。主导组建参谋本部直属的第二〇三航空魔导大队，主导达基亚公国首都空袭等战役，13岁率部击溃六十万达基亚军并俘虏高级将官。统一历1926年率部在南方大陆发起攻打共和国军残党的战役，后因联邦国境出现大规模动员征兆而扩大战果。因作战风格残酷且部队拥有独立行动权，部分军官视其为“战争狂”，但其自称追求安全的后方职位。该角色以幼女外貌与冷酷战略形成强烈反差，战场表现屡获银翼突击章等荣誉。其思维模式与现代合理主义者身份，使其与帝国军传统军官产生根本性差异。在与联合王国主导的多国籍义勇军对抗中，遭遇为父复仇的玛丽·苏准尉`,
 	KunYee_yzs: ``,
 	WangQian_yzs: `——仰慕着上一代“千面”的人偶师，王千，让自己的杰作戴上了千面面具。`,
 	QianmianDoll_yzs:`——由此，人偶被赋予了灵魂，成为拥有李暮记忆的完美傀儡。`,
+	FushiguroToji_yzs: `“不是早就把自尊心舍弃了吗？”<br>伏黑甚尔，原名禅院甚尔，是漫画《咒术回战》及其衍生作品中的角色，由子安武人配音。他出身于咒术界御三家之一的禅院家，因天生无咒力而遭受家族歧视，后脱离家族入赘伏黑家，成为伏黑惠之父、伏黑津美纪的继父，并以“术师杀手”闻名。其肉体因天与咒缚获得超越常人的运动能力与咒力耐性，且零咒力的特性使其能自由出入结界而不被感知。伏黑甚尔早年因无咒力被禅院家虐待，嘴角疤痕系幼年被扔进咒灵堆所致，脱离家族后从事赏金猎杀工作。怀玉篇中接受暗杀星浆体委托，通过悬赏令削弱五条悟，最终重创五条悟并击杀天内理子，被觉醒反转术式的五条悟以虚式“茈”击杀。临死前将儿子伏黑惠托付给五条悟，避免其被禅院家掌控。涉谷事变中其肉体被降灵复生为“天与暴君”，认出伏黑惠后选择自裁以保护儿子。伏黑甚尔凭借完全0咒力的天与咒缚打破因果循环，其介入直接改变了咒术界的命运轨迹，成为死灭回游中天元提及后续祸事的转折点。禅院直毘人曾出价十亿日元购买其子伏黑惠的继承权。`,
+	Guanjun_yzs: `因美丽之罪遭受人们疯狂追求的她逐渐厌倦了人类。错误地触碰了炼金之禁术后，她无可救药地迷上了死亡与新生。”——炼金祖师绪山鹏程`,
+	newLifeChimera_yzs: `偏僻的村庄中，流传着这样的传说：外出晚归的男子会遇见一个面目惨白、绝美的女性，此时，他若被其魅惑，很快就会成为扭曲之物的一部分。<br>“管郡，该收手了，结束你的罪孽就是我生的理由。”                  ——绪山双月鸟`,
 
 };
 const characterReplaces = {
@@ -1767,7 +1847,7 @@ const characterSort = {
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
 		"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "jianSheng_yzs", "RenEmperor_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs",
-		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs","KinMiho_yzs"],
+		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs","Guanjun_yzs"],
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
@@ -1775,7 +1855,7 @@ const characterSort = {
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs",],
-	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs","YoungGojo_yzs"],
+	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs","FushiguroToji_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs", "RyomenSukuna_yzs","GojoSatoru_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

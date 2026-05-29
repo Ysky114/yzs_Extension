@@ -4798,7 +4798,6 @@ const skills = {
 							player.$fullscreenpop("茈", "thunder", false, false)
 						}, 17500)
 					});
-					wtw.addSkill("challenger_yzs")
 					wtw.addSkill("rg_treasure_ban")
 					await new Promise(r => setTimeout(r, 16000))
 					wtw.playEffectOL(lib.skill.xushici_yzs.Effect, player);
@@ -6569,16 +6568,20 @@ const skills = {
 		skillAnimation: true,
 		animationColor: "thunder",
 		trigger: {
-			global: "phaseEnd",
+			global: "phaseBefore",
+			player: "enterGame",
 		},
 		forced: true,
+		filter(event, player) {
+			return true
+		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
 			player.removeSkill(event.name)
 			game.broadcastAll(function (current) {
 				ui.background.setBackgroundImage('extension/一中杀/image/background/challenger_yzs.png');
 			}, player)
-			player.insertPhase();
+			if (trigger.name == "phase" && game.phaseNumber !== 0)player.insertPhase();
 		},
 	},
 	wtw_auto: {
@@ -6678,21 +6681,6 @@ const skills = {
 			},
 			revive: {
 				audio: "ext:一中杀/audio/skill:2",
-				forced: true,
-				forceDie: true,
-				priority: 13,
-				trigger: {
-					player: "reviveEnd"
-				},
-				async content(event, trigger, player) {
-					if (player.name != "GojoSatoru_yzs") return;
-					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs.png");
-					}, player)
-					for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
-						target.chat("真的假的？")
-					}
-				}
 			},
 		},
 		init: function (player, skill) {
@@ -6738,18 +6726,40 @@ const skills = {
 			ban: {
 				charlotte: true,
 			},
+			revive: {
+				audio:"SixEyes_yzs_revive",
+				forced: true,
+				forceDie: true,
+				priority: 13,
+				trigger: {
+					player: ["reviveEnd","recoverEnd"]
+				},
+				async content(event, trigger, player) {
+					if (player.hp <= 0) return false;
+					if (player.name != "GojoSatoru_yzs") return;
+					if (!player.countMark("wuxiaxianshushi_yzs_die")) return;
+					player.clearMark("wuxiaxianshushi_yzs_die",false)
+					game.broadcastAll(function (current) {
+						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs.png");
+					}, player)
+					for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
+						target.chat("真的假的？")
+					}
+				}
+			},
 			die: {
 				forceDie: true,
 				forced: true,
 				popup: false,
 				priority: -21314,
 				trigger: {
-					player: "die",
+					player: "dieBegin",
 				},
 				filter(event, player) {
 					return player.name == "GojoSatoru_yzs" && event.source && event.source.isAlive();
 				},
 				async content(event, trigger, player) {
+					player.addMark("wuxiaxianshushi_yzs_die",1,false)
 					game.broadcastAll(function (current) {
 						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs_die.png");
 					}, player)
@@ -6839,7 +6849,7 @@ const skills = {
 		nobracket: true,
 		priority: 12,
 		init: function (player, skill) {
-			player.addSkill("wuxiaxianshushi_yzs_die");
+			player.addSkill("wuxiaxianshushi_yzs_die","wuxiaxianshushi_yzs_revive");
 		},
 		trigger: {
 			player: "damageBegin3"
@@ -6871,7 +6881,14 @@ const skills = {
 			next.set("selectCard", [1, trigger.num])
 			next.set("prompt", str)
 			next.set("ai", card => {
-				return 6 - get.value(card);
+				const player = get.event().player;
+				let value = 6 - get.value(card);
+				if (!player.isTempBanned("SixEyes_yzs") && player.hasSkill("SixEyes_yzs")) {
+					if (get.itemtype(_status.pileTop) == "card" && get.suit(card, player) == get.suit(_status.pileTop)) {
+						value += 10;
+					}
+				}
+				return value;
 			})
 			next.set("chooseonly", true)
 			event.result = await next.forResult();
@@ -7990,6 +8007,10 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					player.removeSkill("shuangzizhoufu_yzs_awake")
+					game.broadcastAll(() => {
+						_status.tempMusic = `ext:一中杀/audio/AIZO.mp3`;
+						game.playBackgroundMusic();
+					});
 				}
 			}
 		},
@@ -8222,6 +8243,7 @@ const skills = {
 					return get.attitude(player, event.player) <= 0;
 				},
 				filter(event, player) {
+					if (event.player.getStorage("huizhen_yzs")) return false;
 					return event.player != player;
 				},
 				async content(event, trigger, player) {
@@ -8700,6 +8722,8 @@ const skills = {
 				},
 				preHidden: true,
 				filter(event, player) {
+					const target = trigger.player;
+					if (!target.countCards("he")) return false;
 					let evt = event.getParent(2);
 					if (evt?.name == "feidan_yzs") {
 						return game.hasPlayer(cur=>!cur.hasSkill("hidden_yzs")&&cur.countCards("h"))
@@ -8707,8 +8731,9 @@ const skills = {
 					return false;
 				},
 				async cost(event, trigger, player) {
+					const target= trigger.player;
 					event.result = {bool:false}
-					const result = await player.yzs_chooseMultiPlayerCard()
+					/*let result = await player.yzs_chooseMultiPlayerCard()
 						.set("filterCard", (card) => {
 							const player2 = get.player();
 							const mod2 = game.checkMod(card, player2, "unchanged", "cardEnabled2", player2);
@@ -8744,7 +8769,74 @@ const skills = {
 								return result - val;
 							}
 							return -result - val;
-						}).set("judging", trigger.player.judging[0]).setHiddenSkill(event.skill).forResult();
+						}).set("judging", trigger.player.judging[0]).setHiddenSkill(event.skill).forResult();*/
+					let result = player == target ? await player.chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "he", card => {
+						const player = get.player();
+						const mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
+						if (mod2 != "unchanged") {
+							return mod2;
+						}
+						const mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
+						if (mod != "unchanged") {
+							return mod;
+						}
+						return true;
+					})
+						.set("ai", card => {
+							const trigger = get.event().getTrigger();
+							const { player, judging } = get.event();
+							const result = trigger.judge(card) - trigger.judge(judging);
+							const attitude = get.attitude(player, trigger.player);
+							let val = get.value(card);
+							if (get.subtype(card) == "equip2") {
+								val /= 2;
+							} else {
+								val /= 4;
+							}
+							if (attitude == 0 || result == 0) {
+								return 0;
+							}
+							if (attitude > 0) {
+								return result - val;
+							}
+							return -result - val;
+						})
+						.set("judging", trigger.player.judging[0])
+						.forResult()
+						: await player.choosePlayerCard(target, "he", `${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "he")
+							.set("filterButton", card => {
+								const player = get.player();
+								const mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
+								if (mod2 != "unchanged") {
+									return mod2;
+								}
+								const mod = game.checkMod(card, player, "unchanged", "cardRespondable", player);
+								if (mod != "unchanged") {
+									return mod;
+								}
+								return true;
+							})
+							.set("ai", card => {
+								const trigger = get.event().getTrigger();
+								const { player, judging } = get.event();
+								const result = trigger.judge(card) - trigger.judge(judging);
+								const attitude = get.attitude(player, trigger.player);
+								let val = get.value(card);
+								if (get.subtype(card) == "equip2") {
+									val /= 2;
+								} else {
+									val /= 4;
+								}
+								if (attitude == 0 || result == 0) {
+									return 0;
+								}
+								if (attitude > 0) {
+									return result - val;
+								}
+								return -result - val;
+							})
+							.set("judging", trigger.player.judging[0])
+							.forResult()
 					if (result?.bool&&result?.cards?.length) {
 						event.result = {bool:true,cards:result.cards}
 					}
@@ -8790,7 +8882,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			if (player.countCards("j")) {
-				let result = await player.chooseTarget("绯弹", "你可令任意角色执行【闪电】判定，判定牌生效前你可选择任意角色1张手牌代替", false)
+				let result = await player.chooseTarget("绯弹", "你可令任意角色执行【闪电】判定，判定牌生效前你可选择其1张牌代替", false)
 					.set("filterTarget", (card, player, target) => {
 						return !target.hasSkill("hidden_yzs");
 					})
@@ -8865,7 +8957,7 @@ const skills = {
 								player.storage.wuxiaxianshushi_yzs = [get.number(trigger.card)];
 								player.markSkill("wuxiaxianshushi_yzs")
 								if (!player.hasSkill("wuxiaxian_yzs_He") && player.countMark("yuzhe_yzs")) {
-									player.addTempSkill("wuxiaxian_yzs_He")
+									player.addSkill("wuxiaxian_yzs_He")
 									game.trySkillAudio("wuxiaxianshushi_yzs");
 									player.popup("赫")
 									player.$draw(1);
@@ -8880,7 +8972,7 @@ const skills = {
 								player.storage.wuxiaxianshushi_yzs = [get.number(trigger.card)];
 								player.markSkill("wuxiaxianshushi_yzs")
 								if (!player.hasSkill("wuxiaxian_yzs_Cang")) {
-									player.addTempSkill("wuxiaxian_yzs_Cang")
+									player.addSkill("wuxiaxian_yzs_Cang")
 									game.trySkillAudio("wuxiaxianshushi_yzs");
 									player.popup("苍")
 									player.$draw(1);
@@ -8893,10 +8985,34 @@ const skills = {
 				},
 			},
 			Cang: {
-				charlotte:true,
+				charlotte: true,
+				priority: 1324,
+				forced: true,
+				popup: false,
+				trigger: {
+					player:"phaseBegin"
+				},
+				filter(event, player) {
+					return !event.skill
+				},
+				async content(event, trigger, player) {
+					player.removeSkill(event.name)
+				}
 			},
 			He: {
-				charlotte:true,
+				charlotte: true,
+				priority: 1324,
+				forced: true,
+				popup: false,
+				trigger: {
+					player: "phaseBegin"
+				},
+				filter(event, player) {
+					return !event.skill
+				},
+				async content(event, trigger, player) {
+					player.removeSkill(event.name)
+				}
 			},
 			lv2: {
 				charlotte:true,
@@ -8950,20 +9066,36 @@ const skills = {
 		},
 	},
 	yuzhe_yzs: {
-		group: ["yuzhe_yzs_awake"],
+		group: ["yuzhe_yzs_awake","yuzhe_yzs_dying"],
 		derivation: ["wuxiaxian_yzs_lv2", "fanzhuanshushi_yzs", "xushici_yzs"],
 		subSkill: {
+			dying: {
+				forced: true,
+				popup: false,
+				priority: 33,
+				audio: "ext:一中杀/audio/skill:1",
+				trigger: {
+					player:"dying"
+				},
+				filter(event, player) {
+					if (player.countMark("yuzhe_yzs_dying")) return false;
+					return player.name == "YoungGojo_yzs" && event.source?.name =="FushiguroToji_yzs"
+				},
+				async content(event, trigger, player) {
+					player.addMark("yuzhe_yzs_dying",1,false)
+					game.trySkillAudio("yuzhe_yzs_dying")
+				}
+			},
 			awake: {
 				forced: true,
 				skillAnimation: true,
 				animationColor: "thunder",
 				priority: 321,
-				audio: "ext:一中杀/audio/skill:1",
 				trigger: {
 					player:"useCardAfter"
 				},
 				filter(event, player) {
-					return event.card?.storage?.yuzhe_yzs && !player.isDying() && !_status.dying.includes(player);
+					return event.card?.storage?.yuzhe_yzs && !player.isDying() && !_status.dying.includes(player)
 				},
 				async content(event, trigger, player) {
 					player.awakenSkill(event.name);
@@ -8971,7 +9103,21 @@ const skills = {
 						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/YoungGojo_yzs2.png");
 					}, player)
 					player.awakenSkill('yuzhe_yzs');
-					player.addMark("yuzhe_yzs",1,false)
+					player.addMark("yuzhe_yzs", 1, false)
+					if (game.hasPlayer(cur => cur.name == "FushiguroToji_yzs") && player.name == "YoungGojo_yzs") {
+						let toji = game.filterPlayer(cur => cur.name == "FushiguroToji_yzs")
+						toji[0].chat("真的假的？")
+						game.broadcastAll((current) => {
+							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake.MP3");
+							setTimeout(() => {
+								game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+							}, 8000)
+						}, player);
+					} else {
+						game.broadcastAll((current) => {
+							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+						})
+					}
 					await player.addSkill(['fanzhuanshushi_yzs',"xushici_yzs"]);
 				}
 			}

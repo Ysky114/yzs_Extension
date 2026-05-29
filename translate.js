@@ -169,7 +169,14 @@ const translates = {
 	Tanya_yzs: `谭雅`,
 	KunYee_yzs: `昆伊`,
 	WangQian_yzs: `王千`,
-
+	QianmianDoll_yzs: `李暮`,
+	FushiguroToji_yzs: `伏黑甚尔`,
+	Guanjun_yzs: `管郡`,
+	GuanjunServant_yzs1: `仆从`,
+	GuanjunServant_yzs2: `仆从`,
+	GuanjunServant_yzs3: `仆从`,
+	newLifeChimera_yzs: `奇美拉`,
+	newLifeChimera_yzs1:`奇美拉`,
 
     // 技能台词
 
@@ -1225,7 +1232,7 @@ const translates = {
 	然后你展示任意角色的全部手牌并令其将其中的黑色牌依次当做普通【杀】对你使用，然后你依次移去全部【鸦印】。`,
 
 	mixiang_yzs: `迷香`,
-	mixiang_yzs_info: `转换技：需要时，你可视为使用或打出：①【闪】②【无懈可击】。`,
+	mixiang_yzs_info: `转换技：需要时，你可视为使用或打出：<span class="bluetext">①【闪】</span> ②【无懈可击】。`,
 	jingjue_yzs: `警觉`,
 	jingjue_yzs_info:`每回合限1次：你使用非伤害牌后，可弃置1名角色1张牌，然后若其攻击范围包含你，刷新本技能。`,
 	shuyu_yzs: `赎愈`,
@@ -1694,7 +1701,7 @@ const translates = {
 	huizhen_yzs: `绘帧`,
 	huizhen_yzs_info: `出牌阶段开始时，你可声明你接下来使用或打出的3张牌的点数顺序，则你不依顺序使用或打出牌时，清除顺序且本回合不可再使用或打出牌。`,
 	toushezhoufa_yzs: `投射咒法`,
-	toushezhoufa_yzs_info: `你发动${get.poptip("huizhen_yzs")}时摸2张牌。<br>你对其他角色造成伤害时，可令其发动【绘帧】。<br>
+	toushezhoufa_yzs_info: `你发动${get.poptip("huizhen_yzs")}时摸2张牌。<br>你对其他角色造成伤害时，若其未有声明点数，可令其发动【绘帧】。<br>
 	你依顺序使用或打出完【绘帧】声明的点数后，可再次发动【绘帧】。<br>你的【杀】伤害为X（X为你本回合额外发动【绘帧】次数且至多为3）。`,
 
 	gongming_yzs: `共鸣`,
@@ -1704,15 +1711,15 @@ const translates = {
 	kuangji_yzs_info: `弃牌阶段若你本阶段弃牌，记录其中花色，本回合你使用花色记录过的牌无次数距离限制，然后移除对应记录；
 	若否，你可将1张♠手牌当做${get.poptip("kuangchangbaozha_yzs")}使用，然后摸1张牌。`,
 	feidan_yzs: `绯弹`,
-	feidan_yzs_info:`判定阶段若你延时区有牌，你可令任意角色执行【闪电】判定，判定牌生效前你可打出任意角色1张手牌代替；
+	feidan_yzs_info:`判定阶段若你延时区有牌，你可令任意角色执行【闪电】判定，其本次判定牌生效前，你可打出其1张牌代替；
 	若否，本阶段结束时，你可将1张♥手牌当做${get.poptip("xianzheyuyan_yzs")}使用。`,
 
 	wuxiaxian_yzs: `无下限`,
 	wuxiaxian_yzs_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
-每回合限1次：你连续使用点数严格递减的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}（X为中断前连续使用的牌数）。`,
+每自轮限1次：你连续使用点数严格递减的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}（X为中断前连续使用的牌数）。`,
 	wuxiaxian_yzs_lv2: `无下限`,
 	wuxiaxian_yzs_lv2_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
-每回合各限1次：你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
+每自轮各限1次：你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
 	yuzhe_yzs: `玉折`,
 	yuzhe_yzs_info: `觉醒技：你发动过${get.poptip("wuxiaxian_yzs")}的回合内，你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
 
@@ -1721,29 +1728,53 @@ const translates = {
 	shenyu_yzs: `神谕`,
 	shenyu_yzs_info: `锁定技：你使用♠牌无次数距离限制。<br>结束阶段，你摸2张牌，然后判定【闪电】。`,
 	tiandu_yzs: `天妒`,
-	tiandu_yzs_info: `转换技：你的判定牌亮出后，你可：①获得之；②打出手牌代替之。`,
+	tiandu_yzs_info: `转换技：你的判定牌亮出后，你可：<span class="bluetext">①获得之</span>；②打出手牌代替之。`,
 
 	cangyao_yzs: `苍耀`,
 	cangyao_yzs_info: `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
     出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
-    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：①摸1张牌 ②恢复1点体力 ③手牌点数+1（至多为K）。`,
+    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：<span class="bluetext">①摸2张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`,
 	zhenjian_yzs: `振剑`,
-	zhenjian_yzs_info: `你需响应牌时，可将【杀】当做【闪】或【无懈可击】使用或打出，然后摸1张牌。若响应的牌未指定你为目标，本回合本技能失效。`,
+	zhenjian_yzs_info: `你需响应牌时，可将【杀】当做【闪】或【无懈可击】使用或打出。若响应的牌未指定你为目标，本回合本技能失效。`,
 	cangxingzhan_yzs: `苍星斩`,
-	cangxingzhan_yzs_info: `出牌阶段，你可将【杀】当做【过河拆桥】使用，然后目标角色视为对你使用【决斗】。若此牌对你造成了伤害，本回合本技能失效。 `,
+	cangxingzhan_yzs_info: `出牌阶段，你可将【杀】当做【过河拆桥】使用，然后目标角色视为对你使用【决斗】。若之对其他角色造成了伤害，本回合本技能失效。 `,
 
 	xuansi_yzs: `悬丝`,
-	xuansi_yzs_info: `锁定技：准备阶段，若“${get.poptip("QianmianDoll_yzs")}”不在场，你可翻面，然后召唤其至任意座次。`,
+	xuansi_yzs_info: `锁定技：准备阶段，若“${get.poptip("xuansi_yzs_QianmianDoll_yzs")}”不在场，你可翻面，然后召唤其至任意座次。`,
 	tianmou_yzs: `天谋`,
 	tianmou_yzs_info: `其他角色使用即时牌指定目标时，你可依次重铸1张与之牌名、点数、花色相同的手牌，然后依次发动前重铸牌数项：<br>
 <font color="#adbeff">①弃置任意角色1张手牌</font> <font color="#ffb1b7">②为之增加或取消1个目标</font> <font color="#adbeff">③获得之</font>。`,
 	chaoyuezhishou_yzs: `超越之手`,
 	chaoyuezhishou_yzs_info: `你即将死亡时，可令1名其他角色翻面。<br>
-    出牌阶段限2次：你与1名手牌数之差≤2的角色交换手牌，手牌数减少的一方<font color="#ffb1b7">恢复1点体力</font>或<font color="#adbeff">视为对对方使用普通【杀】</font>。`,
+    出牌阶段限1次：你与1名手牌数之差≤2的角色交换手牌，手牌数减少的一方<font color="#ffb1b7">恢复1点体力</font>或<font color="#adbeff">视为对对方使用普通【杀】</font>。`,
 
 	Qianmiankui_yzs: `千面傀`,
 	Qianmiankui_yzs_info:`锁定技：你登场时或回合开始时，选择其他角色的1个通常技，你复制之至你下一回合开始或死亡。<br>
     <font color="#ffb1b7">“王千”</font>或<font color="#adbeff">“千面傀儡”</font>的出牌阶段限1次：其可令二者之一失去1点体力，然后令二者之一：摸2张牌、本回合手牌上限视为4。`,
+
+	ziqi_yzs: `自弃`, 
+	ziqi_yzs_info:`锁定技：游戏开始时和你的出牌阶段结束时，你将1张手牌当做【乐不思蜀】对自己使用。<br>
+    你的黑色【杀】视为【借刀杀人】。<br>你造成或受到伤害时，本技能本回合失效。`,
+
+	newLife_yzs: `新生！`,
+	newLife_yzs_info: `锁定技：你杀死角色后获得其全部手牌并恢复1点体力。然后你永久获得序数＝你杀死角色数项的效果：<br>
+①：收藏Ⅰ：【弹药包】：你手牌上限+4。<br>
+②：收藏Ⅱ：【人头马】：你摸牌数+1。“${get.poptip("GuanjunServant_yzs")}”摸牌数+1。<br>
+③：收藏Ⅲ：【奇美拉】：每公轮你与“${get.poptip("GuanjunChimera_yzs")}”共限1次，出牌阶段，你可将X名手牌总数为N的“${get.poptip("GuanjunServant_yzs")}”
+或“奇美拉”融合为新的“奇美拉”，融合所用的手牌作为新的“奇美拉”的初始手牌（X≥2，N≥5）。然后你移动此“奇美拉”至任意座次。<br>
+④：收藏Ⅳ：【贤者之石】：“奇美拉”复制你的全部技能。`,
+	PinkAnesthesia_yzs: `桃色麻醉`,
+	PinkAnesthesia_yzs_info: `锁定技：出牌阶段，你可召唤1名“${get.poptip("GuanjunServant_yzs")}”至任意座次并给予其任意张手牌，然后结束本阶段并可对其发动${get.poptip("CharmingCommand_yzs")}。
+若给出牌数≥3，其获得${get.poptip("mixiang_yzs")}且无视非指向性伤害。`,
+	CharmingCommand_yzs: `魅惑指令`,
+	CharmingCommand_yzs_info:`出牌阶段限1次：你正面向上给予其他角色1张黑色手牌，然后其选择：<br>
+	①：${get.poptip("sing_yzs")}1：摸1张牌，然后失去本吟唱。②：吟唱1：被你杀死。`,
+
+	Guanjun_servant_yzs: `为奴`,
+	Guanjun_servant_yzs_info: `锁定技：你无出、弃牌阶段。`,
+
+	Guanjun_Chimera_yzs: `奇美拉`,
+	Guanjun_Chimera_yzs_info:`锁定技：你可替“淫欲囚医-管郡”承受伤害。`,
 };
 
 export default translates;

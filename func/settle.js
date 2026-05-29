@@ -250,8 +250,19 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		info: `十种影法术中的最强式神，拥有适应万物的能力。`,
 	});
 	lib.poptip.add({
-		id: "QianmianDoll_yzs",
+		id: "xuansi_yzs_QianmianDoll_yzs",
 		name: "千面傀儡",
-		info: `"纵偶少女-王千"的专属召唤物，初始体力值为2，手牌数为4。可以如同其他玩家一般出牌，拥有技能${get.poptip("Qianmiankui_yzs")}`,
+		info: `"纵偶少女-王千"的专属召唤物，由王千操作，初始体力值为2，手牌数为4。可以如同其他玩家一般出牌，拥有技能${get.poptip("Qianmiankui_yzs")}`,
+	});
+	lib.poptip.add({
+		id: "GuanjunServant_yzs",
+		name: "仆从",
+		info: `"淫欲囚医-管郡"的专属召唤物，由管郡操作，初始体力值为1，无初始手牌，无出、弃牌阶段`,
+	});
+	lib.poptip.add({
+		id: "GuanjunChimera_yzs",
+		name: "奇美拉",
+		info: `"淫欲囚医-管郡"的专属召唤物，由管郡操作，可以如同其他玩家一般出牌。<br>初始体力值为融合角色数+1且至多为5，摸牌数为融合角色数。<br>
+		若融合角色数+融合牌数≥12，“奇美拉”使用【杀】无次数限制。<br>场上至多同时存在1名“奇美拉”。`,
 	});
 }

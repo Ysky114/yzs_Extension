@@ -2293,6 +2293,8 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		config.dieRemove ??= true;
 		config.startCards ??= 4;
 		config.noCheckResult ??= false;
+		config.isSub ??= true;
+		config.noDieAfter2 ??= true;
 		for (const i in config) {
 			next[i] = config[i];
 		}
@@ -2302,7 +2304,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.element.content.yzs_addPlayerOL = async function (event, trigger, player) {
 		const result = {};
 		event.result = result;
-		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub } = event;
+		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub, noDieAfter2 } = event;
 		const newPlayer = await game.addPlayerOL(target, ...rawPairs, isNext, { source, animate });
 		result.target = newPlayer;
 
@@ -2317,18 +2319,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				if (!_status.yzs_autoswap) {
 					_status.yzs_autoswap = {};
 				}
-				else {
-					if (!_status.yzs_autoswap[newPlayer.playerid]) _status.yzs_autoswap[newPlayer.playerid] = [newPlayer.playerid]
-					_status.yzs_autoswap[newPlayer.playerid].push(source.playerid);
-					if (!_status.yzs_autoswap[source.playerid]) _status.yzs_autoswap[source.playerid] = [source.playerid]
-					_status.yzs_autoswap[source.playerid].push(newPlayer.playerid)
-				}
-				newPlayer._trueMe = source;
-				source._trueMe = newPlayer;
+				if (!_status.yzs_autoswap[source.playerid]) _status.yzs_autoswap[source.playerid] = [source.playerid]
+				_status.yzs_autoswap[source.playerid].push(newPlayer.playerid)
+				if (!_status.yzs_autoswap[newPlayer.playerid]) _status.yzs_autoswap[newPlayer.playerid] = _status.yzs_autoswap[source.playerid]
+				_status.yzs_autoswap[newPlayer.playerid].push(newPlayer.playerid);
+
 			}, newPlayer, source)
 		}
 		if (dieRemove) {
 			newPlayer.addSkill("yzs_dieRemove");
+		}
+		if (noDieAfter2) {
+			newPlayer.dieAfter2 = function () { }
 		}
 		if (isSub) {
 			newPlayer.storage.isSub = true;
@@ -2489,6 +2491,181 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		if (callback) {
 			await callback(event, newPlayer);
 		}
+	};
+	game.removePlayerOL = async function (player, config = {}) {
+		if (get.itemtype(player) != "player") {
+			return;
+		}
+		const cards = player.getCards("hejsx");
+		if (cards.length) {
+			game.log(player, "将", cards, "置入弃牌堆");
+			await player.lose(cards, ui.discardPile).set("_triggered", null);
+		}
+		const players = game.players.concat(game.dead);
+		if (player.getSeatNum() > 0) {
+			const seatNum = player.getSeatNum();
+			players.forEach((value) => {
+				if (value.getSeatNum() > seatNum) {
+					value.setSeatNum(value.getSeatNum() - 1);
+				}
+			});
+		}
+		const ClientElement = lib.element.Client;
+		if (player.ws instanceof ClientElement || player == game.me) {
+			const ws = player.ws;
+			lib.node?.observing?.push(ws);
+			delete player.ws;
+			if (!ui.removeObserve && lib.node?.observing?.length) {
+				ui.removeObserve = ui.create.system(
+					"移除旁观",
+					function () {
+						lib.configOL.observe = false;
+						if (game.onlineroom) {
+							game.send("server", "config", lib.configOL);
+						}
+						while (lib.node.observing.length) {
+							lib.node.observing.shift().ws.close();
+						}
+						this.remove();
+						delete ui.removeObserve;
+					},
+					true,
+					true
+				);
+			}
+		}
+		if (_status.connectMode) {
+			delete lib.playerOL[player.playerid];
+		}
+		if (_status.currentPhase == player) {
+			const evt = get.event().getParent("phaseLoop", true)
+			if (evt) {
+				evt.player = player.previousSeat
+			}
+		}
+		const removePlayer = async (player2, config2, configOL) => {
+			let { animate } = config2;
+			if (_status.roundStart == player2) {
+				_status.roundStart = player2.next || player2.getNext() || game.players[0];
+			}
+			player2.style.left = `${player2.getLeft()}px`;
+			player2.style.top = `${player2.getTop()}px`;
+			if (player2.isAlive()) {
+				player2.next.previous = player2.previous;
+				player2.previous.next = player2.next;
+			}
+			player2.nextSeat.previousSeat = player2.previousSeat;
+			player2.previousSeat.nextSeat = player2.nextSeat;
+			game.players.remove(player2);
+			game.dead.remove(player2);
+			if (animate == false) {
+				animate = () => new Promise((resolve) => {
+					resolve();
+				});
+			}
+			animate ??= function (player3) {
+				const rect = player3.getBoundingClientRect();
+				const shardCount = 30;
+				const container = player3.parentElement;
+				const list = [];
+				for (let i = 0; i < shardCount; i++) {
+					const shard = document.createElement("div");
+					shard.style.cssText = `
+                        position: absolute;
+                        pointer-events: none;
+                        background: #e0f7fa;
+                        border: 1px solid #222;
+                        z-index: 100;
+                    `;
+					const size = Math.random() * 15 + 5;
+					shard.style.width = `${size}px`;
+					shard.style.height = `${size}px`;
+					shard.style.left = `50%`;
+					shard.style.top = `50%`;
+					player3.appendChild(shard);
+					const destinationX = (Math.random() - 0.5) * 500;
+					const destinationY = (Math.random() - 0.5) * 500;
+					const rotation = Math.random() * 720 - 360;
+					list.push(
+						shard.animate(
+							[
+								{
+									transform: "translate(0, 0) rotate(0deg) scale(1)",
+									opacity: 1
+								},
+								{
+									transform: `translate(${destinationX}px, ${destinationY}px) rotate(${rotation}deg) scale(0)`,
+									opacity: 0
+								}
+							],
+							{
+								duration: 1e3 + Math.random() * 500,
+								easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+								fill: "forwards"
+							}
+						).finished.then(() => shard.remove())
+					);
+				}
+				const animation = player3.animate(
+					[
+						{ transform: "scale(1)", filter: "brightness(1) grayscale(0)", opacity: 1 },
+						{ transform: "scale(1.1)", filter: "brightness(2) grayscale(1)", opacity: 0.5, offset: 0.2 },
+						{ transform: "scale(0.8)", filter: "brightness(0) grayscale(1)", opacity: 0 }
+					],
+					{
+						duration: 1e3,
+						fill: "forwards"
+					}
+				).finished;
+				list.push(animation);
+				return Promise.all(list);
+			};
+			await animate(player2).then(() => {
+				player2.classList.add("dead");
+				player2.classList.add("out");
+				player2.style.display = "none";
+				player2.delete();
+				const players2 = game.players.concat(game.dead);
+				const position = parseInt(player2.dataset.position);
+				players2.forEach((value) => {
+					if (parseInt(value.dataset.position) > position) {
+						value.dataset.position = parseInt(value.dataset.position) - 1;
+					}
+				});
+				ui.arena.setNumber(parseInt(ui.arena.dataset.number) - 1);
+				player2.removed = true;
+				if (player2 == game.me) {
+					const func = (player3, config3) => {
+						game.swapPlayer(game.players.find((i) => i != player3));
+						const replacePlayer = function (e) {
+							if (!_status.auto || !game.notMe) {
+								return;
+							}
+							game.swapPlayer(this || e.target.parentElement);
+						};
+						game.players.forEach((p) => p.addEventListener(lib.config.touchscreen ? "touchend" : "click", replacePlayer));
+						game.notMe = true;
+						_status.auto = true;
+						if (game.online) {
+							if (!config3.observe_handcard) {
+								ui.arena.classList.add("observe");
+							}
+							game.observe = true;
+						}
+					};
+					func(player2, configOL);
+					ui.auto.hide();
+					ui.wuxie.hide();
+				}
+				setTimeout(() => {
+					player2.removeAttribute("style");
+				}, 500);
+			});
+		};
+		game.broadcast(removePlayer, player, config, get.copy(lib.configOL));
+		await removePlayer(player, config, get.copy(lib.configOL));
+		player.dieAfter();
+		return player;
 	}
 
 	//领域展开
