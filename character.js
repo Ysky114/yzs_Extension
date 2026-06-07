@@ -1,6 +1,6 @@
 /** @type { importCharacterConfig[`character`] } */
 const characters = {
-	Enrico_Pucci_yzs: {
+	MadeInHeaven_EnricoPucci_yzs: {
 		sex: "male",
 		group: "wei",
 		hp: 4,
@@ -8,7 +8,8 @@ const characters = {
 		isUnseen: true,
 		skills: ["speedup_yzs", "create_newworld_yzs"],
 		names: "恩里克普奇",
-		img: "extension/一中杀/image/Enrico_Pucci_yzs.png",
+		img: "extension/一中杀/image/MadeInHeaven_EnricoPucci_yzs.png",
+		BGM: "Crucified",
 	},
 
 	YouBeier_yzs: {
@@ -574,6 +575,8 @@ const characters = {
 		skills: ["SSF_determination_yzs", "SixSouls_yzs", "SSF_Nightmare_yzs"],
 		names: "六魂花",
 		img: "extension/一中杀/image/SSF_Nightmare_yzs.gif",
+		isBoss: true,
+		isBossAllowed:true,
 	},
 
 	FailedFlowey_yzs: {
@@ -1355,6 +1358,8 @@ const characters = {
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
+		isBoss: true,
+		isBossAllowed: true,
 	},
 
 	Makora_yzs: {
@@ -1376,6 +1381,8 @@ const characters = {
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
+		isBoss: true,
+		isBossAllowed: true,
 	//	isUnseen: true,
 	},
 
@@ -1557,11 +1564,33 @@ const characters = {
 		img: "extension/一中杀/image/newLifeChimera_yzs1.png",
 		isUnseen: true,
 	},
+
+	WhiteSnake_EnricoPucci_yzs: {
+		sex: "male",
+		group: "jin",
+		hp: 4,
+		skills: ["choudie_yzs", "miyu_yzs"],
+		names: "恩里克 普奇",
+		img: "extension/一中杀/image/WhiteSnake_EnricoPucci_yzs.png",
+		BGM: "Crucified",
+	},
+
+	CMoon_EnricoPucci_yzs: {
+		sex: "male",
+		group: "wu",
+		hp: 4,
+		skills: ["Gravity_yzs", "Gravity_yzs_limited","Singularity_yzs"],
+		names: "恩里克 普奇",
+		img: "extension/一中杀/image/CMoon_EnricoPucci_yzs.png",
+		BGM: "Crucified",
+		isUnseen: true,
+	},
 };
 
 const characterSubstitutes = {
 };
 const characterTitles = {
+	MadeInHeaven_EnricoPucci_yzs:`神父·天堂制造`,
 	YouBeier_yzs: "近乎无所不切的魔法",
 	LU_Captain_xiangsiniao_yzs:"奖励队长",
 	HuangJOJO_yzs:"黄JOJO",
@@ -1705,7 +1734,9 @@ const characterTitles = {
 	WangQian_yzs: `纵偶少女`,
 	QianmianDoll_yzs: `千面傀儡`,
 	FushiguroToji_yzs: `不羁争强的狂兽`,
-	Guanjun_yzs:`淫欲囚医`,
+	Guanjun_yzs: `淫欲囚医`,
+	WhiteSnake_EnricoPucci_yzs: `神父·白蛇`,
+	CMoon_EnricoPucci_yzs:`神父·新月`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1831,7 +1862,8 @@ const characterIntros = {
 	FushiguroToji_yzs: `“不是早就把自尊心舍弃了吗？”<br>伏黑甚尔，原名禅院甚尔，是漫画《咒术回战》及其衍生作品中的角色，由子安武人配音。他出身于咒术界御三家之一的禅院家，因天生无咒力而遭受家族歧视，后脱离家族入赘伏黑家，成为伏黑惠之父、伏黑津美纪的继父，并以“术师杀手”闻名。其肉体因天与咒缚获得超越常人的运动能力与咒力耐性，且零咒力的特性使其能自由出入结界而不被感知。伏黑甚尔早年因无咒力被禅院家虐待，嘴角疤痕系幼年被扔进咒灵堆所致，脱离家族后从事赏金猎杀工作。怀玉篇中接受暗杀星浆体委托，通过悬赏令削弱五条悟，最终重创五条悟并击杀天内理子，被觉醒反转术式的五条悟以虚式“茈”击杀。临死前将儿子伏黑惠托付给五条悟，避免其被禅院家掌控。涉谷事变中其肉体被降灵复生为“天与暴君”，认出伏黑惠后选择自裁以保护儿子。伏黑甚尔凭借完全0咒力的天与咒缚打破因果循环，其介入直接改变了咒术界的命运轨迹，成为死灭回游中天元提及后续祸事的转折点。禅院直毘人曾出价十亿日元购买其子伏黑惠的继承权。`,
 	Guanjun_yzs: `因美丽之罪遭受人们疯狂追求的她逐渐厌倦了人类。错误地触碰了炼金之禁术后，她无可救药地迷上了死亡与新生。”——炼金祖师绪山鹏程`,
 	newLifeChimera_yzs: `偏僻的村庄中，流传着这样的传说：外出晚归的男子会遇见一个面目惨白、绝美的女性，此时，他若被其魅惑，很快就会成为扭曲之物的一部分。<br>“管郡，该收手了，结束你的罪孽就是我生的理由。”                  ——绪山双月鸟`,
-
+	WhiteSnake_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`, 
+	CMoon_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
 };
 const characterReplaces = {
 };
@@ -1842,7 +1874,7 @@ const characterSort = {
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
-		"Tanya_yzs", "KunYee_yzs","WangQian_yzs"],
+		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs","WhiteSnake_EnricoPucci_yzs"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",

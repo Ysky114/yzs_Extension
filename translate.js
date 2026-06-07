@@ -12,7 +12,7 @@ const translates = {
 	SCPPack_yzs:`SCP`,
 	BOSSPack_yzs: "BOSS包",
 	SpecialPack_yzs:`彩蛋`,
-	Enrico_Pucci_yzs: "恩里克 普奇",
+	MadeInHeaven_EnricoPucci_yzs: "恩里克 普奇",
 	YouBeier_yzs: "尤贝尔",
 	LU_Captain_xiangsiniao_yzs: "向思鸟",
 	HuangJOJO_yzs: "建军",
@@ -176,7 +176,9 @@ const translates = {
 	GuanjunServant_yzs2: `仆从`,
 	GuanjunServant_yzs3: `仆从`,
 	newLifeChimera_yzs: `奇美拉`,
-	newLifeChimera_yzs1:`奇美拉`,
+	newLifeChimera_yzs1: `奇美拉`,
+	WhiteSnake_EnricoPucci_yzs: `恩里克 普奇`,
+	CMoon_EnricoPucci_yzs:`恩里克 普奇`,
 
     // 技能台词
 
@@ -1417,14 +1419,24 @@ const translates = {
     其他角色受到非零伤害时，若伤害来源不为你，你可弃置全部手牌（至少1张），然后无效之并受到伤害来源造成的等量点伤害。`,
 
 	BladeDemon_yzs: `剑魔`,
-	BladeDemon_yzs_info: `锁定技：你体力值变动至≤1时，转换人物牌至“${get.poptip("BDXiangSiniao_yzs")}”，然后恢复体力值至1并重置${get.poptip("BloodFeast_yzs")}。`,
+	BladeDemon_yzs_info: `锁定技：你体力值变动至≤1时，转换人物牌至“${get.poptip({
+		id: "character_BDXiangSiniao_yzs",
+		name: "向思尼奥",
+		type: "character",
+		dialog: "characterDialog",
+	})}”，然后恢复体力值至1并重置${get.poptip("BloodFeast_yzs")}。`,
 	BloodFeast_yzs: `血宴`,
 	BloodFeast_yzs_info: `锁定技：你摸牌数-2、出【杀】数-1。<br>每自轮限1次：${get.poptip("wuyongchang_yzs")}：发动序数等于你体力值的项的效果：<br>
 ①：恢复1点体力并制作1枚${get.poptip("Totem_yzs")}；<br>②：恢复或失去1点体力，然后摸2张牌；<br>③：调整手牌数至上限，然后失去1点体力。`,
 	BloodCovenant_yzs: `血契`,
 	BloodCovenant_yzs_info: `出牌阶段限1次：你令任意角色发动其中一项，然后你发动另一项：<br>①：摸X张牌，然后你失去1点体力；<br>②：弃X张手牌。<br>（X为你体力值）`,
 	DemonBlade_yzs: `魔剑`,
-	DemonBlade_yzs_info: `锁定技：你体力值变动至≥3时，转换人物牌至“${get.poptip("BDCheTianke_yzs")}”并重置${get.poptip("BloodFeast_yzs")}。<br>
+	DemonBlade_yzs_info: `锁定技：你体力值变动至≥3时，转换人物牌至“${get.poptip({
+		id: "character_BDCheTianke_yzs",
+		name: "车天可",
+		type: "character",
+		dialog: "characterDialog",
+	})}”并重置${get.poptip("BloodFeast_yzs")}。<br>
     你使用【杀】无次数限制。你造成伤害后恢复等量点体力。`,
 
 	ExFighting_yzs: `极限格斗`,
@@ -1774,7 +1786,37 @@ const translates = {
 	Guanjun_servant_yzs_info: `锁定技：你无出、弃牌阶段。`,
 
 	Guanjun_Chimera_yzs: `奇美拉`,
-	Guanjun_Chimera_yzs_info:`锁定技：你可替“淫欲囚医-管郡”承受伤害。`,
+	Guanjun_Chimera_yzs_info: `锁定技：你可替“淫欲囚医-管郡”承受伤害。`,
+
+	choudie_yzs: `抽碟`,
+	choudie_yzs_disc_backup:`光碟`,
+	choudie_yzs_info: `锁定技：每回合你首次指定每名角色为目标后，抽取游戏外1张人物牌暗置于你人物牌旁，称为${get.poptip("choudie_yzs_disc")}。<br>
+    你可于对应时机移去【碟】，然后发动其上1个通常技。`,
+	choudie_yzs_skill:`光碟`,
+	choudie_yzs_disc: `碟`,
+	choudie_yzs_disc_info:`持有者出牌阶段可移去任意张【碟】以检索等量张锦囊牌`,
+	miyu_yzs: `密语`,
+	miyu_yzs_info:`锁定技：你每回合使用或打出第质数张牌时摸1张牌。<br>
+    觉醒技：回合结束后，若你本局已使用过14张锦囊牌，你觉醒：你恢复全部体力、本局摸牌数+1、然后更换人物牌至${get.poptip({
+		id: "character_CMoon_EnricoPucci_yzs",
+		name: "神父·新月",
+		type: "character",
+		dialog: "characterDialog",
+	})}。`,
+
+	Gravity_yzs: `重力`,
+	Gravity_yzs_info: ` 锁定技：场上角色计算距离时仅可往下家方向计算。<br>你对其他角色造成伤害后可令其翻面。<br>
+    限定技：每回合开始时，你可摸2张牌，然后反转回合执行顺序。你获得${get.poptip("Singularity_yzs_position")}后刷新本技能。`,
+	Singularity_yzs: `奇点`,
+	Singularity_yzs_info: `觉醒技：你登场时，令一号位角色获得${get.poptip("Singularity_yzs_position")}标记。<br>
+	每回合结束时，若你持有【位置】，你觉醒：恢复全部体力、本局摸牌数+1、更换人物牌至${get.poptip({
+		id: "character_MadeInHeaven_EnricoPucci_yzs",
+		name: "神父·天堂制造",
+		type: "character",
+		dialog: "characterDialog",
+	})}并执行额定回合。`,
+	Singularity_yzs_position: `位置`,
+	Singularity_yzs_position_info:`持有者造成或受到伤害或死亡时，将本标记移至其上家`,
 };
 
 export default translates;

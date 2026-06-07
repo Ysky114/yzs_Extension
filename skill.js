@@ -291,20 +291,7 @@ const skills = {
 	//普奇神父·天堂制造
 	"speedup_yzs": {
 		group: ["speedup_yzs_Begin"],
-		unique: true,
-		LastDo: true,
-		direct: true,
-		init: function (player) {
-			if (!player.storage.speedup_yzs_x) {
-				player.storage.speedup_yzs_x = 0;
-				player.markSkill("speedup_yzs_x");
-			}
-			if (!player.storage.phasenum) {
-				player.storage.phasenum = 0;
-				player.markSkill("phasenum");
-
-			}
-		},
+		priority:-322,
 		subSkill: {
 			Begin: {
 				popup: false,
@@ -316,10 +303,7 @@ const skills = {
 					return !event.skill
 				},
 				content: function () {
-					++player.storage.speedup_yzs_x;
-					player.storage.phasenum = player.storage.speedup_yzs_x;
-					player.markSkill("speedup_yzs_x");
-					player.markSkill("phasenum");
+					player.addMark("speedup_yzs",1,false)
 				},
 				sub: true,
 				sourceSkill: "speedup_yzs",
@@ -329,11 +313,13 @@ const skills = {
 		trigger: {
 			player: "phaseAfter",
 		},
-		content: () => {
-			while (player.storage.phasenum > 0) {
+		filter(event, player) {
+			return player.countMark("speedup_yzs") > 0;
+		},
+		async content(event, trigger, player) {
+			const num = player.countMark("speedup_yzs")
+			for (let i = 0; i < num; i++) {
 				player.insertPhase().skill = "speedup_yzs";
-				player.storage.phasenum--;
-				player.markSkill("phasenum");
 			}
 		},
 		"_priority": 0,

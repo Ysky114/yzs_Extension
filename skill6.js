@@ -1030,13 +1030,14 @@ const skills = {
 	tianmou_yzs: {
 		priority: -1,
 		trigger: {
-			global: "useCardToPlayer",
+			global: "useCard",
 		},
 		audio: "ext:一中杀/audio/skill:7",
 		filter(event, player) {
 			if (event.player == player) return false;
 			if (get.type(event.card) != "basic" && get.type(event.card) != "trick") return false;
 			if (!player.hasCard((card) => player.canRecast(card), "h")) return false;
+			if (!event.targets?.length) return false;
 			return true;
 		},
 		async cost(event, trigger, player) {
@@ -1267,8 +1268,8 @@ const skills = {
 			if (!equal && big && small) {
 				let result = await big.chooseTarget(`你可<font color="#ffb1b7">恢复1点体力</font>或<font color="#adbeff">视为对 ${get.translation(small)} 使用普通【杀】</font>`)
 					.set("filterTarget", (card, player, target) => {
-						if (!get.event().targets.includes(target)) return false;
-						if (target == player) return false;
+						if (!get.event().targetx.includes(target)) return false;
+						if (target == player) return true;
 						return player.canUse({ name: "sha", isCard: true }, target, false, false)
 					})
 					.set("ai", target => {
@@ -1278,15 +1279,16 @@ const skills = {
 					})
 					.set("onChooseTarget", function () {
 						const player = get.event().player;
+						const event = get.event();
 						event.targetprompt2.add(target => {
 							if (!target.classList.contains("selectable")) {
 								return;
 							}
-							if (target == player) return "回血";
-							return "出杀";
+							if (target == player) return ["回血"];
+							return ["出杀"];
 						});
 					})
-					.set('targets', [big, small])
+					.set("targetx", [big, small])
 					.forResult();
 				if (result?.bool && result.targets?.length) {
 					if (result.targets[0] == big) {
@@ -1589,13 +1591,13 @@ const skills = {
 					global: "roundStart",
 				},
 				async content(event, trigger, player) {
-					player.setMark("newLife_yzs_renew",1,false);
+					player.setMark("newLife_yzs_renew", 1, false);
 				},
 				nopop: true,
 				charlotte: true,
 				priority: 0.929,
 				silent: true,
-				popup:false,
+				popup: false,
 				forced: true,
 			},
 			item1: {
@@ -1610,7 +1612,7 @@ const skills = {
 			item2: {
 				charlotte: true,
 				locked: true,
-				popup:false,
+				popup: false,
 				priority: 2,
 				forced: true,
 				trigger: {
@@ -1640,8 +1642,8 @@ const skills = {
 				enable: "phaseUse",
 				filter(event, player) {
 					if (!player.countMark("newLife_yzs_renew") && (!player._source || !player._source.countMark("newLife_yzs_renew"))) return false;
-					const owner = get.itemtype(player._source)=="player" ? player._source : player;
-					const players = game.filterPlayer(cur => cur._source == owner &&["GuanjunServant_yzs1", "GuanjunServant_yzs2", "GuanjunServant_yzs3", "newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name));
+					const owner = get.itemtype(player._source) == "player" ? player._source : player;
+					const players = game.filterPlayer(cur => cur._source == owner && ["GuanjunServant_yzs1", "GuanjunServant_yzs2", "GuanjunServant_yzs3", "newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name));
 					if (players.length < 2) return false;
 					let num = 0;
 					players.every(p => num += p.countCards("h"))
@@ -1652,7 +1654,7 @@ const skills = {
 				filterTarget(card, player, target) {
 					const owner = get.itemtype(player._source) == "player" ? player._source : player;
 					if (target._source != owner) return false;
-					if (game.players.some(cur => ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name))&&(!ui.selected.targets || !ui.selected.targets.some(cur => ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name)))) return ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(target.name)
+					if (game.players.some(cur => ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name)) && (!ui.selected.targets || !ui.selected.targets.some(cur => ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name)))) return ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(target.name)
 					return ["GuanjunServant_yzs1", "GuanjunServant_yzs2", "GuanjunServant_yzs3"].includes(target.name)
 				},
 				selectTarget: [2, Infinity],
@@ -1660,7 +1662,7 @@ const skills = {
 					if (!ui.selected.targets || ui.selected.targets.length < 2) return false;
 					let num = 0;
 					ui.selected.targets.every(cur => num += cur.countCards("h"));
-					return num>=5;
+					return num >= 5;
 				},
 				multitarget: true,
 				multiline: true,
@@ -1684,14 +1686,14 @@ const skills = {
 						num += target.countCards("h")
 						cards.addArray(target.getCards("h"))
 					}
-					let name = num + sum >= 12 ?"newLifeChimera_yzs1":"newLifeChimera_yzs"
+					let name = num + sum >= 12 ? "newLifeChimera_yzs1" : "newLifeChimera_yzs"
 					let result = await player.yzs_addPlayerOL(player, name, null, true, { startCards: 0, isControl: true, noCheckResult: true }).forResult()
 					if (!result?.target) return;
 					const Chimera = result.target;
 					Chimera.setMark("Guanjun_Chimera_yzs", sum, false);
 					if (player.hasSkill("newLife_yzs_item4") || player._source?.hasSkill?.("newLife_yzs_item4")) {
 						Chimera.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
-						Chimera.addSkill(["newLife_yzs", "PinkAnesthesia_yzs", "mixiang_yzs", "CharmingCommand_yzs", "newLife_yzs_item1", "newLife_yzs_item2", "newLife_yzs_item3","newLife_yzs_item4"])
+						Chimera.addSkill(["newLife_yzs", "PinkAnesthesia_yzs", "mixiang_yzs", "CharmingCommand_yzs", "newLife_yzs_item1", "newLife_yzs_item2", "newLife_yzs_item3", "newLife_yzs_item4"])
 					}
 					Chimera.maxHp = Math.min(sum + 1, 5);
 					Chimera.hp = Chimera.maxHp
@@ -1700,7 +1702,7 @@ const skills = {
 					for (let target of event.targets) {
 						await target.yzs_removePlayerOL();
 					}
-					let result2=await player.chooseTarget()
+					let result2 = await player.chooseTarget()
 						.set("filterTarget", function (card, player, target) {
 							return true
 						})
@@ -1760,7 +1762,7 @@ const skills = {
 				const players = game.filterPlayer(cur => cur._source == player && ["newLifeChimera_yzs", "newLifeChimera_yzs1"].includes(cur.name));
 				for (let target of players) {
 					target.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
-					target.addSkill(["newLife_yzs", "PinkAnesthesia_yzs", "mixiang_yzs", "CharmingCommand_yzs", "newLife_yzs_item1", "newLife_yzs_item2", "newLife_yzs_item3","newLife_yzs_item4"])
+					target.addSkill(["newLife_yzs", "PinkAnesthesia_yzs", "mixiang_yzs", "CharmingCommand_yzs", "newLife_yzs_item1", "newLife_yzs_item2", "newLife_yzs_item3", "newLife_yzs_item4"])
 				}
 			}
 		},
@@ -1806,7 +1808,7 @@ const skills = {
 				result.target.addSkill(["mixiang_yzs", "ciyuanzhimen_yzs_summon_damage"])
 			}
 			await player.give(event.cards, result.target);
-			if (!result.target?.isIn()||!player.countCards("h")) return;
+			if (!result.target?.isIn() || !player.countCards("h")) return;
 			let result2 = await player.chooseCardTarget()
 				.set("prompt", `你可对“仆从”发动${get.poptip("CharmingCommand_yzs")}<br><small>你正面向上给予其1张黑色手牌，然后其选择：<br>
 	①：${get.poptip("sing_yzs")}1：摸1张牌，然后失去本吟唱。②：吟唱1：被你杀死。`)
@@ -2003,7 +2005,7 @@ const skills = {
 				trigger: {
 					player: "phaseDrawBegin2",
 				},
-				priority:331,
+				priority: 331,
 				filter(event, player) {
 					return !event.numFixed;
 				},
@@ -2035,6 +2037,614 @@ const skills = {
 		async content(event, trigger, player) {
 			trigger.player = player;
 		}
-	}
+	},
+	//白蛇
+	choudie_yzs: {
+		subSkill: {
+			disc: {
+				nopop:true,
+				charlotte: true,
+				enable: "phaseUse",
+				filter(event, player) {
+					if (!player.storage.choudie_yzs) return false;
+					const cards = player.storage.choudie_yzs;
+					return cards.length;
+				},
+				chooseButton: {
+					dialog(event, player) {
+						const list = player.storage.choudie_yzs;
+						let cards = [];
+						for (var i = 0; i < list.length; i++) {
+							var cardname = "huashen_card_" + list[i];
+							cards.push(game.createCard(cardname, "", ""));
+						}
+						return ui.create.dialog(`你可移去任意张【碟】以检索等量张锦囊牌`, cards);
+					},
+					select: [1, Infinity],
+					filter(button, player) {
+						return true;
+					},
+					check(button) {
+						return Math.random()-0.5;
+					},
+					backup(links, player) {
+						return {
+							filterCard: () => false,
+							selectCard: -1,
+							cards: links,
+							async content(event, trigger, player) {
+								const cards = lib.skill.choudie_yzs_disc_backup.cards;
+								player.$throw(cards);
+								let num = cards.length;
+								let list = [];
+								for (var i = 0; i < cards.length; i++) {
+									list.push(cards[i].name.slice(13))
+								}
+								lib.skill.choudie_yzs.removeVisitors(list, player);
+								var func = function (card) {
+									return get.type2(card, false) == "trick"
+								};
+								let gains = [];
+								while (num--) {
+									let card = get.cardPile2(func)
+									if (card) {
+										if (Array.isArray(card)) card = card[0];
+										gains.push(card);
+									} else {
+										break;
+									}
+								}
+								await player.gain(gains, "gain2");
+							},
+						}
+					}
+				},
+			},
+			targeted: {
+				charlotte: true,
+				onremove: true,
+			}
+		},
+		locked: true,
+		banned: ["lisu", "sp_xiahoudun", "xushao", "jsrg_xushao", "zhoutai", "old_zhoutai", "shixie", "xin_zhoutai", "dc_shixie", "old_shixie"],
+		bannedType: ["Charlotte", "主公技", "觉醒技", "限定技", "隐匿技", "使命技", "锁定技", "转换技", "蓄力技", "蓄能技", "连招技"],
+		getSkills(characters2, player) {
+			let skills2 = [];
+			for (let name of characters2) {
+				if (Array.isArray(get.character(name).skills)) {
+					for (let skill of get.character(name).skills) {
+						const categories = get.skillCategoriesOf(skill, player);
+						if (categories.some(type => lib.skill.choudie_yzs.bannedType.includes(type)) || player.hasSkill(skill)) continue;
+						let info = get.info(skill);
+						if (info && (!info.unique || info.gainable)) {
+							skills2.add(skill);
+						}
+					}
+				}
+			}
+			return skills2;
+		},
+		addVisitors(characters2, player) {
+			player.addSkillBlocker("choudie_yzs");
+			game.log(player, "将", "#y" + get.translation(characters2), "加入了", "#g“碟”");
+			game.broadcastAll(
+				function (player2, characters3) {
+					player2.tempname.addArray(characters3);
+					player2.$draw(
+						characters3.map(function (name) {
+							let cardname = "huashen_card_" + name;
+							lib.card[cardname] = {
+								fullimage: true,
+								image: "character:" + name
+							};
+							lib.translate[cardname] = get.rawName2(name);
+							return game.createCard(cardname, " ", " ");
+						}),
+						"nobroadcast"
+					);
+				},
+				player,
+				characters2
+			);
+			player.markAuto("choudie_yzs", characters2);
+			let storage = player.getStorage("choudie_yzs");
+			let skills2 = lib.skill.choudie_yzs.getSkills(storage, player);
+			player.addInvisibleSkill(skills2);
+		},
+		removeVisitors(characters2, player) {
+			let skills2 = lib.skill.choudie_yzs.getSkills(characters2, player);
+			let characters22 = player.getStorage("choudie_yzs").slice(0);
+			characters22.removeArray(characters2);
+			skills2.removeArray(lib.skill.choudie_yzs.getSkills(characters22, player));
+			if (Array.isArray(player.tempname)) {
+				game.broadcastAll((player2, characters3) => player2.tempname.removeArray(characters3), player, characters2);
+			}
+			player.unmarkAuto("choudie_yzs", characters2);
+			_status.characterlist.addArray(characters2);
+			player.removeInvisibleSkill(skills2);
+		},
+		onremove(player, skill) {
+			lib.skill.choudie_yzs.removeVisitors(player.getStorage("choudie_yzs"), player);
+			player.removeSkillBlocker("choudie_yzs");
+		},
+		skillBlocker(skill, player) {
+			if (!player.invisibleSkills.includes(skill) ||  skill == "choudie_yzs") {
+				return false;
+			}
+			player.removeSkillBlocker("choudie_yzs");
+			const bool = !player.hasSkill("choudie_yzs");
+			player.addSkillBlocker("choudie_yzs");
+			return bool;
+		},
+		marktext: "碟",
+		intro: {
+			name: "DISC",
+			mark(dialog, storage, player) {
+				if (!storage || !storage.length) {
+					return "当前没有“碟”";
+				}
+				if (player.isUnderControl(true)) {
+					dialog.addSmall([storage, "character"]);
+					let skills2 = lib.skill.choudie_yzs.getSkills(storage, player);
+					if (skills2.length) {
+						dialog.addText("<li>当前可用技能：" + get.translation(skills2), false);
+					}
+				} else {
+					return `当前有 ${storage.length} 张“碟”`
+				}
+			},
+		},
+		forced: true,
+		priority:19,
+		trigger: {
+			player: "useCardToPlayered",
+		},
+		filter(event, player) {
+			return !event.target.hasSkill("choudie_yzs_targeted")
+		},
+		async content(event, trigger, player) {
+			trigger.target.addTempSkill("choudie_yzs_targeted");
+			player.addSkill("choudie_yzs_skill");
+			player.addSkill("choudie_yzs_disc");
+			if (!_status.characterlist) {
+				game.initCharacterList();
+			}
+			let characters2 = _status.characterlist.randomRemove(1);
+			lib.skill.choudie_yzs.addVisitors(characters2, player);
+		}
+	},
+	choudie_yzs_skill: {
+		nopop:true,
+		charlotte: true,
+		priority: 32,
+		trigger: {
+			player: ["useSkill", "logSkillBegin"],
+		},
+		forced: true,
+		filter(event, player) {
+			let skill = get.sourceSkillFor(event);
+			return player.invisibleSkills.includes(skill) && lib.skill.choudie_yzs.getSkills(player.getStorage("choudie_yzs"), player).includes(skill);
+		},
+		async content(event, trigger, player) {
+			const visitors = player.getStorage("choudie_yzs").slice(0);
+			const drawers = visitors.filter(function (name) {
+				return get.character(name).skills?.includes(get.sourceSkillFor(trigger));
+			});
+			event.drawers = drawers;
+			player.$throw(game.createCard("huashen_card_" + event.drawers[0], " ", " "))
+			lib.skill.choudie_yzs.removeVisitors(event.drawers, player);
+			game.log(player, "移去了", "#y" + get.translation(event.drawers[0]));
+		},
+		group: "choudie_yzs_skill_trigger",
+		subSkill: {
+			trigger: {
+				trigger: {
+					player: "triggerInvisible",
+				},
+				forced: true,
+				forceDie: true,
+				popup: false,
+				charlotte: true,
+				priority: 10,
+				filter(event, player) {
+					if (event.revealed) {
+						return false;
+					}
+					let info = get.info(event.skill);
+					if (info.charlotte) {
+						return false;
+					}
+					let skills2 = lib.skill.choudie_yzs.getSkills(player.getStorage("choudie_yzs"), player);
+					game.expandSkills(skills2);
+					return skills2.includes(event.skill);
+				},
+				async content(event, trigger, player) {
+					let result;
+					if (get.info(trigger.skill).silent) {
+						return;
+					} else {
+						const info = get.info(trigger.skill);
+						const evt = trigger, evtTrigger = evt._trigger;
+						let str;
+						info.check;
+						if (info.prompt) {
+							str = info.prompt;
+						} else {
+							if (typeof info.logTarget == "string") {
+								str = get.prompt(evt.skill, evtTrigger[info.logTarget], player);
+							} else if (typeof info.logTarget == "function") {
+								const logTarget = info.logTarget(evtTrigger, player, evt.triggername, evt.indexedData);
+								if (get.itemtype(logTarget)?.indexOf("player") == 0) {
+									str = get.prompt(evt.skill, logTarget, player);
+								}
+							} else {
+								str = get.prompt(evt.skill, null, player);
+							}
+						}
+						if (typeof str == "function") {
+							str = str(evtTrigger, player, evt.triggername, evt.indexedData);
+						}
+						let next = player.chooseBool("光碟：" + str);
+						next.set("yes", !info.check || info.check(evtTrigger, player, evt.triggername, evt.indexedData));
+						next.set("hsskill", evt.skill);
+						next.set("forceDie", true);
+						next.set("ai", function () {
+							return _status.event.yes;
+						});
+						if (typeof info.prompt2 == "function") {
+							next.set("prompt2", info.prompt2(evtTrigger, player, evt.triggername, evt.indexedData));
+						} else if (typeof info.prompt2 == "string") {
+							next.set("prompt2", info.prompt2);
+						} else if (info.prompt2 != false) {
+							if (lib.dynamicTranslate[evt.skill]) {
+								next.set("prompt2", lib.dynamicTranslate[evt.skill](player, evt.skill));
+							} else if (lib.translate[evt.skill + "_info"]) {
+								next.set("prompt2", lib.translate[evt.skill + "_info"]);
+							}
+						}
+						if (trigger.skillwarn) {
+							if (next.prompt2) {
+								next.set("prompt2", '<span class="thundertext">' + trigger.skillwarn + "。</span>" + next.prompt2);
+							} else {
+								next.set("prompt2", trigger.skillwarn);
+							}
+						}
+						result = await next.forResult();
+					}
+					if (result?.bool) {
+						if (!get.info(trigger.skill).cost) {
+							trigger.revealed = true;
+						}
+					} else {
+						trigger.untrigger();
+						trigger.cancelled = true;
+					}
+				},
+			},
+		},
+	},
+	miyu_yzs: {
+		group: ["miyu_yzs_use","miyu_yzs_mark"],
+		subSkill: {
+			draw: {
+				trigger: {
+					player: "phaseDrawBegin2",
+				},
+				filter(event, player) {
+					return !event.numFixed;
+				},
+				async content(event, trigger, player) {
+					trigger.num += 1;
+				},
+				priority: 1.99,
+				nopop: true,
+				charlotte: true,
+				silent: true,
+				forced: true,
+				popup: false,
+			},
+			use: {
+				forced: true,
+				priority: 2,
+				trigger: {
+					player: ["useCard", "respond"]
+				},
+				filter(event, player) {
+					let count = player.getHistory("useCard").length + player.getHistory("respond").length;
+					const isPrime = function (num) {
+						if (num <= 1) return false;
+						for (let i = 2; i < num; i++) {
+							if (num % i === 0) {
+								return false;
+							}
+						}
+						return true;
+					}
+					return isPrime(count)
+				},
+				async content(event, trigger, player) {
+					await player.draw();
+				}
+			},
+			mark: {
+				forced: true,
+				popup:false,
+				priority: 14,
+				trigger: {
+					player:"useCard"
+				},
+				filter(event, player) {
+					return get.type2(event.card,player)=="trick"
+				},
+				async content(event, trigger, player) {
+					player.addMark("miyu_yzs", 1, false);
+					const num = player.countMark("miyu_yzs");
+					const list = ["螺旋阶梯", "独角仙", "废墟街道", "无花果塔", "独角仙", "德蕾莎之道", "独角仙", "特异点", "乔托",
+						"天使", "绣球花", "独角仙", "特异点", "秘密皇帝"];
+					const path = `ext:一中杀/audio/skill/miyu_yzs_${list[num]}.MP3`;
+					player.popup(list[num])
+					game.broadcastAll((path) => {
+						game.playAudio(path);
+					}, path);
+				}
+			}
+		},
+		mark: true,
+		marktext: "语",
+		intro: {
+			name: "密语",
+			content(storage, player, skill) {
+				const list = ["『螺旋阶梯』", "『独角仙』", "『废墟街道』", "『无花果塔』", "『独角仙』", "『德蕾莎之道』", "『独角仙』", "『特异点』", "『乔托』",
+					"『天使』", "『绣球花』", "『独角仙』", "『特异点』", "『秘密皇帝』"];
+				let str = ``;
+				const num = player.countMark("miyu_yzs");
+				for (let i = 0; i < list.length; i++) {
+					if (i < num) str += `<font color="#dbffa9">`;
+					str += list[i];
+					if (i < num) str += `</font>`;
+					if(i%2)str+=`<br>`
+				}
+				return str;
+			},
+		},
+		locked: true,
+		skillAnimation: true,
+		animationColor: "thunder",
+		juexingji: true,
+		forced: true,
+		priority: 2,
+		trigger: {
+			player: "phaseAfter"
+		},
+		filter(event, player) {
+			return player.countMark("miyu_yzs") > 13;
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill("miyu_yzs");
+			game.broadcastAll(() => {
+				_status.tempMusic = `ext:一中杀/audio/Crucified.mp3`;
+				game.playBackgroundMusic();
+				ui.backgroundMusic.addEventListener('ended', () => {
+					delete _status.tempMusic;
+					game.playBackgroundMusic();
+				}, { once: true });
+			});
+			await player.recoverTo(player.maxHp);
+			player.addSkill("miyu_yzs_draw");
+			await player.reinitCharacter(player.name1, 'CMoon_EnricoPucci_yzs');
+			let target = game.players.filter(cur => cur.getSeatNum() == 1);
+			target = target[0];
+			target.setMark("Singularity_yzs_position", 1, false);
+		}
+	},
+	//新月
+	Gravity_yzs: {
+		global:"Gravity_yzs_global",
+		group: ["Gravity_yzs_damage"],
+		subSkill: {
+			global: {
+				charlotte:true,
+				ai: {
+					right_hand:true,
+				}
+			},
+			damage: {
+				locked: true,
+				trigger: {
+					source: "damageBegin1"
+				},
+				priority: 1,
+				filter(event, player) {
+					return true;
+				},
+				prompt2: `你对其他角色造成伤害后可令其翻面`,
+				logTarget: "player",
+				check(event, player) {
+					if (event.player.isTurnedOver()) {
+						return get.attitude(player, event.player) > 0;
+					} else {
+						return get.attitude(player, event.player) <= 0;
+					}
+				},
+				async content(event, trigger, player) {
+					await trigger.player.turnOver();
+				}
+			},
+			limited: {
+				nopop:true,
+				limited: true,
+				skillAnimation: false,
+				priority: 64,
+				trigger: {
+					global:"phaseBefore"
+				},
+				prompt2:`每回合开始时，你可摸2张牌，然后反转回合执行顺序`,
+				async content(event, trigger, player) {
+					await player.draw(2);
+					// 1. 获取所有玩家（存活 + 死亡），按座位号从小到大排序
+					let players = game.players.concat(game.dead);
+					players.sortBySeat();
+
+					// 2. 首尾交换座位
+					const len = players.length;
+					const toSwapList = [];
+					for (let i = 0; i < Math.floor(len / 2); i++) {
+						const p1 = players[i];
+						const p2 = players[len - 1 - i];
+						toSwapList.push([p1, p2]);
+					}
+
+					// 3. 广播交换（也可以直接在当前客户端循环调用 swapSeat，视你扩展的结构而定）
+					game.broadcastAll(list => {
+						for (const [p1, p2] of list) {
+							game.swapSeat(p1, p2, false);
+						}
+					}, toSwapList);
+					if (trigger.name === "phase" && !trigger.player.isZhu2() && trigger.player !== players[0] && !trigger._finished) {
+						trigger.finish();
+						trigger._triggered = 5;
+						const evt = players[0].insertPhase();
+						delete evt.skill;
+						const evt2 = trigger.getParent();
+						if (evt2.name == "phaseLoop" && evt2._isStandardLoop) {
+							evt2.player = players[0];
+						}
+						//跳过新回合的phaseBefore
+						evt.pushHandler("onPhase", (event, option) => {
+							if (event.step === 0 && option.state === "begin") {
+								event.step = 1;
+							}
+						});
+					}
+				}
+			},
+		},
+		locked: true,
+	},
+	Singularity_yzs: {
+		group: ["Singularity_yzs_start"],
+		subSkill: {
+			draw: {
+				trigger: {
+					player: "phaseDrawBegin2",
+				},
+				filter(event, player) {
+					return !event.numFixed;
+				},
+				async content(event, trigger, player) {
+					trigger.num += 1;
+				},
+				priority: 2.99,
+				nopop: true,
+				charlotte: true,
+				silent: true,
+				forced: true,
+				popup: false,
+			},
+			position: {
+				charlotte: true,
+				forced: true,
+				popup:false,
+				marktext: "位",
+				intro: {
+					content: "持有者造成或受到伤害或死亡时，将本标记移至其上家",
+				},
+				priority: 3,
+				trigger: {
+					player: ["damageBegin3", "dieBefore"],
+					source:"damageBegin1"
+				},
+				filter(event, player) {
+					return player.countMark("Singularity_yzs_position") > 0;
+				},
+				async content(event, trigger, player) {
+					const target = player.getPrevious();
+					if (target) {
+						player.clearMark("Singularity_yzs_position", false);
+						target.setMark("Singularity_yzs_position", 1, false);
+						if (target.hasSkill("Gravity_yzs_limited") && target.awakenedSkills.includes("Gravity_yzs_limited")) {
+							target.restoreSkill("Gravity_yzs_limited");
+						}
+					}
+				}
+			},
+			start: {
+				forced:true,
+				priority:333,
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				filter(event, player) {
+					return (event.name != "phase" || game.phaseNumber == 0);
+				},
+				async content(event, trigger, player) {
+					let target = game.players.filter(cur => cur.getSeatNum() == 1);
+					target = target[0];
+					target.setMark("Singularity_yzs_position", 1, false);
+				}
+			},
+		},
+		locked: true,
+		juexingji: true,
+		forced: true,
+		priority: 2,
+		trigger: {
+			global: "phaseEnd"
+		},
+		filter(event, player) {
+			return player.countMark("Singularity_yzs_position") > 0;
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill("Singularity_yzs");
+			player.clearMark("Singularity_yzs_position", false);
+			game.broadcastAll(() => {
+				ui.backgroundMusic.pause();
+				game.playAudio(`ext:一中杀/audio/skill/Singularity_yzs.MP3`);
+				var video = document.createElement("VIDEO");
+				video.className = "anime";
+
+				Object.assign(video, {
+					src: lib.assetURL + "/extension/一中杀/image/background/Singularity_yzs.MP4",
+					autoplay: true,//准备就绪后自动播放
+					loop: false,//是否循环播放
+					muted: false,//是否静音
+					preload: true,//是否提前加载
+				})
+				Object.assign(video.style, {
+					position: "fixed",
+					left: "0",
+					top: "0",
+					width: "100%",
+					height: "100%",
+					objectFit: "cover",
+					minWidth: "100vw",
+					minHeight: "100vh",
+					opacity: "0",//透明度
+					pointerEvents: "none",//不阻挡点击事件
+					zIndex: "99",
+					transition: "opacity 1s ease-out",
+				})
+				video.addEventListener("ended", () => {
+					video.style.opacity = "0";
+					setTimeout(() => {
+						document.body.removeChild(video);
+						_status.tempMusic = `ext:一中杀/audio/Crucified.mp3`;
+						game.playBackgroundMusic();
+					}, 1000)//1s后移除视频
+				})
+				document.body.appendChild(video);
+				setTimeout(() => {
+					video.style.opacity = "1";
+				}, 50)
+
+			});
+			await new Promise(r => setTimeout(r, 6000))
+			await player.recoverTo(player.maxHp);
+			player.addSkill("Singularity_yzs_draw");
+			await player.reinitCharacter(player.name1, 'MadeInHeaven_EnricoPucci_yzs');
+			player.insertPhase();
+		}
+	},
 }
 export default skills;

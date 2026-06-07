@@ -275,6 +275,7 @@ const dynamicTranslates = {
 		return str;
 	},
 	chaoren_yzs(player) {
+		if (!player.storage.chaoren_yzs?.length) return lib.translate["chaoren_yzs_info"];
 		const map = {
 			chaoren_yzs_SPSX: `手牌上限`,
 			chaoren_yzs_MPS: `摸牌数`,
@@ -621,6 +622,10 @@ const dynamicTranslates = {
 		else str += `①令其恢复1点体力<span class="bluetext">②对其造成1点伤害。</span>`;
 		str += `${get.poptip("FukaSkill_yzs")}： ${get.poptip("wuyongchang_yzs")}：你与1名与你体力值之差等于1的角色交换体力值。`;
 		return str;
+	},
+	speedup_yzs(player) {
+		const num = player.countMark("speedup_yzs");
+		return `你的额定回合结束后，你连续执行X(${num})个额外回合。你的额定回合开始时，令X+1。（X初始为0）`
 	}
 };
 

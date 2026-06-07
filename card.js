@@ -1875,6 +1875,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					if (player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs")) return true;
 					return false;
 				},
+				usable:2,
 				selectTarget: 1,
 				postAi(targets) {
 					return targets.length === 1;
@@ -2090,6 +2091,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					if (player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs")) return true;
 					return false;
 				},
+				usable: 2,
 				selectTarget: 1,
 				postAi(targets) {
 					return targets.length === 1 && targets[0].countCards("j");
@@ -4377,9 +4379,9 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			FullMoon_yzs: `盈月`,
 			FullMoon_yzs_info: `回合开始时，若“星环”中最多为：<br><font color="#f9e99e">【盈月】</font>：若当前为额定回合，回合结束后你执行额外回合。<br><font color="#f9e99e">【盈月】</font>：每移去其下2张牌，你分配0点伤害。`,
 			wtwCang_yzs: `苍`,
-			wtwCang_yzs_info: `出牌阶段对对1名其他角色使用。你摸此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
+			wtwCang_yzs_info: `出牌阶段限2次：对对1名其他角色使用。你摸此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
 			wtwHe_yzs: `赫`,
-			wtwHe_yzs_info: `出牌阶段对1名其他角色使用。你弃置目标角色此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
+			wtwHe_yzs_info: `出牌阶段限2次：对1名其他角色使用。你弃置目标角色此牌点数张牌，然后目标角色需打出1张【杀】。否则你对其造成1点伤害。`,
 			yuquan_yzs: `玉犬`,
 			yuquan_yzs_info: `消耗1：出牌阶段限2次：对1名其他角色使用。观看目标角色1张手牌。<br>融合：目标牌选取牌时目标明牌。`,
 			ye_yzs: `鵺`,
