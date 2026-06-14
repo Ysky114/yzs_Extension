@@ -4591,8 +4591,22 @@ const skills = {
 		},
 	},
 	zuzhouzhiwang_yzs: {
-		group: ["BossRule_yzs", "rg_treasure", "zuzhouzhiwang_yzs_summon"],
+		group: ["zuzhouzhiwang_yzs_summon", "zuzhouzhiwang_yzs_die"],
 		subSkill: {
+			die: {
+				priority: 23,
+				forced: true,
+				trigger: {
+					player:["dieBefore","dyingBefore"]
+				},
+				filter(event, player) {
+					return player.hp > 3;
+				},
+				async content(event, trigger, player) {
+					trigger.cancel();
+					player.chat("小伎俩在绝对力量面前是无用的")
+				},
+			},
 			summon: {
 				forced: true,
 				popup: false,
@@ -4823,7 +4837,7 @@ const skills = {
 		},
 		filter(event, player) {
 			if (_status.currentPhase == player) return true;
-			return player.countCards("h") < 4;
+			return player.countCards("h") < game.countPlayer();
 		},
 		async content(event, trigger, player) {
 			player.ai.modAttitudeTo = function (from, to, att) {
@@ -4834,7 +4848,7 @@ const skills = {
 				//你对其他角色的态度
 				return -999;
 			};
-			if (player.countCards("h") < 4) await player.drawTo(4);
+			if (player.countCards("h") < game.countPlayer()) await player.drawTo(game.countPlayer());
 			if (_status.currentPhase != player) return;
 			let result = game.countPlayer(target => !target.hasSkill("hidden_yzs") && player != target) > 1 ? await player.chooseTarget(`诅咒之王：请选择1名其他角色`, `除其以外的其他角色依次可调离并摸1张牌`, true)
 				.set("filterTarget", (card, player, target) => {
@@ -4891,6 +4905,7 @@ const skills = {
 				popup:false,
 				forced: true,
 				filter(event, player) {
+					return false;
 					return (event.name != "phase" || game.phaseNumber == 0);
 				},
 				async content(event, trigger, player) {
@@ -5058,8 +5073,8 @@ const skills = {
 						});
 					}
 					await player.changeCharacter(["RyomenSukuna_yzs"])
-					player.hp = 15;
-					player.maxHp = 19;
+					player.hp = 30;
+					player.maxHp = 30;
 					player.update();
 				}
 			},
@@ -5125,22 +5140,42 @@ const skills = {
 				locked: true,
 				usable: 1,
 				trigger: {
-					target: "useCardToTarget",
+					global: "useCardToTarget",
 				},
 				filter(event, player) {
+					if (event.player == player || (event.player._source == player && event.player.name =="Makora_yzs")) return false;
+					if (event.target != player && !(event.target._source == player && event.target.name == "Makora_yzs")) {
+						return false;
+					}
 					const evt = event.getParent();
 					if (evt?.targets?.length) {
-						return event.player != player && game.hasPlayer(cur => cur.name == "Makora_yzs" && !evt.targets.includes(cur) && cur != evt.player);
+						if (event.target == player) {
+							return game.hasPlayer(cur => cur.name == "Makora_yzs" && cur._source == player&&!evt.targets.includes(cur))
+						}
+						return !evt.targets.includes(player)
 					}
 					return false;
 				},
 				async cost(event, trigger, player) {
+					event.result = { bool: false };
+					let other = false;
+					if (trigger.target != player && !(trigger.target._source == player && trigger.target.name == "Makora_yzs")) return ;
 					const evt = trigger.getParent();
+					const players = game.filterPlayer();
+					if (evt?.targets?.length) {
+						if (trigger.target == player) {
+							for (let cur of players) {
+								if (cur.name == "Makora_yzs" && cur._source == player && !evt.targets.includes(cur)) other = cur;
+							}
+						}
+						if (!evt.targets.includes(player)) other = player;
+					}
+					if (!other||!other.isIn()) return;
 					event.result = await player
 						.chooseTarget()
 						.set("filterTarget", (card, player, target) => {
 							if (get.event().targets.includes(target)) return false;
-							return target.name == "Makora_yzs" && !evt.targets.includes(target)
+							return target == get.event().other;
 						})
 						.set("ai", target => {
 							const player = get.player();
@@ -5151,6 +5186,7 @@ const skills = {
 								return -att
 							}
 						})
+						.set("other", other)
 						.set("targets", evt.targets)
 						.set("prompt2", `每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标，你可将目标转移给“魔虚罗”`)
 						.setHiddenSkill(event.name.slice(0, -5))
@@ -5159,8 +5195,8 @@ const skills = {
 				async content(event, trigger, player) {
 					const target = event.targets[0];
 					const evt = trigger.getParent();
-					evt.triggeredTargets2.remove(player);
-					evt.targets.remove(player);
+					evt.triggeredTargets2.remove(trigger.target);
+					evt.targets.remove(trigger.target);
 					evt.targets.push(target);
 				},
 			},
@@ -5181,12 +5217,12 @@ const skills = {
 			if (!list.length) {
 				return false;
 			}
-			if (!player.countCards("h", { name: "ying" })) {
+			if (!player.countCards("h")) {
 				return false;
 			}
 			for (var i of list) {
 				let cost = lib.card[i].shizhongyingfashu_yzs_cost;
-				if (player.countCards("h", { name: "ying" }) < cost) continue;
+				if (player.countCards("h") < cost) continue;
 				if (event.filterCard(get.autoViewAs({ name: i, }, "unsure"), player, event)) {
 					return true;
 				}
@@ -5200,7 +5236,7 @@ const skills = {
 				for (var i of list) {
 					var type = get.type2(i, false);
 					let cost = lib.card[i].shizhongyingfashu_yzs_cost;
-					if (player.countCards("h", { name: "ying" }) < cost) continue;
+					if (player.countCards("h") < cost) continue;
 					if (event.filterCard(get.autoViewAs({ name: i, isCard: false, }, "unsure"), player, event)) {
 						list2.push([type, "", i]);
 					}
@@ -5217,7 +5253,7 @@ const skills = {
 				return {
 					audio: "ext:一中杀/audio/skill:1",
 					filterCard(card) {
-						return get.name(card) == "ying";
+						return true
 					},
 					selectCard: cost,
 					position: "h",
@@ -5234,7 +5270,7 @@ const skills = {
 			prompt(links, player) {
 				let name = links[0][2];
 				let cost = lib.card[name].shizhongyingfashu_yzs_cost
-				return "将" + cost + "张【影】当做【" + get.translation(name) + "】使用";
+				return "将" + cost + "张手牌当做【" + get.translation(name) + "】使用";
 			},
 		},
 		ai: {
@@ -5722,6 +5758,11 @@ const skills = {
 			await player.discardPlayerCard(event.target, 'h', true);
 			await player.discardPlayerCard(event.target, 'e', true);
 			await event.target.damage();
+			if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
+				await player.discardPlayerCard(event.target, 'h', true);
+				await player.discardPlayerCard(event.target, 'e', true);
+				await event.target.damage();
+			}
 		},
 		ai: {
 			order: 8,
@@ -5853,6 +5894,9 @@ const skills = {
 					trigger.player.playEffectOL(lib.skill.jie_yzs.Effect);
 					trigger.num += Math.min(Math.ceil(trigger.player.maxHp / 2), 5) - 1;
 					trigger.num *= trigger.card.storage.ba_yzs;
+					if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
+						trigger.num += 2;
+					}
 					if (trigger.player.name == "GojoSatoru_yzs" && player.name == "MegumiSukuna_yzs") {
 						game.broadcastAll(() => {
 							var video = document.createElement("VIDEO");
@@ -6004,7 +6048,10 @@ const skills = {
 			let base = player.isLinked() ? 1 : 0;
 			if (game.filterPlayer(cur => cur != player).every(cur => cur.isLinked())) base++;
 			if (!target.isLinked()) base++;
-			if (base <= 1) {
+			if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
+				base++;
+			}
+			if (base <= 2) {
 				game.broadcastAll(
 					() => {
 						game.playAudio("ext:一中杀/audio/skill/zao_yzs1.mp3");
@@ -6716,7 +6763,7 @@ const skills = {
 				//你对其他角色的态度
 				if (to.hasSkill("zuzhouzhiwang_yzs")) return -999
 			};
-			await player.drawTo(6);
+			await player.drawTo(Math.min(player.maxHp,11));
 			//		if (player.countCards("h") > 6) await player.chooseToDiscard(player.countCards("h") - 6, true)
 		}
 	},
@@ -6807,8 +6854,7 @@ const skills = {
 
 								game.trySkillAudio("wuxiaxianshushi_yzs");
 								player.popup("赫")
-								player.$draw(1);
-								await player.gain(game.createCard("wtwHe_yzs", "red", num), "giveAuto", "bySelf")
+								await player.gain(game.createCard("wtwHe_yzs", "red", num), "gain2", "bySelf")
 							}
 						} else {
 							if (get.number(trigger.card) < last) {
@@ -6820,8 +6866,7 @@ const skills = {
 
 								game.trySkillAudio("wuxiaxianshushi_yzs");
 								player.popup("苍")
-								player.$draw(1);
-								await player.gain(game.createCard("wtwCang_yzs", "black", num),"giveAuto","bySelf")
+								await player.gain(game.createCard("wtwCang_yzs", "black", num),"gain2","bySelf")
 							}
 						}
 					}
@@ -8960,8 +9005,7 @@ const skills = {
 									player.addSkill("wuxiaxian_yzs_He")
 									game.trySkillAudio("wuxiaxianshushi_yzs");
 									player.popup("赫")
-									player.$draw(1);
-									await player.gain(game.createCard("wtwHe_yzs", "red", num), "giveAuto", "bySelf")
+									await player.gain(game.createCard("wtwHe_yzs", "red", num), "gain2", "bySelf")
 								}
 							}
 						} else {
@@ -8975,8 +9019,7 @@ const skills = {
 									player.addSkill("wuxiaxian_yzs_Cang")
 									game.trySkillAudio("wuxiaxianshushi_yzs");
 									player.popup("苍")
-									player.$draw(1);
-									await player.gain(game.createCard("wtwCang_yzs", "black", num), "giveAuto", "bySelf")
+									await player.gain(game.createCard("wtwCang_yzs", "black", num), "gain2", "bySelf")
 								}
 							}
 						}
@@ -9141,7 +9184,7 @@ const skills = {
 			storage: { yuzhe_yzs :true,}
 		},
 		filter(event, player) {
-			return event.yuzhe_yzs&&player.countCards("h") > 1;
+			return player.countCards("h") > 1;
 		},
 		filterCard(card, player) {
 			if (ui.selected.cards.length) {

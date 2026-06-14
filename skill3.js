@@ -5528,9 +5528,9 @@ const skills = {
 			const num = game.countPlayer(cur => cur.isLinked())
 			let prompt = ``;
 			if (num == 0) prompt += `令其横置并摸1张牌`;
-			else if (num == 1) prompt += `令其横置`;
+			else if (num == 1) prompt += `令其横置(建议选择敌人)`;
 			else if (num == 2) prompt += `令其横置并摸1张牌，或重置并弃1张牌`;
-			else if (num == 3) prompt += `令其重置`;
+			else if (num == 3) prompt += `令其重置(建议选择队友)`;
 			else prompt += `令其重置并弃1张牌`;
 			let filter = function (target) {
 				return !target.hasSkill("hidden_yzs")
@@ -5568,14 +5568,18 @@ const skills = {
 					if (num == 0) {
 						if (!target.isLinked()) return get.attitude(player, target)
 						return -get.attitude(player, target)
+					} else if (num == 1) {
+						return -get.attitude(player, target)
 					} else if (num == 2) {
 						if (!target.isLinked()) return get.attitude(player, target)
 						return get.effect(target, {name:"guohe"},player,player)
+					} else if (num == 3) {
+						return get.attitude(player, target)
 					} else if (num > 3) {
 						if (!target.isLinked()) return get.attitude(player, target)
 						return get.effect(target, { name: "guohe" }, player, player)
 					}
-					return 0;
+					return Math.random();
 				})
 				.set("num",num)
 				.set("onChooseTarget", function () {

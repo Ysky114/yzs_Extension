@@ -10006,14 +10006,16 @@ const skills = {
 			}
 			cards = event.cards.filter((card) => get.position(card, true) == "d");
 			if (length > 2 && cards.length) {
-				let result2 = await fairy.chooseButton(["报春", "使用其中1张牌", cards], 1, true)
-					.set("ai", button => get.value(button.link))
-					.set("filterButton", button => {
-						return _status.event.player.hasUseTarget(button.link);
-					})
-					.forResult()
-				if (result2 && result2.bool) {
-					await fairy.chooseUseTarget(true, result2.links, false);
+				if (cards.some(card => player.hasUseTarget(card))) {
+					let result2 = await fairy.chooseButton(["报春", "使用其中1张牌", cards], 1, true)
+						.set("ai", button => get.value(button.link))
+						.set("filterButton", button => {
+							return _status.event.player.hasUseTarget(button.link);
+						})
+						.forResult()
+					if (result2?.bool && result2.links?.length) {
+						await fairy.chooseUseTarget(true, result2.links, false);
+					}
 				}
 			}
 		},
@@ -10128,14 +10130,16 @@ const skills = {
 			if (!fairy) return false;
 			let cards = event.cards.filter((card) => get.position(card, true) == "d");
 			if (length > 0 && cards.length) {
-				let result2 = await fairy.chooseButton(["报春", "使用其中1张牌", cards], 1, true)
-					.set("ai", button => get.value(button.link))
-					.set("filterButton", button => {
-						return _status.event.player.hasUseTarget(button.link);
-					})
-					.forResult()
-				if (result2 && result2.bool) {
-					await fairy.chooseUseTarget(true, result2.links, false);
+				if (cards.some(card => player.hasUseTarget(card))) {
+					let result2 = await fairy.chooseButton(["报春", "使用其中1张牌", cards], 1, true)
+						.set("ai", button => get.value(button.link))
+						.set("filterButton", button => {
+							return _status.event.player.hasUseTarget(button.link);
+						})
+						.forResult()
+					if (result2?.bool && result2.links?.length) {
+						await fairy.chooseUseTarget(true, result2.links, false);
+					}
 				}
 			}
 			cards = event.cards.filter((card) => get.position(card, true) == "d");

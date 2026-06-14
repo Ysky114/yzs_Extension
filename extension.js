@@ -75,7 +75,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"三国杀是个很残酷的游戏，通常需要很多个玩家才能开始，但是只有一个玩家能玩。",
 						"如果你在生活中遇到了什么糟糕的事，想都不用想，肯定是三国杀干的",
 						"当你觉得一个武将是大作文时，你可以先不看他的技能，多挨打几次就知道了。",
-						"小提示：小提示可以在扩展设置里被关闭。",
+						"“小提示”（就是你现在在看的这个）可以在扩展设置里被关闭。",
 						`大佐·鲁日立的“必定生效”效果不只是强中那么简单。`,
 						`莉可如果牌序不当，将会非常容易暴毙。`,
 						`选择雷古就能开局直接睡觉，把压力留给队友。`,
@@ -92,6 +92,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						`如果你喜欢爽开【无中生有】，那你可以试试马哈特。`,
 						`蕾赛一血进回合了，又有人要遭殃了。`,
 						`网友手操五条悟 VS 网友手操宿傩？胜负由你决定！`,
+						`你知道吗？管郡的仆从有三种随机原画。`,
 					];
 					var suiji = randomNames.randomGet();
 					var name = [suiji, nickname].randomGet();
@@ -582,8 +583,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"Guanjun_yzs",
-						"WhiteSnake_EnricoPucci_yzs"
+						"KomeijiSatori_yzs",
+						"Jovanlin_yzs"
 					]
 				},
 				{
@@ -592,10 +593,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"ZeninNaoya_yzs",
-						"GunTwins_yzs",
-						"YoungGojo_yzs",
-						"KunYee_yzs",
 					]
 				},
 			];
@@ -691,12 +688,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.94</div><br>
+            <div style="color:#ffa348">• 版本号：v0.94.5</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.94",
+			version: "0.94.5",
 		},
 		files: {}, connect: true
 	}

@@ -1195,6 +1195,7 @@ const skills = {
 	},
 	//肉鸽技能
 	rg_treasure: {
+		nopop:true,
 		subSkill: {
 			ban: {
 				charlotte: true,
@@ -1888,7 +1889,7 @@ const skills = {
 				if (player.hasSkill("jiu") && card.name == "sha") return true;
 			},
 			cardUsable(card, player, num) {
-				if (player.hasSkill("jiu") && card.name == "sha") return true;
+				if (player.hasSkill("jiu") && card.name == "sha") return Infinity;
 			},
 		},
 		ai: {
@@ -1962,7 +1963,6 @@ const skills = {
 			player.logSkill("sanbubisha_yzs");
 		},
 		ai: {
-			jiuOther: true,
 			basic: {
 				useful: (card, i) => {
 					if (_status.event.player.hp > 1) {
@@ -2117,10 +2117,10 @@ const skills = {
 		animationColor: "fire",
 		priority: 3,
 		trigger: {
-			source: "damageEnd",
+			global: "phaseEnd",
 		},
 		filter(event, player) {
-			return event.num >= 4;
+			return player.getStat("damage") >= 4;
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);

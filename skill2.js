@@ -4204,6 +4204,7 @@ const skills = {
 		},
 	},
 	BossRule_yzs: {
+		nopop:true,
 		priority: -1314,
 	//	forceDie: true,
 		locked: true,

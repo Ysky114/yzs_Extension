@@ -9,6 +9,7 @@ const characters = {
 		skills: ["speedup_yzs", "create_newworld_yzs"],
 		names: "恩里克普奇",
 		img: "extension/一中杀/image/MadeInHeaven_EnricoPucci_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/MadeInHeaven_EnricoPucci_yzs.mp3"],
 		BGM: "Crucified",
 	},
 
@@ -1354,7 +1355,7 @@ const characters = {
 		sex: "male",
 		group: "shu",
 		hp: 30,
-		skills: ["zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs","fumoyuchuzi_yzs"],
+		skills: ["BossRule_yzs", "rg_treasure", "zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs","fumoyuchuzi_yzs"],
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
@@ -1370,7 +1371,7 @@ const characters = {
 		names: "魔虚罗",
 		img: "extension/一中杀/image/Makora_yzs.png",
 		BGM: "Malevolent Shrine",
-		isUnseen: true,
+	//	isUnseen: true,
 	},
 
 	RyomenSukuna_yzs: {
@@ -1381,8 +1382,6 @@ const characters = {
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
 		BGM: "Malevolent Shrine",
-		isBoss: true,
-		isBossAllowed: true,
 	//	isUnseen: true,
 	},
 
@@ -1442,7 +1441,7 @@ const characters = {
 	YoungGojo_yzs: {
 		sex: "male",
 		group: "wei",
-		hp: 3,
+		hp: 4,
 		skills: ["SixEyes_yzs","wuxiaxian_yzs", "yuzhe_yzs"],
 		names: "五条悟",
 		img: "extension/一中杀/image/YoungGojo_yzs.png",
@@ -1572,6 +1571,7 @@ const characters = {
 		skills: ["choudie_yzs", "miyu_yzs"],
 		names: "恩里克 普奇",
 		img: "extension/一中杀/image/WhiteSnake_EnricoPucci_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/MadeInHeaven_EnricoPucci_yzs.mp3"],
 		BGM: "Crucified",
 	},
 
@@ -1582,9 +1582,28 @@ const characters = {
 		skills: ["Gravity_yzs", "Gravity_yzs_limited","Singularity_yzs"],
 		names: "恩里克 普奇",
 		img: "extension/一中杀/image/CMoon_EnricoPucci_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/MadeInHeaven_EnricoPucci_yzs.mp3"],
 		BGM: "Crucified",
 		isUnseen: true,
 	},
+
+	KomeijiSatori_yzs: {
+		sex: "female",
+		group: "jin",
+		hp: 3,
+		skills: ["mingji_yzs", "MindControl_yzs", "xiangqi_yzs"],
+		names: "古明地觉",
+		img: "extension/一中杀/image/KomeijiSatori_yzs.png",
+	},
+
+	Jovanlin_yzs: {
+		sex: "male",
+		group: "qun",
+		hp: 3,
+		skills: ["jingjuan_yzs", "shixue_yzs"],
+		names: "Jovanlin",
+		img: "extension/一中杀/image/Jovanlin_yzs.png",
+	}
 };
 
 const characterSubstitutes = {
@@ -1736,7 +1755,8 @@ const characterTitles = {
 	FushiguroToji_yzs: `不羁争强的狂兽`,
 	Guanjun_yzs: `淫欲囚医`,
 	WhiteSnake_EnricoPucci_yzs: `神父·白蛇`,
-	CMoon_EnricoPucci_yzs:`神父·新月`,
+	CMoon_EnricoPucci_yzs: `神父·新月`,
+	KomeijiSatori_yzs:`大家的心病`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1817,7 +1837,7 @@ const characterIntros = {
 	SCP049_yzs: `SCP-049是一个人形实体，身高1.9米，外形与中世纪的瘟疫医生相符。虽然SCP-049看上去穿着厚长袍和表明其职业的陶制面具，但这些服装似乎是随着时间的推移从SCP-049的体内生长而出的，现已几乎无法将服装与服装下的体形区分开来。尽管如此，X光检查表明，SCP-049的表层之下确实有人类骨骼结构。<br>SCP-049会对其认为受瘟疫影响的人类个体产生敌意，经常会达到应加以控制的程度。如果不加控制，SCP-049通常会试图杀死该人类个体；SCP-049能够通过直接的皮肤接触使生物体的所有生理机能停止。发生这种情况的原因尚不清楚，对SCP-049受害者的尸检均无定论。SCP-049在杀人后曾表现出沮丧或悔恨，表示这样的行为对消灭“瘟疫”帮助极小，但接下来通常会使用其总是随身携带的一个黑色医疗包中的器具对尸体进行粗糙的手术。手术往往会导致SCP-049-2出现，但并非总能“成功”`,
 	SCP106_yzs:`SCP-106看起来是一个老年人形生物，通常有着高度腐烂的外形。他的外形经常改变，但是均能观察到腐烂的外形。<br>SCP-106能够对其触碰的固体导致一种“腐蚀”效应，在触碰数秒之后导致物质的物理性崩溃。材料会被观察到生锈、腐朽和最终崩溃的过程，并且会创造出一种黑色的、像黏液一样类似于包裹着SCP-106的物质的材料。<br>SCP-106能够穿过固体物质，在它身后留下一大段的腐蚀性粘液。SCP-106能够“消失”在固体物质之中，进入一种被假定为“口袋空间”的物质之中。SCP-106接下来能够通过与任何它最初进入的固体物质相连的固体物质出去（例如：“进入”房间的内墙，从外墙“出去”。进入一堵墙壁，从天花板离开）。这现在还不知道是否是SCP-106原型的关键，或者说只是它制造出来的“巢穴”。`,
 	LiTong_yzs: `“静，我会永远记住你的舞步、你的笑颜和你的死亡。”<br>“创造出我们的那天，你们有想过我会回来复仇吗？”`,
-	Nanachi_yzs: `娜娜奇（ナナチ）是由土笔章人所创作的漫画《来自深渊》及其衍生作品的登场角色。来自极北要地赛雷尼，有着兔子外形的「生骸」、知识丰富，自称软绵绵的布偶。与好友米蒂一同居住在深渊四层。拯救了在第四层因中毒及上升负荷而陷入濒死的莉可。性别未公布。使用男性化第一人称「俺、咱（オイラ）」。口癖是「嗯呐（んなぁ〜）」。被雷古触碰时会感到害羞`,
+	Nanachi_yzs: `娜娜奇 是由土笔章人所创作的漫画《来自深渊》及其衍生作品的登场角色。来自极北要地赛雷尼，有着兔子外形的「生骸」、知识丰富，自称软绵绵的布偶。与好友米蒂一同居住在深渊四层。拯救了在第四层因中毒及上升负荷而陷入濒死的莉可。性别未公布。使用男性化第一人称「俺、咱（オイラ）」。口癖是「嗯呐（んなぁ〜）」。被雷古触碰时会感到害羞`,
 	FengCthulhu_yzs: `“人间虚伪无比，主会支配一切！”`,
 	Keiki_yzs: `埴安神袿姬是《东方Project》系列游戏角色，首次登场于《东方鬼形兽》作为六面BOSS，由地狱畜生界灵长园中的人类灵召唤而来。其通过造形术创造埴轮兵团驱逐动物灵势力，重建灵长园秩序并成为新支配者。角色身穿雕刻围裙、戴防掉发头巾，展现造形师的职业特征。动物灵组织引导博丽灵梦等人击败吸收过度信仰的袿姬，战后她开始为人类灵寻求地面居所，并主动改善与幻想乡居民的关系。袿姬允许雾雨魔理沙参观灵长园，提出为博丽神社制作神像，体现立场转变。角色性格兼具天真的和平主义与对入侵者的强硬态度，其造形能力体现在埴轮武装男子立像、马形埴轮等作品的设计中。战斗中使用的符卡包含「土偶人馬造形術」「鬼形造形術」「トランスヒューマナイズ」，展现土属性和星属性攻击特性`,
 	Yugi_yzs: `星熊勇仪，女，日本《东方Project》系列弹幕游戏及其衍生作品的登场角色之一，于《东方地灵殿》首次登场，山之四天王之一。星熊勇仪，传说中的鬼以怪力闻名，栖身旧地狱，性格刚毅，偏好勇力正直之人，厌恶懦弱狡猾之辈，拥有能提升酒品级的星熊杯，现几乎断绝与人类及地面妖怪交往，情报稀少`,
@@ -1864,6 +1884,7 @@ const characterIntros = {
 	newLifeChimera_yzs: `偏僻的村庄中，流传着这样的传说：外出晚归的男子会遇见一个面目惨白、绝美的女性，此时，他若被其魅惑，很快就会成为扭曲之物的一部分。<br>“管郡，该收手了，结束你的罪孽就是我生的理由。”                  ——绪山双月鸟`,
 	WhiteSnake_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`, 
 	CMoon_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
+	KomeijiSatori_yzs:`古明地觉，系列作品《东方Project》中的角色，拥有读心的能力，于《东方地灵殿》中作为四面BOSS首次登场，同时也是漫画《东方智灵奇传 犯规侦探觉》的主角。读心的妖怪。虽然住在位于旧地狱中心的地灵殿，因其能力就算是那些身居尽是被厌恶者的地底的妖怪们也惧怕着她。在地灵殿过着被动物们簇拥起来的生活。虽然她被能使用语言的人所厌恶，但相反地对于无法说话的存在而言，她却因为是弥足珍贵的可以相互沟通的存在而被视若珍宝，因此许多动物仰慕着她而聚集到了地灵殿生活。动物们中有像阿燐和阿空这样可以帮助觉工作的，也有能够照顾其他宠物的宠物之类的。`,
 };
 const characterReplaces = {
 };
@@ -1883,13 +1904,13 @@ const characterSort = {
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
-		"ReiujiUtsuho_yzs","Sakuya_yzs"],
+		"ReiujiUtsuho_yzs", "Sakuya_yzs","KomeijiSatori_yzs"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs",],
-	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs","FushiguroToji_yzs"],
+	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs","Makora_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
-	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs", "RyomenSukuna_yzs","GojoSatoru_yzs"],
+	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],
 };
 export { characterSubstitutes, characterTitles, characterIntros, characterReplaces, characterSort };

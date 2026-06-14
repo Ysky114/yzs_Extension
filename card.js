@@ -3006,79 +3006,9 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						if (game.hasPlayer(cur => cur.name == "Makora_yzs", true)) {
 							return;
 						}
-						game.addGlobalSkill("Makora_auto")
-						if (!_status.moxuluo_yzs) {
-							if (!game.checkResult_moxuluo_yzs) {
-								game.checkResult_moxuluo_yzs = game.checkResult;
-								game.checkResult = function () {
-									const targets = game.players.filter(i => i.isNoPlayer_moxuluo_yzs);
-									game.players.removeArray(targets);
-									game.checkResult_moxuluo_yzs();
-									game.players.addArray(targets);
-								};
-							}
-							if (!game.checkOnlineResult_moxuluo_yzs) {
-								game.checkOnlineResult_moxuluo_yzs = game.checkOnlineResult;
-								game.checkOnlineResult = function (player) {
-									const targets = game.players.filter(i => i.isNoPlayer_moxuluo_yzs);
-									game.players.removeArray(targets);
-									game.checkOnlineResult_moxuluo_yzs(player);
-									game.players.addArray(targets);
-								};
-							}
-							game.broadcastAll(() => {
-								_status.moxuluo_yzss = true;
-							})
-						}
-						if (!get.attitude_moxuluo_yzs) {
-							get.attitude_moxuluo_yzs = get.attitude;
-							get.attitude = function (from, to) {
-								if (from && from?.getStorage("moxuluo_yzs_source", false)) {
-									from = from.getStorage("moxuluo_yzs_source", false);
-								}
-								if (to && to?.getStorage("moxuluo_yzs_source", false)) {
-									to = to.getStorage("moxuluo_yzs_source", false);
-								}
-								let att = get.attitude_moxuluo_yzs(from, to);
-								return att;
-							};
-						}
-						const Makora = await game.addPlayerOL(target, "Makora_yzs", null, true);
-						game.broadcastAll((Makora) => {
-							Makora.isNoPlayer_longzhiban_yzs = true;
-							Makora.dieAfter = function () { };
-							Makora.dieAfter2 = function () { };
-						}, Makora)
-						Makora.setStorage("moxuluo_yzs_source", player);
-						Makora.ai.modAttitudeFrom = function (from, to, att) {
-							if (_status.moxuluo_yzs_source_att_ing) return att;
-							if (from.getStorage("moxuluo_yzs_source", false)) {
-								from = from.getStorage("moxuluo_yzs_source", false);
-							}
-							if (to.getStorage("moxuluo_yzs_source", false)) {
-								to = to.getStorage("moxuluo_yzs_source", false);
-							}
-							_status.moxuluo_yzs_source_att_ing = true;
-							att = get.attitude(from, to);
-							delete _status.moxuluo_yzs_source_att_ing;
-							return att;
-						};
-						game.broadcastAll((Makora, player) => {
-							if (get.mode() == 'guozhan') {
-								if (Makora.name2 == undefined) Makora.name2 = Makora.name1;
-							}
-							if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-								Makora.side = player.side;
-								Makora.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-								Makora.node.identity.dataset.color = player.node.identity.dataset.color;
-							}
-							Makora.skillH = [];
-							Makora.storage.zhibi = [];
-							Makora.storage.stratagem_expose = [];
-							Makora.storage.stratagem_fury = 0;
-						}, Makora, player);
-						Makora.storage.isSub = true;
-						Makora.markSkill("isSub");
+						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true,dieRemove:false, noCheckResult: true }).forResult()
+						if (!result?.target) return;
+						const Makora = result.target;
 						if (player.storage.Makora_yzs && player.storage.Makora_yzs) {
 							Makora.hp = player.storage.Makora_yzs;
 							Makora.update();
@@ -3090,7 +3020,6 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							}
 						}
 						Makora.addSkill("rg_treasure_ban")
-						Makora.directgain(get.cards(4));
 						Makora
 							.when({ global: "die" })
 							.filter((evt, player2) => {
@@ -3101,11 +3030,6 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 								forceDie: true,
 							})
 							.step(lib.card["moxuluo_yzs"].dieRemove);
-						game.broadcastAll(function (player, Makora) {
-							_status.Makora_auto = [player.playerid, Makora.playerid]
-							Makora._trueMe = player;
-							player._trueMe = player;
-						}, player, Makora)
 						game.log(player, '召唤了', lib.translate['Makora_yzs']);
 					}
 				},

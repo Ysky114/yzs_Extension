@@ -2080,6 +2080,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		config.startCards ??= 4;
 		config.noCheckResult ??= false;
 		config.isSub ??= true;
+		config.noDieAfter ??= true;
 		config.noDieAfter2 ??= true;
 		for (const i in config) {
 			next[i] = config[i];
@@ -2090,7 +2091,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.element.content.yzs_addPlayerOL = async function (event, trigger, player) {
 		const result = {};
 		event.result = result;
-		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub, noDieAfter2 } = event;
+		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub, noDieAfter, noDieAfter2 } = event;
 		const newPlayer = await game.addPlayerOL(target, ...rawPairs, isNext, { source, animate });
 		result.target = newPlayer;
 
@@ -2114,6 +2115,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		}
 		if (dieRemove) {
 			newPlayer.addSkill("yzs_dieRemove");
+		}
+		if (noDieAfter) {
+			newPlayer.dieAfter = function () { }
 		}
 		if (noDieAfter2) {
 			newPlayer.dieAfter2 = function () { }

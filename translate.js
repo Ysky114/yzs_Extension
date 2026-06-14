@@ -178,7 +178,9 @@ const translates = {
 	newLifeChimera_yzs: `奇美拉`,
 	newLifeChimera_yzs1: `奇美拉`,
 	WhiteSnake_EnricoPucci_yzs: `恩里克 普奇`,
-	CMoon_EnricoPucci_yzs:`恩里克 普奇`,
+	CMoon_EnricoPucci_yzs: `恩里克 普奇`,
+	KomeijiSatori_yzs: `古明地觉`,
+	Jovanlin_yzs:`Jovanlin`,
 
     // 技能台词
 
@@ -617,7 +619,7 @@ const translates = {
 	Zoltraak_yzs: "弑魔魔法",
 	Zoltraak_yzs_info:`你可将锦囊牌当做无次数距离限制的任意基本牌使用或打出，并摸1张牌。然后若底牌牌名为你首次因此转化，或转化牌不为【杀】，本技能本回合失效`,
 	Defend_yzs: "防御魔法",
-	Defend_yzs_info:`你可将基本牌当做【无懈可击】打出并摸1张牌，然后若底牌为【杀】，本技能本回合失效。`,
+	Defend_yzs_info:`你可将基本牌当做【无懈可击】使用并摸1张牌，然后若底牌为【杀】，本技能本回合失效。`,
 	suyin_yzs: "速吟",
 	suyin_yzs_info: `限定技：场上角色回合结束后，你可执行额外回合。`,
 
@@ -1297,7 +1299,7 @@ const translates = {
 	sanbubisha_yzs_info: `锁定技：每局游戏限3次：需要时，你可视为使用【酒】（有次数限制）。<br>
 	若本技能已耗尽次数，你使用【杀】时重置本技能、摸3张牌并令之不可响应。`,
 	guiqikuanglan_yzs: `鬼气狂澜`,
-	guiqikuanglan_yzs_info: `觉醒技：你使用【杀】单次造成≥4点伤害后，你觉醒：你使用【酒】的次数上限+1。`,
+	guiqikuanglan_yzs_info: `觉醒技：每回合结束时，若你本回合造成伤害之和≥4，你觉醒：你使用【酒】的次数上限+1。`,
 
 	dajiejie_yzs: `大结界`,
 	dajiejie_yzs_info: `锁定技：回合开始时你获得[1]张${get.poptip("Fuka_yzs")}。你使用或打出红色牌时获得[0]张符卡。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`,
@@ -1656,10 +1658,15 @@ const translates = {
 	SimpleDomain_yzs_buff:`简易领域`,
 
 	zuzhouzhiwang_yzs: `诅咒之王`,
-	zuzhouzhiwang_yzs_info: `锁定技：每回合开始时你摸牌至4张，然后若为你的回合，你选择1名其他角色，除其以外的其他角色依次可调离并摸1张牌`,
+	zuzhouzhiwang_yzs_info: `锁定技：每回合开始时你摸牌至场上角色数张，然后若为你的回合，你选择1名其他角色，除其以外的其他角色依次可调离并摸1张牌。`,
 	shizhongyingfashu_yzs: `十种影法术`,
-	shizhongyingfashu_yzs_info: `锁定技：你使用非式神非虚拟牌时获得1张点数随机的【影】。<br>你可将对应消耗数量的【影】当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
-	每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标或使用者，你可将目标转移给“魔虚罗”。`,
+	shizhongyingfashu_yzs_info: `锁定技：你使用非式神非虚拟牌时获得1张点数随机的【影】。<br>你可将对应消耗数量的手牌当做未被破坏的${get.poptip("shishenCard_yzs")}使用。<br>
+	每回合限1次：你和“${get.poptip({
+		id: "character_Makora_yzs",
+		name: "魔虚罗",
+		type: "character",
+		dialog: "characterDialog",
+	})}”其中一方成为牌的目标时，若二者不为使用者，你可将目标转移给另一方。`,
 	fanzhuanshushi_yzs: `反转术式`,
 	fanzhuanshushi_yzs_info: `锁定技：你可将2张非【影】手牌当做【桃】对自己使用，若这两张牌点数相同，结算后你可恢复一个已失效的技能。`,
 	jie_yzs: `解`,
@@ -1680,11 +1687,11 @@ const translates = {
 	tuimozhijian_yzs_info:`你攻击范围+2。你使用【杀】不可响应。`,
 
 	liangmianguishen_yzs: `两面鬼神`,
-	liangmianguishen_yzs_info: `锁定技：你摸牌数和出【杀】数翻倍。你无视翻面效果。你造成非属性伤害后，可横置受伤角色。`,
+	liangmianguishen_yzs_info: `锁定技：你摸牌数和出【杀】数翻倍。你无视翻面效果。你造成非属性伤害后，可横置受伤角色。你的术式强度提升。`,
 
 	challenger_yzs:`你才是挑战者`,
 	SixEyes_yzs: `六眼`,
-	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至6张。<br>每回合开始时，你失去1点体力或令本技能本回合失效。`,
+	SixEyes_yzs_info: `锁定技：牌堆顶的牌对你可见。<br>你的回合结束时，你摸牌至体力上限张。<br>每回合开始时，你失去1点体力或令本技能本回合失效。`,
 	wuxiaxianshushi_yzs: `无下限术式`,
 	wuxiaxianshushi_yzs_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
 你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
@@ -1733,7 +1740,7 @@ const translates = {
 	wuxiaxian_yzs_lv2_info: `防具技能：若你未处于其他角色的领域内，你受到伤害时，可弃置任意张手牌令伤害值减少等量点，然后你摸1张牌。若所弃的牌与摸的牌花色有不同，本技能本回合失效。<br>
 每自轮各限1次：你连续使用点数严格递减/增的牌中断时(【苍】和【赫】不计入)，你获得1张点数为X的${get.poptip("wtwCang_yzs")}/${get.poptip("wtwHe_yzs")}（X为中断前连续使用的牌数）。`,
 	yuzhe_yzs: `玉折`,
-	yuzhe_yzs_info: `觉醒技：你发动过${get.poptip("wuxiaxian_yzs")}的回合内，你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
+	yuzhe_yzs_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
 
 	eling_yzs: `恶伶`,
 	eling_yzs_info: `你可将手牌当做【闪】或【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。`,
@@ -1797,7 +1804,7 @@ const translates = {
 	choudie_yzs_disc_info:`持有者出牌阶段可移去任意张【碟】以检索等量张锦囊牌`,
 	miyu_yzs: `密语`,
 	miyu_yzs_info:`锁定技：你每回合使用或打出第质数张牌时摸1张牌。<br>
-    觉醒技：回合结束后，若你本局已使用过14张锦囊牌，你觉醒：你恢复全部体力、本局摸牌数+1、然后更换人物牌至${get.poptip({
+    觉醒技：回合结束后，若你本局已使用过14张牌，你觉醒：你恢复全部体力、本局摸牌数+1、然后更换人物牌至${get.poptip({
 		id: "character_CMoon_EnricoPucci_yzs",
 		name: "神父·新月",
 		type: "character",
@@ -1816,7 +1823,21 @@ const translates = {
 		dialog: "characterDialog",
 	})}并执行额定回合。`,
 	Singularity_yzs_position: `位置`,
-	Singularity_yzs_position_info:`持有者造成或受到伤害或死亡时，将本标记移至其上家`,
+	Singularity_yzs_position_info: `持有者造成或受到伤害或死亡时，将本标记移至其上家`,
+
+	mingji_yzs: `铭记`,
+	mingji_yzs_info: `每名角色每回合限1次，场上角色成为实体即时牌的目标时，若其无【忆】或【忆】牌名均不同，其可将之正面向上扣置为自己的【忆】，然后取消此目标。`,
+	MindControl_yzs: `精神操控`,
+	MindControl_yzs_info: `出牌阶段限1次，你观看1名角色的手牌并选择其1张手牌或【忆】，其将之加入【忆】/获得之。
+直至你下次发动本技能前，其的${get.poptip("mingji_yzs")}由你选择是否发动，且无次数限制。`,
+	xiangqi_yzs: `想起`,
+	xiangqi_yzs_info: `出牌阶段，你可获得1名角色2张同名的【忆】，然后依次视为对其使用其剩余【忆】中的即时牌。`,
+
+	jingjuan_yzs: `竞卷`,
+	jingjuan_yzs_info:`出牌阶段限1次，你视为使用可额外指定你自己的【南蛮入侵】，然后目标角色同时声明其需响应牌数（1~4张）。结算后，响应牌数最多的角色摸2张牌。`,
+	shixue_yzs: `嗜学`,
+	shixue_yzs_info:`锁定技：你每造成1点伤害便摸1张牌。<br>你使用你于本回合获得的牌无距离次数限制。<br>
+    你体力值为0/1/2/3时，你于本回合前获得的牌视为【酒】/【桃】/【杀】／【闪】。 `,
 };
 
 export default translates;

@@ -310,6 +310,7 @@ const skills = {
 				"_priority": 0,
 			},
 		},
+		audio: "ext:一中杀/audio/skill:2",
 		trigger: {
 			player: "phaseAfter",
 		},
@@ -2400,7 +2401,7 @@ const skills = {
 			return get.attitude(player, event.player) > 3;
 		},
 		async content(event, trigger, player) {
-			player.awakenSkill()
+			player.awakenSkill("lastclass_yzs")
 			trigger.cancel("lastclass_yzs");
 			if (trigger.player === player) {
 				await player.recover(player.maxHp - player.hp);
