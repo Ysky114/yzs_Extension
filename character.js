@@ -1600,9 +1600,29 @@ const characters = {
 		sex: "male",
 		group: "qun",
 		hp: 3,
-		skills: ["jingjuan_yzs", "shixue_yzs"],
+		skills: ["jingjuan_yzs", "shixue_yzs","rg_mumei"],
 		names: "Jovanlin",
 		img: "extension/一中杀/image/Jovanlin_yzs.png",
+	},
+
+	Irumyuui_yzs: {
+		sex: "female",
+		group: "qun",
+		hp: 4,
+		skills: ["yunyu_yzs", "duozi_yzs"],
+		names: "伊尔缪伊",
+		img: "extension/一中杀/image/Irumyuui_yzs.png",
+		BGM: "かたち",
+	},
+
+	Faputa_yzs: {
+		sex: "female",
+		group: "qun",
+		hp: 4,
+		skills: ["bianxing_yzs", "jiazhi_yzs"],
+		names: "法仆塔",
+		img: "extension/一中杀/image/Faputa_yzs.png",
+		BGM: "SAN-KEN「The Three SAGES」",
 	}
 };
 
@@ -1756,7 +1776,9 @@ const characterTitles = {
 	Guanjun_yzs: `淫欲囚医`,
 	WhiteSnake_EnricoPucci_yzs: `神父·白蛇`,
 	CMoon_EnricoPucci_yzs: `神父·新月`,
-	KomeijiSatori_yzs:`大家的心病`,
+	KomeijiSatori_yzs: `大家的心病`,
+	Irumyuui_yzs: `温暖的黑暗`,
+	Faputa_yzs:`生骸公主`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1884,7 +1906,10 @@ const characterIntros = {
 	newLifeChimera_yzs: `偏僻的村庄中，流传着这样的传说：外出晚归的男子会遇见一个面目惨白、绝美的女性，此时，他若被其魅惑，很快就会成为扭曲之物的一部分。<br>“管郡，该收手了，结束你的罪孽就是我生的理由。”                  ——绪山双月鸟`,
 	WhiteSnake_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`, 
 	CMoon_EnricoPucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
-	KomeijiSatori_yzs:`古明地觉，系列作品《东方Project》中的角色，拥有读心的能力，于《东方地灵殿》中作为四面BOSS首次登场，同时也是漫画《东方智灵奇传 犯规侦探觉》的主角。读心的妖怪。虽然住在位于旧地狱中心的地灵殿，因其能力就算是那些身居尽是被厌恶者的地底的妖怪们也惧怕着她。在地灵殿过着被动物们簇拥起来的生活。虽然她被能使用语言的人所厌恶，但相反地对于无法说话的存在而言，她却因为是弥足珍贵的可以相互沟通的存在而被视若珍宝，因此许多动物仰慕着她而聚集到了地灵殿生活。动物们中有像阿燐和阿空这样可以帮助觉工作的，也有能够照顾其他宠物的宠物之类的。`,
+	KomeijiSatori_yzs: `古明地觉，系列作品《东方Project》中的角色，拥有读心的能力，于《东方地灵殿》中作为四面BOSS首次登场，同时也是漫画《东方智灵奇传 犯规侦探觉》的主角。读心的妖怪。虽然住在位于旧地狱中心的地灵殿，因其能力就算是那些身居尽是被厌恶者的地底的妖怪们也惧怕着她。在地灵殿过着被动物们簇拥起来的生活。虽然她被能使用语言的人所厌恶，但相反地对于无法说话的存在而言，她却因为是弥足珍贵的可以相互沟通的存在而被视若珍宝，因此许多动物仰慕着她而聚集到了地灵殿生活。动物们中有像阿燐和阿空这样可以帮助觉工作的，也有能够照顾其他宠物的宠物之类的。`,
+	Irumyuui_yzs: `跟随探窟敢死队一起下潜到深界六层的一员。原本是阿比斯洞口的土著，因为不能够生孩子，被土著部落流放下深渊，为探窟敢死队所收容。最后被贤者瓦兹康利用，化为了生骸村的村落。`,
+	Faputa_yzs: `法仆塔（ファプタ），日本漫画《来自深渊》及其衍生作品中的角色，别名“生骸公主”，由久野美咲配音。该角色长期居住在深渊第六层“来无回之都”，具有四臂两足的异形身躯，可伏地高速移动并具备怪力，还能化为流态穿过物体孔洞。法仆塔曾因与深渊生物“龙鬃螺鸠”交战逃亡而与雷古相遇，双方互换知识后建立羁绊。`,
+
 };
 const characterReplaces = {
 };
@@ -1907,7 +1932,7 @@ const characterSort = {
 		"ReiujiUtsuho_yzs", "Sakuya_yzs","KomeijiSatori_yzs"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
-	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs",],
+	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
 	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs","Makora_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],

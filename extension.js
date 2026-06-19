@@ -583,8 +583,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"KomeijiSatori_yzs",
-						"Jovanlin_yzs"
+						"Irumyuui_yzs",
+						"Faputa_yzs"
 					]
 				},
 				{
@@ -593,6 +593,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
+						"Jovanlin_yzs",
+						"ReiujiUtsuho_yzs"
 					]
 				},
 			];
@@ -688,12 +690,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.94.5</div><br>
+            <div style="color:#ffa348">• 版本号：v0.95</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.94.5",
+			version: "0.95",
 		},
 		files: {}, connect: true
 	}

@@ -1766,28 +1766,105 @@ const skills = {
 		usable: 1,
 		filter(event, player) {
 			return (game.hasPlayer(function (target) {
-				if (target.hasSkill("hidden_yzs")) return false;
-				return player.canUse({ name: "huogong", isCard: false }, target)
+				return player.canUse({
+					name: "huogong",
+					isCard: true, }, target)
 			}))
 		},
-		filterTarget: function (card, player, target) {
-			return player.canUse({ name: "huogong", isCard: false }, target)
+		viewAs: {
+			name: "huogong",
+			isCard: true,
 		},
-		selectTarget: 1,
-		async content(event, trigger, player) {
-			let next = player.useCard({ name: "huogong", isCard: false }, event.target);
-			next.baseDamage = 0;
-			await next;
+		viewAsFilter(player) {
+			return true
 		},
-		prompt: `出牌阶段限1次：你视为使用伤害为0的【火攻】`,
+		filterCard: () => false,
+		selectCard: -1,
+		prompt: `出牌阶段限1次：你视为使用【火攻】`,
 		ai: {
-			order: 2,
-			result: {
-				target: -2,
+			order(item, player) {
+				return 8;
 			},
-			threaten: 1.2,
-			combo: "SubterraneanSun_yzs"
-		}
+			basic: {
+				order: 9.2,
+				value: [3, 1],
+				useful: 0.6,
+			},
+			wuxie(target, card, player, viewer, status) {
+				if (get.attitude(viewer, player._trueMe || player) > 0) {
+					return 0;
+				}
+				if (status * get.attitude(viewer, target) * get.effect(target, card, player, target) >= 0) {
+					return 0;
+				}
+				if (_status.event.getRand("huogong_wuxie") * 4 > player.countCards("h")) {
+					return 0;
+				}
+			},
+			result: {
+				player(player) {
+					var nh = player.countCards("h");
+					if (nh <= player.hp && nh <= 4 && _status.event.name == "chooseToUse") {
+						if (typeof _status.event.filterCard == "function" && _status.event.filterCard(new lib.element.VCard({ name: "huogong" }), player, _status.event)) {
+							return -10;
+						}
+						if (_status.event.skill) {
+							var viewAs = get.info(_status.event.skill).viewAs;
+							if (viewAs == "huogong") {
+								return -10;
+							}
+							if (viewAs && viewAs.name == "huogong") {
+								return -10;
+							}
+						}
+					}
+					return 0;
+				},
+				target(player, target) {
+					if (target.hasSkill("huogong2") || target.countCards("h") == 0) {
+						return 0;
+					}
+					if (player.countCards("h") <= 1) {
+						return 0;
+					}
+					if (_status.event.player == player) {
+						if (target.isAllCardsKnown(player)) {
+							if (
+								!target.countCards("h", card => {
+									return player.countCards("h", card2 => {
+										return get.suit(card2) == get.suit(card);
+									});
+								})
+							) {
+								return 0;
+							}
+						}
+					}
+					if (target == player) {
+						if (typeof _status.event.filterCard == "function" && _status.event.filterCard(new lib.element.VCard({ name: "huogong" }), player, _status.event)) {
+							return -1.15;
+						}
+						if (_status.event.skill) {
+							var viewAs = get.info(_status.event.skill).viewAs;
+							if (viewAs == "huogong") {
+								return -1.15;
+							}
+							if (viewAs && viewAs.name == "huogong") {
+								return -1.15;
+							}
+						}
+						return 0;
+					}
+					return -1.15;
+				},
+			},
+			tag: {
+				damage: 1,
+				fireDamage: 1,
+				natureDamage: 1,
+				norepeat: 1,
+			},
+		},
 	},
 	SubterraneanSun_yzs: {
 		//group:"SubterraneanSun_yzs_start",
@@ -4663,6 +4740,16 @@ const skills = {
 						}, 50)
 					});
 					await new Promise(r => setTimeout(r, 14000))
+					game.broadcastAll((die) => {
+						if (game.me.playerid != die.playerid) return;
+						let evt = _status.event.getParent("chooseToUse")
+						if (!evt) return;
+						evt.endButton?.close();
+						delete evt.endButton;
+						ui.exit?.close();
+						delete ui.exit;
+						evt.fakeforce = false;
+					}, pos)
 					const wtw = await game.addPlayerOL(pos, "GojoSatoru_yzs", null, true);
 					if (!get.attitude_GojoSatoru_yzs) {
 						get.attitude_GojoSatoru_yzs = get.attitude;
@@ -4905,7 +4992,7 @@ const skills = {
 				popup:false,
 				forced: true,
 				filter(event, player) {
-					return false;
+			//		return false;
 					return (event.name != "phase" || game.phaseNumber == 0);
 				},
 				async content(event, trigger, player) {
@@ -5361,7 +5448,7 @@ const skills = {
 				}
 			},
 		},
-		prompt: "你可将2张手牌当做【桃】对自己使用，结算后若这两张牌点数相同，你再恢复一个已失效的技能",
+		prompt: "你可将2张非【影】手牌当做【桃】对自己使用，结算后若这两张牌点数相同，你再恢复一个已失效的技能",
 		viewAsFilter(player) {
 			return player.countCards("h") > 1;
 		},
@@ -6023,7 +6110,10 @@ const skills = {
 	zao_yzs: {
 		onChooseToUse(event) {
 			const player = event.player;
-			let base = player.isLinked() ? 1 : 0;
+			let base = player.isLinked() ? 2 : 1;
+			if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
+				base++;
+			}
 			if (game.filterPlayer(cur => cur != player).every(cur => cur.isLinked())) base++;
 			event.targetprompt2.add(target => {
 				if (event.skill !== "zao_yzs" || !target.classList.contains("selectable")) {
@@ -6045,7 +6135,7 @@ const skills = {
 		async content(event, trigger, player) {
 			await player.tempBanSkill(event.name);
 			const target = event.target;
-			let base = player.isLinked() ? 1 : 0;
+			let base = player.isLinked() ? 2 : 1;
 			if (game.filterPlayer(cur => cur != player).every(cur => cur.isLinked())) base++;
 			if (!target.isLinked()) base++;
 			if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
@@ -6128,7 +6218,7 @@ const skills = {
 		prompt: `${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色的回合结束时，你对其发动${get.poptip("jie_yzs")}`,
 		check(card) {
 			let player = _status.event.player;
-			return 8 - get.value(card);
+			return 6 - get.value(card,player);
 		},
 		filter(event, player) {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
@@ -6196,7 +6286,7 @@ const skills = {
 		ai: {
 			order(item, player2) {
 				if (_status._yzsDomainPlayer != player2 && _status._yzsDomain == "wuliangkongchu_yzs") return 114514
-				return 1;
+				return 8;
 			},
 			result: {
 				player: 1,
@@ -6711,8 +6801,8 @@ const skills = {
 						.set("ai", button => {
 							const player = get.event().player;
 							const target = get.event().target;
-							if (button.link == "失效") return player != target && get.attitude(target, player) > 0;
-							if (player == target) return true;
+							if (button.link == "失效" && player != target && get.attitude(target, player) > 0) return 123;
+							if (player == target) return 144;
 							return get.attitude(target, player) < -2 * (1 - player.hp / player.maxHp);
 						})
 						.forResult();

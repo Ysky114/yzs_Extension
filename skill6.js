@@ -2089,13 +2089,11 @@ const skills = {
 								while (num--) {
 									let card = get.cardPile2(func)
 									if (card) {
-										if (Array.isArray(card)) card = card[0];
-										gains.push(card);
+										await player.gain(card, "gain2");
 									} else {
 										break;
 									}
 								}
-								await player.gain(gains, "gain2");
 							},
 						}
 					}
@@ -2655,16 +2653,12 @@ const skills = {
 		subSkill: {
 			global: {
 				priority: -10,
-				usable(skill, player) {
-					const owner = player.storage.MindControl_yzs 
-					if (owner && get.itemtype(owner) == "player" && owner.isIn?.()) return Infinity;
-					return 1;
-				},
 				trigger: {
 					target: "useCardToTargeted",
 				},
 				filter(event, player) {
 					if (!["basic", "trick"].includes(get.type(event.card))) return false;
+					if (player.hasSkill("mingji_yzs_used") && !(get.itemtype(player.storage.MindControl_yzs) == "player" && player.storage?.MindControl_yzs?.isIn?.())) return false;
 					const cards = player.getExpansions("mingji_yzs");
 					let map = {};
 					for (let card of cards) {
@@ -2701,6 +2695,7 @@ const skills = {
 						game.log(player, "从", trigger.card, "的目标中移除");
 					}
 					let cards2 = trigger.cards.filterInD();
+					player.addTempSkill("mingji_yzs_used")
 					let next = player.addToExpansion(cards2,"gain2", player);
 					next.gaintag.add("mingji_yzs")
 					await next;
@@ -3031,7 +3026,7 @@ const skills = {
 										game.playAudio("effect/flappybird_score.wav");
 									}
 								});
-								await cur.draw(2);
+								await cur.draw(3);
 								break;
 							}
 						}
@@ -3089,10 +3084,12 @@ const skills = {
 			damage: {
 				forced:true,
 				trigger: {
-					source:"damageEnd"
+					player: "useCardAfter",
 				},
-				getIndex(event, player) {
-					return event.num
+				filter(event, player) {
+					return player.hasHistory("sourceDamage", function (evt) {
+						return evt.card == event.card;
+					}) 
 				},
 				async content(event, trigger, player) {
 					await player.draw()
@@ -3136,6 +3133,307 @@ const skills = {
 				else if (player.hp == 3) return "shan";
 			},
 		},
-	}
+	},
+	//伊尔缪伊
+	yunyu_yzs: {
+		group: ["yunyu_yzs_summon"],
+		subSkill: {
+			summon: {
+				audio: "yunyu_yzs",
+				skillAnimation: true,
+				animationColor: "fire",
+				locked: true,
+				trigger: {
+					player:"phaseJieshu"
+				},
+				prompt2: `限定技：结束阶段，若你体力上限>8，你可于下家召唤“${get.poptip({
+					id: "character_Faputa_yzs",
+					name: "法仆塔",
+					type: "character",
+					dialog: "characterDialog",
+				})}”，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
+				priority: 5,
+				filter(event, player) {
+					return player.maxHp > 8 && !player.countMark("yunyu_yzs_summon")
+				},
+				async content(event, trigger, player) {
+					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, true, { isControl: true,dieRemove:false }).forResult();
+					if (!result?.target) return;
+					game.broadcastAll(() => {
+						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
+						game.playBackgroundMusic();
+						ui.backgroundMusic.addEventListener('ended', () => {
+							delete _status.tempMusic;
+							game.playBackgroundMusic();
+						}, { once: true });
+					});
+					player.addMark("yunyu_yzs_summon", 1, false)
+					const target = result.target;
+					let result2 = await player.chooseTarget(`你扣除一半体力上限（向上取整），或令“法仆塔”翻面`)
+						.set("filterTarget", (card, player, target) => {
+							return get.event().targets.includes(target)
+						})
+						.set("ai", target => {
+							const player = get.event().player;
+							if (2 * player.hp < player.maxHp) {
+								if (target == player) return 114;
+							} else {
+								if (target.name == "Faputa_yzs") return 114;
+							}
+							return Math.random();
+						})
+						.set("onChooseTarget", function () {
+							const event = get.event();
+							const player = get.player();
+							event.targetprompt2.add(target => {
+								if (!target.classList.contains("selectable")) {
+									return;
+								}
+								if (target == player) return "扣除上限";
+								return "翻面"
+							});
+						})
+						.set('targets', [player,target])
+						.forResult();
+					if (result2?.bool && result2?.targets?.length) {
+						if (result2.targets[0] == player) {
+							game.broadcastAll((current) => {
+								game.playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon1.MP3");
+							}, player);
+							await player.loseMaxHp(Math.ceil(player.maxHp / 2));
+						} else {
+							game.broadcastAll((current) => {
+								game.playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon2.MP3");
+							}, player);
+							await target.turnOver();
+						}
+					}
+				}
+			}
+		},
+		locked: true,
+		forced: true,
+		audio: "ext:一中杀/audio/skill:4",
+		usable: 1,
+		trigger: {
+			player:"damageBegin4"
+		},
+		async content(event, trigger, player) {
+			const target = get.itemtype(trigger.source) == "player" ? trigger.source : player;
+			trigger.cancel();
+			await player.gainMaxHp();
+			const controls = ["draw_card", "recover_hp"];
+			const prompt = `令 ` + get.translation(target) + ` 摸3张牌或恢复2点体力`
+			const next = player.chooseControl(controls);
+			next.set("ai", function () {
+				const player = get.event().player;
+				const target = get.event().target;
+				if (get.attitude(player, target) > 0) {
+					if (target.isHealthy()) return "draw_card"
+					return "recover_hp"
+				} else {
+					if (target.isHealthy()) return "recover_hp"
+					return "draw_card"
+				}
+				return "recover_hp"
+			})
+			next.set("target", target)
+			next.set("prompt", prompt);
+			next.set("forced", true);
+			let result = await next.forResult();
+			if (result.control == "draw_card") {
+				await target.draw(3);
+			} else {
+				await target.recover(2);
+			}
+		}
+	},
+	duozi_yzs: {
+		global: "duozi_yzs_global",
+		subSkill: {
+			global: {
+				enable: "phaseUse",
+				usable: 1,
+				filter(event, player) {
+					if (!player.countCards("h", card => get.type(card, false) == "basic")) return false;
+					return game.hasPlayer((target) => lib.skill.duozi_yzs_global.filterTarget(null, player, target));
+				},
+				filterTarget: function (card, player, target) {
+					return !target.hasSkill("hidden_yzs") && target.hasSkill("duozi_yzs")
+				},
+				filterCard(card, player) {
+					return get.type(card) == "basic" 
+				},
+				check(card) {
+					return 7 - get.value(card);
+				},
+				discard: false,
+				lose: false,
+				delay: 0,
+				prompt:`正面向上给予目标角色1张基本牌，然后视为对其使用【决斗】`,
+				async content(event, trigger, player) {
+					const target = event.target;
+					if(target!=player)await player.give(event.cards, target, true);
+					await player.useCard(target, {name:"juedou",isCard:true})
+				},
+				ai: {
+					order: 9,
+					result: {
+						player:4,
+						target: 0,
+					},
+				},
+			}
+		}
+	},
+	//法仆塔
+	bianxing_yzs: {
+		subSkill: {
+			used: {
+				charlotte: true,
+				onremove: "storage",
+				sub: true,
+				sourceSkill: "bianxing_yzs",
+			},
+		},
+		hiddenCard(player, name) {
+			var list = get
+				.inpileVCardList(info => {
+					const name = info[2];
+					if (get.type(name) != "trick" && get.type(name) != "basic") {
+						return false;
+					}
+					return !player.getStorage("bianxing_yzs_used").includes(name);
+				})
+			list = list.map(i => i = i[2]);
+			return list.includes(name)
+		},
+		enable: ["chooseToUse", "chooseToRespond"],
+		filter(event, player) {
+			if (event.responded) return false;
+			return get
+				.inpileVCardList(info => {
+					const name = info[2];
+					if (get.type(name) != "trick"&&get.type(name)!="basic") {
+						return false;
+					}
+					return !player.getStorage("bianxing_yzs_used").includes(name);
+				})
+				.some(card => event.filterCard({ name: card[2], nature: card[3],isCard:true }, player, event));
+		},
+		chooseButton: {
+			dialog(event, player) {
+				var list = get
+					.inpileVCardList(info => {
+						const name = info[2];
+						if (get.type(name) != "trick" && get.type(name) != "basic") {
+							return false;
+						}
+						return !player.getStorage("bianxing_yzs_used").includes(name) && event.filterCard({ name: info[2], nature: info[3], isCard: true }, player, event);
+					})
+				return ui.create.dialog("变形", [list, "vcard"]);
+			},
+			check(button) {
+				if (_status.event.getParent().type != "phase") {
+					return 1;
+				}
+				return _status.event.player.getUseValue({ name: button.link[2], isCard: false, }, null, true);
+			},
+			backup(links, player) {
+				return {
+					audio: "ext:一中杀/audio/skill:3",
+					filterCard() {
+						return false;
+					},
+					selectCard: -1,
+					position: "h",
+					popname: true,
+					viewAs: {
+						name: links[0][2],
+						isCard: false,
+					},
+					async precontent(event, trigger, player) {
+						player.logSkill("bianxing_yzs");
+						player.addTempSkill("bianxing_yzs_used");
+						player.markAuto("bianxing_yzs_used", [event.result.card.name]);
+						let result = await player
+							.chooseButton([`令【变形】本回合失效，或减少1点体力上限`, [["技能失效", "扣除上限"], "tdnodes"]], true)
+							.set("filterButton", button => {
+								return true;
+							})
+							.set("ai", button => {
+								const player = get.event().player;
+								if (button.link == "技能失效") {
+									if (player.maxHp <= 4 || player.hp == player.maxHp) return 124;
+								}
+								return 5;
+							})
+							.forResult();
+						if (!result.bool) return;
+						if (result.links?.length) {
+							if (result.links[0] == "技能失效") {
+								player.tempBanSkill("bianxing_yzs");
+							} else {
+								await player.loseMaxHp();
+							}
+						}
+					},
+				};
+			},
+			prompt(links, player) {
+				return "视为使用或打出【" + get.translation(links[0][2]) + "】";
+			},
+		},
+		ai: {
+			save: true,
+			respondSha: true,
+			respondShan: true,
+			skillTagFilter(player, tag, arg) {
+				if ( player.isTempBanned("bianxing_yzs")) {
+					return false;
+				}
+				if (tag == "respondSha" || tag == "respondShan") {
+					if (arg == "respond") {
+						return false;
+					}
+					return player.getStorage("bianxing_yzs").includes(tag == "respondSha" ? "sha" : "shan");
+				}
+				return true
+			},
+			order: 4,
+			result: {
+				player: 1,
+			},
+			threaten: 2.4,
+		},
+	},
+	jiazhi_yzs: {
+		group: ["jiazhi_yzs_kill"],
+		audio: "ext:一中杀/audio/skill:1",
+		subSkill: {
+			kill: {
+				audio: "jiazhi_yzs",
+				locked: true,
+				trigger: {
+					source: "die",
+				},
+				forced:true,
+				async content(event, trigger, player) {
+					event.togain = trigger.player.getCards("h");
+					await player.gain(event.togain, trigger.player, "giveAuto", "bySelf");
+					if (typeof trigger.player.maxHp=="number")await player.gainMaxHp(trigger.player.maxHp);
+				},
+			}
+		},
+		locked: true,
+		forced: true,
+		trigger: {
+			player:"phaseZhunbei"
+		},
+		priority: 3,
+		async content(event, trigger, player) {
+			await player.gainMaxHp();
+		}
+	},
 }
 export default skills;

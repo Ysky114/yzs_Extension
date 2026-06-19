@@ -180,7 +180,9 @@ const translates = {
 	WhiteSnake_EnricoPucci_yzs: `恩里克 普奇`,
 	CMoon_EnricoPucci_yzs: `恩里克 普奇`,
 	KomeijiSatori_yzs: `古明地觉`,
-	Jovanlin_yzs:`Jovanlin`,
+	Jovanlin_yzs: `Jovanlin`,
+	Irumyuui_yzs: `伊尔缪伊`,
+	Faputa_yzs:`法仆塔`,
 
     // 技能台词
 
@@ -1577,7 +1579,7 @@ const translates = {
 	NuclearHeat_yzs_info: `锁定技：一名角色受到火焰伤害后，依次执行：若其无手牌，你刷新${get.poptip("Tokamak_yzs")}；若伤害来源为你，其摸牌至3张；若其为你，你恢复等量点体力。`,
 	Tokamak_yzs: `环流器`,
 	Tokamak_yzs_info: `锁定技：一名角色因你的【火攻】而展示或弃置牌后，你将展示或弃置的牌明置于人物牌旁，称为【核】。<br>
-    出牌阶段限1次：你视为使用伤害为0的【火攻】。`,
+    出牌阶段限1次：你视为使用【火攻】。`,
 	SubterraneanSun_yzs: `地底太阳`,
 	SubterraneanSun_yzs_info: `限定技：结束阶段，你可：依次将任意角色1张牌和3张【核】置入弃牌堆，若这四张牌花色各不相同，你分配1点火焰伤害并重复此流程。`,
 
@@ -1674,7 +1676,7 @@ const translates = {
 	ba_yzs: `捌`,
 	ba_yzs_info: `出牌阶段，你可视为使用无次数、距离限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效。`,
 	zao_yzs: `开`,
-	zao_yzs_info: `出牌阶段，你可对1名其他角色造成X点火焰伤害，然后本技能本回合失效。<br>X为满足的项数：①你横置②目标未横置③其他角色均横置。`,
+	zao_yzs_info: `出牌阶段，你可对1名其他角色造成X+1点火焰伤害，然后本技能本回合失效。<br>X为满足的项数：①你横置②目标未横置③其他角色均横置。`,
 	fumoyuchuzi_yzs: `伏魔御厨子`,
 	fumoyuchuzi_yzs_info: `${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色的回合结束时，你对其发动${get.poptip("jie_yzs")}。`,
 	fumoyuchuzi_yzs_skill: `伏魔御厨子`,
@@ -1834,10 +1836,26 @@ const translates = {
 	xiangqi_yzs_info: `出牌阶段，你可获得1名角色2张同名的【忆】，然后依次视为对其使用其剩余【忆】中的即时牌。`,
 
 	jingjuan_yzs: `竞卷`,
-	jingjuan_yzs_info:`出牌阶段限1次，你视为使用可额外指定你自己的【南蛮入侵】，然后目标角色同时声明其需响应牌数（1~4张）。结算后，响应牌数最多的角色摸2张牌。`,
+	jingjuan_yzs_info:`出牌阶段限1次，你视为使用可额外指定你自己的【南蛮入侵】，然后目标角色同时声明其需响应牌数（1~4张）。结算后，响应牌数最多的角色摸3张牌。`,
 	shixue_yzs: `嗜学`,
-	shixue_yzs_info:`锁定技：你每造成1点伤害便摸1张牌。<br>你使用你于本回合获得的牌无距离次数限制。<br>
+	shixue_yzs_info:`锁定技：你使用造成了伤害的牌结算后摸1张牌。<br>你使用你于本回合获得的牌无距离次数限制。<br>
     你体力值为0/1/2/3时，你于本回合前获得的牌视为【酒】/【桃】/【杀】／【闪】。 `,
+
+	yunyu_yzs: `孕欲`,
+	yunyu_yzs_info: `锁定技：你每回合首次受到伤害时，改为增加1点体力上限，然后令伤害来源（若无来源则为你）恢复2点体力或摸3张牌。<br>
+    限定技：结束阶段，若你体力上限>8，你可于下家召唤“${get.poptip({
+		id: "character_Faputa_yzs",
+		name: "法仆塔",
+		type: "character",
+		dialog: "characterDialog",
+	})}”，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
+	duozi_yzs: `夺子`,
+	duozi_yzs_info: `每名角色的出牌阶段限1次：其可正面向上给予你1张基本牌，然后视为对你使用【决斗】`,
+
+	bianxing_yzs: `变形`,
+	bianxing_yzs_info: `每回合每种牌名限1次：需要时，你可令本技能本回合失效，或减少1点体力上限，然后视为使用或打出任意即时牌。`,
+	jiazhi_yzs: `价值`,
+	jiazhi_yzs_info:`锁定技：你杀死其他角色后，获得其全部手牌，然后增加X点体力上限（X为其体力上限）。<br>准备阶段，你增加1点体力上限。`,
 };
 
 export default translates;
