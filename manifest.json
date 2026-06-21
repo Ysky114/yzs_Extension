@@ -1,6 +1,6 @@
 {
-  "version": "0.95",
-  "update": "0.95新增伊尔缪伊、法仆塔",
+  "version": "0.95.1",
+  "update": "0.95.1新增伊尔缪伊、法仆塔",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -614,7 +614,7 @@
     "extension.js": "2bf1e8e75903deda23d76e775aa2e8916e38ad20",
     "func/settle.js": "6e4c0b8ae83329674c2653f786b8e239beb57498",
     "func/trigger.js": "dbfa96abdb6b42782fc402399a89eaf1c8af81a6",
-    "genManifest.js": "e52e5c4d3afef5e1b0f37e192a9240482e8dfa61",
+    "genManifest.js": "500ab2bbd3c89b6b70538184c036e69c7ff1ec35",
     "image/AdmiredWitch_yzs.png": "7aa1424e93435d7ae1a0e8822773f929e588e8de",
     "image/aiqi_yzs_discard.png": "6dbb7e741cc9dd7f50ec0613dd533c6b8ccb4fbb",
     "image/AiSi_yzs.png": "4a242b4c265fa10cdf36b61f7935a2adf11df43c",
@@ -975,7 +975,6 @@
     "skill5.js": "5807c1a31b09bbff4e71c6e447befc9932f2f39a",
     "skill6.js": "595ee41f629d1ab7c89a8e8fceade568748d7f6a",
     "translate.js": "553e73e8c052d167c7bc20a14254e824613e2f8c",
-    "update.js": "fde1d509872adc1d3a2524d2cd596e4d5902af73",
-    "一中杀.zip": "a6adb9d0c5f7b10900e466bf35a394d8b4b79e26"
+    "update.js": "fde1d509872adc1d3a2524d2cd596e4d5902af73"
   }
 }
