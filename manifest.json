@@ -611,10 +611,10 @@
     "character.js": "0a87926753b7fb62992a873a47e5bfb4bfd37601",
     "dynamicTranslate.js": "b57b52e4b4e9dda4ff040aa494d4beab0396bd57",
     "extension.css": "0cdc14624cafc2af6871d789775ccc5334a4186d",
-    "extension.js": "f228d180a001a669d2105c8c87519fbc9e0c52f5",
+    "extension.js": "2bf1e8e75903deda23d76e775aa2e8916e38ad20",
     "func/settle.js": "6e4c0b8ae83329674c2653f786b8e239beb57498",
     "func/trigger.js": "dbfa96abdb6b42782fc402399a89eaf1c8af81a6",
-    "genManifest.js": "f067ed17b620235ad1a77f1cbab578fd1c2eb62a",
+    "genManifest.js": "e52e5c4d3afef5e1b0f37e192a9240482e8dfa61",
     "image/AdmiredWitch_yzs.png": "7aa1424e93435d7ae1a0e8822773f929e588e8de",
     "image/aiqi_yzs_discard.png": "6dbb7e741cc9dd7f50ec0613dd533c6b8ccb4fbb",
     "image/AiSi_yzs.png": "4a242b4c265fa10cdf36b61f7935a2adf11df43c",
@@ -969,12 +969,13 @@
     "README.md": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     "skill.js": "4e7627bad58f5defedb2e662e55e4798ef43af06",
     "skill1.js": "e146e5e8334d38eb543658b3e41216c9dd1dd7bf",
-    "skill2.js": "83819ecc68b61d667b154c2e0b34b24671372d2b",
+    "skill2.js": "0304d682dcbdb714361672d12304c2e33e77929c",
     "skill3.js": "90319d7d2ca2c66db746597721e0363285ff9401",
     "skill4.js": "f518e6093296ece004214b29f01ae70c152b6de1",
     "skill5.js": "5807c1a31b09bbff4e71c6e447befc9932f2f39a",
     "skill6.js": "595ee41f629d1ab7c89a8e8fceade568748d7f6a",
     "translate.js": "553e73e8c052d167c7bc20a14254e824613e2f8c",
-    "update.js": "6a956f4ae98a4a6134dd7e62f303bd46f4706fe9"
+    "update.js": "fde1d509872adc1d3a2524d2cd596e4d5902af73",
+    "一中杀.zip": "a6adb9d0c5f7b10900e466bf35a394d8b4b79e26"
   }
 }

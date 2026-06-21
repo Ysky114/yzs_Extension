@@ -9718,7 +9718,7 @@ const skills = {
 				},
 				check(event, player) {
 					if (_status.currentPhase == player) {
-						if (player.storage.AirFazen_yzs.includes(event.card.name)) return get.value(event.card) > 4;
+						if (player.getStorage("AirFazen_yzs").includes(event.card.name)) return get.value(event.card) > 4;
 						return get.value(event.card) > 0;
 					} else {
 						return true;

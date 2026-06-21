@@ -120,7 +120,7 @@ export default async (b) => {
 				}
 				p.remove();
 			}
-			localStorage.gb_clean = true
+			localStorage.yzs_clean = true
 		}
 		finally {
 			prog.remove();
