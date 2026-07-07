@@ -1776,7 +1776,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			let result = await player.chooseToUse(
-				"【化境】：你可使用1张【杀】",
+				`【化境】：你可对 ${get.translation(trigger.player)} 使用1张【杀】`,
 				function (card) {
 					if (get.name(card) != "sha") {
 						return false;
@@ -1784,12 +1784,16 @@ const skills = {
 					return lib.filter.filterCard.apply(this, arguments);
 				},
 				function (card, player, target) {
-					if (player == target) {
+					if (player !== get.event().targetx && !ui.selected.targets.includes(get.event().targetx)) {
 						return false;
 					}
 					return lib.filter.filterTarget.apply(this, arguments);
 				}
 			)
+				.set("targetRequired", true)
+				.set("complexSelect", true)
+				.set("complexTarget", true)
+				.set("targetx", trigger.player)
 				.set("addCount", false)
 				.forResult();
 		}
@@ -8261,7 +8265,7 @@ const skills = {
 		locked: true,
 		nobracket: true,
 		init(player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name == "LavaShell_yzs")) player.yzs_setCountDown({
+			const countDowns = [{
 				num: 1,
 				repeatNum: 1,
 				command: {
@@ -8284,7 +8288,7 @@ const skills = {
 								.set("filterTarget", (card, player, target) => {
 									return target == get.event().targetx
 								})
-								.set("ai",target=>1)
+								.set("ai", target => 1)
 								.forResult();
 						}
 						if (result.bool) {
@@ -8302,8 +8306,59 @@ const skills = {
 				name: "LavaShell_yzs",
 				prompt: `你获得1枚${get.poptip("LavaShell_yzs_mark")}标记。你体力值变动时本${get.poptip("sing_yzs_count")}-1`,
 				skill: "LavaShell_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
 		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						player.addMark("LavaShell_yzs_mark");
+						if (player.countMark("LavaShell_yzs_mark") < 3) return;
+						player.clearMark("LavaShell_yzs_mark");
+						game.trySkillAudio("canhuozhong_yzs");
+						await player.draw(3);
+						if (_status._yzsStorm == "FireStorm" && player.hasSkill("canhuozhong_yzs_effect")) return;
+						let result = { bool: false }
+						if (_status._yzsStorm == "FireStorm") {
+							result = { bool: true }
+						} else if (player.hasSkill("canhuozhong_yzs_effect")) {
+							result = { bool: false }
+						} else {
+							result = await player.chooseTarget()
+								.set("prompt", `进入${get.poptip("canhuozhong_yzs_effect")}状态，否则转换至${get.poptip("FireStorm")}`)
+								.set("targetx", player)
+								.set("filterTarget", (card, player, target) => {
+									return target == get.event().targetx
+								})
+								.set("ai", target => 1)
+								.forResult();
+						}
+						if (result.bool) {
+							game.log(player, "进入了【激昂】状态")
+							player.addSkill("canhuozhong_yzs_effect")
+						} else {
+							if (_status._yzsStorm !== "FireStorm") await player.yzs_changeStorm("FireStorm");
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 2;
+				},
+				name: "LavaShell_yzs",
+				prompt: `你获得1枚${get.poptip("LavaShell_yzs_mark")}标记。你体力值变动时本${get.poptip("sing_yzs_count")}-1`,
+				skill: "LavaShell_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
+		},
+
 	},
 	LavaShell_yzs_mark: {
 		sub: true,

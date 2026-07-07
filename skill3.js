@@ -1031,7 +1031,7 @@ const skills = {
 	tongshe_yzs: {
 		locked: true,
 		init(player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name == "tongshe_yzs")) player.yzs_setCountDown({
+			const countDowns = [{
 				num: 1,
 				repeatNum: 1,
 				command: {
@@ -1053,8 +1053,39 @@ const skills = {
 				name: "tongshe_yzs",
 				prompt: `你将牌堆顶牌暗置为【谕】。然后若你有护甲，受到1点无来源伤害。无论如何你获得1点护甲`,
 				skill: "tongshe_yzs"
-			});
-		}
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						let cards = get.cards(1);
+						let next = player.addToExpansion(cards, "draw", player)
+						next.gaintag.add("shengyu_yzs_down");
+						await next;
+						if (player.hujia > 0) {
+							await player.damage("nosource", "nocard");
+						}
+						await player.changeHujia(1);
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 2;
+				},
+				name: "tongshe_yzs",
+				prompt: `你将牌堆顶牌暗置为【谕】。然后若你有护甲，受到1点无来源伤害。无论如何你获得1点护甲`,
+				skill: "tongshe_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
+		},
 	},
 	//咲延
 	Calibration_yzs: {
@@ -1128,8 +1159,8 @@ const skills = {
 	TimeBomb_yzs: {
 		nobracket: true,
 		locked: true,
-		init: function (player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name == "TimeBomb_yzs")) player.yzs_setCountDown({
+		init(player, skill) {
+			const countDowns = [{
 				num: 3,
 				repeatNum: 3,
 				command: {
@@ -1165,7 +1196,52 @@ const skills = {
 				name: "TimeBomb_yzs",
 				prompt: `你令当前回合角色受到1点伤害或恢复1点体力`,
 				skill: "TimeBomb_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/TimeBomb_yzs";
+						const index = 2;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						if (!_status.currentPhase) return;
+						let result = await player
+							.chooseButton([`对${get.translation(_status.currentPhase)}造成1点伤害，或令其恢复1点体力`, [["伤害", "回血"], "tdnodes"]])
+							.set("filterButton", button => {
+								return true;
+							})
+							.set("forced", true)
+							.forResult()
+						if (!result.bool) return false;
+						if (result.links[0] == "伤害") {
+							await _status.currentPhase.damage(player)
+						} else {
+							await _status.currentPhase.recover(player)
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "TimeBomb_yzs",
+				prompt: `你令当前回合角色受到1点伤害或恢复1点体力`,
+				skill: "TimeBomb_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
 		},
 		priority: 12,
 		trigger: {
@@ -1198,8 +1274,8 @@ const skills = {
 	TimeMachine_yzs: {
 		nobracket: true,
 		locked: true,
-		init: function (player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name == "TimeMachine_yzs")) player.yzs_setCountDown({
+		init(player, skill) {
+			const countDowns = [{
 				num: 3,
 				repeatNum: 3,
 				command: {
@@ -1245,7 +1321,62 @@ const skills = {
 				name: "TimeMachine_yzs",
 				prompt: `你调离任意角色至本回合结束。若其为当前回合角色，其先摸2张牌；若否，你摸2张牌或制作1枚${get.poptip("Totem_yzs")}`,
 				skill: "TimeMachine_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/TimeMachine_yzs";
+						const index = 2;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						let result = await player.chooseTarget("时间机器", `你调离任意角色至本回合结束。若其为当前回合角色，其先摸2张牌；若否，你摸2张牌或制作1枚${get.poptip("Totem_yzs")}`, true)
+							.set("filterTarget", (card, player, target) => {
+								return !(target.hasSkill("hidden_yzs"));
+							})
+							.forResult()
+						if (!result.bool) return false;
+						if (result.targets[0] == _status.currentPhase) {
+							await result.targets[0].draw(2);
+						} else {
+							let result2 = await player
+								.chooseButton([`你摸2张牌或制作1枚${get.poptip("Totem_yzs")}`, [["摸牌", "图腾"], "tdnodes"]])
+								.set("filterButton", button => {
+									return true;
+								})
+								.set("forced", true)
+								.forResult()
+							if (!result2.bool) return false;
+							if (result2.links[0] == "摸牌") {
+								await player.draw(2);
+							} else {
+								player.addMark("Totem_yzs");
+							}
+						}
+						result.targets[0].addTempSkill("diaohulishan");
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "TimeMachine_yzs",
+				prompt: `你调离任意角色至本回合结束。若其为当前回合角色，其先摸2张牌；若否，你摸2张牌或制作1枚${get.poptip("Totem_yzs")}`,
+				skill: "TimeMachine_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
 		},
 		audio: "ext:一中杀/audio/skill:1",
 		priority: 12,
@@ -7146,8 +7277,8 @@ const skills = {
 			global: "phaseBefore",
 			player: "enterGame",
 		},
-		skillAnimation: true,
-		animationColor: "thunder",
+		skillAnimation: false,
+		animationColor: false,
 		charlotte: true,
 		unique: true,
 		forced: true,

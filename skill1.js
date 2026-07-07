@@ -2742,7 +2742,8 @@ const skills = {
 		multitarget: true,
 		async content(event, trigger, player) {
 			await player.recover();
-			if (!event.targets || !event.targets.length) return;			game.broadcastAll(function (damageAudioInfo) {
+			if (!event.targets || !event.targets.length) return;
+			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
 					game.playAudio(damageAudioInfo);
 				}
@@ -2752,8 +2753,8 @@ const skills = {
 				const result = await target
 					.chooseToUse(
 						"讽弄：对 鲁日立 使用1张手牌或令 鲁日立 摸1张牌",
-						function (card) {
-							return lib.filter.filterCard.apply(this, arguments);
+						function (card, player, event) {
+							return lib.filter.filterCard(card, player, event)
 						},
 						function (card, player, target) {
 							if (target != get.event().targetx) return false;
@@ -2763,6 +2764,9 @@ const skills = {
 					.set("ai2", function () {
 						return get.effect_use.apply(this, arguments) - get.event("effect");
 					})
+					.set("targetRequired", true)
+					.set("complexSelect", true)
+					.set("complexTarget", true)
 					.set("targetx", player)
 					.set("effect", get.effect(target, { name: "losehp" }, target, target))
 					.set("addCount", false)
@@ -4073,7 +4077,7 @@ const skills = {
 						.set("ai", (button) => {
 							const player = get.event().player;
 							const target = get.event().target;
-							return get.attitude(player, target);
+							return -get.attitude(player, target);
 						})
 						.forResult()
 					event.result = {
@@ -10497,7 +10501,7 @@ const skills = {
 		audio: "ext:一中杀/audio/skill:1",
 		"_priority": 2,
 		init(player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name =="quanbing_yzs"))player.yzs_setCountDown({
+			const countDowns = [{
 				num: 1,
 				repeatNum: 1,
 				command: {
@@ -10558,7 +10562,77 @@ const skills = {
 				name: "quanbing_yzs",
 				prompt: `你摸1张牌并将1张手牌明置于人物牌旁称为【${get.poptip("quanbing_yzs_card")}】；若已达4张，改为摸1张牌或将【权柄】全部翻至正面。受到非零伤害时本${get.poptip("sing_yzs_count")}-1`,
 				skill: "quanbing_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						if (player.countExpansions("quanbing_yzs") + player.countExpansions("quanbing_yzs_down") < 4) {
+							await player.draw();
+							if (!player.countCards("h")) return
+							const result = await player.chooseCard("权柄", "将1张手牌明置于人物牌旁称为【权柄】", "h", 1, true)
+								.set("ai", card => 5 - get.value(card))
+								.forResult()
+							if (result.bool && result.cards?.length) {
+								let next = player.addToExpansion(result.cards, player, "give")
+								next.gaintag.add("quanbing_yzs")
+								await next
+							}
+						} else {
+							const result = await player
+								.chooseControl("摸牌", "翻【权柄】")
+								.set("prompt", "【权柄】：请选择一项")
+								.set("choiceList", ["摸1张牌", "将【权柄】全部翻至正面"])
+								.forResult();
+							if (result?.control) {
+								player.popup(result.control);
+								game.log(player, "选择了", "#g" + result.control);
+							}
+							let length = 0;
+							if (result?.control == "摸牌") {
+								await player.draw();
+							} else {
+								const downs = player.getExpansions("quanbing_yzs_down");
+								if (!downs.length) return;
+								length += downs.length;
+								await player.loseToSpecial(downs);
+								let next = player.addToExpansion(downs, player, "gain2")
+								next.gaintag.add("quanbing_yzs");
+								next.untrigger(true);
+								await next;
+							}
+							if (!length || !player.hasSkill("shenshu_yzs")) return;
+							while (length--) {
+								const map = {
+									spade: "lvjie_yzs",
+									club: "yinyao_yzs",
+									heart: "shenglian_yzs",
+									diamond: "xinghui_yzs",
+								}
+								let result = await player.judge("quanbing_yzs").forResult();
+								await player.restoreSkill(map[result.suit])
+								player.unmarkSkill(map[result.suit])
+							}
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 2;
+				},
+				name: "quanbing_yzs",
+				prompt: `你摸1张牌并将1张手牌明置于人物牌旁称为【${get.poptip("quanbing_yzs_card")}】；若已达4张，改为摸1张牌或将【权柄】全部翻至正面。受到非零伤害时本${get.poptip("sing_yzs_count")}-1`,
+				skill: "quanbing_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
 		},
 	},
 	shenshu_yzs: {

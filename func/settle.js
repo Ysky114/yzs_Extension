@@ -3,6 +3,21 @@
 "use strict";
 window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.poptip.add({
+		id: "jinling_yzs_tip",
+		name: "对应效果",
+		info: `黑色【禁令】：使用的下张牌为伤害牌-》无效之。<br>
+红色【禁令】：使用的下张牌为非伤害牌-》无效之。<br>
+装备或点数9【禁令】：对你造成伤害或本阶段未出牌-》跳过其下回合任意一个阶段。`,
+	});
+	lib.poptip.add({
+		id: "MiracleRetail_yzs_tip",
+		name: "对应效果",
+		info: `♥：出牌阶段：摸1张人物牌加入【秘身】，摸2张牌并跳过本回合弃牌阶段。<br>
+♦：每公轮开始时：令牌堆消失至本轮结束。<br>
+♠：${get.poptip("wuyongchang_yzs")}：将任意名人物送至其一自轮后的次元。<br>
+♣：出牌阶段：交换2名角色手牌至你下一回合开始。`,
+	});
+	lib.poptip.add({
 		id: "adapt_yzs",
 		name: "适应",
 		info: `被适应的牌或技能对你无效（包括无视抵挡和减免伤害等）。你对你适应的角色造成伤害+X（X为你对其适应的次数）`,

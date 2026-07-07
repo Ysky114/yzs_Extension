@@ -4456,7 +4456,7 @@ const skills = {
 			},
 		},
 		init(player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name == "chijingzhiyi_yzs")) player.yzs_setCountDown({
+			const countDowns = [{
 				num: 1,
 				repeatNum: 1,
 				command: {
@@ -4483,8 +4483,45 @@ const skills = {
 				name: "chijingzhiyi_yzs",
 				prompt: `你摸1张牌，然后尽可能将至多<font color="#fd5656">1</font>张手牌加入你的【生命之契】。你失去最后的${get.poptip("_sishengzhijian_yzs_cards")}时本${get.poptip("sing_yzs_count")}-1。`,
 				skill: "chijingzhiyi_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
 		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						await player.draw();
+						let max = Math.min(player.countMark("chijingzhiyi_yzs_used") + 1, 3)
+						const result = player.countCards("h") > max ? await player.chooseCard("赤荆之翼", `尽可能将至多<font color="#fd5656">${Math.min(player.countMark("chijingzhiyi_yzs_used") + 1, 3)}</font>张手牌加入你的【生命之契】`, "h", max, true)
+							.set("ai", (card) => {
+								let player = _status.event.player
+								return 8 - get.value(card, player)
+							}).forResult() : { bool: true, cards: player.getCards("h") }
+						if (result?.bool && result?.cards?.length) {
+							let next = player.addToExpansion(result.cards, player, "give")
+							next.gaintag.add("_sishengzhijian_yzs_cards")
+							await next
+						}
+						player.addMark("chijingzhiyi_yzs_used", 1, false);
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 2;
+				},
+				name: "chijingzhiyi_yzs",
+				prompt: `你摸1张牌，然后尽可能将至多<font color="#fd5656">1</font>张手牌加入你的【生命之契】。你失去最后的${get.poptip("_sishengzhijian_yzs_cards")}时本${get.poptip("sing_yzs_count")}-1。`,
+				skill: "chijingzhiyi_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
+		},
+	
 		nobracket: true,
 		locked: true,
 		forced: true,
@@ -6101,10 +6138,6 @@ const skills = {
 		},
 		ai: {
 			order: 3.4,
-			respondSha: true,
-			skillTagFilter(player, tag) {
-				return tag == "respondSha"
-			},
 		},
 	},
 	zao_yzs: {
@@ -6135,13 +6168,14 @@ const skills = {
 		async content(event, trigger, player) {
 			await player.tempBanSkill(event.name);
 			const target = event.target;
+			const request = player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")?3: 2;
 			let base = player.isLinked() ? 2 : 1;
 			if (game.filterPlayer(cur => cur != player).every(cur => cur.isLinked())) base++;
 			if (!target.isLinked()) base++;
 			if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
 				base++;
 			}
-			if (base <= 2) {
+			if (base <= request) {
 				game.broadcastAll(
 					() => {
 						game.playAudio("ext:一中杀/audio/skill/zao_yzs1.mp3");
@@ -6218,7 +6252,7 @@ const skills = {
 		prompt: `${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色的回合结束时，你对其发动${get.poptip("jie_yzs")}`,
 		check(card) {
 			let player = _status.event.player;
-			return 6 - get.value(card,player);
+			return 9 - get.value(card,player);
 		},
 		filter(event, player) {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
@@ -6285,7 +6319,7 @@ const skills = {
 		},
 		ai: {
 			order(item, player2) {
-				if (_status._yzsDomainPlayer != player2 && _status._yzsDomain == "wuliangkongchu_yzs") return 114514
+				if (player2.hasSkill("liangmianguishen_yzs")||(_status._yzsDomainPlayer != player2 && _status._yzsDomain == "wuliangkongchu_yzs")) return 114514
 				return 8;
 			},
 			result: {
@@ -6472,6 +6506,9 @@ const skills = {
 						trigger.cancel();
 					}
 					player.storage.hundunyutiaohe_yzs_skill[trigger.skill]++;
+					if (player.storage.hundunyutiaohe_yzs_skill[trigger.skill] == 1) {
+						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill[trigger.skill]++;
+					}
 					player.markSkill("hundunyutiaohe_yzs_skill")
 					if (player.storage.hundunyutiaohe_yzs_skill[trigger.skill] == 2) {
 						player.popup("适应");
@@ -6533,6 +6570,9 @@ const skills = {
 						player.addSkill("hundunyutiaohe_yzs_skill4")
 					}
 					player.storage.hundunyutiaohe_yzs_skill2[trigger.skill]++;
+					if (player.storage.hundunyutiaohe_yzs_skill2[trigger.skill] == 1) {
+						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill2[trigger.skill]++;
+					}
 					player.markSkill("hundunyutiaohe_yzs_skill")
 				},
 			},
@@ -6561,6 +6601,9 @@ const skills = {
 						trigger.cancel();
 					}
 					player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
+					if (player.storage.hundunyutiaohe_yzs_skill3[trigger.skill] == 1) {
+						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
+					}
 					player.markSkill("hundunyutiaohe_yzs_skill3")
 				}
 			},
@@ -6611,6 +6654,9 @@ const skills = {
 				trigger.cancel();
 			}
 			player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
+			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 1) {
+				if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
+			}
 			player.markSkill("hundunyutiaohe_yzs_card")
 			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 2) {
 				player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);

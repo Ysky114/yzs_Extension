@@ -55,9 +55,11 @@ const skills = {
 		direct: true,
 		superCharlotte: true,
 		filter(event, player) {
+			if (event._yzsmusic) return false;
 			return game.hasPlayer(p => p.name in lib.characterPack['SCHyzs']) && lib.config.extension_一中杀_yzs_bgm
 		},
 		async content(event, trigger, player) {
+			trigger._yzsmusic = true;
 			var targets = game.filterPlayer(p => get.character(p.name).BGM);
 			let num = 0;
 			const max = Math.max(4, game.countPlayer());
@@ -247,27 +249,17 @@ const skills = {
 			return (event.name != "phase" || game.phaseNumber == 0) && game.hasPlayer(current => current != player);
 		},
 		async content(event, trigger, player) {
-			player.addSkill("Undying_yzs");
-			player.addTip("Undying_yzs", "不死保护生效中", false);
+			player.addTempSkill("Undying_yzs", {player:"phaseBegin"});
 		},
 	},
 	//不死保护
 	Undying_yzs: {
 		ruleSkill: true,
-		group: "Undying_yzs_lose",
-		subSkill: {
-			lose: {
-				locked: true,
-				forced: true,
-				popup: false,
-				trigger: {
-					player: "phaseBefore"
-				},
-				async content(event, trigger, player) {
-					await player.removeSkill("Undying_yzs")
-					player.removeTip("Undying_yzs");
-				}
-			}
+		init(player, skill) {
+			player.addTip("Undying_yzs", "不死保护生效中", false);
+		},
+		onremove(player, skill) {
+			player.removeTip("Undying_yzs");
 		},
 		audio: "ext:一中杀/audio/skill:1",
 		locked: true,
@@ -2277,6 +2269,11 @@ const skills = {
 		async content(event, trigger, player) {
 			player.removeMark("zhujiu_yzs", 1);
 			player.line(trigger.player);
+			game.broadcastAll(function (damageAudioInfo) {
+				if (lib.config.background_audio) {
+					game.playAudio(damageAudioInfo);
+				}
+			}, "effect/throw_wine2.mp3");
 			await trigger.player.chooseUseTarget({ name: "jiu" }, true, "noTargetDelay", "nodelayx");
 		},
 		ai: {
@@ -4571,7 +4568,7 @@ const skills = {
 									game.playAudio(damageAudioInfo);
 								}
 							}, damageAudioInfo);
-							var next =  player.chooseUseTarget("sha", true);
+							var next = player.chooseUseTarget("sha", true);
 							next.prompt = "圣佑：选择普通【杀】的目标";
 							next.addCount = false;
 							await next;
@@ -4618,9 +4615,134 @@ const skills = {
 				name: "HolyBlessing_yzs_wushen",
 				prompt: `进入【武神】状态至你下回合开始`,
 				skill: "HolyBlessing_yzs_wushen"
-			}];
+			}]
 			for (let item of countDowns) {
 				if (!player.yzs_hasCountDown(i=>i.name==item.name))player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						const num = 4 - player.countCards("h");
+						if (num == 0) return
+						var damageAudioInfo = "ext:一中杀/audio/skill/HolyBlessing_yzs_draw";
+						const index = 1;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						if (num > 0) await player.draw(num);
+						else await player.chooseToDiscard("h", true, -num);
+					},
+					list: [player],
+				},
+				value(item, player) {
+					if (player.countCards("h") >= 4) return -1;
+					return 2 * (4 - player.countCards("h"))
+				},
+				name: "HolyBlessing_yzs_draw",
+				prompt: `你调整手牌数至4`,
+				skill: "HolyBlessing_yzs_draw"
+			},
+			{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						let num = 1 - player.hujia;
+						if (num == 0) return;
+						var damageAudioInfo = "ext:一中杀/audio/skill/HolyBlessing_yzs_hujia";
+						const index = 1;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						await player.changeHujia(num);
+					},
+					list: [player],
+				},
+				value(item, player) {
+					if (!player.hujia) return 2;
+					return 0;
+				},
+				name: "HolyBlessing_yzs_hujia",
+				prompt: `调整护甲值至1`,
+				skill: "HolyBlessing_yzs_hujia"
+			},
+			{
+				nocount: true,
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						if (game.hasPlayer(function (target) {
+							return player.canUse({ name: "sha" }, target)
+						})) {
+							var damageAudioInfo = "ext:一中杀/audio/skill/HolyBlessing_yzs_sha";
+							const index = 1;
+							damageAudioInfo += index + ".mp3";
+							game.broadcastAll(function (damageAudioInfo) {
+								if (lib.config.background_audio) {
+									game.playAudio(damageAudioInfo);
+								}
+							}, damageAudioInfo);
+							var next = player.chooseUseTarget("sha", true);
+							next.prompt = "圣佑：选择普通【杀】的目标";
+							next.addCount = false;
+							await next;
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 1.5;
+				},
+				name: "HolyBlessing_yzs_sha",
+				prompt: `你视为使用普通【杀】(准备阶段不计算此吟唱)`,
+				skill: "HolyBlessing_yzs_sha"
+			},
+			{
+				num: 4,
+				repeatNum: 4,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/HolyBlessing_yzs_wushen";
+						const index = 1;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						await player.addSkill("wushen_yzs");
+						game.log(player, "变身武神");
+						game.broadcastAll(function (current) {
+							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana2_yzs.png");
+						}, player)
+						player.playEffectOL(lib.skill.GodgivenSwordsmanship_yzs.Effect);
+						player.popup("武神")
+						if (lib.config.background_audio) {
+							game.playAudio("effect", "recover");
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 2;
+				},
+				name: "HolyBlessing_yzs_wushen",
+				prompt: `进入【武神】状态至你下回合开始`,
+				skill: "HolyBlessing_yzs_wushen"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
 			}
 		},
 		priority:-21,

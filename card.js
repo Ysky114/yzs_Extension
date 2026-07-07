@@ -251,7 +251,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					order: 10,
 					result: {
 						target(player2, target) {
-							const num = player.countMark("pomochong_yzs_used");
+							const num = player2.countMark("pomochong_yzs_used");
 							if (num < 5) return -1;
 							return get.damageEffect(target, player2, target);
 						},
@@ -518,6 +518,9 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					tag: {
 						recover: 1,
 						fireDamage: 1,
+						damage: 1,
+						natureDamage: 1,
+						norepeat: 1,
 					},
 				},
 				image: "ext:一中杀/image/card/kuangchangbaozha_yzs.png",

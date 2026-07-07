@@ -117,7 +117,8 @@ const skills = {
 		enable: "phaseUse",
 		filter(event, player) {
 			if (!player.hasMark("RE_AP")) return false;
-			return true;
+			let cards = player.storage.RE_Mystic;
+			return cards.length;
 		},
 		logv: false,
 		chooseButton: {
@@ -6223,7 +6224,7 @@ const skills = {
 		sing: 1,
 		"_priority": 2,
 		init(player, skill) {
-			if (!player.yzs_hasCountDown(i => i.name =="putaojiu_yzs"))player.yzs_setCountDown({
+			const countDowns = [{
 				num: 1,
 				repeatNum: 1,
 				command: {
@@ -6244,7 +6245,37 @@ const skills = {
 				name: "putaojiu_yzs",
 				prompt: `场上角色依次向3调整1点体力`,
 				skill: "putaojiu_yzs"
-			});
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 1,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						game.trySkillAudio("putaojiu_yzs");
+						let players = game.filterPlayer();
+						for (let cur of players) {
+							if (cur.hp == 3) continue;
+							if (cur.hp > 3) await cur.loseHp();
+							if (cur.hp < 3) await cur.recover();
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 1;
+				},
+				name: "putaojiu_yzs",
+				prompt: `场上角色依次向3调整1点体力`,
+				skill: "putaojiu_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+			}
 		},
 		audio: "ext:一中杀/audio/skill:2",
 	},

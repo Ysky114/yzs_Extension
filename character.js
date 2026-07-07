@@ -1600,7 +1600,7 @@ const characters = {
 		sex: "male",
 		group: "qun",
 		hp: 3,
-		skills: ["jingjuan_yzs", "shixue_yzs","rg_mumei"],
+		skills: ["jingjuan_yzs", "shixue_yzs"],
 		names: "Jovanlin",
 		img: "extension/一中杀/image/Jovanlin_yzs.png",
 	},
@@ -1617,13 +1617,43 @@ const characters = {
 
 	Faputa_yzs: {
 		sex: "female",
-		group: "qun",
+		group: "shu",
 		hp: 4,
 		skills: ["bianxing_yzs", "jiazhi_yzs"],
 		names: "法仆塔",
 		img: "extension/一中杀/image/Faputa_yzs.png",
 		BGM: "SAN-KEN「The Three SAGES」",
-	}
+	},
+
+	GoldenOrly_yzs: {
+		sex: "female",
+		group: "shu",
+		hp: 3,
+		hujia: 2,
+		skills: ["yupao_yzs", "daolve_yzs","fuyoupao_yzs"],
+		names: "奥丽",
+		img: "extension/一中杀/image/GoldenOrly_yzs.png",
+		isUnseen: true,
+	},
+
+	UsamiSumireko_yzs: {
+		sex: "female",
+		group: "jin",
+		hp: 4,
+		skills: ["Metamorphosis_yzs", "MiracleRetail_yzs"],
+		names: "宇佐见堇子",
+		img: "extension/一中杀/image/UsamiSumireko_yzs.png",
+	},
+
+	LawfulXu_yzs: {
+		sex: "male",
+		group: "jin",
+		hp: 4,
+		skills: ["jinling_yzs", "shouxu_yzs","xuanpan_yzs"],
+		names: "陈序",
+		img: "extension/一中杀/image/LawfulXu_yzs.png",
+	},
+
 };
 
 const characterSubstitutes = {
@@ -1777,8 +1807,12 @@ const characterTitles = {
 	WhiteSnake_EnricoPucci_yzs: `神父·白蛇`,
 	CMoon_EnricoPucci_yzs: `神父·新月`,
 	KomeijiSatori_yzs: `大家的心病`,
+	Jovanlin_yzs:`盖世卷王`,
 	Irumyuui_yzs: `温暖的黑暗`,
-	Faputa_yzs:`生骸公主`,
+	Faputa_yzs: `生骸公主`,
+	GoldenOrly_yzs: `星际海盗`,
+	UsamiSumireko_yzs: `现世的秘术师`,
+	LawfulXu_yzs:`序之勇者`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1909,6 +1943,9 @@ const characterIntros = {
 	KomeijiSatori_yzs: `古明地觉，系列作品《东方Project》中的角色，拥有读心的能力，于《东方地灵殿》中作为四面BOSS首次登场，同时也是漫画《东方智灵奇传 犯规侦探觉》的主角。读心的妖怪。虽然住在位于旧地狱中心的地灵殿，因其能力就算是那些身居尽是被厌恶者的地底的妖怪们也惧怕着她。在地灵殿过着被动物们簇拥起来的生活。虽然她被能使用语言的人所厌恶，但相反地对于无法说话的存在而言，她却因为是弥足珍贵的可以相互沟通的存在而被视若珍宝，因此许多动物仰慕着她而聚集到了地灵殿生活。动物们中有像阿燐和阿空这样可以帮助觉工作的，也有能够照顾其他宠物的宠物之类的。`,
 	Irumyuui_yzs: `跟随探窟敢死队一起下潜到深界六层的一员。原本是阿比斯洞口的土著，因为不能够生孩子，被土著部落流放下深渊，为探窟敢死队所收容。最后被贤者瓦兹康利用，化为了生骸村的村落。`,
 	Faputa_yzs: `法仆塔（ファプタ），日本漫画《来自深渊》及其衍生作品中的角色，别名“生骸公主”，由久野美咲配音。该角色长期居住在深渊第六层“来无回之都”，具有四臂两足的异形身躯，可伏地高速移动并具备怪力，还能化为流态穿过物体孔洞。法仆塔曾因与深渊生物“龙鬃螺鸠”交战逃亡而与雷古相遇，双方互换知识后建立羁绊。`,
+	GoldenOrly_yzs: `出自游戏《机甲旋风》`,
+	UsamiSumireko_yzs: `宇佐见堇子是《东方Project》系列中的虚拟角色，由上海爱丽丝幻乐团创作，作为《东方深秘录》的最终Boss初次登场，幻想乡外面的世界的高中生。能使用超能力的她，在进入高中后为了揭露世界的秘密而创办了超自然社团「秘封俱乐部」。以幻想乡为目标的堇子，将联系着外界神秘的力量石「灵异珠」送进了幻想乡。她传播「集齐7个就会发生某些事情」的传言，引诱他人收集，试图用外来的神秘力量强行破坏结界。后来这些灵异珠引起了月世界人们的注意，又与别的异变联系到了一起。灵异珠异变之后，她得以在睡梦之中进入幻想乡，似乎进一步加深了与这里的交流。`,
+	LawfulXu_yzs: `因七罪而崩坏的世界，这混乱的末世...王国的秩序，由我来守护。`,
 
 };
 const characterReplaces = {
@@ -1916,20 +1953,21 @@ const characterReplaces = {
 const characterSort = {
 	normalPack_yzs: ["LU_Captain_xiangsiniao_yzs", "HuangJOJO_yzs", "changzhang_yzs", "WZZS_lilixin_yzs", "shenfu_Limu_yzs", "shenChangzhang_yzs",
 		"hunziKing_yzs", "Zbro_yzs", "Chino_yzs", "IceGirl_yzs", "ChengGuixiang_yzs", "OnionMan_yzs", "BoFengShuiKun_yzs", "WaiJiaoDaChen_yzs",
-		"DaZuo_yzs", "ChenJiahao_yzs","YanLaFeng_yzs"],
+		"DaZuo_yzs", "ChenJiahao_yzs", "YanLaFeng_yzs","Jovanlin_yzs"],
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
-		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs","WhiteSnake_EnricoPucci_yzs"],
+		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs","GoldenOrly_yzs"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
 		"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "jianSheng_yzs", "RenEmperor_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs",
-		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs","Guanjun_yzs"],
+		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs", "Guanjun_yzs",
+	    "LawfulXu_yzs",],
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
-		"ReiujiUtsuho_yzs", "Sakuya_yzs","KomeijiSatori_yzs"],
+		"ReiujiUtsuho_yzs", "Sakuya_yzs", "KomeijiSatori_yzs","UsamiSumireko_yzs"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],

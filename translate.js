@@ -182,7 +182,10 @@ const translates = {
 	KomeijiSatori_yzs: `古明地觉`,
 	Jovanlin_yzs: `Jovanlin`,
 	Irumyuui_yzs: `伊尔缪伊`,
-	Faputa_yzs:`法仆塔`,
+	Faputa_yzs: `法仆塔`,
+	GoldenOrly_yzs: `奥丽`,
+	UsamiSumireko_yzs:`宇佐见 堇子`,
+	LawfulXu_yzs: `陈序`,
 
     // 技能台词
 
@@ -1289,7 +1292,7 @@ const translates = {
 	rg_chunniang: `醇酿`,
 	rg_chunniang_info: `出牌阶段限1次：你可将1张手牌当做【酒】或【桃】使用。`,
 	rg_huajing: `化境`,
-	rg_huajing_info: `每回合开始时你可将1张手牌当做【酒】使用。你未受到过伤害的回合结束时，若你处于醉酒状态，则可使用1张【杀】。`,
+	rg_huajing_info: `每回合开始时你可将1张手牌当做【酒】使用。你未受到过伤害的回合结束时，若你处于醉酒状态，则可对当前回合角色使用1张【杀】。`,
 	rg_shiminggan: `使命感`,
 	rg_shiminggan_info: `每回合首次有其他角色受到伤害后，你摸2张牌并可对其使用任意张非伤害手牌(无次数距离限制)，然后你弃2张牌。`,
 	rg_xuedizi: `血滴子`,
@@ -1539,16 +1542,16 @@ const translates = {
 	
 	InvisibleHand_yzs: `无形之手`,
 	InvisibleHand_yzs_info: `锁定技：摸牌阶段，你可改为摸5张牌并弃4张手牌。<br>你每主动弃置或使用1张你自己的红/黑色手牌时【市价】+/-1。<br>
-<small>【市价】：记为<font color="#f9be4d">X</font>，初始为2，范围为[0，5]。`,
+<small>【市价】：记为<font color="#f9be4d">X</font>，初始为2，范围为[0，5]。</small>`,
 	FreeMarket_yzs: `自由市场`,
 	FreeMarket_yzs_info: `锁定技：出牌阶段限1次：你弃<font color="#f9be4d">X</font>张手牌并获得1枚<font color="#f9be4d">【货】</font>，上限为3。<br>
     你受到伤害时，你可给予伤害来源1枚<font color="#f9be4d">【货】</font>以无效之，然后其弃<font color="#f9be4d">X-2</font>张手牌。（其依此法获得的<font color="#f9be4d">【货】</font>其本回合内不可主动售出）<br>
-<small><font color="#f9be4d">【货】：场上角色其出牌阶段限1次：售出自己的1枚【货】并摸<font color="#f9be4d">X-2</font>张牌，若其为你，额外摸2张牌。</font>`,
+<small><font color="#f9be4d">【货】：场上角色其出牌阶段限1次：售出自己的1枚【货】并摸<font color="#f9be4d">X-2</font>张牌，若其为你，额外摸2张牌。</font></small>`,
 	AnchoringEffect_yzs: `锚定效应`,
 	AnchoringEffect_yzs_info: `锁定技：<font color="#f9be4d">【货】</font>标记被售出时你摸3张牌然后弃3张牌。你无弃牌阶段。`,
 	ReminderNotice_yzs: `督!促!状!`,
 	ReminderNotice_yzs_info: `锁定技：场上有人物因你的技能效果需弃牌时，若其因手牌不足而少弃牌，其每少弃1张牌便获得1点<font color="#f93838">【赤字】</font>。<br>
-<small><font color="#f93838">【赤字】：每名角色至多拥有6点【赤字】。拥有者不因自己技能摸牌时改为减少等量【赤字】。</font>`,
+<small><font color="#f93838">【赤字】：每名角色至多拥有6点【赤字】。拥有者不因自己技能摸牌时改为减少等量【赤字】。</font></small>`,
 	PonziScheme_yzs: `庞氏骗局`,
 	PonziScheme_yzs_info: `锁定技：出牌阶段限1次：你令1名其他人物弃<font color="#f9be4d">X-2</font>张手牌，然后你获得1枚<font color="#f9be4d">【货】</font>且其获得1枚<font color="#bef750">【菜】</font>标记。<br>
 	其回合开始时移除1枚<font color="#bef750">【菜】</font>，然后你给予其1枚<font color="#f9be4d">【货】</font>，若你无<font color="#f9be4d">【货】</font>则你立即发动此技能。<br>（每名人物至多拥有1枚<font color="#bef750">【菜】</font>，场上有2枚<font color="#bef750">【菜】</font>时你不可主动发动本技能）`,
@@ -1683,8 +1686,7 @@ const translates = {
 	fumoyuchuzi_yzs_skill_info: `领域主人使用的牌不可响应。领域主人以外的角色的回合结束时，领域主人对其发动${get.poptip("jie_yzs")}`,
 
 	hundunyutiaohe_yzs: `适应`,
-	hundunyutiaohe_yzs_info: `持恒技：你每对1名其他角色累计造成2次伤害，你“${get.poptip("adapt_yzs")}”其1次。<br>
-	其他角色的牌或技能对你生效2次后，你“适应”之。`,
+	hundunyutiaohe_yzs_info: `持恒技：你可以逐渐“${get.poptip("adapt_yzs")}”一切。`,
 	tuimozhijian_yzs: `退魔之剑`,
 	tuimozhijian_yzs_info:`你攻击范围+2。你使用【杀】不可响应。`,
 
@@ -1855,7 +1857,48 @@ const translates = {
 	bianxing_yzs: `变形`,
 	bianxing_yzs_info: `每回合每种牌名限1次：需要时，你可令本技能本回合失效，或减少1点体力上限，然后视为使用或打出任意即时牌。`,
 	jiazhi_yzs: `价值`,
-	jiazhi_yzs_info:`锁定技：你杀死其他角色后，获得其全部手牌，然后增加X点体力上限（X为其体力上限）。<br>准备阶段，你增加1点体力上限。`,
+	jiazhi_yzs_info: `锁定技：你杀死其他角色后，获得其全部手牌，然后增加X点体力上限（X为其体力上限）。<br>准备阶段，你增加1点体力上限。`,
+
+	yupao_yzs: `驭炮`,
+	yupao_yzs_info: `锁定技：你受到伤害后，失去向上取半数点护甲。弃牌阶段你弃牌后，获得等量点护甲（至多为6），然后若你累计因此获得过10点护甲，你获得${get.poptip("bahu_yzs")}和${get.poptip("biyue")}。`,
+	daolve_yzs: `盗掠`,
+	daolve_yzs_info: `判定阶段开始时，你可获得任意角色区域内1张牌。`,
+	fuyoupao_yzs: `浮游炮`,
+	fuyoupao_yzs_info: `锁定技：每名角色的额定回合结束时，你选择至多X（你护甲值）个不同阶段，执行一个仅有这些阶段的额外回合。`,
+	bahu_yzs: `跋扈`,
+	bahu_yzs_info: `锁定技：准备阶段你摸1张牌。你出【杀】数+1。`,
+
+	Metamorphosis_yzs: `大变活人`,
+	Metamorphosis_yzs_info: `锁定技：游戏开始时你摸3张人物牌暗置于你人物牌旁，称为【秘身】，你回合开始时可重铸其中一张。<br>
+    每公轮开始时，你可移去1张【秘身】，将1名人物的角色牌替换为此【秘身】至本轮结束。（期间其体力值至多下降至1）`,
+	MiracleRetail_yzs: `奇迹零售`,
+	MiracleRetail_yzs_info:`锁定技：你摸牌后可使用其中一张牌，然后摸1张牌。（你每自轮仅可使用1张【杀】）<br>
+    你摸牌阶段改为摸4张牌并正面向上扣置其中一张，出牌阶段结束时，若你本阶段使用牌数≥扣置牌点数，你将扣置牌置为【魔术】，否则移去此扣置牌。<br>
+    你可于对应时机移去【魔术】以获得1点护甲并发动${get.poptip("MiracleRetail_yzs_tip")}：<br>
+	♥：出牌阶段：摸1张人物牌加入【秘身】，摸2张牌并跳过本回合弃牌阶段。<br>
+♦：每公轮开始时：令牌堆消失至本轮结束。<br>
+♠：${get.poptip("wuyongchang_yzs")}：将任意名人物送至其一自轮后的次元。<br>
+♣：出牌阶段：交换2名角色手牌至你下一回合开始。`,
+	MiracleRetail_yzs_moshu: `魔术`,
+	MiracleRetail_yzs_moshu1: `魔术`,
+	MiracleRetail_yzs_moshu1_backup: `魔术`,
+	MiracleRetail_yzs_moshu2: `魔术`,
+	MiracleRetail_yzs_moshu3: `魔术`,
+	MiracleRetail_yzs_wyc:`魔术`,
+
+	jinling_yzs: `禁令`,
+	jinling_yzs_info: `锁定技：其他角色出牌阶段开始时，你可将1张手牌扣置为【禁令】。本阶段结束后你获得【禁令】。<br>
+    当前回合角色达成【禁令】条件时你可移去之，然后摸2张牌并发动${get.poptip("jinling_yzs_tip")}，然后你可将1张手牌扣置为【禁令】：<br>
+黑色【禁令】：使用的下张牌为伤害牌-》无效之。<br>
+红色【禁令】：使用的下张牌为非伤害牌-》无效之。<br>
+装备或点数9【禁令】：对你造成伤害或本阶段未使用牌-》跳过其下回合任意一个阶段。`,
+	shouxu_yzs: `守序`,
+	shouxu_yzs_info: `锁定技：出牌阶段开始时，你可将1~2张手牌扣置为任意角色的【序】（每名角色至多3张）并结束本阶段。
+	其使用或打出牌时，你可移去1张与之同名的【序】以无效之。`,
+	xuanpan_yzs: `宣判`,
+	xuanpan_yzs_limited:`宣判`,
+	xuanpan_yzs_info: ` 限定技：${get.poptip("wuyongchang_yzs")}：你用1张手牌交换【序】。 
+    你移去【禁令】或【序】后，若本回合移去数之和为3的倍数，你对当前回合角色造成1点伤害并恢复1点体力，然后刷新限定技。`,
 };
 
 export default translates;
