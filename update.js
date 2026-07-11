@@ -1,136 +1,218 @@
 import { lib, game, ui, get, ai, _status } from "../../../noname.js";
 import { createProgress } from "../../../noname/library/update.js";
 
-export default async (b) => {
-	try {
-		if (_status.connectMode) if (b) {
-			alert("联机状态下无法更新");
-			throw new Error("联机状态下无法更新");
-		}
-		if (!window.navigator.onLine) if (b) {
-			alert("断网状态下无法检查更新，请检查网络连接")
-			throw new Error("网络连接失败");
-		}
-		if (!b && sessionStorage.yzs_check) return;
+// ============ 提取出的核心更新逻辑 ============
+async function performUpdate(isManual) {
+	// 网络状态检查（手动才弹窗）
+	if (_status.connectMode && isManual) {
+		alert("联机状态下无法更新");
+		throw new Error("联机状态下无法更新");
+	}
+	if (!window.navigator.onLine && isManual) {
+		alert("断网状态下无法检查更新，请检查网络连接");
+		throw new Error("网络连接失败");
+	}
+	// 自动更新时，若本次会话已检查过则跳过（此时外部应已 return）
+	if (!isManual && sessionStorage.yzs_check) return;
 
-		game.importedPack = true;
-		const pList = ["https://proxy.aestarin.com/", "", "https://gh-proxy.com/", "https://hk.gh-proxy.com/", "https://tvv.tw/"];
-		let p = pList[lib.config.extension_一中杀_update_source] || "";
-		let m;
-		let success = false;
-		for (const u of [p, ...pList.filter(x => x !== p)]) {
-			try {
-				const r = await fetch(`${u}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/manifest.json`);
-				if (r.ok) {
-					m = JSON.parse(await r.text());
-					p = u;
-					console.log(`使用${u || '默认'}镜像获取清单成功`);
-					success = true;
-					break;
-				}
-			} catch (e) {
-				console.warn(`镜像 ${u} 请求异常:`, e);
-			}
-		}
-
-		if (!success) {
-			const msg = '清单文件获取失败，请检查网络连接';
-			if (b) alert(msg);
-			throw new Error(msg);
-		}
-
-		let updateFiles = [];
-		const hex = Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, '0'));
-		const entries = Object.entries(m.files);
-
-		// 读取新增的配置：是否仅更新代码文件
-		const onlyCode = lib.config.extension_一中杀_update_method;
-
-		for (let i = 0; i < entries.length; i += 5) {
-			const batch = entries.slice(i, i + 5);
-			await Promise.all(batch.map(async ([f, h]) => {
-				// 如果开启了仅更新代码，且文件不是 .js 或 .css 结尾，则直接跳过该文件
-				if (onlyCode && !f.endsWith('.js') && !f.endsWith('.css')) {
-					return;
-				}
-
-				const path = `extension/一中杀/${f}`;
-				if (await game.promises.checkFile(path) !== 1) {
-					updateFiles.push(f);
-					return;
-				}
-				try {
-					const buf = await crypto.subtle.digest('SHA-1', await game.promises.readFile(path));
-					const localHash = Array.from(new Uint8Array(buf), x => hex[x]).join('');
-					if (localHash !== h) updateFiles.push(f);
-				} catch {
-					updateFiles.push(f);
-				}
-			}));
-		}
-
-		delete game.importedPack;
-		sessionStorage.yzs_check = true;
-
-		if (updateFiles.length === 0) return b && alert('已经是最新版本，无需更新');
-		if (!confirm(`《一中杀》发现新版本 ${m.version}\n${updateFiles.length}个文件需更新，是否继续？\n更新说明:\n${m.update || '无'}`)) return
-
-		const prog = createProgress("更新 一中杀 扩展", updateFiles.length);
-		game.importedPack = true;
-
+	// 获取清单
+	const pList = ["https://proxy.aestarin.com/", "", "https://gh-proxy.com/", "https://hk.gh-proxy.com/", "https://tvv.tw/"];
+	let p = pList[lib.config.extension_一中杀_update_source] || "";
+	let m;
+	let success = false;
+	for (const u of [p, ...pList.filter(x => x !== p)]) {
 		try {
-			for (let i = 0; i < updateFiles.length; i++) {
-				const f = updateFiles[i];
-				prog.setProgressValue(i + 1);
-				prog.setFileName(`正在下载：${f}`);
-
-				const r = await fetch(`${p}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/${f}`);
-				if (!r.ok) throw new Error(`下载失败: ${f}`);
-
-				const data = await r.arrayBuffer();
-				const fullPath = `extension/一中杀/${f}`;
-				const dir = fullPath.split("/").slice(0, -1).join("/");
-
-				await game.promises.createDir(dir);
-				await game.promises.writeFile(data, dir, fullPath.split("/").pop());
+			const r = await fetch(`${u}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/manifest.json`);
+			if (r.ok) {
+				m = JSON.parse(await r.text());
+				p = u;
+				console.log(`使用${u || '默认'}镜像获取清单成功`);
+				success = true;
+				break;
 			}
-			await game.promises.writeFile(JSON.stringify(m, null, 2), "extension/一中杀", "manifest.json");
+		} catch (e) {
+			console.warn(`镜像 ${u} 请求异常:`, e);
+		}
+	}
+	if (!success) {
+		const msg = '清单文件获取失败，请检查网络连接';
+		if (isManual) alert(msg);
+		throw new Error(msg);
+	}
 
-			const clean = async (path, pre = '') => {
-				const [dirs, files] = await game.promises.getFileList(path);
-				let list = files.map(file => pre ? `${pre}/${file}` : file);
-				for (const d of dirs) list = list.concat(await clean(`${path}/${d}`, pre ? `${pre}/${d}` : d));
-				return list;
-			};
+	// 比对文件
+	const hex = Array.from({ length: 256 }, (_, i) => i.toString(16).padStart(2, '0'));
+	const entries = Object.entries(m.files);
+	const onlyCode = lib.config.extension_一中杀_update_method;
+	let updateFiles = [];
 
-			// 清理文件时同样做判断：如果开启了 onlyCode，未被包含在清单里的媒体文件（非 js/css）不应该被清理，否则会误删玩家本地的音视频
-			const f = (await clean("extension/一中杀")).filter(file => {
-				if (file === "manifest.json") return false;
-				if (m.files[file]) return false;
-				// 如果开启了仅更新代码，非 js/css 文件在此轮不参与清理
-				if (onlyCode && !file.endsWith('.js') && !file.endsWith('.css')) return false;
-				return true;
-			});
+	for (let i = 0; i < entries.length; i += 5) {
+		const batch = entries.slice(i, i + 5);
+		await Promise.all(batch.map(async ([f, h]) => {
+			if (onlyCode && !f.endsWith('.js') && !f.endsWith('.css')) return;
+			const path = `extension/一中杀/${f}`;
+			if (await game.promises.checkFile(path) !== 1) {
+				updateFiles.push(f);
+				return;
+			}
+			try {
+				const buf = await crypto.subtle.digest('SHA-1', await game.promises.readFile(path));
+				const localHash = Array.from(new Uint8Array(buf), x => hex[x]).join('');
+				if (localHash !== h) updateFiles.push(f);
+			} catch {
+				updateFiles.push(f);
+			}
+		}));
+	}
 
-			if (f.length) {
-				const p = createProgress("清理文件", f.length);
-				for (let i = 0; i < f.length; i++) {
-					p.setProgressValue(i + 1);
-					await game.promises.removeFile(`extension/一中杀/${f[i]}`)
+	// 标记已检查（自动更新不会再次弹窗）
+	sessionStorage.yzs_check = true;
+
+	if (updateFiles.length === 0) {
+		if (isManual) alert('已经是最新版本，无需更新');
+		return;
+	}
+
+	if (!confirm(`《一中杀》发现新版本 ${m.version}\n${updateFiles.length}个文件需更新，是否继续？\n更新说明:\n${m.update || '无'}`)) return;
+
+	// 开始下载与清理
+	let prog = createProgress("更新 一中杀 扩展", updateFiles.length);
+
+	try {
+		// 带重试的下载函数
+		async function downloadFileWithRetry(url, maxRetries = 3) {
+			for (let attempt = 0; attempt <= maxRetries; attempt++) {
+				try {
+					const r = await fetch(url);
+					if (r.ok) return r;
+					if (r.status === 429) {
+						if (attempt === maxRetries) {
+							throw new Error(`请求过于频繁 (429)，已重试 ${maxRetries + 1} 次仍然失败`);
+						}
+						const wait = Math.pow(2, attempt) * 1000;
+						console.warn(`请求过于频繁，等待 ${wait / 1000} 秒...`);
+						await new Promise(resolve => setTimeout(resolve, wait));
+						continue;
+					}
+					throw new Error(`HTTP ${r.status}`);
+				} catch (e) {
+					if (attempt === maxRetries) throw e;
+					await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
 				}
-				p.remove();
 			}
-			localStorage.yzs_clean = true
 		}
-		finally {
-			prog.remove();
-			alert('更新完成！');
-			delete game.importedPack;
-			game.reload();
+
+		// 递归创建目录
+		async function ensureDir(dirPath) {
+			const parts = dirPath.split('/');
+			let current = '';
+			for (const part of parts) {
+				current += (current ? '/' : '') + part;
+				try {
+					await game.promises.createDir(current);
+				} catch (e) { /* 忽略已存在的错误 */ }
+			}
 		}
+
+		for (let i = 0; i < updateFiles.length; i++) {
+			const f = updateFiles[i];
+			prog.setProgressValue(i + 1);
+			prog.setFileName(`正在下载：${f}`);
+
+			const fileUrl = `${p}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/${f}`;
+			const r = await downloadFileWithRetry(fileUrl);
+			const data = await r.arrayBuffer();
+			const fullPath = `extension/一中杀/${f}`;
+			const dir = fullPath.split("/").slice(0, -1).join("/");
+
+			await ensureDir(dir);
+			await game.promises.writeFile(data, dir, fullPath.split("/").pop());
+			await new Promise(resolve => setTimeout(resolve, 200));
+		}
+
+		await game.promises.writeFile(JSON.stringify(m, null, 2), "extension/一中杀", "manifest.json");
+
+		// 清理旧文件
+		const clean = async (path, pre = '') => {
+			const [dirs, files] = await game.promises.getFileList(path);
+			let list = files.map(file => pre ? `${pre}/${file}` : file);
+			for (const d of dirs) list = list.concat(await clean(`${path}/${d}`, pre ? `${pre}/${d}` : d));
+			return list;
+		};
+
+		const fList = (await clean("extension/一中杀")).filter(file => {
+			if (file === "manifest.json") return false;
+			if (m.files[file]) return false;
+			if (onlyCode && !file.endsWith('.js') && !file.endsWith('.css')) return false;
+			return true;
+		});
+
+		if (fList.length) {
+			const cleanProg = createProgress("清理文件", fList.length);
+			for (let i = 0; i < fList.length; i++) {
+				cleanProg.setProgressValue(i + 1);
+				try {
+					await game.promises.removeFile(`extension/一中杀/${fList[i]}`);
+				} catch (e) {
+					console.warn(`清理文件失败: ${fList[i]}`, e);
+				}
+			}
+			cleanProg.remove();
+		}
+		localStorage.yzs_clean = true;
+
+		prog.remove();
+		alert('更新完成！（将自动重启）');
+		game.reload();
 	} catch (e) {
-		if (b) alert(e)
-		console.warn(e)
-		delete game.importedPack;
+		// 出现异常时确保进度条关闭
+		if (prog) prog.remove();
+		throw e;  // 重新抛出，让外部调用者处理
+	}
+}
+
+
+// ============ 导出主函数 ============
+export default async (b) => {
+	let autoUpdateQueue = Promise.resolve();
+
+	if (b) {
+		// ===== 手动更新：强制获取锁，执行核心逻辑 =====
+		game.importedPack = true;
+		try {
+			await performUpdate(true);
+		} catch (e) {
+			// performUpdate 内部对于手动更新的错误已 alert，这里可不再弹窗
+			console.warn(e);
+		} finally {
+			game.importedPack = false;
+		}
+	} else {
+		// ===== 自动更新：排队、等待锁，执行核心逻辑 =====
+		async function doAutoUpdate() {
+			if (sessionStorage.yzs_check) return;      // 本次会话已检查过
+
+			// 等待其他更新释放锁
+			if (game.importedPack) {
+				await new Promise(resolve => {
+					const check = () => {
+						if (!game.importedPack) resolve();
+						else setTimeout(check, 300);
+					};
+					check();
+				});
+			}
+
+			game.importedPack = true;
+			try {
+				await performUpdate(false);
+			} finally {
+				game.importedPack = false;
+			}
+		}
+
+		autoUpdateQueue = autoUpdateQueue.then(() => doAutoUpdate()).catch(() => { });
+		await autoUpdateQueue;
+		// 注意：自动更新完成或出错后不需要再 return，函数自然结束
 	}
 };

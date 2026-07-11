@@ -5465,6 +5465,9 @@ const skills = {
 		filterCard(card, player) {
 			return get.name(card) !== "ying";
 		},
+		hiddenCard(player, name) {
+			return name == "tao"
+		},
 		selectCard: 2,
 		position: "h",
 		viewAs: {
@@ -8817,6 +8820,7 @@ const skills = {
 				player.addTempSkill("kuangji_yzs_record");
 				player.markAuto("kuangji_yzs_record", suits);
 			} else {
+				if (!player.countCards("h")) return ;
 				let result = await player.chooseToUse().set("openskilldialog", `###${get.prompt(event.name)}###将1张♠手牌当做${get.poptip("kuangchangbaozha_yzs")}使用，并摸1张牌`)
 					.set("norestore", true)
 					.set("_backupevent", `${event.name}_backup`)
@@ -8903,11 +8907,11 @@ const skills = {
 				},
 				preHidden: true,
 				filter(event, player) {
-					const target = trigger.player;
+					const target = event.player;
 					if (!target.countCards("he")) return false;
 					let evt = event.getParent(2);
 					if (evt?.name == "feidan_yzs") {
-						return game.hasPlayer(cur=>!cur.hasSkill("hidden_yzs")&&cur.countCards("h"))
+						return true
 					}
 					return false;
 				},
@@ -8951,7 +8955,7 @@ const skills = {
 							}
 							return -result - val;
 						}).set("judging", trigger.player.judging[0]).setHiddenSkill(event.skill).forResult();*/
-					let result = player == target ? await player.chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "he", card => {
+					let result = player == target ? await player.chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，你可打出${get.translation(trigger.player)}的1张牌代替`, "he", card => {
 						const player = get.player();
 						const mod2 = game.checkMod(card, player, "unchanged", "cardEnabled2", player);
 						if (mod2 != "unchanged") {
@@ -9078,6 +9082,7 @@ const skills = {
 				}
 			} else {
 				player.when({ player: "phaseJudgeEnd" }).filter((evt) => trigger == evt).step(async () => {
+					if (!player.countCards("h")) return ;
 					await player.chooseToUse().set("openskilldialog", `###${get.prompt(event.name)}###可将1张♥手牌当做${get.poptip("xianzheyuyan_yzs")}使用`)
 						.set("norestore", true)
 						.set("_backupevent", `${event.name}_backup`)
@@ -9300,6 +9305,9 @@ const skills = {
 					await player.addSkill(['fanzhuanshushi_yzs',"xushici_yzs"]);
 				}
 			}
+		},
+		hiddenCard(player, name) {
+			return name == "tao"
 		},
 		onChooseToUse(event) {
 			if (!game.online) {

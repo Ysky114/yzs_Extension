@@ -8290,7 +8290,7 @@ const skills = {
 						trigger.player.addTempSkill("burnlife_yzs_buff")
 					}
 					else {
-						if (trigger.player.getCards("h") > 5) await trigger.player.chooseToDiscard("h", true, 5);
+						if (trigger.player.countCards("h") > 5) await trigger.player.chooseToDiscard("h", true, 5);
 						else {
 							await trigger.player.discard(trigger.player.getCards("h"));
 						}
@@ -8348,7 +8348,7 @@ const skills = {
 							player.addTempSkill("burnlife_yzs_buff")
 						}
 						else {
-							if (player.getCards("h") > 5) await player.chooseToDiscard("h", true, 5);
+							if (player.countCards("h") > 5) await player.chooseToDiscard("h", true, 5);
 							else {
 								await player.discard(player.getCards("h"));
 							}
