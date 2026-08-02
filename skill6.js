@@ -5995,14 +5995,14 @@ const skills = {
 				async content(event, trigger, player) {
 					trigger.yzs_Girlyheart_skill_damage = true;
 					trigger.num += player.getStorage("yzs_Girlyheart_skill");
-					player.setStorage("yzs_Girlyheart_skill", 0, true);
+					player.setStorage("yzs_Girlyheart_skill", 0);
 					player.removeTip("yzs_Girlyheart_skill");
+					player.unmarkSkill("yzs_Girlyheart_skill")
 				}
 			},
 		},
+		markimage: "extension/一中杀/image/yzs_Girlyheart_skill.png",
 		intro: {
-			markcount: "nocount",
-			markimage: "extension/一中杀/image/yzs_Girlyheart_skill.png",
 			mark(dialog, content, player) {
 				const storage = player.getStorage("yzs_Girlyheart_skill");
 				if (storage == 1) {
@@ -6034,11 +6034,13 @@ const skills = {
 		async content(event, trigger, player) {
 			const num = player.countCards("e", card => get.name(card, player) == "yzs_Girlyheart");
 			if (num % 2) {
-				player.setStorage("yzs_Girlyheart_skill", -1, true);
+				player.setStorage("yzs_Girlyheart_skill", -1);
 				player.addTip("yzs_Girlyheart_skill", "少女心 减伤", false);
+				player.markSkill("yzs_Girlyheart_skill")
 			} else {
-				player.setStorage("yzs_Girlyheart_skill", 1, true);
+				player.setStorage("yzs_Girlyheart_skill", 1);
 				player.addTip("yzs_Girlyheart_skill", "少女心 加伤", false);
+				player.markSkill("yzs_Girlyheart_skill")
 			}
 		}
 	},
