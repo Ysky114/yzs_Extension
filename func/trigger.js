@@ -1593,16 +1593,16 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			str += "伤害";
 			game.log(player, str);
 			if (player.stat[player.stat.length - 1].damaged == void 0) {
-				player.stat[player.stat.length - 1].damaged = num;
+				player.stat[player.stat.length - 1].damaged = num > 0 ? num : 0;
 			} else {
-				player.stat[player.stat.length - 1].damaged += num;
+				player.stat[player.stat.length - 1].damaged += num > 0 ? num : 0;
 			}
 			if (source) {
 				source.getHistory("sourceDamage").push(event);
 				if (source.stat[source.stat.length - 1].damage == void 0) {
-					source.stat[source.stat.length - 1].damage = num;
+					source.stat[source.stat.length - 1].damage = num > 0 ? num : 0;
 				} else {
-					source.stat[source.stat.length - 1].damage += num;
+					source.stat[source.stat.length - 1].damage += num > 0 ? num : 0;
 				}
 			}
 			player.getHistory("damage").push(event);
@@ -2074,7 +2074,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		next.target = target;
 		next.rawPairs = [character, character2];
 		next.isNext = isNext;
+		next.forceDie = true;
 		config.source ??= this;
+		config.log ??= true;
 		config.sourceSkill ??= get.sourceSkillFor(get.event().name);
 		config.dieRemove ??= true;
 		config.startCards ??= 4;
@@ -2097,11 +2099,6 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 
 		if (isControl) {
 			game.addGlobalSkill("yzs_autoswap");
-			if (get.itemtype(isControl) == "player") {
-				newPlayer._trueMe = isControl;
-			} else {
-				newPlayer._trueMe = source || player;
-			}
 			game.broadcastAll(function (newPlayer, source) {
 				if (!_status.yzs_autoswap) {
 					_status.yzs_autoswap = {};
@@ -2154,7 +2151,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			}
 			target.setIdentity();
 			if (get.mode() == 'guozhan') {
-				if (target.name2 == undefined) wtw.name2 = wtw.name1;
+				if (target.name2 == undefined) target.name2 = target.name1;
 			}
 			if (source?.side || (game.me && game.me.side) || get.mode() == 'versus') {
 				target.side = source.side;
@@ -2185,15 +2182,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				const origin_checkResult = game.checkResult;
 				game.checkResult = function () {
 					const player = game.me._trueMe || game.me;
-					if (game.players.every(i => i["_source"] == player || i == player)) {
-						game.over(true);
-					} else if (get.mode() == "single") {
-						if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+					if (get.mode() == "single") {
+						if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+							game.over(true);
+						} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
 							game.over(false);
 						}
 						return;
 					}
-					return origin_checkResult.apply(this, arguments);
+					const targets = game.players.filter(i => i._noCheckResult);
+					game.players.removeArray(targets);
+					origin_checkResult();
+					game.players.addArray(targets);
 				};
 			}
 			if (typeof game.checkOnlineResult === "function") {
@@ -2202,12 +2202,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					if (player._noCheckResult) {
 						return false;
 					}
-					if (game.players.every(i => i["_source"] == player || i == player)) {
-						game.over(true);
-					} else if (get.mode() == "single") {
-						return false;
+					if (get.mode() == "single") {
+						if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+							game.over(true);
+						} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+							game.over(false);
+						}
+						return;
 					}
-					return origin_checkOnlineResult.apply(this, arguments);
+					const targets = game.players.filter(i => i._noCheckResult);
+					game.players.removeArray(targets);
+					origin_checkOnlineResult();
+					game.players.addArray(targets);
 				};
 			}
 			//敌友判定
@@ -2260,6 +2266,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		if (callback) {
 			await callback(event, newPlayer);
 		}
+		if(event.log)game.log(player,"召唤了",newPlayer)
 	};
 	lib.element.player.yzs_removePlayerOL=function(target, config = {}) {
 		const next = game.createEvent("removePlayer");
@@ -2276,7 +2283,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	}
 	lib.element.content.yzs_removePlayerOL = async function (event, trigger, player) {
 		const { target, source, animate, callback } = event;
-		delete _status.yzs_autoswap[target.playerid];
+		if (_status.yzs_autoswap?.[target.playerid])delete _status.yzs_autoswap[target.playerid];
 		await game.removePlayerOL(target, { animate });
 		if (callback) {
 			await callback(event, newPlayer);
@@ -2461,49 +2468,103 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	//领域展开
 	lib.element.player.yzs_ExpandDomain = function () {
 		var next = game.createEvent("yzs_ExpandDomain", false);
+		next.ExpandPlayerList = [this];
+		next.ExpandPlayerMap = new Map();
+		next.ExpandPlayerMap.set(this, {});
 		next.player = this;
 		const args = Array.from(arguments);
 		for (const arg of args) {
 			if (typeof arg === 'string') {
-				if (!next.domain) next.domain = arg;
-				else next.color = arg
+				if (!next.domain) {
+					next.domain = arg;
+					next.ExpandPlayerMap.get(this).domain = arg;
+				} else {
+					next.color = arg;
+					next.ExpandPlayerMap.get(this).color = arg;
+				}
 			} else if (typeof arg == "number") {
 				next.num = arg;
+				next.ExpandPlayerMap.get(this).num = arg;
+			} else if (typeof arg == "function") {
+				next.animation = arg;
 			} else if (arg === true) {
-				next.forced=true
+				next.forced = true;
+				next.ExpandPlayerMap.get(this).forced = arg;
 			} else if (arg === false) {
 				next.log = false;
+				next.ExpandPlayerMap.get(this).log = arg;
 			}
 		}
-		if (!next.domain || next.num <= 0 || (_status._yzsDomain==next.domain&&!next.forced)) {
+		if (!next.domain || next.num <= 0 || (_status._yzsDomain == next.domain && !next.forced && _status._yzsDomainPlayer == next.player)) {
 			_status.event.next.remove(next);
 			next.resolve();
-			return;
 		}
+		next.addExpandPlayer = function () {
+			const args = Array.from(arguments);
+			if (!this.ExpandPlayerList) this.ExpandPlayerList = [];
+			if (!this.ExpandPlayerMap) this.ExpandPlayerMap = new Map();
+			let push = {};
+			for (const arg of args) {
+				if (get.itemtype(arg) === 'player') {
+					push.player = arg;
+				} else if (typeof arg === 'string') {
+					if (!push.domain) push.domain = arg;
+					else push.color = arg;
+				} else if (typeof arg == "number") {
+					push.num = arg;
+				} else if (typeof arg == "function") {
+					push.animation = arg;
+				} else if (arg === true) {
+					push.forced = true;
+				} else if (arg === false) {
+					push.log = false;
+				}
+			}
+			if (!push.player || !push.domain) return;
+			if (this.ExpandPlayerList.includes(push.player)) return;
+			this.ExpandPlayerList.push(push.player);
+			game.log(push.player, "加入了领域对拼（", push.num, "）");
+			this.ExpandPlayerMap.set(push.player, {});
+			const playerData = this.ExpandPlayerMap.get(push.player);
+			for (const key in push) {
+				playerData[key] = push[key];
+			}
+		};
+		next.result = { bool: false };
 		next.setContent("yzs_ExpandDomain");
-		return next
+		return next;
 	};
 	lib.element.content.yzs_ExpandDomain =
 		[
 			async (event, trigger, player) => {
 				if (_status._yzsDomain && typeof _status._yzsDomain == "string") event.before = _status._yzsDomain
-				else event.before = "blank";
-				if (event.before && event.before != "blank") event.beforeskill = event.before + "_skill"
-				if (!event.domain || typeof event.domain != "string") {
-					event.domain = "blankDomain";//默认展开“无领域”（异常情况）
-				}
-				if (!event.domainskill || typeof event.domainskill != "string") {
-					event.domainskill = event.domain + "_skill";//领域技能命名格式为“领域名称”+"_skill"
-				}
+				else event.before = false;
+				if (event.before) event.beforeskill = event.before + "_skill"
 				if (!event.log || typeof event.log != "boolean") {
 					event.log = true;//默认自动播报
 				}
 				await event.trigger("yzs_ExpandDomainBegin");
 			},
 		async (event, trigger, player) => {
+			let list = [];
+			for (const target of event.ExpandPlayerList) {
+				list.push({ player: target, num: event.ExpandPlayerMap.get(target).num })
+		//		game.log(target, event.ExpandPlayerMap.get(target).num)
+			}
+			list.sort(function (a, b) {
+				return b.num - a.num;
+			})
+			event.finalWinner = list.filter(i => i.num == list[0].num);
+			event.finalWinner = event.finalWinner.map(i => i = i.player);
+			let max = list[0].num;
+			event.num = max;
 			let num = event.num;
-			if (typeof _status._yzsDomainCount=="number")num -= _status._yzsDomainCount;
-			if (num <= 0) {
+			let counts = list.map(i => i = i.num);
+			counts = counts.filter(i => i != num);
+			if (typeof _status._yzsDomainCount == "number") counts.push(_status._yzsDomainCount);
+			let count = Math.max(counts);
+			if (count == -Infinity) count = 0;
+			if (num <= count) {
 				game.broadcastAll((count) => {
 					_status._yzsDomainCount -= count;
 					if (_status._yzsDomainCount > 0) return;
@@ -2520,90 +2581,116 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					delete _status._yzsDomain;
 					delete _status._yzsDomainPlayer;
 				},event.num);
-				game.log(event.player, `抵消了${event.num}个回合的${get.translation(event.before)}`);
+				if (event.before)game.log(event.finalWinner, `抵消了${event.num}个回合的${get.translation(event.before)}`);
 				event.result = { bool: false, domain: event.domain, before: event.before };
 				return;
 			}
+			num -= count;
+			if (!event.domain) return;
+			//game.log(counts)
+			if (event.ExpandPlayerList.length > 1) {
+				game.log(event.ExpandPlayerList, "展开了领域对拼，" ,event.finalWinner.length > 1?`没有胜者`: `胜者为 ${ get.translation(event.finalWinner[0])}`)
+			}
+			if (event.finalWinner.length > 1) return;
+			event.finalPlayer = event.finalWinner[0];
+			if (event.ExpandPlayerMap.get(event.finalPlayer).domain) {
+				event.domain = event.ExpandPlayerMap.get(event.finalPlayer).domain
+			}
+			if (event.ExpandPlayerMap.get(event.finalPlayer).color) {
+				event.color = event.ExpandPlayerMap.get(event.finalPlayer).color
+			}
+			if (event.ExpandPlayerMap.get(event.finalPlayer).animation) {
+				event.animation = event.ExpandPlayerMap.get(event.finalPlayer).animation
+			}
 
-				if (event.log) {//播报内容
-					let str = "展开了领域：" + get.translation(event.domain)
-					game.log(player, str);
-				}
-				let parsedPath = "extension/一中杀/image/background/";
-				parsedPath += event.domain + ".png";
-				event.player.$fullscreenpop("领域展开", event.color);
-				await new Promise(r => setTimeout(r, 2500))
-				event.player.$fullscreenpop(get.translation(event.domain),event.color);
-				await game.broadcastAll(
-					(formattedPath, domain, skill, player, count) => {
-						_status._yzsDomainCount = count;
-						_status._yzsDomainPlayer = player;
-						const node = ui.create.div(".background.upper.domain");
-						node.setBackgroundImage(formattedPath);
-						node.style.backgroundSize = "cover";
-						node.style.backgroundRepeat = "no-repeat";
-						node.style.backgroundPosition = "center";
-						node.style.zIndex = "-1";
-						node.style.pointerEvents = "none"; // 防止点击事件被阻挡
-						node.destroy = () => {
-							if (node.skill) {
-								game.removeGlobalSkill(node.skill);
-								if (node.system) {
-									node.system.remove();
-								}
+			if (event.domain && (!event.domainskill || typeof event.domainskill != "string")) {
+				event.domainskill = event.domain + "_skill";//领域技能命名格式为“领域名称”+"_skill"
+			}
+
+			if (event.log) {//播报内容
+				let str = "展开了领域：" + get.translation(event.domain)
+				game.log(event.finalPlayer, str);
+			}
+			let parsedPath = "extension/一中杀/image/background/";
+			parsedPath += event.domain + ".png";
+			if (event.animation) game.broadcastAll(event.animation)
+			event.finalPlayer.$fullscreenpop("领域展开", event.color);
+			await new Promise(r => setTimeout(r, 2500))
+			event.finalPlayer.$fullscreenpop(get.translation(event.domain), event.color);
+			await game.broadcastAll(
+				(formattedPath, domain, skill, player, count) => {
+					_status._yzsDomainCount = count;
+					_status._yzsDomainPlayer = player;
+					const node = ui.create.div(".background.upper.domain");
+					node.setBackgroundImage(formattedPath);
+					node.style.backgroundSize = "cover";
+					node.style.backgroundRepeat = "no-repeat";
+					node.style.backgroundPosition = "center";
+					node.style.zIndex = "-1";
+					node.style.pointerEvents = "none"; // 防止点击事件被阻挡
+					node.destroy = () => {
+						if (node.skill) {
+							game.removeGlobalSkill(node.skill);
+							if (node.system) {
+								node.system.remove();
 							}
-							node.classList.add("hidden");
-							setTimeout(() => node.remove(), 3000);
-							if (ui.domain == node) {
-								ui.domain = null;
-							}
-						};
-						if (ui.domain) {
-							document.body.insertBefore(node, ui.domain);
-							ui.domain.destroy();
-						} else {
-							node.classList.add("hidden");
-							document.body.insertBefore(node, ui.window);
-							ui.refresh(node);
-							node.classList.remove("hidden");
 						}
-						ui.domain = node;
-						if (!domain) {
-							return;
+						node.classList.add("hidden");
+						setTimeout(() => node.remove(), 3000);
+						if (ui.domain == node) {
+							ui.domain = null;
 						}
-						node.domain = domain;
-						node.skill = skill;
-						if (player) {
-							node.player = player;
-						}
-						lib.setPopped(
-							(node.system = ui.create.system(lib.translate[skill], null, true, true)),
-							() => {
-								const uiIntro = ui.create.dialog("hidden");
-								uiIntro.addText(player ? `领域的主人：${get.translation(player)}` : get.translation(domain)).style.margin = "0";
-								uiIntro._place_text = uiIntro.add(ui.create.div(".text", lib.translate[`${skill}_info`] + `(剩余 ${_status._yzsDomainCount} 回合)`));
-								uiIntro.add(ui.create.div(".placeholder.slim"));
-								return uiIntro;
-							},
-							200
-						);
-						_status._yzsDomain = domain;
-					},
-					parsedPath,
-					event.domain,
-					event.domainskill,
-					event.player,
-					num
-				);
+					};
+					if (ui.domain) {
+						document.body.insertBefore(node, ui.domain);
+						ui.domain.destroy();
+					} else {
+						node.classList.add("hidden");
+						document.body.insertBefore(node, ui.window);
+						ui.refresh(node);
+						node.classList.remove("hidden");
+					}
+					ui.domain = node;
+					if (!domain) {
+						return;
+					}
+					node.domain = domain;
+					node.skill = skill;
+					if (player) {
+						node.player = player;
+					}
+					lib.setPopped(
+						(node.system = ui.create.system(lib.translate[skill], null, true, true)),
+						() => {
+							const uiIntro = ui.create.dialog("hidden");
+							uiIntro.addText(player ? `领域的主人：${get.translation(player)}` : get.translation(domain)).style.margin = "0";
+							uiIntro._place_text = uiIntro.add(ui.create.div(".text", lib.translate[`${skill}_info`] + `(剩余 ${_status._yzsDomainCount} 回合)`));
+							uiIntro.add(ui.create.div(".placeholder.slim"));
+							return uiIntro;
+						},
+						200
+					);
+					_status._yzsDomain = domain;
+				},
+				parsedPath,
+				event.domain,
+				event.domainskill,
+				event.finalPlayer,
+				num
+			);
 			await game.addGlobalSkill(event.domainskill);
-			let skills = lib.character[player.name][3].filter(skill => {
-				const categories = get.skillCategoriesOf(skill, player);
-				return !categories.some(type => lib.skill.AiSi_yzs.bannedType.includes(type)) && player.hasSkill(skill);
-			});
-			player.tempBanSkill(skills)
-				if (lib.skill[event.domainskill + "_instant"]) player.useSkill(event.domainskill + "_instant", false)
-				await event.trigger("yzs_ExpandDomainEnd")
-				event.result = { bool: true, domain: event.domain, before: event.before };
+
+			for (const target of event.ExpandPlayerList) {
+				let skills = lib.character[target.name][3].filter(skill => {
+					const categories = get.skillCategoriesOf(skill, target);
+					return !categories.some(type => lib.skill.AiSi_yzs.bannedType.includes(type)) && target.hasSkill(skill);
+				});
+				target.tempBanSkill(skills)
+			}
+
+			if (lib.skill[event.domainskill + "_instant"]) event.finalPlayer.useSkill(event.domainskill + "_instant", false)
+			await event.trigger("yzs_ExpandDomainEnd")
+			event.result = { bool: true, domain: event.domain, before: event.before };
 			},
 		];
 

@@ -8716,6 +8716,7 @@ const skills = {
 		},
 		forced: true,
 		filter(event, player) {
+		//	return true;
 			return player.countMark("yangfanqihang_yzs") >= 4;
 		},
 		async content(event, trigger, player) {
@@ -8866,196 +8867,19 @@ const skills = {
 					.forResult();
 				if (!result.bool) return;
 				const target = result.targets[0];
-				game.broadcastAll((player) => {
-					var group1 = player.group;
-					game.addCharacter('jifengbaoxiang_yzs', {
-						sex: 'none',
-						group: group1,
-						hp: 8,
-						skills: ["jifengbaoxiang_yzs_summon"],
-						groupInGuozhan: group1,
-						isUnseen: true,
-						extension: '衍生武将',
-						translate: '疾风宝箱',
-					});
-					lib.character['jifengbaoxiang_yzs'][4] = ['ext:一中杀/image/jifengbaoxiang_yzs.png', 'unseen', group1];
-				}, player);
-				if (_status.connectMode === true) {
-					var id = Math.floor(Math.random() * 8000000000);
-					game.broadcastAll((player, id) => {
-						var chest = ui.create.player(ui.arena).addTempClass("start");
-						const position = +player.dataset.position + 1;
-						const players = game.players.concat(game.dead);
-						ui.arena.setNumber(players.length + 1);
-						players.forEach(value => {
-							if (parseInt(value.dataset.position) >= position) {
-								value.dataset.position = parseInt(value.dataset.position) + 1;
-							}
-						});
-						chest.playerid = id;
-						lib.playerOL[id] = chest;
-						chest.init('jifengbaoxiang_yzs');
-						game.players.push(chest);
-						chest.dataset.position = position;
-						game.arrangePlayers();
-					}, target, id);
-					var chest = game.findPlayer2(current => (current.name1 == 'jifengbaoxiang_yzs' || current.name2 == 'jifengbaoxiang_yzs'));
-					if (!chest) chest = target.next;
-				} else {
-					
-					var chest = await game.addPlayerOL(target, "jifengbaoxiang_yzs", null, true);
-				}
-				if (!chest.playerid) chest.getId();
-				event.chest = chest;
-				if (!_status.chest_die) _status.chest_die = [];
-				_status.chest_die.add(chest.playerid);
-				if (!_status.chest_auto) _status.chest_auto = [];
-				_status.chest_auto.add(player.playerid, chest.playerid);
-				game.log(player, '召唤了', lib.translate['jifengbaoxiang_yzs']);
-				game.broadcastAll((chest, player) => {
-					if (get.mode() == 'guozhan') {
-						if (chest.name2 == undefined) chest.name2 = chest.name1;
-					}
-					if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-						chest.side = player.side;
-						chest.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-						chest.node.identity.dataset.color = player.node.identity.dataset.color;
-					}
-					chest.skillH = [];
-					chest.storage.zhibi = [];
-					chest.storage.stratagem_expose = [];
-					chest.storage.stratagem_fury = 0;
-				}, chest, player);
-				game.broadcastAll((chest, player) => {
-					const identity = (chest.identity = (identity => {
-						switch (identity) {
-							case "zhu":
-							case "mingzhong":
-								return "zhong";
-							case "zhu_false":
-								return "zhong_false";
-							case "bZhu":
-								return "bZhong";
-							case "rZhu":
-								return "rZhong";
-							case "nei":
-								return "commoner";
-							default:
-								return identity;
+				const callback = async function (event, player) {
+					const disables = [];
+					for (let i = 1; i <= 5; i++) {
+						for (let j = 0; j < player.countEnabledSlot(i); j++) {
+							disables.push(i);
 						}
-					})(player.identity));
-					if (get.mode() == 'doudizhu') lib.translate['zhong'] = "忠";
-					if (!lib.translate[identity]) lib.translate[identity] = "民";
-					const goon = player !== game.me && chest !== game.me && player.node.identity.classList.contains("guessing") && !player.identityShown;
-					if (goon) {
-						if (chest.identityShown) delete chest.identityShown;
-						if (!chest.node.identity.classList.contains("guessing")) chest.node.identity.classList.add("guessing");
 					}
-					chest.setIdentity(goon ? "cai" : undefined);
-					if (chest.node.dieidentity) chest.node.dieidentity.innerHTML = get.translation(chest.identity + 2);
-					if (typeof player.ai?.shown === "number" && chest.ai) chest.ai.shown = player.ai.shown;
-				}, chest, player);
-				game.broadcastAll((chest, player) => {
-					chest.setSeatNum(player.getSeatNum() + 1);
-					const playerx = game.players.concat(game.dead);
-					var minx = playerx.length;
-					ui.arena.setNumber(minx);
-					for (var i of playerx) {
-						if (i.getSeatNum() < minx) minx = i.getSeatNum();
+					if (disables.length > 0) {
+						await player.disableEquip(disables);
 					}
-					playerx.sortBySeat(game.findPlayer2(current => current.getSeatNum() == minx), true);
-					for (var i = 0; i < playerx.length; i++) {
-						playerx[i].setSeatNum(i + 1);
-					}
-					ui.update();
-				}, chest, player);
-				game.broadcastAll((chest, player) => {
-					chest["jifengbaoxiang_yzs"] = player;
-					if (!game.checkResult_chest) {
-						game.checkResult_chest = game.checkResult;
-						game.checkResult = function () {
-							const targets = game.players.filter(i => i.hasSkill("jifengbaoxiang_yzs_summon"));
-							game.players.removeArray(targets);
-							game.checkResult_chest();
-							game.players.addArray(targets);
-						};
-					}
-					if (!game.checkResult_chest) {
-						game.checkResult_chest = game.checkOnlineResult;
-						game.checkOnlineResult = function (player) {
-							const targets = game.players.filter(i => i.hasSkill("jifengbaoxiang_yzs_summon"));
-							game.players.removeArray(targets);
-							game.checkResult_chest(player);
-							game.players.addArray(targets);
-						};
-					}
-					if (typeof lib.element.player.getFriends === "function") {
-						const origin_getFriends = lib.element.player.getFriends;
-						const getFriends = function (func, includeDie) {
-							const player = this;
-							return [...origin_getFriends.apply(this, arguments),
-							...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => (target["jifengbaoxiang_yzs"] || target) === (player["jifengbaoxiang_yzs"] || player))
-							].filter(i => i !== player || func === true).unique().sortBySeat(player);
-						};
-						lib.element.player.getFriends = getFriends;
-						[...game.players, ...game.dead].forEach(i => (i.getFriends = getFriends));
-					}
-					if (typeof lib.element.player.isFriendOf === "function") {
-						const origin_isFriendOf = lib.element.player.isFriendOf;
-						const isFriendOf = function (player) {
-							if ((this["jifengbaoxiang_yzs"] || this) === (player["jifengbaoxiang_yzs"] || player)) return true;
-							return origin_isFriendOf.apply(this, arguments);
-						};
-						lib.element.player.isFriendOf = isFriendOf;
-						[...game.players, ...game.dead].forEach(i => (i.isFriendOf = isFriendOf));
-					}
-					if (typeof lib.element.player.getEnemies === "function") {
-						const origin_getEnemies = lib.element.player.getEnemies;
-						const getEnemies = function (func, includeDie) {
-							if (this["jifengbaoxiang_yzs"]) return this["jifengbaoxiang_yzs"].getEnemies(func, includeDie);
-							else {
-								const player = this;
-								return [...origin_getEnemies.apply(this, arguments),
-								...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => {
-									return origin_getEnemies.apply(this, arguments).includes(target["jifengbaoxiang_yzs"] || target);
-								}),
-								].filter(i => player != (i["jifengbaoxiang_yzs"] || i)).unique().sortBySeat(player);
-							}
-						};
-						lib.element.player.getEnemies = getEnemies;
-						[...game.players, ...game.dead].forEach(i => (i.getEnemies = getEnemies));
-					}
-				}, chest, player);
-				player.ai.modAttitudeFrom = (from, to, att) => {
-					if (player.isFriendsOf(to)) return get.attitude(from, to);
-					return get.attitude(from, to) - 0.1;
-				};
-				chest.ai.modAttitudeFrom = (from, to, att) => {
-					if (to == player || player.isFriendsOf(to)) return 114514;
-					return get.attitude(player, to) - 0.1;
-				};
-				chest.ai.modAttitudeTo = (from, to, att) => {
-					if (from == player || player.isFriendsOf(from)) return 7;
-					return get.attitude(from, to);
-				};
-				const disables = [];
-				for (let i = 1; i <= 5; i++) {
-					for (let j = 0; j < player.countEnabledSlot(i); j++) {
-						disables.push(i);
-					}
+					await player.disableJudge();
 				}
-				if (disables.length > 0) {
-					await chest.disableEquip(disables);
-				}
-				await chest.disableJudge();
-				game.addGlobalSkill('chest_auto_yzs');
-				game.addGlobalSkill('chest_die_yzs');
-				game.addGlobalSkill('chest_over_yzs');
-				let chests = game.filterPlayer(current => current.hasSkill("jifengbaoxiang_yzs_summon"));
-				for (let chest of chests) {
-					chest.storage.isSub = true;
-					chest.markSkill("isSub");
-				}
+			    await player.yzs_addPlayerOL(target, "jifengbaoxiang_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true,callback })
 			}
 		}
 	},

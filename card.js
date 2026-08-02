@@ -1878,7 +1878,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					if (player.hasSkill("wuxiaxianshushi_yzs") && !player.isTempBanned("wuxiaxianshushi_yzs")) return true;
 					return false;
 				},
-				usable:2,
+				usable: 2,
 				selectTarget: 1,
 				postAi(targets) {
 					return targets.length === 1;
@@ -1891,7 +1891,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				async content(event, trigger, player) {
 					game.trySkillAudio("bagua_skill")
-					if (player.name =="GojoSatoru_yzs")game.broadcastAll(() => {
+					if (player.name == "GojoSatoru_yzs") game.broadcastAll(() => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
 
@@ -2579,7 +2579,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				fullskin: true,
 				type: "trick",
 				wuxieable: true,
-		//		global:"tuotu_yzs_skill",
+				//		global:"tuotu_yzs_skill",
 				notarget: true,
 				image: "ext:一中杀/image/card/tuotu_yzs.png",
 				async content(event, trigger, player) {
@@ -2950,7 +2950,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				image: "ext:一中杀/image/card/moxuluo_yzs.png",
 				filterTarget(card, player, target) {
 					const players = game.filterPlayer(cur => !cur.storage.isSub);
-					if (players.some(cur => cur.name == "Makora_yzs",true)) {
+					if (players.some(cur => cur.name == "Makora_yzs", true)) {
 						return target.name == "Makora_yzs"
 					} else {
 						return true;
@@ -2962,7 +2962,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						await target.recover(3);
 						player.setStorage("Makora_yzs", target.hp);
 						const hundunyutiaohe_yzs = {}
-						const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3","hundunyutiaohe_yzs_skill4"];
+						const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4"];
 						for (let item of list) {
 							hundunyutiaohe_yzs[item] = target.getStorage(item);
 						}
@@ -3009,7 +3009,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						if (game.hasPlayer(cur => cur.name == "Makora_yzs", true)) {
 							return;
 						}
-						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true,dieRemove:false, noCheckResult: true }).forResult()
+						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true, dieRemove: false, noCheckResult: true }).forResult()
 						if (!result?.target) return;
 						const Makora = result.target;
 						if (player.storage.Makora_yzs && player.storage.Makora_yzs) {
@@ -3017,7 +3017,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							Makora.update();
 						}
 						if (player.storage.Makora_yzs_hundunyutiaohe_yzs) {
-							const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3","hundunyutiaohe_yzs_skill4"];
+							const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4"];
 							for (let item of list) {
 								Makora.setStorage(item, player.storage.Makora_yzs_hundunyutiaohe_yzs[item])
 							}
@@ -3075,6 +3075,12 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						}
 					});
 				},
+			},
+			yzs_Girlyheart: {
+				fullimage: true,
+				type: "equip",
+				subtype: "equip5",
+				image: "ext:一中杀/image/yzs_Elysia.png",
 			},
 		},
 		skill: {
@@ -3367,7 +3373,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					return player.countMark("shuangzishuidai_yzs_delay")
 				},
 				async content(event, trigger, player) {
-					player.removeMark("shuangzishuidai_yzs_delay", false);
+					player.removeMark("shuangzishuidai_yzs_delay",1, false);
 					let result = await player.chooseButton([
 						"请选择一项",
 						[
@@ -4328,7 +4334,9 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			huzang_yzs: `虎葬`,
 			huzang_yzs_info: `消耗4：出牌阶段限1次：对1名其他角色使用。若目标角色有护甲，其失去2点护甲，否则你对其造成1点伤害。<br>融合：目标牌结算后目标角色失去1点护甲。`,
 			moxuluo_yzs: `魔虚罗`,
-			moxuluo_yzs_info:`消耗5：出牌阶段：若“魔虚罗”①不在场：对1名角色使用，于其下家召唤“魔虚罗”（继承上次退场时的体力值）；②在场：对“魔虚罗”使用，令其恢复3点体力并退场。<br>此牌无融合效果，且仅会因“魔虚罗”死亡而被破坏。`,
+			moxuluo_yzs_info: `消耗5：出牌阶段：若“魔虚罗”①不在场：对1名角色使用，于其下家召唤“魔虚罗”（继承上次退场时的体力值）；②在场：对“魔虚罗”使用，令其恢复3点体力并退场。<br>此牌无融合效果，且仅会因“魔虚罗”死亡而被破坏。`,
+			yzs_Girlyheart: `少女心`,
+			yzs_Girlyheart_info:`此牌数量变动后，若为奇/偶数，持有者下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
 		},
 		list: [
 			["spade", 1, "juedou"], ["spade", 1, "shandian"], ["spade", 1, "guding"], ["spade", 1, "wugu"],

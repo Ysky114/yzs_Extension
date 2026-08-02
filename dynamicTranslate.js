@@ -1,5 +1,56 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	SixSouls_yzs_patience(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `你的回合结束时，你摸4张牌。`
+		}
+		return lib.translate["SixSouls_yzs_patience_info"]
+	},
+	SixSouls_yzs_courage(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `你每回合使用的前两张【杀】无次数限制且不可响应。`
+		}
+		return lib.translate["SixSouls_yzs_courage_info"]
+	},
+	SixSouls_yzs_honesty(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `你手牌上限+8。`
+		}
+		return lib.translate["SixSouls_yzs_honesty_info"]
+	},
+	SixSouls_yzs_perseverance(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `你每公轮首次受到的伤害-6。`
+		}
+		return lib.translate["SixSouls_yzs_perseverance_info"]
+	},
+	SixSouls_yzs_kindness(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `出牌阶段限2次：你失去1点体力，然后令1名其他角色恢复1点体力。`
+		}
+		return lib.translate["SixSouls_yzs_kindness_info"]
+	},
+	SixSouls_yzs_justice(player) {
+		if (player.hasSkill("SixSouls_yzs")) {
+			return `你的回合开始或结束时，你可弃X张手牌(X为你体力值且至多为4)，然后对1名其他角色造成1点伤害或弃置其区域内的至多2张牌。`
+		}
+		return lib.translate["SixSouls_yzs_justice_info"]
+	},
+	sichong_yzs(player) {
+		let x = player.getStorage("sichong_yzs").length || "X";
+		if (typeof x == "number") x = `<font color="#f85538">${x}</font>`
+		return `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1张${get.poptip("Fuka_yzs")}、恢复体力至${x}点并摸${x}张牌。<br>（${x}为清空记录数）`
+	}, 
+	jianzhi_yzs(player) {
+		let str = `【技能】：转换技：`;
+		if (player.storage?.jianzhi_yzs) str += `<span class="bluetext">①：出牌阶段：你弃2张手牌然后令1名其他角色防具无效且其下张【杀】伤害-1，直至你下回合开始。</span><br>
+<font color="#fa5c4c">【剑技】：其下次造成非零伤害为0（可叠加）。</font><br>
+②：你对其他角色造成伤害时，你可弃2张手牌，然后弃置其1张牌。<br><font color="#fa5c4c">【剑技】：其跳过下一摸牌阶段。</font>`
+		else str +=`①：出牌阶段：你弃2张手牌然后令1名其他角色防具无效且其下张【杀】伤害-1，直至你下回合开始。<br>
+<font color="#fa5c4c">【剑技】：其下次造成非零伤害为0（可叠加）。</font><br>
+<span class="bluetext">②：你对其他角色造成伤害时，你可弃2张手牌，然后弃置其1张牌。</span><br><font color="#fa5c4c">【剑技】：其跳过下一摸牌阶段。</font>`
+		return str;
+	},
 	Guanjun_Chimera_yzs(player) {
 		let str = `锁定技：你可替“淫欲囚医-管郡”承受伤害。`
 		if (player.hasSkill("kuangbao_yzs_paoxiao")) str += `你使用【杀】无次数限制。`;
@@ -68,7 +119,7 @@ const dynamicTranslates = {
 		return lib.translate["wuxiaxian_yzs_info"];
 	},
 	gongming_yzs(player) {
-		let str = `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将该阶段加入下列描述：<br><small>[`
+		let str = `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将之加入队列前端：<br><small>[`
 		let list = player.getStorage("gongming_yzs");
 		if (list.length) {
 			for (let i = 0; i < list.length; i++) {

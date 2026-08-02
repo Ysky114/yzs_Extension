@@ -2765,84 +2765,27 @@ const skills = {
 					_status.dajiejie_yzs = true;
 				})
 			}
-			if (!get.attitude_dajiejie_yzs) {
-				get.attitude_dajiejie_yzs = get.attitude;
-				get.attitude = function (from, to) {
-					if (from && from?.getStorage("dajiejie_yzs_source", false)) {
-						from = from.getStorage("dajiejie_yzs_source", false);
-					}
-					if (to && to?.getStorage("dajiejie_yzs_source", false)) {
-						to = to.getStorage("dajiejie_yzs_source", false);
-					}
-					let att = get.attitude_dajiejie_yzs(from, to);
-					return att;
-				};
-			}
-			const Barrier_yzs = await game.addPlayerOL(pos, "Reimu_yzs_Barrier_yzs", null, true);
-			game.broadcastAll((Barrier_yzs) => {
-				Barrier_yzs.isNoPlayer_dajiejie_yzs = true;
-				Barrier_yzs.dieAfter = function () { };
-				Barrier_yzs.dieAfter2 = function () { };
-			}, Barrier_yzs)
-			Barrier_yzs.setStorage("dajiejie_yzs_source", player);
-			Barrier_yzs.ai.modAttitudeFrom = function (from, to, att) {
-				if (_status.dajiejie_yzs_source_att_ing) return att;
-				if (from.getStorage("dajiejie_yzs_source", false)) {
-					from = from.getStorage("dajiejie_yzs_source", false);
-				}
-				if (to.getStorage("dajiejie_yzs_source", false)) {
-					to = to.getStorage("dajiejie_yzs_source", false);
-				}
-				_status.dajiejie_yzs_source_att_ing = true;
-				att = get.attitude(from, to);
-				delete _status.dajiejie_yzs_source_att_ing;
-				return att;
-			};
-			game.broadcastAll((Barrier_yzs, player) => {
-				if (get.mode() == 'guozhan') {
-					if (Barrier_yzs.name2 == undefined) Barrier_yzs.name2 = Barrier_yzs.name1;
-				}
-				if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-					Barrier_yzs.side = player.side;
-					Barrier_yzs.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-					Barrier_yzs.node.identity.dataset.color = player.node.identity.dataset.color;
-				}
-				Barrier_yzs.skillH = [];
-				Barrier_yzs.storage.zhibi = [];
-				Barrier_yzs.storage.stratagem_expose = [];
-				Barrier_yzs.storage.stratagem_fury = 0;
-			}, Barrier_yzs, player);
-			Barrier_yzs.storage.isSub = true;
-			Barrier_yzs.markSkill("isSub");
-			Barrier_yzs
-				.when({ global: "die" })
-				.filter((evt, player2) => {
-					if (evt.reserveOut) return false;
-					return evt.player == player || evt.player == player2;
-				})
-				.assign({
-					forceDie: true,
-				})
-				.step(lib.skill[event.name].dieRemove);
-			const disables = [];
-			for (let i = 1; i <= 5; i++) {
-				for (let j = 0; j < player.countEnabledSlot(i); j++) {
-					disables.push(i);
-				}
-			}
-			if (disables.length > 0) {
-				await Barrier_yzs.disableEquip(disables);
-			}
-			await Barrier_yzs.disableJudge();
-			game.log(player, '召唤了', lib.translate['Reimu_yzs_Barrier_yzs']);
-			game.broadcastAll(() => {
-				_status.tempMusic = `ext:一中杀/audio/神々が恋した幻想郷.mp3`;
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
-					delete _status.tempMusic;
+			const callback = async function (event, player) {
+				game.broadcastAll(() => {
+					_status.tempMusic = `ext:一中杀/audio/神々が恋した幻想郷.mp3`;
 					game.playBackgroundMusic();
-				}, { once: true });
-			});
+					ui.backgroundMusic.addEventListener('ended', () => {
+						delete _status.tempMusic;
+						game.playBackgroundMusic();
+					}, { once: true });
+				});
+				const disables = [];
+				for (let i = 1; i <= 5; i++) {
+					for (let j = 0; j < player.countEnabledSlot(i); j++) {
+						disables.push(i);
+					}
+				}
+				if (disables.length > 0) {
+					await player.disableEquip(disables);
+				}
+				await player.disableJudge();
+			}
+			await player.yzs_addPlayerOL(pos, "Reimu_yzs_Barrier_yzs", null, true, { animate:false,startCards: 0, dieRemove: true, noCheckResult: true, callback })
 		},
 		async dieRemove(event, trigger, player) {
 			if (_status.roundStart == player) _status.roundStart = player.next;
@@ -3022,110 +2965,30 @@ const skills = {
 			if (!result.bool) return
 			const direction = result.links[0];
 			const pos = event.targets[0];
-			if (!_status.dajiejie_yzs) {
-				if (!game.checkResult_dajiejie_yzs) {
-					game.checkResult_dajiejie_yzs = game.checkResult;
-					game.checkResult = function () {
-						const targets = game.players.filter(i => i.isNoPlayer_dajiejie_yzs);
-						game.players.removeArray(targets);
-						game.checkResult_dajiejie_yzs();
-						game.players.addArray(targets);
-					};
-				}
-				if (!game.checkOnlineResult_dajiejie_yzs) {
-					game.checkOnlineResult_dajiejie_yzs = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						const targets = game.players.filter(i => i.isNoPlayer_dajiejie_yzs);
-						game.players.removeArray(targets);
-						game.checkOnlineResult_dajiejie_yzs(player);
-						game.players.addArray(targets);
-					};
-				}
-				game.broadcastAll(() => {
-					_status.dajiejie_yzs = true;
-				})
-			}
-			if (!get.attitude_dajiejie_yzs) {
-				get.attitude_dajiejie_yzs = get.attitude;
-				get.attitude = function (from, to) {
-					if (from && from?.getStorage("dajiejie_yzs_source", false)) {
-						from = from.getStorage("dajiejie_yzs_source", false);
+			const callback = async function (event, player) {
+				const disables = [];
+				for (let i = 1; i <= 5; i++) {
+					for (let j = 0; j < player.countEnabledSlot(i); j++) {
+						disables.push(i);
 					}
-					if (to && to?.getStorage("dajiejie_yzs_source", false)) {
-						to = to.getStorage("dajiejie_yzs_source", false);
-					}
-					let att = get.attitude_dajiejie_yzs(from, to);
-					return att;
-				};
+				}
+				if (disables.length > 0) {
+					await player.disableEquip(disables);
+				}
+				await player.disableJudge();
+				player.markAuto("Reimu_yzs_subBarrier_yzs_skill", event.direction)
+				await lib.skill.Reimu_yzs_Barrier_yzs_skill.settle();
+				game.broadcastAll(
+					function (player, direction) {
+						if (player.marks.Reimu_yzs_subBarrier_yzs_skill) {
+							player.marks.Reimu_yzs_subBarrier_yzs_skill.firstChild.innerHTML = direction == 'clockwise' ? `顺` : `逆`;
+						}
+					},
+					player,
+					event.direction
+				);
 			}
-			const Barrier_yzs = await game.addPlayerOL(pos, "Reimu_yzs_subBarrier_yzs", null, true);
-			game.broadcastAll((Barrier_yzs) => {
-				Barrier_yzs.isNoPlayer_dajiejie_yzs = true;
-				Barrier_yzs.dieAfter = function () { };
-				Barrier_yzs.dieAfter2 = function () { };
-			}, Barrier_yzs)
-			Barrier_yzs.setStorage("dajiejie_yzs_source", player);
-			Barrier_yzs.ai.modAttitudeFrom = function (from, to, att) {
-				if (_status.dajiejie_yzs_source_att_ing) return att;
-				if (from.getStorage("dajiejie_yzs_source", false)) {
-					from = from.getStorage("dajiejie_yzs_source", false);
-				}
-				if (to.getStorage("dajiejie_yzs_source", false)) {
-					to = to.getStorage("dajiejie_yzs_source", false);
-				}
-				_status.dajiejie_yzs_source_att_ing = true;
-				att = get.attitude(from, to);
-				delete _status.dajiejie_yzs_source_att_ing;
-				return att;
-			};
-			game.broadcastAll((Barrier_yzs, player) => {
-				if (get.mode() == 'guozhan') {
-					if (Barrier_yzs.name2 == undefined) Barrier_yzs.name2 = Barrier_yzs.name1;
-				}
-				if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-					Barrier_yzs.side = player.side;
-					Barrier_yzs.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-					Barrier_yzs.node.identity.dataset.color = player.node.identity.dataset.color;
-				}
-				Barrier_yzs.skillH = [];
-				Barrier_yzs.storage.zhibi = [];
-				Barrier_yzs.storage.stratagem_expose = [];
-				Barrier_yzs.storage.stratagem_fury = 0;
-			}, Barrier_yzs, player);
-			Barrier_yzs.storage.isSub = true;
-			Barrier_yzs.markSkill("isSub");
-			Barrier_yzs
-				.when({ global: "die" })
-				.filter((evt, player2) => {
-					if (evt.reserveOut) return false;
-					return evt.player == player || evt.player == player2;
-				})
-				.assign({
-					forceDie: true,
-				})
-				.step(lib.skill[event.name].dieRemove);
-			const disables = [];
-			for (let i = 1; i <= 5; i++) {
-				for (let j = 0; j < player.countEnabledSlot(i); j++) {
-					disables.push(i);
-				}
-			}
-			if (disables.length > 0) {
-				await Barrier_yzs.disableEquip(disables);
-			}
-			Barrier_yzs.markAuto("Reimu_yzs_subBarrier_yzs_skill", direction)
-			game.broadcastAll(
-				function (player, direction) {
-					if (player.marks.Reimu_yzs_subBarrier_yzs_skill) {
-						player.marks.Reimu_yzs_subBarrier_yzs_skill.firstChild.innerHTML = direction == 'clockwise' ? `顺` : `逆`;
-					}
-				},
-				Barrier_yzs,
-				direction
-			);
-			await Barrier_yzs.disableJudge();
-			await lib.skill.Reimu_yzs_Barrier_yzs_skill.settle();
-			game.log(player, '召唤了', lib.translate['Reimu_yzs_subBarrier_yzs']);
+			await player.yzs_addPlayerOL(pos, "Reimu_yzs_subBarrier_yzs", null, true, { animate: false, direction,startCards: 0, dieRemove: true, noCheckResult: true, callback })
 		},
 		async dieRemove(event, trigger, player) {
 			if (_status.roundStart == player) _status.roundStart = player.next;
@@ -3538,6 +3401,7 @@ const skills = {
 		enable: "phaseUse",
 		prompt: `符卡：移除X枚【梦】标记，然后从任意结界内角色开始，结界内角色依次受到1点伤害，共计X/3点。（向下取整）`,
 		filter(event, player) {
+		//	return true;
 			if (player.countMark("Fuka_yzs") < 1) return false;
 			if (player.countMark("mengxiangfengyin_yzs") < 3) return false;
 			let Barrier = game.filterPlayer((cur) => cur.name == "Reimu_yzs_Barrier_yzs", true)
@@ -3586,6 +3450,24 @@ const skills = {
 				setTimeout(function () {
 					img.parentNode.removeChild(img);
 				}, duration);
+
+				_status.tempMusic = `ext:一中杀/audio/神々が恋した幻想郷.mp3`;
+
+				// 2. 调用播放逻辑
+				game.playBackgroundMusic();
+
+				// 3. 核心修改：等待音频加载并跳转时间
+				if (ui.backgroundMusic) {
+					// 如果音频已经加载完成（通常是本地资源），直接跳转
+					if (ui.backgroundMusic.readyState >= 2) {
+						ui.backgroundMusic.currentTime = 15;
+					} else {
+						// 否则监听加载完成事件
+						ui.backgroundMusic.addEventListener('canplay', function () {
+							this.currentTime = 15;
+						}, { once: true });
+					}
+				}
 			}, player);
 			await new Promise(r => setTimeout(r, 1800))
 			target.playEffectOL(lib.skill.yinyangyu_yzs.Effect);
@@ -6948,6 +6830,7 @@ const skills = {
 						trigger.player.getStat("card")[trigger.card.name]--;
 					}
 					if (trigger.card?.storage?.WindSword_yzs_baseDamage) {
+						if (!trigger.baseDamage) trigger.baseDamage = 0;
 						trigger.baseDamage += 1;
 						trigger.WindSword_yzs = true;
 					}
@@ -6959,7 +6842,7 @@ const skills = {
 		position: "h",
 		enable: "phaseUse",
 		filter(event, player) {
-			if (player.countMark("GodgivenSwordsmanship_yzs_lv") < 5) return false;
+			//if (player.countMark("GodgivenSwordsmanship_yzs_lv") < 5) return false;
 			if (!player.countCards("h")) return false;
 			return player.countMark("WindSword_yzs_used") < 1;
 		},
@@ -7014,7 +6897,7 @@ const skills = {
 					player.removeMark("WindSword_yzs_used", 1, false)
 				}
 			}
-			if (!player.countCards("h")) {
+			if (player.countCards("h", card => !event.result.cards.includes(card))==0) {
 				event.result.card.storage.WindSword_yzs_baseDamage = true;
 			}
 			let cards = event.result.cards

@@ -2128,196 +2128,19 @@ const skills = {
 				.forResult();
 			if (!result.bool) return;
 			const target = result.targets[0];
-			game.broadcastAll((player) => {
-				var group1 = player.group;
-				game.addCharacter('ciyuanzhimen_yzs', {
-					sex: 'none',
-					group: group1,
-					hp: 4,
-					skills: ["ciyuanzhimen_yzs_summon"],
-					groupInGuozhan: group1,
-					isUnseen: true,
-					extension: '衍生武将',
-					translate: '次元之门',
-				});
-				lib.character['ciyuanzhimen_yzs'][4] = ['ext:一中杀/image/ciyuanzhimen_yzs.png', 'unseen', group1];
-			}, player);
-			if (_status.connectMode === true) {
-				var id = Math.floor(Math.random() * 8000000000);
-				game.broadcastAll((player, id) => {
-					var door = ui.create.player(ui.arena).addTempClass("start");
-					const position = +player.dataset.position + 1;
-					const players = game.players.concat(game.dead);
-					ui.arena.setNumber(players.length + 1);
-					players.forEach(value => {
-						if (parseInt(value.dataset.position) >= position) {
-							value.dataset.position = parseInt(value.dataset.position) + 1;
-						}
-					});
-					door.playerid = id;
-					lib.playerOL[id] = door;
-					door.init('ciyuanzhimen_yzs');
-					game.players.push(door);
-					door.dataset.position = position;
-					game.arrangePlayers();
-				}, target, id);
-				var door = game.findPlayer2(current => (current.name1 == 'ciyuanzhimen_yzs' || current.name2 == 'ciyuanzhimen_yzs'));
-				if (!door) door = target.next;
-			} else {
-				
-				var door = await game.addPlayerOL(target, "ciyuanzhimen_yzs", null, true);
-			}
-			if (!door.playerid) door.getId();
-			event.door = door;
-			if (!_status.door_die) _status.door_die = [];
-			_status.door_die.add(door.playerid);
-			if (!_status.door_auto) _status.door_auto = [];
-			_status.door_auto.add(player.playerid, door.playerid);
-			game.log(player, '召唤了', lib.translate['ciyuanzhimen_yzs']);
-			game.broadcastAll((door, player) => {
-				if (get.mode() == 'guozhan') {
-					if (door.name2 == undefined) door.name2 = door.name1;
-				}
-				if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-					door.side = player.side;
-					door.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-					door.node.identity.dataset.color = player.node.identity.dataset.color;
-				}
-				door.skillH = [];
-				door.storage.zhibi = [];
-				door.storage.stratagem_expose = [];
-				door.storage.stratagem_fury = 0;
-			}, door, player);
-			game.broadcastAll((door, player) => {
-				const identity = (door.identity = (identity => {
-					switch (identity) {
-						case "zhu":
-						case "mingzhong":
-							return "zhong";
-						case "zhu_false":
-							return "zhong_false";
-						case "bZhu":
-							return "bZhong";
-						case "rZhu":
-							return "rZhong";
-						case "nei":
-							return "commoner";
-						default:
-							return identity;
+			const callback = async function (event, player) {
+				const disables = [];
+				for (let i = 1; i <= 5; i++) {
+					for (let j = 0; j < player.countEnabledSlot(i); j++) {
+						disables.push(i);
 					}
-				})(player.identity));
-				if (get.mode() == 'doudizhu') lib.translate['zhong'] = "忠";
-				if (!lib.translate[identity]) lib.translate[identity] = "民";
-				const goon = player !== game.me && door !== game.me && player.node.identity.classList.contains("guessing") && !player.identityShown;
-				if (goon) {
-					if (door.identityShown) delete door.identityShown;
-					if (!door.node.identity.classList.contains("guessing")) door.node.identity.classList.add("guessing");
 				}
-				door.setIdentity(goon ? "cai" : undefined);
-				if (door.node.dieidentity) door.node.dieidentity.innerHTML = get.translation(door.identity + 2);
-				if (typeof player.ai?.shown === "number" && door.ai) door.ai.shown = player.ai.shown;
-			}, door, player);
-			game.broadcastAll((door, player) => {
-				door.setSeatNum(player.getSeatNum() + 1);
-				const playerx = game.players.concat(game.dead);
-				var minx = playerx.length;
-				ui.arena.setNumber(minx);
-				for (var i of playerx) {
-					if (i.getSeatNum() < minx) minx = i.getSeatNum();
+				if (disables.length > 0) {
+					await player.disableEquip(disables);
 				}
-				playerx.sortBySeat(game.findPlayer2(current => current.getSeatNum() == minx), true);
-				for (var i = 0; i < playerx.length; i++) {
-					playerx[i].setSeatNum(i + 1);
-				}
-				ui.update();
-			}, door, player);
-			game.broadcastAll((door, player) => {
-				door["ciyuanzhimen_yzs"] = player;
-				if (!game.checkResult_door) {
-					game.checkResult_door = game.checkResult;
-					game.checkResult = function () {
-						const targets = game.players.filter(i => i.hasSkill("ciyuanzhimen_yzs_summon"));
-						game.players.removeArray(targets);
-						game.checkResult_door();
-						game.players.addArray(targets);
-					};
-				}
-				if (!game.checkResult_door) {
-					game.checkResult_door = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						const targets = game.players.filter(i => i.hasSkill("ciyuanzhimen_yzs_summon"));
-						game.players.removeArray(targets);
-						game.checkResult_door(player);
-						game.players.addArray(targets);
-					};
-				}
-				if (typeof lib.element.player.getFriends === "function") {
-					const origin_getFriends = lib.element.player.getFriends;
-					const getFriends = function (func, includeDie) {
-						const player = this;
-						return [...origin_getFriends.apply(this, arguments),
-						...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => (target["ciyuanzhimen_yzs"] || target) === (player["ciyuanzhimen_yzs"] || player))
-						].filter(i => i !== player || func === true).unique().sortBySeat(player);
-					};
-					lib.element.player.getFriends = getFriends;
-					[...game.players, ...game.dead].forEach(i => (i.getFriends = getFriends));
-				}
-				if (typeof lib.element.player.isFriendOf === "function") {
-					const origin_isFriendOf = lib.element.player.isFriendOf;
-					const isFriendOf = function (player) {
-						if ((this["ciyuanzhimen_yzs"] || this) === (player["ciyuanzhimen_yzs"] || player)) return true;
-						return origin_isFriendOf.apply(this, arguments);
-					};
-					lib.element.player.isFriendOf = isFriendOf;
-					[...game.players, ...game.dead].forEach(i => (i.isFriendOf = isFriendOf));
-				}
-				if (typeof lib.element.player.getEnemies === "function") {
-					const origin_getEnemies = lib.element.player.getEnemies;
-					const getEnemies = function (func, includeDie) {
-						if (this["ciyuanzhimen_yzs"]) return this["ciyuanzhimen_yzs"].getEnemies(func, includeDie);
-						else {
-							const player = this;
-							return [...origin_getEnemies.apply(this, arguments),
-							...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => {
-								return origin_getEnemies.apply(this, arguments).includes(target["ciyuanzhimen_yzs"] || target);
-							}),
-							].filter(i => player != (i["ciyuanzhimen_yzs"] || i)).unique().sortBySeat(player);
-						}
-					};
-					lib.element.player.getEnemies = getEnemies;
-					[...game.players, ...game.dead].forEach(i => (i.getEnemies = getEnemies));
-				}
-			}, door, player);
-			player.ai.modAttitudeFrom = (from, to, att) => {
-				if (player.isFriendsOf(to)) return get.attitude(from, to);
-				return get.attitude(from, to) - 0.1;
-			};
-			door.ai.modAttitudeFrom = (from, to, att) => {
-				if (to == player || player.isFriendsOf(to)) return 114514;
-				return get.attitude(player, to) - 0.1;
-			};
-			door.ai.modAttitudeTo = (from, to, att) => {
-				if (from == player || player.isFriendsOf(from)) return 7;
-				return get.attitude(from, to);
-			};
-			const disables = [];
-			for (let i = 1; i <= 5; i++) {
-				for (let j = 0; j < player.countEnabledSlot(i); j++) {
-					disables.push(i);
-				}
+				await player.disableJudge();
 			}
-			if (disables.length > 0) {
-				await door.disableEquip(disables);
-			}
-			await door.disableJudge();
-			game.addGlobalSkill('door_auto_yzs');
-			game.addGlobalSkill('door_die_yzs');
-			game.addGlobalSkill('door_over_yzs');
-			let doors = game.filterPlayer(current => current.hasSkill("ciyuanzhimen_yzs_summon"));
-			for (let door of doors) {
-				door.storage.isSub = true;
-				door.markSkill("isSub");
-			}
+			await player.yzs_addPlayerOL(target, "ciyuanzhimen_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true, callback })
 		}
 	},
 	door_auto_yzs: {
@@ -3144,9 +2967,11 @@ const skills = {
 			}
 		},
 		ai: {
-			order(item,player){
-				if (player.countCards("h") <= player.getHandcardLimit()-2) return 10;
-				return 0.1;
+			basic: {
+				order(item, player) {
+					if (player.countCards("h") <= player.getHandcardLimit() - 2) return 10;
+					return 0.1;
+				},
 			},
 			result: {
 				target(player, target) {
@@ -3182,12 +3007,14 @@ const skills = {
 					player: "phaseEnd"
 				},
 				async content(event, trigger, player) {
-					await player.draw(2);
+					await player.draw(player.hasSkill("SixSouls_yzs") ? 4 : 2);
 				}
 			},
 			courage: {
 				sub: true,
-				usable: 1,
+				usable(skill, player) {
+					return player.hasSkill("SixSouls_yzs") ? 2:1
+				},
 				sourceSkill: "SixSouls_yzs",
 				priority: 12,
 				trigger: {
@@ -3210,7 +3037,7 @@ const skills = {
 				sourceSkill: "SixSouls_yzs",
 				mod: {
 					maxHandcard: function (player, num) {
-						return num + 4;
+						return num + player.hasSkill("SixSouls_yzs") ? 8 : 4;
 					},
 				},
 			},
@@ -3224,13 +3051,15 @@ const skills = {
 					player: "damageBegin3"
 				},
 				async content(event, trigger, player) {
-					trigger.num -= 3;
+					trigger.num -= player.hasSkill("SixSouls_yzs") ? 6 : 3;
 				}
 			},
 			kindness: {
 				sub: true,
 				sourceSkill: "SixSouls_yzs",
-				usable: 1,
+				usable(skill, player) {
+					return player.hasSkill("SixSouls_yzs") ? 2 : 1
+				},
 				enable: "phaseUse",
 				prompt: "失去1点体力，然后令目标角色恢复1点体力",
 				filter(event, player) {
@@ -3263,9 +3092,10 @@ const skills = {
 				sourceSkill: "SixSouls_yzs",
 				priority: 131,
 				trigger: {
-					player: "phaseBegin"
+					player: ["phaseBegin","phaseEnd"]
 				},
-				filter(event, player) {
+				filter(event, player,name) {
+					if (!player.hasSkill("SixSouls_yzs") && name == "phaseEnd") return false;
 					if (player.hp < 1) return false;
 					return player.countCards("h") >= Math.min(player.hp, 4);
 				},
@@ -3897,7 +3727,7 @@ const skills = {
 				forced: true,
 				popup: false,
 				trigger: {
-					player: ["dying", "dieBegin"],
+					player: ["dyingBegin", "dieBegin"],
 				},
 				filter(event, player) {
 					if (event.name != "die") return true;
@@ -8471,7 +8301,7 @@ const skills = {
 	longzhiban_yzs: {
 		nobracket: true,
 		group: ["longzhiban_yzs_mark", "longzhiban_yzs_addDamage", "longzhiban_yzs_firstrecover", "longzhiban_yzs_draw", "longzhiban_yzs_skip", "longzhiban_yzs_wusheng", "longzhiban_yzs_protect", "longzhiban_yzs_recover", "longzhiban_yzs_damage", "longzhiban_yzs_renew"],
-		global: ["longzhiban_yzs_MrDragon_auto"],
+	//	global: ["longzhiban_yzs_MrDragon_auto"],
 		subSkill: {
 			mark: {
 				marktext: "绊",
@@ -9018,95 +8848,7 @@ const skills = {
 				.forResult();
 			if (!result.bool) return;
 			const pos = result.targets[0];
-			if (!_status.longzhiban_yzs) {
-				if (!game.checkResult_longzhiban_yzs) {
-					game.checkResult_longzhiban_yzs = game.checkResult;
-					game.checkResult = function () {
-						const targets = game.players.filter(i => i.isNoPlayer_longzhiban_yzs);
-						game.players.removeArray(targets);
-						game.checkResult_longzhiban_yzs();
-						game.players.addArray(targets);
-					};
-				}
-				if (!game.checkOnlineResult_longzhiban_yzs) {
-					game.checkOnlineResult_longzhiban_yzs = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						const targets = game.players.filter(i => i.isNoPlayer_longzhiban_yzs);
-						game.players.removeArray(targets);
-						game.checkOnlineResult_longzhiban_yzs(player);
-						game.players.addArray(targets);
-					};
-				}
-				game.broadcastAll(() => {
-					_status.longzhiban_yzs = true;
-				})
-			}
-			if (!get.attitude_longzhiban_yzs) {
-				get.attitude_longzhiban_yzs = get.attitude;
-				get.attitude = function (from, to) {
-					if (from && from?.getStorage("longzhiban_yzs_source", false)) {
-						from = from.getStorage("longzhiban_yzs_source", false);
-					}
-					if (to && to?.getStorage("longzhiban_yzs_source", false)) {
-						to = to.getStorage("longzhiban_yzs_source", false);
-					}
-					let att = get.attitude_longzhiban_yzs(from, to);
-					return att;
-				};
-			}
-			const MrDragon = await game.addPlayerOL(pos, "MrDragon_yzs", null, true);
-			game.broadcastAll((MrDragon) => {
-				MrDragon.isNoPlayer_longzhiban_yzs = true;
-				MrDragon.dieAfter = function () { };
-				MrDragon.dieAfter2 = function () { };
-			}, MrDragon)
-			MrDragon.setStorage("longzhiban_yzs_source", player);
-			MrDragon.ai.modAttitudeFrom = function (from, to, att) {
-				if (_status.longzhiban_yzs_source_att_ing) return att;
-				if (from.getStorage("longzhiban_yzs_source", false)) {
-					from = from.getStorage("longzhiban_yzs_source", false);
-				}
-				if (to.getStorage("longzhiban_yzs_source", false)) {
-					to = to.getStorage("longzhiban_yzs_source", false);
-				}
-				_status.longzhiban_yzs_source_att_ing = true;
-				att = get.attitude(from, to);
-				delete _status.longzhiban_yzs_source_att_ing;
-				return att;
-			};
-			game.broadcastAll((MrDragon, player) => {
-				if (get.mode() == 'guozhan') {
-					if (MrDragon.name2 == undefined) MrDragon.name2 = MrDragon.name1;
-				}
-				if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-					MrDragon.side = player.side;
-					MrDragon.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-					MrDragon.node.identity.dataset.color = player.node.identity.dataset.color;
-				}
-				MrDragon.skillH = [];
-				MrDragon.storage.zhibi = [];
-				MrDragon.storage.stratagem_expose = [];
-				MrDragon.storage.stratagem_fury = 0;
-			}, MrDragon, player);
-			MrDragon.storage.isSub = true;
-			MrDragon.markSkill("isSub");
-			MrDragon.directgain(get.cards(4));
-			MrDragon
-				.when({ global: "die" })
-				.filter((evt, player2) => {
-					if (evt.reserveOut) return false;
-					return evt.player == player || evt.player == player2;
-				})
-				.assign({
-					forceDie: true,
-				})
-				.step(lib.skill[event.name].dieRemove);
-			game.broadcastAll(function (player, MrDragon) {
-				_status.MrDragon_auto = [player.playerid, MrDragon.playerid]
-				MrDragon._trueMe = player;
-				player._trueMe = player;
-			}, player, MrDragon)
-			game.log(player, '召唤了', lib.translate['MrDragon_yzs']);
+			await player.yzs_addPlayerOL(pos, "MrDragon_yzs", null, true, { isControl:true,noCheckResult: true})
 		},
 		async dieRemove(event, trigger, player) {
 			if (_status.roundStart == player) _status.roundStart = player.next;
@@ -9711,7 +9453,7 @@ const skills = {
 			mark(dialog, content, player) {
 				const storage = player.getStorage("AirFazen_yzs");
 				const names = storage;
-				if (player.isUnderControl(true) && names.length) {
+				if ( names.length) {
 					dialog.addText("当前记录牌名：");
 					dialog.addSmall([names, "vcard"]);
 				}
@@ -9783,7 +9525,7 @@ const skills = {
 				return false;
 			}
 			for (var i of list) {
-				if (event.filterCard(get.autoViewAs({ name: i, }, "unsure"), player, event)) {
+				if (event.filterCard(get.autoViewAs({ name: i, isCard: false, }, "unsure"), player, event)) {
 					return true;
 				}
 			}

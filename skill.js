@@ -268,9 +268,9 @@ const skills = {
 		trigger: {
 			player: ["changeHp"]
 		},
+		banSkills:["sheshen_yzs", "jiandun_yzs","qieyong_yzs"],
 		filter(event, player) {
-			if (event.getParent(2).name == "sheshen_yzs") return false;
-			if (event.getParent(2).name == "jiandun_yzs") return false;
+			if (lib.skill.Undying_yzs.banSkills.includes(event.getParent(2).name)) return false;
 			if (event.num >= 0) return false;
 			//	if (!player.storage.minHp_yzs) player.storage.minHp_yzs = 0;
 			return player.hp <= 1;
@@ -1936,6 +1936,11 @@ const skills = {
 				}
 			}
 			if (is_spade) {
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, "effect/lose.mp3");
 				player.skip("phaseUse")
 			}
 			if (num == 3) {
@@ -1970,7 +1975,11 @@ const skills = {
 				player.addSkill(result.links[0]);
 				player.popup(result.links[0]);
 				game.log(player, "获得了", "【" + get.translation(result.links[0]) + "】");
-
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, "effect/throw_flower1.mp3");
 			}
 		},
 		ai: {
@@ -3493,6 +3502,7 @@ const skills = {
 	},
 	//翼飞羽
 	"wuying_yzs": {
+		Effect: function (player) { },
 		locked: true,
 		group: ["wuying_yzs_hidden1", "wuying_yzs_hidden2"],
 		trigger: {
@@ -3524,6 +3534,7 @@ const skills = {
 					return !player.hasSkill("hidden_yzs")
 				},
 				content() {
+					player.playEffectOL(lib.skill.wuying_yzs.Effect, trigger.player);
 					player.addSkill("hidden_yzs")
 					game.log(player, "进入了【隐匿】")
 				},
@@ -3538,6 +3549,7 @@ const skills = {
 					return !player.hasSkill("hidden_yzs")
 				},
 				content() {
+					player.playEffectOL(lib.skill.wuying_yzs.Effect, trigger.player);
 					player.addSkill("hidden_yzs")
 					player.skip("phaseUse")
 					game.log(player, "跳过了本回合出牌阶段")
@@ -3944,6 +3956,7 @@ const skills = {
 				);
 			}
 			game.log(player, "移动至" + event.targets[0].getSeatNum() + "号位后面")
+			player.playEffectOL(lib.skill.wuying_yzs.Effect, trigger.player);
 			player.addSkill("hidden_yzs")
 			game.log(player, "进入了【隐匿】")
 			const evt = event.getParent(2);
@@ -4021,6 +4034,7 @@ const skills = {
 				);
 			}
 			game.log(player, "移动至" + player.storage.toutianhuanri_yzs_move.getSeatNum() + "号位后面")
+			player.playEffectOL(lib.skill.wuying_yzs.Effect, trigger.player);
 			player.addSkill("hidden_yzs")
 			game.log(player, "进入了【隐匿】")
 			player.removeSkill("toutianhuanri_yzs_move")
@@ -5437,6 +5451,116 @@ const skills = {
 		"_priority": 4,
 	},
 	"Gungnell_yzs": {
+		Effect: function (player, target) {
+			if (!player || !target) return;
+
+			// 1. 坐标
+			const pRect = player.getBoundingClientRect();
+			const tRect = target.getBoundingClientRect();
+			const tipX = pRect.left + pRect.width / 2;
+			const tipY = pRect.top - 20;
+			const targetX = tRect.left + tRect.width / 2;
+			const targetY = tRect.top + tRect.height / 2;
+
+			// 2. 角度（矛尖指向目标）
+			const dx = targetX - tipX;
+			const dy = targetY - tipY;
+			const rad = Math.atan2(dy, dx);
+			const targetAngle = rad * 180 / Math.PI - 90;
+
+			// 3. 巨型长矛（总高300px，矛头60px）
+			const spear = document.createElement('div');
+			spear.style.cssText = `
+        position: fixed; left: ${tipX - 18}px; top: ${tipY - 300}px;
+        width: 36px; height: 300px; z-index: 9999;
+        transform-origin: 50% 100%;
+        transform: scale(0) translate(0px,0px) rotate(${targetAngle}deg);
+        opacity: 0; pointer-events: none;
+    `;
+			// 杆（加粗加长）
+			const shaft = document.createElement('div');
+			shaft.style.cssText = `
+        position: absolute; left: 15px; top: 0;
+        width: 6px; height: 240px;
+        background: linear-gradient(to bottom, #4a0000, #e60000);
+        box-shadow: 0 0 18px #ff0000;
+    `;
+			// 巨型矛头
+			const head = document.createElement('div');
+			head.style.cssText = `
+        position: absolute; left: 0; bottom: 0;
+        width: 0; height: 0;
+        border-left: 18px solid transparent;
+        border-right: 18px solid transparent;
+        border-top: 60px solid #e60000;
+        filter: drop-shadow(0 0 12px red);
+    `;
+			spear.appendChild(shaft);
+			spear.appendChild(head);
+			document.body.appendChild(spear);
+
+			// 4. 血滴凝聚粒子（延长至1000ms）
+			const particleCount = 15;
+			for (let i = 0; i < particleCount; i++) {
+				const angle = Math.random() * Math.PI * 2;
+				const dist = 35 + Math.random() * 30;
+				const ox = Math.cos(angle) * dist;
+				const oy = Math.sin(angle) * dist;
+				const p = document.createElement('div');
+				const size = 2 + Math.random() * 4;
+				p.style.cssText = `
+            position: fixed; left: ${tipX + ox - size / 2}px; top: ${tipY + oy - size / 2}px;
+            width: ${size}px; height: ${size}px; background: #cc0000;
+            border-radius: 50%; box-shadow: 0 0 6px red;
+            z-index: 9998; pointer-events: none; opacity: 0; transform: scale(0);
+        `;
+				document.body.appendChild(p);
+				p.animate([
+					{ opacity: 0, transform: 'translate(0,0) scale(0)' },
+					{ opacity: 0.8, transform: 'translate(0,0) scale(1)', offset: 0.2 },
+					{ opacity: 0, transform: `translate(${-ox}px,${-oy}px) scale(0)` }
+				], { duration: 1000, fill: 'forwards', easing: 'ease-in-out' })
+					.finished.then(() => p.remove());
+			}
+
+			// 5. 凝聚动画（1000ms，逐渐变大变清晰）
+			const appear = spear.animate([
+				{ opacity: 0, transform: `scale(0) translate(0px,0px) rotate(${targetAngle}deg)` },
+				{ opacity: 1, transform: `scale(1) translate(0px,0px) rotate(${targetAngle}deg)` }
+			], { duration: 1000, fill: 'forwards', easing: 'ease-out' });
+
+			// 6. 凝聚完成 → 短暂延迟 → 射出
+			appear.finished.then(() => {
+				setTimeout(() => {
+					spear.animate([
+						{ transform: `scale(1) translate(0px,0px) rotate(${targetAngle}deg)` },
+						{ transform: `scale(1) translate(${dx}px,${dy}px) rotate(${targetAngle}deg)` }
+					], { duration: 400, fill: 'forwards', easing: 'ease-in' })
+						.finished.then(() => {
+							// 命中溅射（血花更大）
+							for (let i = 0; i < 12; i++) {
+								const a = Math.random() * Math.PI * 2;
+								const d = 25 + Math.random() * 45;
+								const s = document.createElement('div');
+								const ss = 3 + Math.random() * 5;
+								s.style.cssText = `
+                        position: fixed; left: ${targetX - ss / 2}px; top: ${targetY - ss / 2}px;
+                        width: ${ss}px; height: ${ss}px; background: #ff3333;
+                        border-radius: 50%; box-shadow: 0 0 10px red;
+                        z-index: 9999; pointer-events: none;
+                    `;
+								document.body.appendChild(s);
+								s.animate([
+									{ opacity: 1, transform: 'translate(0,0) scale(1)' },
+									{ opacity: 0, transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d}px) scale(0)` }
+								], { duration: 500, fill: 'forwards', easing: 'ease-out' })
+									.finished.then(() => s.remove());
+							}
+							spear.remove();
+						});
+				}, 300);
+			});
+		},
 		nobracket: true,
 		group: ["Gungnell_yzs_renew"],
 		subSkill: {
@@ -5499,50 +5623,8 @@ const skills = {
 			}
 			next.addCount = false;
 			if (player.storage.Gungnell_yzs[1] > 0 && next.baseDamage > 0) {
-				game.broadcastAll((player) => {
-					player.$skill("神枪「冈戈尼尔」", "legend", "fire");
-					game.delay(2);
-					var imagePath = lib.assetURL + "/extension/一中杀/image/Gungnell_yzs.png";
-					var duration = 1500;
-
-					var img = document.createElement("img");
-					img.src = imagePath;
-
-					// 设置图片样式 - 竖向图片居中显示
-					img.style.position = "fixed";
-					img.style.left = "50%";
-					img.style.top = "0";
-					img.style.transform = "translateX(-50%)";
-					img.style.width = "auto";
-					img.style.height = "100%";
-					img.style.maxWidth = "none";
-					img.style.zIndex = "0";
-					img.style.opacity = "0"; // 初始透明度设为0
-					img.style.pointerEvents = "none";
-
-					// 设置过渡效果 - 同时作用于opacity属性
-					img.style.transition = "opacity 1s ease-out";
-
-					// 添加到DOM
-					document.body.appendChild(img);
-
-					// 使用requestAnimationFrame确保过渡生效
-					requestAnimationFrame(function () {
-						// 触发透明度渐入效果
-						img.style.opacity = "0.7";
-					});
-
-					// 延迟后开始渐出
-					setTimeout(function () {
-						img.style.opacity = "0";
-						setTimeout(function () {
-							if (img.parentNode) {
-								img.parentNode.removeChild(img);
-							}
-						}, 1000); // 等待1秒过渡完成后再移除
-					}, duration);
-
-				}, player);
+				game.trySkillAudio("cixiong_skill")
+				player.playEffectOL(lib.skill.Gungnell_yzs.Effect, target);
 			}
 			await next;
 			let result = await player.chooseButton([

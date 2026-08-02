@@ -475,6 +475,17 @@ const characters = {
 		DamageAudio2: 2,
 	},
 
+	jifengbaoxiang_yzs: {
+		sex: "none",
+		group: "wei",
+		hp: 8,
+		skills: ["jifengbaoxiang_yzs_summon"],
+		names: "疾风宝箱",
+		translate: '疾风宝箱',
+		img: "extension/一中杀/image/jifengbaoxiang_yzs.png",
+		isUnseen:true,
+	},
+
 	Yuyuko_yzs: {
 		sex: "female",
 		group: "wei",
@@ -567,6 +578,16 @@ const characters = {
 		skills: ["tiangongkaiwu_yzs", "xunyou_yzs", "gongyin_yzs","ciyuanchaoyue_yzs"],
 		names: "许如荧",
 		img: "extension/一中杀/image/DimensionWitch_yzs.png",
+	},
+
+	ciyuanzhimen_yzs: {
+		sex: "none",
+		group: "shu",
+		hp: 4,
+		skills: ["ciyuanzhimen_yzs_summon"],
+		isUnseen: true,
+		translate: '次元之门',
+		img: "extension/一中杀/image/ciyuanzhimen_yzs.png",
 	},
 
 	SixSoulsFlowey_yzs: {
@@ -1371,7 +1392,7 @@ const characters = {
 		names: "魔虚罗",
 		img: "extension/一中杀/image/Makora_yzs.png",
 		BGM: "Malevolent Shrine",
-	//	isUnseen: true,
+		isUnseen: true,
 	},
 
 	RyomenSukuna_yzs: {
@@ -1654,6 +1675,35 @@ const characters = {
 		img: "extension/一中杀/image/LawfulXu_yzs.png",
 	},
 
+	Flandre_yzs: {
+		sex: "female",
+		group: "shu",
+		hp: 4,
+		skills: ["sichong_yzs", "Laevatein_yzs","pohuai_yzs"],
+		names: "芙兰朵露",
+		img: "extension/一中杀/image/Flandre_yzs.png",
+		Fuka: 3,
+	},
+
+	FushiguroMegumi_yzs: {
+		sex: "male",
+		group: "qun",
+		hp: 4,
+		skills: ["shizhongying_yzs", "zongying_yzs","qianheanyiting_yzs","tiaofuyishi_yzs"],
+		names: "伏黑惠",
+		img: "extension/一中杀/image/FushiguroMegumi_yzs.png",
+		dieAudios: ["ext:一中杀/audio/die/FushiguroMegumi_yzs.mp3"],
+		BGM: "AIZO",
+	},
+
+	yzs_Elysia: {
+		sex: "female",
+		group: "shu",
+		hp: 2,
+		skills: ["yzs_wanciwang", "yzs_wusuobuneng", "yzs_zhenwowuxia"],
+		names: "爱莉希雅",
+		img: "extension/一中杀/image/yzs_Elysia.png",
+	},
 };
 
 const characterSubstitutes = {
@@ -1812,7 +1862,10 @@ const characterTitles = {
 	Faputa_yzs: `生骸公主`,
 	GoldenOrly_yzs: `星际海盗`,
 	UsamiSumireko_yzs: `现世的秘术师`,
-	LawfulXu_yzs:`序之勇者`,
+	LawfulXu_yzs: `序之勇者`,
+	Flandre_yzs: `恶魔之妹`,
+	FushiguroMegumi_yzs: `暗翳孤影`,
+	yzs_Elysia:`始源之律者`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -1946,6 +1999,9 @@ const characterIntros = {
 	GoldenOrly_yzs: `出自游戏《机甲旋风》`,
 	UsamiSumireko_yzs: `宇佐见堇子是《东方Project》系列中的虚拟角色，由上海爱丽丝幻乐团创作，作为《东方深秘录》的最终Boss初次登场，幻想乡外面的世界的高中生。能使用超能力的她，在进入高中后为了揭露世界的秘密而创办了超自然社团「秘封俱乐部」。以幻想乡为目标的堇子，将联系着外界神秘的力量石「灵异珠」送进了幻想乡。她传播「集齐7个就会发生某些事情」的传言，引诱他人收集，试图用外来的神秘力量强行破坏结界。后来这些灵异珠引起了月世界人们的注意，又与别的异变联系到了一起。灵异珠异变之后，她得以在睡梦之中进入幻想乡，似乎进一步加深了与这里的交流。`,
 	LawfulXu_yzs: `因七罪而崩坏的世界，这混乱的末世...王国的秩序，由我来守护。`,
+	Flandre_yzs: `芙兰朵露·斯卡蕾特，系列作品《东方Project》中的角色，吸血鬼，拥有破坏一切程度的能力，于《东方红魔乡》中作为EXTRA BOSS首次登场。吸血鬼且是魔法少女，红魔馆之主蕾米莉亚·斯卡蕾特的妹妹，但是红魔馆的居民不希望她跑到馆外去，因此限制了她的行动。`,
+	FushiguroMegumi_yzs: `伏黑惠，男性，日本动漫《咒术回战》及其衍生作品中的角色，由芥见下下创作。他是蝉联该作品官方人气投票两届冠军的角色，登场于漫画第一回和动画第一集，配音为内田雄马。生日12月22日，身高175cm。伏黑惠外表黑发蓝瞳、清冷俊朗，气质沉稳内敛；性格理智冷静、责任心极强，看似寡言冷淡，实则重情重义、外冷内热，行事果断且富有原则。出身咒术界御三家禅院家，自幼孤苦，姐姐遭咒沉睡后立志守护他人。登场时为二级咒术师，处于一级晋升评定阶段，是东京都立咒术高等专门学校一年级生，与虎杖悠仁、钉崎野蔷薇为同伴。因其天赋出众被五条悟看重并悉心栽培，继承祖传秘术“十种影法术”。在少年院绝境与同伴相托生死，在姐妹校交流会识破阴谋、智取强敌，更在八十八桥重伤濒死时觉醒领域“嵌合暗翳庭”、极限反杀。在死灭回游中，伏黑惠被宿傩夺取身体，他抗争导致宿傩咒力波动，灵魂沦陷；最终发力降低宿傩状态。`,
+	yzs_Elysia: `爱莉希雅，手机游戏《崩坏3》及其衍生作品中的角色，第一文明纪元抗崩坏组织逐火之蛾的逐火十三英桀之一，位次“Ⅱ”，刻印为“真我”。自称第一文明纪元的第十三律者，实际为最早诞生于世的“人之律者”，又名“始源之律者”。凡事任凭心意而为，自由自在，与副首领身份格格不入的少女。亦是逐火英桀的创立者，聚集并维系此十三人的核心人物。只在喜欢的人上花时间，但每个人都很喜欢；只在有趣的事上花心思，但每件事都很有趣——心怀如此信念，带着真诚与热情拥抱每一天的纯真女孩`,
 
 };
 const characterReplaces = {
@@ -1957,7 +2013,7 @@ const characterSort = {
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
-		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs","GoldenOrly_yzs"],
+		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs", "GoldenOrly_yzs","yzs_Elysia"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
@@ -1967,11 +2023,12 @@ const characterSort = {
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
-		"ReiujiUtsuho_yzs", "Sakuya_yzs", "KomeijiSatori_yzs","UsamiSumireko_yzs"],
+		"ReiujiUtsuho_yzs", "Sakuya_yzs", "KomeijiSatori_yzs", "UsamiSumireko_yzs","Flandre_yzs"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
-	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs","Makora_yzs"],
+	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs", "Makora_yzs",
+	    "FushiguroMegumi_yzs"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

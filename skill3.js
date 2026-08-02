@@ -3718,7 +3718,7 @@ const skills = {
 	//洋葱怪人
 	OnionCells_yzs: {
 		group: ["OnionCells_yzs_summon", "OnionCells_yzs_view"],
-		global: ["OnionCells_yzs_Onion_auto"],
+	//	global: ["OnionCells_yzs_Onion_auto"],
 		subSkill: {
 			Onion_auto: {
 				trigger: {
@@ -3814,104 +3814,27 @@ const skills = {
 				async content(event, trigger, player) {
 					const pos = trigger.player;
 					pos.clearMark("OnionCells_yzs")
-					if (!get.attitude_OnionCells_yzs) {
-						get.attitude_OnionCells_yzs = get.attitude;
-						get.attitude = function (from, to) {
-							if (from && from?.getStorage("OnionCells_yzs_source", false)) {
-								from = from.getStorage("OnionCells_yzs_source", false);
-							}
-							if (to && to?.getStorage("OnionCells_yzs_source", false)) {
-								to = to.getStorage("OnionCells_yzs_source", false);
-							}
-							let att = get.attitude_OnionCells_yzs(from, to);
-							return att;
-						};
+					const callback = async function (event, player) {
+						game.broadcastAll((Onion) => {
+							Onion.isNoPlayer_OnionCells_yzs = true;
+						}, player)
+						player.setStorage("OnionCells_yzs_source", event.player);
+						player.addSkill("OnionCells_yzs_view")
+						if (!get.attitude_OnionCells_yzs) {
+							get.attitude_OnionCells_yzs = get.attitude;
+							get.attitude = function (from, to) {
+								if (from && from?.getStorage("OnionCells_yzs_source", false)) {
+									from = from.getStorage("OnionCells_yzs_source", false);
+								}
+								if (to && to?.getStorage("OnionCells_yzs_source", false)) {
+									to = to.getStorage("OnionCells_yzs_source", false);
+								}
+								let att = get.attitude_OnionCells_yzs(from, to);
+								return att;
+							};
+						}
 					}
-					const Onion = await game.addPlayerOL(pos, "OnionMan_yzs2", null, true);
-					game.broadcastAll((Onion) => {
-						Onion.isNoPlayer_OnionCells_yzs = true;
-						Onion.dieAfter2 = function () { };
-					}, Onion)
-					Onion.setStorage("OnionCells_yzs_source", player);
-					Onion.ai.modAttitudeFrom = function (from, to, att) {
-						if (_status.OnionCells_yzs_source_att_ing) return att;
-						if (from.getStorage("OnionCells_yzs_source", false)) {
-							from = from.getStorage("OnionCells_yzs_source", false);
-						}
-						if (to.getStorage("OnionCells_yzs_source", false)) {
-							to = to.getStorage("OnionCells_yzs_source", false);
-						}
-						_status.OnionCells_yzs_source_att_ing = true;
-						att = get.attitude(from, to);
-						delete _status.OnionCells_yzs_source_att_ing;
-						return att;
-					};
-					game.broadcastAll((Onion, player) => {
-						if (get.mode() == 'guozhan') {
-							if (Onion.name2 == undefined) Onion.name2 = Onion.name1;
-						}
-						if (player.side || (game.me && game.me.side) || get.mode() == 'versus') {
-							Onion.side = player.side;
-							Onion.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;
-							Onion.node.identity.dataset.color = player.node.identity.dataset.color;
-						}
-						Onion.skillH = [];
-						Onion.storage.zhibi = [];
-						Onion.storage.stratagem_expose = [];
-						Onion.storage.stratagem_fury = 0;
-					}, Onion, player);
-					game.broadcastAll((Onion, player) => {
-						const identity = (Onion.identity = (identity => {
-							switch (identity) {
-								case "zhu":
-								case "mingzhong":
-									return "zhong";
-								case "zhu_false":
-									return "zhong_false";
-								case "bZhu":
-									return "bZhong";
-								case "rZhu":
-									return "rZhong";
-								case "nei":
-									return "commoner";
-								default:
-									return identity;
-							}
-						})(player.identity));
-						if (get.mode() == 'doudizhu') lib.translate['zhong'] = "忠";
-						if (!lib.translate[identity]) lib.translate[identity] = "民";
-						const goon = player !== game.me && Onion !== game.me && player.node.identity.classList.contains("guessing") && !player.identityShown;
-						if (goon) {
-							if (Onion.identityShown) delete Onion.identityShown;
-							if (!Onion.node.identity.classList.contains("guessing")) Onion.node.identity.classList.add("guessing");
-						}
-						Onion.setIdentity(goon ? "cai" : undefined);
-						if (Onion.node.dieidentity) Onion.node.dieidentity.innerHTML = get.translation(Onion.identity + 2);
-						if (typeof player.ai?.shown === "number" && Onion.ai) Onion.ai.shown = player.ai.shown;
-					}, Onion, player);
-					Onion.directgain(get.cards(4));
-					Onion.addSkill("OnionCells_yzs_view")
-					Onion
-						.when({ global: "dieAfter" })
-						.filter((evt, player2) => {
-							if (evt.reserveOut) return false;
-							return evt.player == player2;
-						})
-						.assign({
-							forceDie: true,
-						})
-						.step(lib.skill[event.name].dieRemove);
-					game.broadcastAll(function (player, Onion) {
-						if (!_status.Onion_auto) {
-							_status.Onion_auto = [player.playerid, Onion.playerid];
-						}
-						else {
-							_status.Onion_auto.push(Onion.playerid)
-						}
-						Onion._trueMe = player;
-						player._trueMe = player;
-					}, player, Onion)
-					game.log(player, '召唤了', lib.translate['OnionMan_yzs2']);
+					await player.yzs_addPlayerOL(pos, "OnionMan_yzs2", null, true, { isSub: false, isControl:true,  noCheckResult: true, callback })
 				},
 				async dieRemove(event, trigger, player) {
 					game.broadcastAll(function (Onion) {

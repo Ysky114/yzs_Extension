@@ -68,6 +68,7 @@ const translates = {
 	Xiangbolin_yzs: "香波霖",
 	PhantomEnsemble_yzs:"骚灵三姐妹",
 	cunhe_yzs: "远舟村贺",
+	jifengbaoxiang_yzs:`疾风宝箱`,
 	Yuyuko_yzs: "西行寺 幽幽子",
 	tangjiheChao_yzs: "涂 唐吉诃超",
 	LilyWhite_yzs: "莉莉霍瓦特",
@@ -78,6 +79,7 @@ const translates = {
 	Patriot_yzs: "博卓卡斯替",
 	DreamWitch_yzs: "肖",
 	DimensionWitch_yzs: "许如荧",
+	ciyuanzhimen_yzs:`次元之门`,
 	SixSoulsFlowey_yzs: `<span class="yzs_xuancai">六魂花</span>`,
 	FailedFlowey_yzs: "小花",
 	QiGongMaster_yzs: "鹤元海",
@@ -88,7 +90,8 @@ const translates = {
 	Aura_yzs: "阿乌拉",
 	Marcus_yzs: "马库斯",
 	Reze_yzs: "蕾赛",
-	Cayuu_yzs:"加羽",
+	Cayuu_yzs: "加羽",
+	MrDragon_yzs:`龙先生`,
 	Ren_yzs: "刃",
 	Linie_yzs: "莉涅",
 	Alastor_yzs: "阿拉斯托",
@@ -186,6 +189,9 @@ const translates = {
 	GoldenOrly_yzs: `奥丽`,
 	UsamiSumireko_yzs:`宇佐见 堇子`,
 	LawfulXu_yzs: `陈序`,
+	Flandre_yzs: `芙兰朵露`,
+	FushiguroMegumi_yzs: "伏黑惠",
+	yzs_Elysia:`爱莉希雅`,
 
     // 技能台词
 
@@ -475,7 +481,7 @@ const translates = {
 	steadyLibrary_yzs: "不动图书馆",
 	steadyLibrary_yzs_info: `锁定技：回合开始时你补充全部${get.poptip("Fuka_yzs")}。回合结束时若为${get.poptip("WaterStorm_skill")}，你获得1张符卡。你造成的双属性伤害+1。`,
 	wiseStone_yzs: "贤者之石",
-	wiseStone_yzs_info: `锁定技：若你无【藏书】，你摸3张牌扣置为【藏书】。<br>${get.poptip("Fuka_yzs")}：你摸3张牌。<br>你使用【杀】指定目标后可展示并给予目标1张【藏书】。`,
+	wiseStone_yzs_info: `锁定技：若你无${get.poptip("book_yzs")}，你摸3张牌扣置为【藏书】。<br>${get.poptip("Fuka_yzs")}：你摸3张牌。<br>你使用【杀】指定目标后可展示并给予目标1张【藏书】。`,
 	wiseStone_yzs_effect: "对应效果",
 	wiseStone_yzs_effect_info: `♥：${get.poptip("FireStorm")}：场上下张【杀】需2张【闪】响应<br>♦：${get.poptip("WindStorm")}<br>场上下张【杀】无次数限制<br>♠：${get.poptip("ThunderStorm")}：获得【藏书】的角色依次弃2张牌<br>♣：${get.poptip("WaterStorm")}：令任意角色恢复1点体力。`,
 	book_yzs: "【藏书】",
@@ -855,7 +861,7 @@ const translates = {
 	SSF_determination_yzs: "决心",
 	SSF_determination_yzs_info: `<span class="yzs_xuancai">持恒技</span>：${get.poptip("wuyongchang_yzs")}：你${get.poptip("cundang_yzs")}/${get.poptip("dudang_yzs")}。`,
 	SixSouls_yzs: `六魂`,
-	SixSouls_yzs_info: `<span class="yzs_xuancai">持恒技</span>：你视为拥有：<br><font color="#32d9c7">${get.poptip("SixSouls_yzs_patience")}</font>
+	SixSouls_yzs_info: `<span class="yzs_xuancai">持恒技</span>：你视为拥有双倍强化的：<br><font color="#32d9c7">${get.poptip("SixSouls_yzs_patience")}</font>
 	<font color="#ffac4c">${get.poptip("SixSouls_yzs_courage")}</font>
 	<font color="#2145ff">${get.poptip("SixSouls_yzs_honesty")}</font>
 	<font color="#b621ff">${get.poptip("SixSouls_yzs_perseverance")}</font>
@@ -1510,7 +1516,7 @@ const translates = {
 	jiejie_yzs_info: `其他角色的锦囊牌对你无效。<br>结束阶段，你可失去本技能，然后摸2张牌。`,
 
 	dianjin_yzs: `点金`,
-	dianjin_yzs_info: `出牌阶段限1次：你令任意角色<font color="#f9be4d">“黄金化”</font>，直至其使用2张牌时或脱离濒死后。<br><small><font color="#f9be4d">“黄金化”：所有手牌视为【无中生有】。</font>`,
+	dianjin_yzs_info: `出牌阶段限1次：你令任意角色<font color="#f9be4d">“黄金化”</font>，直至其使用2张牌时或脱离濒死后。<br><small><font color="#f9be4d">“黄金化”：所有手牌视为【无中生有】。</font></small>`,
 	dianjin_yzs_buff: `黄金化`,
 	Deeagorze_yzs: `纵金`,
 	Deeagorze_yzs_info: `锁定技：场上角色脱离<font color="#f9be4d">“黄金化”</font>后，你可对其以外的1名角色发动<font color="#f9be4d">${get.poptip("dianjin_yzs")}</font>。<br>
@@ -1728,7 +1734,7 @@ const translates = {
 	你依顺序使用或打出完【绘帧】声明的点数后，可再次发动【绘帧】。<br>你的【杀】伤害为X（X为你本回合额外发动【绘帧】次数且至多为3）。`,
 
 	gongming_yzs: `共鸣`,
-	gongming_yzs_info: `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将该阶段加入下列描述：<br><small>[]</small><br>
+	gongming_yzs_info: `锁定技：你的额定回合开始时，你可调整本回合1个主要阶段的执行顺序，并将之加入队列前端：<br><small>[弃牌阶段]</small><br>
     额定回合结束后，你执行依次进行上述阶段的额外回合。`,
 	kuangji_yzs: `狂击`,
 	kuangji_yzs_info: `弃牌阶段若你本阶段弃牌，记录其中花色，本回合你使用花色记录过的牌无次数距离限制，然后移除对应记录；
@@ -1899,6 +1905,44 @@ const translates = {
 	xuanpan_yzs_limited:`宣判`,
 	xuanpan_yzs_info: ` 限定技：${get.poptip("wuyongchang_yzs")}：你用1张手牌交换【序】。 
     你移去【禁令】或【序】后，若本回合移去数之和为3的倍数，你对当前回合角色造成1点伤害并恢复1点体力，然后刷新限定技。`,
+
+	sichong_yzs: `四重`,
+	sichong_yzs_info: `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1张${get.poptip("Fuka_yzs")}、恢复体力至X点并摸X张牌。<br>（X为清空记录数）`,
+	Laevatein_yzs: `莱瓦汀`,
+	visible_Laevatein_yzs:`莱瓦汀`,
+	Laevatein_yzs_info: `你因弃牌阶段或${get.poptip("pohuai_yzs")}而弃置任意角色的【杀】后，获得并明置之，你视这些【杀】为无次数距离限制的火【杀】。`,
+	pohuai_yzs: `破坏`,
+	pohuai_yzs_info: `${get.poptip("FukaSkill_yzs")}：你指定1名角色，弃置其区域内2张牌，若牌不足则改为对其造成1点伤害并令其摸2张牌。`,
+
+	shizhongying_yzs: `十种影`,
+	shizhongying_yzs_info: `锁定技：你使用非转化的即时牌结算后，可重铸1张手牌，若之点数为数字且你未记录过，你记录之，
+	此后你可将此点数的牌当做此即时牌使用。<br>你使用底牌含【影】的牌时摸1张牌。`,
+	zongying_yzs: `纵影`,
+	zongying_yzs_info: `锁定技：结束阶段，你获得2张点数随机的【影】，然后可以使用1张牌。`,
+	qianheanyiting_yzs: `嵌合暗翳庭`,
+	qianheanyiting_yzs_info: `限定技：${get.poptip("lingyuzhankai_yzs")}：每回合结束时，你发动${get.poptip("zongying_yzs")}`,
+	qianheanyiting_yzs_skill: `嵌合暗翳庭`,
+	qianheanyiting_yzs_skill_info: `每回合结束时，领域主人发动${get.poptip("zongying_yzs")}`,
+	tiaofuyishi_yzs: `调伏仪式`,
+	tiaofuyishi_yzs_info: `限定技：出牌阶段，你可于下家召唤“${get.poptip({
+		id: "character_Makora_yzs",
+		name: "魔虚罗",
+		type: "character",
+		dialog: "characterDialog",
+	})}”。其无身份，无初始手牌，不计入胜负结算，优先与你敌对。<br>你杀死其后，${get.poptip("shizhongying_yzs")}可将点数A的手牌当做${get.poptip("moxuluo_yzs")}使用。`,
+
+	yzs_wanciwang: `万雌王`,
+	yzs_wanciwang_info: `锁定技：你摸牌后可将其中的【杀】当做${get.poptip("yzs_Girlyheart")}置入场上任意装备栏，然后摸置入数张牌。<br>
+    你手牌上限+X（X为你装备区【少女心】数）。`,
+	yzs_Girlyheart_skill:`少女心`,
+	yzs_wusuobuneng: `无所不能`,
+	yzs_wusuobuneng_info: ` 锁定技：你使用【杀】无咏唱且每自轮仅可使用1张，你造成零伤害后重置本次数。<br>
+    你可将任意张手牌当做【杀】使用或打出（点数取总和对13取余）。<br>你连续使用或打出点数总和为13的牌后摸牌至手牌上限。<br>
+    出牌阶段限1次：将全部手牌任意置顶或底，然后摸等量张牌。`,
+	yzs_zhenwowuxia: `真我无暇`,
+	yzs_zhenwowuxia_info:`你受到零点伤害后，若【少女心】参与伤害结算，恢复1点体力，若溢出则摸1张牌并获得1点护甲（上限为2）。
+	<br>你受到非零伤害后可移动场上1张牌。`,
+
 };
 
 export default translates;
