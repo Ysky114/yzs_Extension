@@ -1,4 +1,3 @@
-v
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 import characters from "./character.js";
 import { characterSubstitutes, characterTitles, characterIntros, characterReplaces, characterSort } from "./character.js";
