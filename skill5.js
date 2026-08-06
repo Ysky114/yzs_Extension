@@ -4732,15 +4732,23 @@ const skills = {
 				popup: false,
 				priority: 3214,
 				trigger: {
-					global: ["dieAfter"],
+					global: ["dieAfter","dieBefore"],
 				},
-				filter(event, player) {
-					if (event.player.storage?.isSub) return false;
-					if (event.player == player) return false;
-					if (game.players.some(cur => cur.name == "GojoSatoru_yzs")) return false;
-					return !_status.zuzhouzhiwang_yzs_kill;
+				filter(event, player, name) {
+					if (name == "dieBefore") {
+						if (event.player.storage?.isSub) return false;
+						if (event.player == player) return false;
+						if (game.players.some(cur => cur.name == "GojoSatoru_yzs")) return false;
+						return !_status.zuzhouzhiwang_yzs_kill;
+					}
+					return event.zuzhouzhiwang_yzs_summon
 				},
 				async content(event, trigger, player) {
+					if (!trigger.zuzhouzhiwang_yzs_summon) {
+						trigger.noDieAfter = true;
+						trigger.zuzhouzhiwang_yzs_summon = true;
+						return;
+					}
 					_status.zuzhouzhiwang_yzs_kill = true;
 					const pos = trigger.player;
 				//	game.addGlobalSkill("wtw_auto")
@@ -6008,6 +6016,19 @@ const skills = {
 						trigger.player.getStat("card")[trigger.card.name]--;
 					}
 				},
+				mod: {
+					targetInRange(card, player) {
+						if (player.countMark("ba_yzs_weaken")) return;
+						if (card?.storage?.ba_yzs) {
+							return true;
+						}
+					},
+					cardUsable(card, player, num) {
+						if (card?.storage?.ba_yzs) {
+							return Infinity
+						}
+					},
+				},
 			}
 		},
 		audio: "ext:一中杀/audio/skill:1",
@@ -6048,19 +6069,6 @@ const skills = {
 		precontent() {
 			player.addSkill(["ba_yzs_use", "ba_yzs_damage"]);
 			player.tempBanSkill("ba_yzs");
-		},
-		mod: {
-			targetInRange(card, player) {
-				if (player.countMark("ba_yzs_weaken")) return;
-				if (card?.storage?.ba_yzs) {
-					return true;
-				}
-			},
-			cardUsable(card, player, num) {
-				if (card?.storage?.ba_yzs) {
-					return Infinity
-				}
-			},
 		},
 		ai: {
 			order: 3.4,

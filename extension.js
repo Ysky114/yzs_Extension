@@ -592,7 +592,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"GunTwins_yzs"
 					]
 				},
 			];
