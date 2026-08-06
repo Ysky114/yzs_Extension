@@ -1,4 +1,4 @@
-
+v
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 import characters from "./character.js";
 import { characterSubstitutes, characterTitles, characterIntros, characterReplaces, characterSort } from "./character.js";
@@ -584,9 +584,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"Flandre_yzs",
-						"FushiguroMegumi_yzs",
-						"yzs_Elysia"
+						"yzs_DanHeng",
 					]
 				},
 				{
@@ -691,12 +689,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.96</div><br>
+            <div style="color:#ffa348">• 版本号：v0.96.2</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.96",
+			version: "0.96.2",
 		},
 		files: {}, connect: true
 	}

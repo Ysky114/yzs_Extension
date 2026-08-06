@@ -5235,7 +5235,7 @@ const skills = {
 						})
 						.set("other", other)
 						.set("targets", evt.targets)
-						.set("prompt2", `每回合限1次：其他角色使用牌指定你为目标时，若“${get.poptip("Makora_yzs")}”不为目标，你可将目标转移给“魔虚罗”`)
+						.set("prompt2", `每回合限1次：其他角色使用牌指定你或“${get.poptip("Makora_yzs")}”为目标时，你可将目标转移给未成为目标的一方`)
 						.setHiddenSkill(event.name.slice(0, -5))
 						.forResult();
 				},
@@ -6516,8 +6516,50 @@ const skills = {
 				img.remove();
 			};
 		},
-		group: ["hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill1", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3"],
+		group: ["hundunyutiaohe_yzs_HandcardLimit", "hundunyutiaohe_yzs_draw", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill1", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3"],
 		subSkill: {
+			HandcardLimit: {
+				trigger: {
+					player: "phaseDiscardEnd",
+				},
+				filter(event, player) {
+					return event.cards?.length;
+				},
+				forced: true,
+				async content(event, trigger, player) {
+					player.addMark("hundunyutiaohe_yzs_HandcardLimit", 2, false);
+					player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
+					player.popup("适应");
+					game.trySkillAudio("hundunyutiaohe_yzs");
+					game.log(player, `适应了`, "手牌上限不足")
+
+				},
+				mod: {
+					maxHandcardFinal(player, num) {
+						return num += player.countMark("hundunyutiaohe_yzs_HandcardLimit");
+					},
+				},
+			},
+			draw: {
+				trigger: {
+					player: "phaseDrawBegin2",
+				},
+				forced: true,
+				popup:false,
+				async content(event, trigger, player) {
+					if (player.countCards("h") <= player.getHandcardLimit() / 2) {
+						player.addMark("hundunyutiaohe_yzs_draw", 2, false);
+						player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
+						player.popup("适应");
+						game.trySkillAudio("hundunyutiaohe_yzs");
+						game.log(player, `适应了`, "手牌数不足")
+					}
+					trigger.num += player.countMark("hundunyutiaohe_yzs_draw");
+				},
+				ai: {
+					threaten: 1.3,
+				},
+			},
 			damage: {
 				priority: 22,
 				trigger: {

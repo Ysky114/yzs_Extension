@@ -191,7 +191,9 @@ const translates = {
 	LawfulXu_yzs: `陈序`,
 	Flandre_yzs: `芙兰朵露`,
 	FushiguroMegumi_yzs: "伏黑惠",
-	yzs_Elysia:`爱莉希雅`,
+	yzs_Elysia: `爱莉希雅`,
+	yzs_DanHeng: `丹恒`,
+	yzs_DanHengImbibitorLunae:`饮月`,
 
     // 技能台词
 
@@ -1936,13 +1938,34 @@ const translates = {
     你手牌上限+X（X为你装备区【少女心】数）。`,
 	yzs_Girlyheart_skill:`少女心`,
 	yzs_wusuobuneng: `无所不能`,
-	yzs_wusuobuneng_info: ` 锁定技：你使用【杀】无咏唱且每自轮仅可使用1张，你造成零伤害后重置本次数。<br>
+	yzs_wusuobuneng_info: ` 锁定技：你使用【杀】${get.poptip("wuyongchang_yzs")}且每自轮仅可使用1张，你造成零伤害后重置本次数。<br>
     你可将任意张手牌当做【杀】使用或打出（点数取总和对13取余）。<br>你连续使用或打出点数总和为13的牌后摸牌至手牌上限。<br>
     出牌阶段限1次：将全部手牌任意置顶或底，然后摸等量张牌。`,
 	yzs_zhenwowuxia: `真我无暇`,
 	yzs_zhenwowuxia_info:`你受到零点伤害后，若【少女心】参与伤害结算，恢复1点体力，若溢出则摸1张牌并获得1点护甲（上限为2）。
 	<br>你受到非零伤害后可移动场上1张牌。`,
 
+	yzs_hualongmiaofa: `化龙妙法`,
+	yzs_hualongmiaofa_info: `锁定技：受伤角色出牌阶段开始前，你可失去任意点体力，然后你记录当前体力状态并替换武将牌为“${get.poptip({
+	id: "character_yzs_DanHengImbibitorLunae",
+	name: "饮月",
+	type: "character",
+	dialog: "characterDialog",
+})}”，体力和体力上限为你已损体力值，死亡时改为切换回当前武将牌并调整体力状态至记录值。`,
+	yzs_qianlong: `潜龙`,
+	yzs_qianlong_info: `一张即时牌指定目标后，你可摸或弃1张牌并展示之：若二者同花色，令使用者摸或弃1张牌；否则本技能本回合失效。`,
+	yzs_shuofeng: `朔风`,
+	yzs_shuofeng_info: `你使用【杀】无次数距离限制。`,
+	yzs_jiyu: `疾雨`,
+	yzs_jiyu_info: `你使用【杀】改为获得1点“蚀”，达3点时清空并对当前回合角色造成1点伤害。`,
+
+	yzs_canglongzhuoshi: `苍龙濯世`,
+	yzs_canglongzhuoshi_info: `锁定技：你登场时<font color="#77e1ff">摸牌至手牌上限</font>，离场时<font color="#77e1ff">获得1点“蚀”</font>或<font color="#77e1ff">恢复1点体力</font>。`,
+	yzs_disi: `抵死`,
+	yzs_disi_info: `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>
+<span class="bluetext">①${get.poptip("yzs_qianlong")}</span>②${get.poptip("yzs_shuofeng")}③${get.poptip("yzs_jiyu")}，然后扣除1点体力上限，若已获得则改为失去本技能并获得${get.poptip("yzs_longlizizai")}。`,
+	yzs_longlizizai: `龙力自在`,
+	yzs_longlizizai_info: `你手牌上限固定为4。<br>每回合限1次：${get.poptip("wuyongchang_yzs")}：你发动${get.poptip("yzs_canglongzhuoshi")}中的一个<font color="#77e1ff">效果</font>。`,
 };
 
 export default translates;

@@ -1704,6 +1704,26 @@ const characters = {
 		names: "爱莉希雅",
 		img: "extension/一中杀/image/yzs_Elysia.png",
 	},
+
+	yzs_DanHeng: {
+		sex: "male",
+		group: "wu",
+		hp: 4,
+		maxHp:5,
+		skills: ["yzs_hualongmiaofa", "yzs_qianlong", "yzs_shuofeng","yzs_jiyu"],
+		names: "丹恒",
+		img: "extension/一中杀/image/yzs_DanHeng.png",
+	},
+
+	yzs_DanHengImbibitorLunae: {
+		sex: "male",
+		group: "wu",
+		hp: 1,
+		skills: ["yzs_canglongzhuoshi", "yzs_disi"],
+		names: "饮月",
+		img: "extension/一中杀/image/yzs_DanHengImbibitorLunae.png",
+		isUnseen:true,
+	},
 };
 
 const characterSubstitutes = {
@@ -1865,7 +1885,10 @@ const characterTitles = {
 	LawfulXu_yzs: `序之勇者`,
 	Flandre_yzs: `恶魔之妹`,
 	FushiguroMegumi_yzs: `暗翳孤影`,
-	yzs_Elysia:`始源之律者`,
+	yzs_Elysia: `始源之律者`,
+	yzs_DanHeng: `长梦一觉`,
+	yzs_DanHengImbibitorLunae: `洞天幻化`,
+
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2002,6 +2025,8 @@ const characterIntros = {
 	Flandre_yzs: `芙兰朵露·斯卡蕾特，系列作品《东方Project》中的角色，吸血鬼，拥有破坏一切程度的能力，于《东方红魔乡》中作为EXTRA BOSS首次登场。吸血鬼且是魔法少女，红魔馆之主蕾米莉亚·斯卡蕾特的妹妹，但是红魔馆的居民不希望她跑到馆外去，因此限制了她的行动。`,
 	FushiguroMegumi_yzs: `伏黑惠，男性，日本动漫《咒术回战》及其衍生作品中的角色，由芥见下下创作。他是蝉联该作品官方人气投票两届冠军的角色，登场于漫画第一回和动画第一集，配音为内田雄马。生日12月22日，身高175cm。伏黑惠外表黑发蓝瞳、清冷俊朗，气质沉稳内敛；性格理智冷静、责任心极强，看似寡言冷淡，实则重情重义、外冷内热，行事果断且富有原则。出身咒术界御三家禅院家，自幼孤苦，姐姐遭咒沉睡后立志守护他人。登场时为二级咒术师，处于一级晋升评定阶段，是东京都立咒术高等专门学校一年级生，与虎杖悠仁、钉崎野蔷薇为同伴。因其天赋出众被五条悟看重并悉心栽培，继承祖传秘术“十种影法术”。在少年院绝境与同伴相托生死，在姐妹校交流会识破阴谋、智取强敌，更在八十八桥重伤濒死时觉醒领域“嵌合暗翳庭”、极限反杀。在死灭回游中，伏黑惠被宿傩夺取身体，他抗争导致宿傩咒力波动，灵魂沦陷；最终发力降低宿傩状态。`,
 	yzs_Elysia: `爱莉希雅，手机游戏《崩坏3》及其衍生作品中的角色，第一文明纪元抗崩坏组织逐火之蛾的逐火十三英桀之一，位次“Ⅱ”，刻印为“真我”。自称第一文明纪元的第十三律者，实际为最早诞生于世的“人之律者”，又名“始源之律者”。凡事任凭心意而为，自由自在，与副首领身份格格不入的少女。亦是逐火英桀的创立者，聚集并维系此十三人的核心人物。只在喜欢的人上花时间，但每个人都很喜欢；只在有趣的事上花心思，但每件事都很有趣——心怀如此信念，带着真诚与热情拥抱每一天的纯真女孩`,
+	yzs_DanHeng:`丹恒，米哈游出品的游戏《崩坏：星穹铁道》及其衍生作品中的角色。前世为罗浮龙尊“丹枫”，尊号“饮月君”。列车护卫，同时也是智库的管理员。个性认真，对时不时会乱来的三月七和身为“开拓”之旅新人的开拓者来说是非常值得信赖的存在。他出身于仙丹“罗浮”，但因为前世的诸多因缘导致身世较为复杂，最初正是为了逃避自己的过往而搭乘星穹列车`,
+	yzs_DanHengImbibitorLunae: `丹恒·饮月，游戏《崩坏：星穹铁道》中的五星角色，属于毁灭命途的虚数属性角色，定位为强化普攻型输出位丹恒·饮月继承了前代龙尊“饮月君”的力量，展现出持明族的本相，在接纳角冠的同时也背负了其过往的功过是非。他历经战争与放逐，最终登上星穹列车投身星际旅程，始终保持着独立于前世身份的自我认知`,
 
 };
 const characterReplaces = {
@@ -2013,13 +2038,13 @@ const characterSort = {
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
-		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs", "GoldenOrly_yzs","yzs_Elysia"],
+		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs", "GoldenOrly_yzs", "yzs_Elysia", "yzs_DanHeng"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
 		"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "jianSheng_yzs", "RenEmperor_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs",
 		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs", "Guanjun_yzs",
-	    "LawfulXu_yzs",],
+		"LawfulXu_yzs"],
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",

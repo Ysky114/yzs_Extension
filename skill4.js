@@ -6596,6 +6596,7 @@ const skills = {
 				sourceSkill: "jianzhi_yzs",
 				locked: true,
 				forced: true,
+				priority:4,
 				trigger: {
 					source: "damageBegin1",
 				},
@@ -6718,6 +6719,7 @@ const skills = {
 		},
 		charlotte: true,
 		forced: true,
+		priority:14,
 		popup: false,
 		forceDie: true,
 		trigger: {
@@ -6743,6 +6745,7 @@ const skills = {
 		},
 		charlotte: true,
 		forced: true,
+		priority:34,
 		popup: false,
 		forceDie: true,
 		trigger: {

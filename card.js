@@ -1073,10 +1073,18 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					await event.target.gain(event.cards, "gain2");
 					game.log(player, "和", event.target, "交换了武器和防具");
 					let cards = [[], []];
-					if (player.getEquip(1) && !bannedCards.includes(get.name(player.getEquip(1)))) cards[0].push(player.getEquip(1));
-					if (player.getEquip(2) && !bannedCards.includes(get.name(player.getEquip(2)))) cards[0].push(player.getEquip(2));
-					if (event.target.getEquip(1) && !bannedCards.includes(get.name(event.target.getEquip(1)))) cards[1].push(event.target.getEquip(1));
-					if (event.target.getEquip(2) && !bannedCards.includes(get.name(event.target.getEquip(2)))) cards[1].push(event.target.getEquip(2));
+					if (player.getEquip(1) && !bannedCards.includes(get.name(player.getEquip(1)))) {
+						cards[0].push(player.getEquip(1));
+					}
+					if (player.getEquip(2) && !bannedCards.includes(get.name(player.getEquip(2)))) {
+						cards[0].push(player.getEquip(2));
+					}
+					if (event.target.getEquip(1) && !bannedCards.includes(get.name(event.target.getEquip(1)))) {
+						cards[1].push(event.target.getEquip(1));
+					}
+					if (event.target.getEquip(2) && !bannedCards.includes(get.name(event.target.getEquip(2)))) {
+						cards[1].push(event.target.getEquip(2));
+					}
 					await game.loseAsync({
 						player: player,
 						target: event.target,
@@ -3076,10 +3084,28 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					});
 				},
 			},
-			yzs_Girlyheart: {
+			yzs_Girlyheart_equip1: {
 				fullimage: true,
 				type: "equip",
-				subtype: "equip5",
+				subtype: "equip1",
+				image: "ext:一中杀/image/yzs_Elysia.png",
+			},
+			yzs_Girlyheart_equip2: {
+				fullimage: true,
+				type: "equip",
+				subtype: "equip2",
+				image: "ext:一中杀/image/yzs_Elysia.png",
+			},
+			yzs_Girlyheart_equip3: {
+				fullimage: true,
+				type: "equip",
+				subtype: "equip3",
+				image: "ext:一中杀/image/yzs_Elysia.png",
+			},
+			yzs_Girlyheart_equip4: {
+				fullimage: true,
+				type: "equip",
+				subtype: "equip4",
 				image: "ext:一中杀/image/yzs_Elysia.png",
 			},
 		},
@@ -4336,7 +4362,16 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			moxuluo_yzs: `魔虚罗`,
 			moxuluo_yzs_info: `消耗5：出牌阶段：若“魔虚罗”①不在场：对1名角色使用，于其下家召唤“魔虚罗”（继承上次退场时的体力值）；②在场：对“魔虚罗”使用，令其恢复3点体力并退场。<br>此牌无融合效果，且仅会因“魔虚罗”死亡而被破坏。`,
 			yzs_Girlyheart: `少女心`,
-			yzs_Girlyheart_info:`此牌数量变动后，若为奇/偶数，持有者下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+			yzs_Girlyheart_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+			yzs_Girlyheart_equip1: `少女心`,
+			yzs_Girlyheart_equip1_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+			yzs_Girlyheart_equip2: `少女心`,
+			yzs_Girlyheart_equip2_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+			yzs_Girlyheart_equip3: `少女心`,
+			yzs_Girlyheart_equip3_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+			yzs_Girlyheart_equip4: `少女心`,
+			yzs_Girlyheart_equip4_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
+
 		},
 		list: [
 			["spade", 1, "juedou"], ["spade", 1, "shandian"], ["spade", 1, "guding"], ["spade", 1, "wugu"],

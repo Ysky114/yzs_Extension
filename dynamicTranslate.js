@@ -1,5 +1,32 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_disi(player) {
+		const storage = player.countMark("yzs_disi")
+		let str = `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>`
+		if (storage == 0) {
+			str +=`<span class="bluetext">`
+		}
+		str += `①${get.poptip("yzs_qianlong")}`
+		if (storage == 0) {
+			str +=`</span>`
+		}
+		if (storage == 1) {
+			str += `<span class="bluetext">`
+		}
+		str += `②${get.poptip("yzs_shuofeng")}`
+		if (storage == 1) {
+			str += `</span>`
+		}
+		if (storage == 2) {
+			str += `<span class="bluetext">`
+		}
+		str += `③${get.poptip("yzs_jiyu")}`
+		if (storage == 2) {
+			str += `</span>`
+		}
+		str += `，然后扣除1点体力上限，若已获得则改为失去本技能并获得${get.poptip("yzs_longlizizai")}。`
+		return str;
+	},
 	SixSouls_yzs_patience(player) {
 		if (player.hasSkill("SixSouls_yzs")) {
 			return `你的回合结束时，你摸4张牌。`
