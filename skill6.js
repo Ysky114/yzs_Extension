@@ -3153,7 +3153,7 @@ const skills = {
 				})}”，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
 				priority: 5,
 				filter(event, player) {
-					return player.maxHp > 8 && !player.countMark("yunyu_yzs_summon")
+					return player.maxHp > 4 && !player.countMark("yunyu_yzs_summon")
 				},
 				async content(event, trigger, player) {
 					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, true, { isControl: true, dieRemove: false }).forResult();
@@ -3161,6 +3161,31 @@ const skills = {
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
 						game.playBackgroundMusic();
+						var background = document.createElement("img");
+						background.className = "background";
+						window._currentDynamicBackground = background;
+						Object.assign(background, {
+							src: lib.assetURL + "/extension/一中杀/image/background/yunyu_yzs.jpg",
+						})
+						Object.assign(background.style, {
+							position: "fixed",
+							left: "0",
+							top: "0",
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							minWidth: "100vw",
+							minHeight: "100vh",
+							opacity: "0",//透明度
+							pointerEvents: "none",//不阻挡点击事件
+							zIndex: "0",
+							transition: "opacity 0.5s ease-out",
+						})
+						document.body.appendChild(background);
+						setTimeout(() => {
+							background.style.opacity = "1";
+						}, 50)
+
 						ui.backgroundMusic.addEventListener('ended', () => {
 							delete _status.tempMusic;
 							game.playBackgroundMusic();
@@ -5818,12 +5843,12 @@ const skills = {
 				let at = att;
 				//你对其他角色的态度
 				if (to == from?.source) at = -1;
-				if (player.storage.yzs_NeutralAttitude.has(to)) at -= player.storage.yzs_NeutralAttitude.get(to)
+				if (from.storage.yzs_NeutralAttitude.has(to)) at -= from.storage.yzs_NeutralAttitude.get(to)
 				return at;
 			};
-			if (player.storage.yzs_NeutralAttitude === undefined) return;
-			for (let key of player.storage.yzs_NeutralAttitude) {
-				if (player.storage.yzs_NeutralAttitude.get(key) > 0) player.storage.yzs_NeutralAttitude.set(key, --player.storage.yzs_NeutralAttitude.get(key))
+			if (from.storage.yzs_NeutralAttitude === undefined) return;
+			for (let key of from.storage.yzs_NeutralAttitude) {
+				if (from.storage.yzs_NeutralAttitude.get(key) > 0) from.storage.yzs_NeutralAttitude.set(key, --from.storage.yzs_NeutralAttitude.get(key))
 			}
 		},
 	},
@@ -5861,7 +5886,7 @@ const skills = {
 						if (!get.event().cardsx.includes(card)) return false;
 						return true
 					})
-					.set("ai", function (button) {
+					.set("ai1", function (button) {
 						return 6 - get.value({ name: button.link[2] })
 					})
 					.set("cardsx", cards)
@@ -6564,7 +6589,7 @@ const skills = {
 		locked: true,
 		priority: 8,
 		trigger: {
-			global:"phaseUseBefore"
+			global: "phaseUseBefore"
 		},
 		filter(event, player) {
 			return event.player.isDamaged();
@@ -6579,24 +6604,25 @@ const skills = {
 						name: "饮月",
 						type: "character",
 						dialog: "characterDialog",
-					})}”，体力上限为你已损体力值，死亡后切换回当前武将牌并调整体力状态至记录值`, min: 1, max: num }], false)
+					})}”，体力上限为你已损体力值，死亡后切换回当前武将牌并调整体力状态至记录值`, min: 1, max: num
+				}], false)
 				.set('processAI', () => {
-					return [get.event().numz-1];
+					return [get.event().numz - 1];
 				})
 				.set('numz', num)
 				.forResult();
 			if (result?.bool) {
 				const num2 = result.numbers?.[0];
-				event.result = {bool:true,cost_data:num2}
+				event.result = { bool: true, cost_data: num2 }
 			}
 		},
 		async content(event, trigger, player) {
 			const num = event.cost_data;
 			await player.loseHp(num);
-			const maxHp=player.getDamagedHp()
+			const maxHp = player.getDamagedHp()
 			player.storage.yzs_hualongmiaofa = {
 				maxHp: player.maxHp,
-				hp:player.hp,
+				hp: player.hp,
 				name1: player.name1,
 			};
 			player.markSkill("yzs_hualongmiaofa")
@@ -6612,7 +6638,7 @@ const skills = {
 		},
 	},
 	yzs_qianlong: {
-		priority:4,
+		priority: 4,
 		trigger: {
 			global: "useCard",
 		},
@@ -6626,7 +6652,7 @@ const skills = {
 			return true;
 		},
 		async content(event, trigger, player) {
-			let card=false;
+			let card = false;
 			let result = await player.chooseToDiscard(`你可摸或弃1张牌并展示之（不弃则摸），<br>若之花色为${get.translation(get.suit(trigger.card, false))}，令${get.translation(trigger.player)}摸或弃1张牌；否则本技能本回合失效`)
 				.set("ai", (card) => {
 					const player = get.event().player;
@@ -6642,7 +6668,7 @@ const skills = {
 					}
 				})
 				.set("suit", get.suit(trigger.card, false))
-				.set("target",trigger.player)
+				.set("target", trigger.player)
 				.forResult();
 			if (result?.bool && result.cards?.length) {
 				card = result.cards[0];
@@ -6680,7 +6706,7 @@ const skills = {
 					if (result3.links[0] == "摸") {
 						await trigger.player.draw()
 					} else {
-						await trigger.player.chooseToDiscard("he",true)
+						await trigger.player.chooseToDiscard("he", true)
 					}
 				}
 			} else {
@@ -6696,7 +6722,7 @@ const skills = {
 				}
 			},
 			targetInRange(card) {
-				if ( get.name(card) == "sha") {
+				if (get.name(card) == "sha") {
 					return true;
 				}
 			},
@@ -6723,16 +6749,16 @@ const skills = {
 					markcount: "storage",
 					content: "当前有#/3点“蚀”。",
 				},
-				charlotte:true,
+				charlotte: true,
 			}
 		},
-		direct:true,
+		direct: true,
 		trigger: {
-			player:"useCard0"
+			player: "useCard0"
 		},
 		priority: 2,
 		filter(event, player) {
-			return event.card.name=="sha"
+			return event.card.name == "sha"
 		},
 		async content(event, trigger, player) {
 			trigger.cancel();
@@ -6746,11 +6772,11 @@ const skills = {
 	//饮月
 	yzs_canglongzhuoshi: {
 		nobracket: true,
-		forced:true,
+		forced: true,
 		locked: true,
 		priority: 41,
 		trigger: {
-			player: ["yzs_canglongzhuoshi","dieBefore"]
+			player: ["yzs_canglongzhuoshi", "dieBefore"]
 		},
 		async content(event, trigger, player) {
 			if (trigger.name == "yzs_hualongmiaofa") {
@@ -6816,7 +6842,7 @@ const skills = {
 	yzs_disi: {
 		locked: true,
 		zhuanhuanji: true,
-		forced:true,
+		forced: true,
 		priority: 6,
 		mark: true,
 		marktext: "抵",
@@ -6825,7 +6851,7 @@ const skills = {
 				let str = `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>`
 				if (storage == 0) {
 					str += `①${get.poptip("yzs_qianlong")}`
-				} else if(storage == 1) {
+				} else if (storage == 1) {
 					str += `②${get.poptip("yzs_shuofeng")}`
 				} else if (storage == 2) {
 					str += `③${get.poptip("yzs_jiyu")}`
@@ -6835,12 +6861,12 @@ const skills = {
 			},
 		},
 		trigger: {
-			global:"phaseUseBefore"
+			global: "phaseUseBefore"
 		},
 		async content(event, trigger, player) {
 			const list = ["yzs_qianlong", "yzs_shuofeng", "yzs_jiyu"]
 			const storage = player.countMark("yzs_disi");
-			player.setMark("yzs_disi", (storage +1)%3, false);
+			player.setMark("yzs_disi", (storage + 1) % 3, false);
 			if (player.hasSkill(list[storage])) {
 				player.removeSkill("yzs_disi")
 				player.addSkill("yzs_longlizizai")
@@ -6945,9 +6971,9 @@ const skills = {
 				];
 				return ui.create.dialog(`龙力自在：请选择要执行的效果`, [method, "tdnodes"], "hidden");
 			},
-			select:1,
+			select: 1,
 			check(button) {
-				const player=get.player()
+				const player = get.player()
 				const target = _status.currentPhase || player;
 				if (button.link == "draw") {
 					return 1.5 * (player.getHandcardLimit() - player.countCards())
@@ -6964,7 +6990,7 @@ const skills = {
 			filter(button, player) {
 				const card = button.link;
 				if (card == "draw") {
-					return player.countCards("h")<player.getHandcardLimit()
+					return player.countCards("h") < player.getHandcardLimit()
 				}
 				return true;
 			},
@@ -7035,6 +7061,226 @@ const skills = {
 			order: 8,
 			result: {
 				player: 4,
+			},
+		},
+	},
+	//马知康
+	yzs_idol: {
+		group: ["yzs_idol_summon"],
+		subSkill: {
+			summon: {
+				priority: 1,
+				trigger: {
+					player: "judgeEnd",
+				},
+				forced:true,
+				filter(event, player) {
+					return _status._yzsStorm !== "LoveStorm" && get.suit(event.result.card,player)=="heart"
+				},
+				async content(event, trigger, player) {
+					await player.yzs_SummonStorm("LoveStorm");
+				},
+			},
+			gaobai: {
+				locked: true,
+				async content(event, trigger, player) {
+					const judgeResult = await player.judge(function (card) {
+						const suit2 = get.suit(card);
+						if (suit2 == "heart") {
+							return 4;
+						}
+						if (suit2 == "spade") {
+							return -4;
+						}
+						return 2;
+					}).forResult();
+					if (get.suit(judgeResult.card,player) == "heart") {
+						game.log(player, "告白成功")
+						await player.recover()
+					} else if (get.suit(judgeResult.card,player) == "spade") {
+						game.log(player, "告白失败");
+						await player.loseHp()
+					} else {
+						await player.gain(judgeResult.card)
+						game.log(player, "没得到明确答复", "获得了", judgeResult.card)
+					}
+				}
+			},
+		},
+		init: function (player, skill) {
+			if (!player.storage.extraStorm) {
+				player.storage.extraStorm = "LoveStorm";
+				player.markSkill("extraStorm");
+			}
+		},
+		nobracket: true,
+		locked: true,
+		priority: 520,
+		trigger: {
+			player:"useCardAfter"
+		},
+		filter(event, player) {
+			return get.type(event.card) == "basic";
+		},
+		async cost(event, trigger, player) {
+			event.result = await player.chooseTarget("爱“豆”", `你可令任意角色进行${get.poptip("yzs_idol_gaobai")}`, false)
+				.set("filterTarget", (card, player, target) => {
+					return !target.hasSkill("hidden_yzs")
+				})
+				.set("ai", (target2) => {
+					return Math.random();
+				}).forResult();
+		},
+		async content(event, trigger, player) {
+			const target = event.targets[0];
+			await target.useSkill("yzs_idol_gaobai")
+		}
+	},
+	LoveStorm_skill: {
+		group: "LoveStorm_skill_instant",
+		subSkill: {
+			instant: {
+				name: "告白风暴",
+				popup: false,
+				locked: true,
+				log: false,
+				stormskill: true,
+				async content(event, trigger, player) {
+					event.result = await player.chooseTarget("爱“豆”", `你可令任意角色进行${get.poptip("yzs_idol_gaobai")}`, true)
+						.set("filterTarget", (card, player, target) => {
+							return !target.hasSkill("hidden_yzs")
+						})
+						.set("ai", (target2) => {
+							return Math.random();
+						}).forResult();
+					if (event.result?.bool && event.result?.targets?.length) {
+						const target = event.result.targets[0];
+						await target.useSkill("yzs_idol_gaobai")
+					}
+				}
+			},
+		},
+		locked: true,
+		popup: false,
+		stormskill: true,
+		forced: true,
+		trigger: {
+			player: "phaseBegin",
+		},
+		filter(event, player) {
+			return true
+		},
+		async content(event, trigger, player) {
+			let result = player.countCards("h") ? await player.chooseCardTarget(false)
+				.set("filterTarget", (card, player, target) => {
+					if (target.hasSkill("hidden_yzs")) return false;
+					return true;
+				})
+				.set("prompt", "告白风暴")
+				.set("prompt2", `给予其他角色1张手牌以令其进行${get.poptip("yzs_idol_gaobai")}，否则你进行${get.poptip("yzs_idol_gaobai")}`)
+				.set("filterCard", (card, player, target) => {
+					return true
+				})
+				.set("ai1", get.unuseful3)
+				.set("ai2", target => {
+					const player=get.player()
+					return get.attitude(player, target)-2;
+				})
+				.set("position", "h")
+				.forResult() : { bool: false }
+			if (result?.bool && result?.cards?.length && result?.targets?.length) {
+				const target = result.targets[0];
+				await player.give(result.cards, target);
+				await target.useSkill("yzs_idol_gaobai")
+			} else {
+				await player.useSkill("yzs_idol_gaobai")
+			}
+		},
+		priority: -25,
+	},
+	yzs_zongqing: {
+		priority: -520,
+		trigger: {
+			global: "judge",
+		},
+		preHidden: true,
+		filter(event, player) {
+			return player.hasCards("h");
+		},
+		async cost(event, trigger, player) {
+			event.result = await player.chooseCard({
+				prompt: `${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，你可打出1张手牌代替之。然后若原判定牌为♥，你获得之`,
+				filterCard(card) {
+					const player2 = get.player();
+					const mod2 = game.checkMod(card, player2, "unchanged", "cardEnabled2", player2);
+					if (mod2 !== "unchanged") {
+						return !!mod2;
+					}
+					const mod = game.checkMod(card, player2, "unchanged", "cardRespondable", player2);
+					if (mod !== "unchanged") {
+						return !!mod;
+					}
+					return true;
+				},
+				position: "h",
+				ai(card) {
+					const trigger2 = get.event().getTrigger();
+					const { player: player2, judging } = get.event();
+					const result = trigger2.judge(card) - trigger2.judge(judging);
+					const attitude = get.attitude(player2, trigger2.player);
+					let val = get.value(card);
+					if (get.subtype(card) == "equip2") {
+						val /= 2;
+					} else {
+						val /= 4;
+					}
+					if (attitude == 0 || result == 0) {
+						return 0;
+					}
+					if (attitude > 0) {
+						return result - val;
+					}
+					return -result - val;
+				}
+			}).set("judging", trigger.player.judging[0]).setHiddenSkill(event.skill).forResult();
+
+		},
+		popup: false,
+		async content(event, trigger, player) {
+			const next = player.respond({
+				cards: event.cards,
+				skill: event.name,
+				highlight: true,
+				noOrdering: true
+			});
+			await next;
+			const { cards: cards2 } = next;
+			if (cards2?.length) {
+				const card = trigger.player.judging[0];
+				if (trigger.player.judging[0].clone) {
+					trigger.player.judging[0].clone.classList.remove("thrownhighlight");
+					game.broadcast((card) => {
+						if (card.clone) {
+							card.clone.classList.remove("thrownhighlight");
+						}
+					}, trigger.player.judging[0]);
+					game.addVideo("deletenode", player, get.cardsInfo([trigger.player.judging[0].clone]));
+				}
+				await game.cardsDiscard(trigger.player.judging[0]);
+				trigger.player.judging[0] = cards2[0];
+				trigger.orderingCards.addArray(cards2);
+				game.log(trigger.player, "的判定牌改为", cards2);
+				await game.delay(2);
+				if (get.suit(card, player) == "heart") {
+					player.$gain2(card);
+					await player.gain(card);
+				}
+			}
+		},
+		ai: {
+			rejudge: true,
+			tag: {
+				rejudge: 1,
 			},
 		},
 	},

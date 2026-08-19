@@ -2082,7 +2082,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		config.startCards ??= 4;
 		config.noCheckResult ??= false;
 		config.isSub ??= true;
-		config.noDieAfter ??= true;
+		config.noDieAfter ??= false;
 		config.noDieAfter2 ??= true;
 		for (const i in config) {
 			next[i] = config[i];
@@ -2495,10 +2495,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				next.ExpandPlayerMap.get(this).log = arg;
 			}
 		}
+
+		// 防御：若未传入数字或数字非法，视为无效（num 设为 0，后续判断会移除事件）
+		if (typeof next.num !== 'number' || !Number.isFinite(next.num)) {
+			next.num = 0;
+		}
+
+		// 条件增强：显式要求 num 为合法正数
 		if (!next.domain || next.num <= 0 || (_status._yzsDomain == next.domain && !next.forced && _status._yzsDomainPlayer == next.player)) {
 			_status.event.next.remove(next);
 			next.resolve();
 		}
+
 		next.addExpandPlayer = function () {
 			const args = Array.from(arguments);
 			if (!this.ExpandPlayerList) this.ExpandPlayerList = [];
@@ -2520,7 +2528,8 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					push.log = false;
 				}
 			}
-			if (!push.player || !push.domain) return;
+			// 必须同时提供 player、domain 和合法数字，否则忽略该次添加
+			if (!push.player || !push.domain || typeof push.num !== 'number' || !Number.isFinite(push.num)) return;
 			if (this.ExpandPlayerList.includes(push.player)) return;
 			this.ExpandPlayerList.push(push.player);
 			game.log(push.player, "加入了领域对拼（", push.num, "）");
@@ -2530,6 +2539,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				playerData[key] = push[key];
 			}
 		};
+
 		next.result = { bool: false };
 		next.setContent("yzs_ExpandDomain");
 		return next;
@@ -2548,25 +2558,38 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		async (event, trigger, player) => {
 			let list = [];
 			for (const target of event.ExpandPlayerList) {
-				list.push({ player: target, num: event.ExpandPlayerMap.get(target).num })
-		//		game.log(target, event.ExpandPlayerMap.get(target).num)
+				let rawNum = event.ExpandPlayerMap.get(target).num;
+				// 确保 num 是合法数字，否则视为 0
+				let safeNum = (typeof rawNum === 'number' && Number.isFinite(rawNum)) ? rawNum : 0;
+				list.push({ player: target, num: safeNum });
 			}
 			list.sort(function (a, b) {
 				return b.num - a.num;
-			})
-			event.finalWinner = list.filter(i => i.num == list[0].num);
-			event.finalWinner = event.finalWinner.map(i => i = i.player);
-			let max = list[0].num;
+			});
+
+			// 防止 list 为空的情况
+			let max = list.length ? list[0].num : 0;
+			event.finalWinner = list.filter(i => i.num == max).map(i => i.player);
 			event.num = max;
+
 			let num = event.num;
-			let counts = list.map(i => i = i.num);
+			let counts = list.map(i => i.num);
+
+			// 仅保留与当前最大强度不同的数字
 			counts = counts.filter(i => i != num);
-			if (typeof _status._yzsDomainCount == "number") counts.push(_status._yzsDomainCount);
-			let count = Math.max(counts);
-			if (count == -Infinity) count = 0;
+
+			// 加入当前已存在的领域回合数（需保证为数字）
+			if (typeof _status._yzsDomainCount === 'number' && Number.isFinite(_status._yzsDomainCount)) {
+				counts.push(_status._yzsDomainCount);
+			}
+
+			let count = counts.length ? Math.max(...counts) : 0;
+			// 二次保证：如果 Math.max 仍得出 -Infinity 或 NaN，统一归零
+			if (!Number.isFinite(count)) count = 0;
+
 			if (num <= count) {
-				game.broadcastAll((count) => {
-					_status._yzsDomainCount -= count;
+				game.broadcastAll((decrement) => {
+					_status._yzsDomainCount -= decrement;
 					if (_status._yzsDomainCount > 0) return;
 					if (ui.domain) {
 						ui.domain.destroy();
@@ -2576,22 +2599,24 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 						ui.refresh(node);
 						node.classList.remove("hidden");
 					}
-					delete ui.domain
+					delete ui.domain;
 					_status._yzsDomainCount = 0;
 					delete _status._yzsDomain;
 					delete _status._yzsDomainPlayer;
-				},event.num);
-				if (event.before)game.log(event.finalWinner, `抵消了${event.num}个回合的${get.translation(event.before)}`);
+				}, event.num);
+				if (event.before) game.log(event.finalWinner, `抵消了${event.num}个回合的${get.translation(event.before)}`);
 				event.result = { bool: false, domain: event.domain, before: event.before };
 				return;
 			}
+
 			num -= count;
 			if (!event.domain) return;
-			//game.log(counts)
+
 			if (event.ExpandPlayerList.length > 1) {
-				game.log(event.ExpandPlayerList, "展开了领域对拼，" ,event.finalWinner.length > 1?`没有胜者`: `胜者为 ${ get.translation(event.finalWinner[0])}`)
+				game.log(event.ExpandPlayerList, "展开了领域对拼，", event.finalWinner.length > 1 ? `没有胜者` : `胜者为 ${get.translation(event.finalWinner[0])}`);
 			}
 			if (event.finalWinner.length > 1) return;
+
 			event.finalPlayer = event.finalWinner[0];
 			if (event.ExpandPlayerMap.get(event.finalPlayer).domain) {
 				event.domain = event.ExpandPlayerMap.get(event.finalPlayer).domain

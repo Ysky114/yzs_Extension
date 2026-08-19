@@ -4878,7 +4878,7 @@ const skills = {
 							game.playAudio("ext:一中杀/audio/skill/wuxiaxianshushi_yzs2.MP3");
 						});
 					}
-					await pos.yzs_addPlayerOL(pos, "GojoSatoru_yzs", null, true, { targetx:player,startCards: 4, dieRemove: false, noCheckResult: true, callback,log:false })
+					await pos.yzs_addPlayerOL(pos, "GojoSatoru_yzs", null, true, { targetx: player, startCards: 4, dieRemove: false, noDieAfter: false, noDieAfter2: false, callback,log:false })
 				}
 			}
 		},
@@ -4952,6 +4952,7 @@ const skills = {
 		group: ["shizhongyingfashu_yzs_start", "shizhongyingfashu_yzs_targeted", "shizhongyingfashu_yzs_use", "shizhongyingfashu_yzs_break"],
 		subSkill: {
 			start: {
+			    firstDo:true,
 				locked: true,
 				trigger: {
 					global: "phaseBefore",

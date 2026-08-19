@@ -584,6 +584,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				{
 					type: "players", data: [
 						"yzs_DanHeng",
+						"yzs_Mazhikang"
 					]
 				},
 				{
@@ -687,12 +688,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.96.2</div><br>
+            <div style="color:#ffa348">• 版本号：v0.97</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.96.2",
+			version: "0.97",
 		},
 		files: {}, connect: true
 	}

@@ -193,7 +193,9 @@ const translates = {
 	FushiguroMegumi_yzs: "伏黑惠",
 	yzs_Elysia: `爱莉希雅`,
 	yzs_DanHeng: `丹恒`,
-	yzs_DanHengImbibitorLunae:`饮月`,
+	yzs_DanHengImbibitorLunae: `饮月`,
+	yzs_Mazhikang: `马知康`,
+	LoveStorm:`告白风暴`,
 
     // 技能台词
 
@@ -1966,6 +1968,17 @@ const translates = {
 <span class="bluetext">①${get.poptip("yzs_qianlong")}</span>②${get.poptip("yzs_shuofeng")}③${get.poptip("yzs_jiyu")}，然后扣除1点体力上限，若已获得则改为失去本技能并获得${get.poptip("yzs_longlizizai")}。`,
 	yzs_longlizizai: `龙力自在`,
 	yzs_longlizizai_info: `你手牌上限固定为4。<br>每回合限1次：${get.poptip("wuyongchang_yzs")}：你发动${get.poptip("yzs_canglongzhuoshi")}中的一个<font color="#77e1ff">效果</font>。`,
+
+	yzs_idol: `爱“豆”`,
+	yzs_idol_info: `锁定技：你的判定牌为♥后召引${get.poptip("LoveStorm")}。<br>
+    你使用基本牌后可令任意角色进行${get.poptip("yzs_idol_gaobai")}。`,
+	yzs_idol_gaobai: `告白`,
+	yzs_idol_gaobai_info:`判定：若结果为♠/♥，失去/恢复1点体力；若否，获得判定牌。`,
+	LoveStorm_skill: "告白风暴",
+	LoveStorm_skill_info: `场上角色回合开始时选择：①：进行${get.poptip("yzs_idol_gaobai")}；②：给予除其外角色1张手牌，然后令该角色进行${get.poptip("yzs_idol_gaobai")}。`,
+	LoveStorm_instant_info: `告白风暴：召引者令任意角色进行${get.poptip("yzs_idol_gaobai")}。`,
+	yzs_zongqing: `纵情`,
+	yzs_zongqing_info:`场上角色的判定牌生效前，你可打出1张手牌代替之。然后若原判定牌为♥，你获得之。`,
 };
 
 export default translates;

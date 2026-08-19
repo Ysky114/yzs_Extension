@@ -1724,6 +1724,15 @@ const characters = {
 		img: "extension/一中杀/image/yzs_DanHengImbibitorLunae.png",
 		isUnseen:true,
 	},
+
+	yzs_Mazhikang: {
+		sex: "male",
+		group: "wei",
+		hp: 4,
+		skills: ["yzs_idol", "yzs_zongqing"],
+		names: "马知康",
+		img: "extension/一中杀/image/yzs_Mazhikang.png",
+	},
 };
 
 const characterSubstitutes = {
@@ -1888,7 +1897,8 @@ const characterTitles = {
 	yzs_Elysia: `始源之律者`,
 	yzs_DanHeng: `长梦一觉`,
 	yzs_DanHengImbibitorLunae: `洞天幻化`,
-
+	yzs_Mazhikang: `我是爱神`,
+	
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2027,14 +2037,14 @@ const characterIntros = {
 	yzs_Elysia: `爱莉希雅，手机游戏《崩坏3》及其衍生作品中的角色，第一文明纪元抗崩坏组织逐火之蛾的逐火十三英桀之一，位次“Ⅱ”，刻印为“真我”。自称第一文明纪元的第十三律者，实际为最早诞生于世的“人之律者”，又名“始源之律者”。凡事任凭心意而为，自由自在，与副首领身份格格不入的少女。亦是逐火英桀的创立者，聚集并维系此十三人的核心人物。只在喜欢的人上花时间，但每个人都很喜欢；只在有趣的事上花心思，但每件事都很有趣——心怀如此信念，带着真诚与热情拥抱每一天的纯真女孩`,
 	yzs_DanHeng:`丹恒，米哈游出品的游戏《崩坏：星穹铁道》及其衍生作品中的角色。前世为罗浮龙尊“丹枫”，尊号“饮月君”。列车护卫，同时也是智库的管理员。个性认真，对时不时会乱来的三月七和身为“开拓”之旅新人的开拓者来说是非常值得信赖的存在。他出身于仙丹“罗浮”，但因为前世的诸多因缘导致身世较为复杂，最初正是为了逃避自己的过往而搭乘星穹列车`,
 	yzs_DanHengImbibitorLunae: `丹恒·饮月，游戏《崩坏：星穹铁道》中的五星角色，属于毁灭命途的虚数属性角色，定位为强化普攻型输出位丹恒·饮月继承了前代龙尊“饮月君”的力量，展现出持明族的本相，在接纳角冠的同时也背负了其过往的功过是非。他历经战争与放逐，最终登上星穹列车投身星际旅程，始终保持着独立于前世身份的自我认知`,
-
+	yzs_Mazhikang:``,
 };
 const characterReplaces = {
 };
 const characterSort = {
 	normalPack_yzs: ["LU_Captain_xiangsiniao_yzs", "HuangJOJO_yzs", "changzhang_yzs", "WZZS_lilixin_yzs", "shenfu_Limu_yzs", "shenChangzhang_yzs",
 		"hunziKing_yzs", "Zbro_yzs", "Chino_yzs", "IceGirl_yzs", "ChengGuixiang_yzs", "OnionMan_yzs", "BoFengShuiKun_yzs", "WaiJiaoDaChen_yzs",
-		"DaZuo_yzs", "ChenJiahao_yzs", "YanLaFeng_yzs","Jovanlin_yzs"],
+		"DaZuo_yzs", "ChenJiahao_yzs", "YanLaFeng_yzs", "Jovanlin_yzs","yzs_Mazhikang"],
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
