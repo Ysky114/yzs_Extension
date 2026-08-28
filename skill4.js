@@ -6789,7 +6789,7 @@ const skills = {
 				forced: true,
 				logTarget: "target",
 				async content(event, trigger, player) {
-					if (trigger.getParent().WindSword_yzs) {
+					if (trigger.getParent().WindSword_yzs&&trigger.target!=player) {
 						trigger.target.addTempSkill("qinggang2");
 						trigger.target.storage.qinggang2.add(trigger.card);
 						trigger.target.markSkill("qinggang2");

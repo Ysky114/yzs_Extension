@@ -6411,7 +6411,7 @@ const skills = {
 		async content(event, trigger, player) {
 			if (trigger.name == "useCard") {
 				trigger.fumoyuchuzi_yzs_skill_buff = true;
-				trigger.directHit.addArray(game.filterPlayer(cur => !cur.hasSkill("SimpleDomain_yzs_buff") && cur != player))
+				trigger.directHit.addArray(game.filterPlayer(cur => !cur.hasSkill("SimpleDomain_yzs_buff")))
 				return;
 			}
 			let next = _status._yzsDomainPlayer.useSkill("jie_yzs")

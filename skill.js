@@ -66,8 +66,15 @@ const skills = {
 			lib.config.all.background_music = [];
 			if (targets.length) for (let target of targets) {
 				const bgm = get.character(target.name).BGM
-				lib.config.all.background_music.add(`ext:一中杀/audio/${bgm}.mp3`)
-				num++;
+				if (Array.isArray(bgm)) {
+					for (let b of bgm) {
+						lib.config.all.background_music.add(`ext:一中杀/audio/${b}.mp3`)
+						num ++;
+					}
+				} else {
+					lib.config.all.background_music.add(`ext:一中杀/audio/${bgm}.mp3`)
+					num++;
+				}
 			}
 			let list = ["My Sunset", "泡沫、哀のまほろば", "Time Bomb", "inhuman", "Lupinus", "Pigstep (Stereo Mix)",
 				"Puppet in the Dark(PartⅡBuried Away)", "RYUKYUVANIA V2", "Vagrant",
@@ -10007,7 +10014,7 @@ const skills = {
 					return event.card.name=="sha"
 				},
 				async content(event,trigger,player) {
-					trigger.storage.wiseStone_yzs_Hbuff = true;
+					trigger.wiseStone_yzs_Hbuff = true;
 					await player.removeSkill("wiseStone_yzs_Hbuff")
 				}
 			},

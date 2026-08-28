@@ -3125,7 +3125,7 @@ const skills = {
 				if (card.cards?.some(c => c.hasGaintag("shixue_yzs"))) return Infinity;
 			},
 			cardname(card, player) {
-				if (card.hasGaintag("shixue_yzs")) return;
+				if (card.cards?.some(c=>c.hasGaintag("shixue_yzs"))) return;
 				if (player.hp == 0) return "jiu";
 				else if (player.hp == 1) return "tao";
 				else if (player.hp == 2) return "sha";
@@ -5496,8 +5496,52 @@ const skills = {
 					await player.discard(event.cards);
 					player.tempBanSkill("qianheanyiting_yzs", { global: "roundStart" })
 					const animation = () => {
+						var video = document.createElement("VIDEO");
+						video.className = "anime";
 
-					};
+						Object.assign(video, {
+							src: lib.assetURL + "/extension/一中杀/image/background/qianheanyiting_yzs.MP4",
+							autoplay: true,//准备就绪后自动播放
+							loop: false,//是否循环播放
+							muted: false,//是否静音
+							preload: true,//是否提前加载
+						})
+						Object.assign(video.style, {
+							position: "fixed",
+							left: "0",
+							top: "0",
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							minWidth: "100vw",
+							minHeight: "100vh",
+							opacity: "0",//透明度
+							pointerEvents: "none",//不阻挡点击事件
+							zIndex: "2",
+							transition: "opacity 1s ease-out",
+						})
+						video.addEventListener("ended", () => {
+							video.style.opacity = "0";
+							setTimeout(() => {
+								document.body.removeChild(video);
+							}, 1000)//1s后移除视频
+						})
+						document.body.appendChild(video);
+						setTimeout(() => {
+							video.style.opacity = "1";
+						}, 50)
+						//if (_status.tempMusic == `ext:一中杀/audio/Malevolent Shrine.mp3`) return;
+						// 1. 设置音频路径
+						_status.tempMusic = `ext:一中杀/audio/qianheanyiting_yzs.mp3`;
+
+						// 2. 调用播放逻辑
+						game.playBackgroundMusic();
+						ui.backgroundMusic.addEventListener('ended', () => {
+							delete _status.tempMusic;
+							game.playBackgroundMusic();
+						}, { once: true });
+
+					}
 					trigger.addExpandPlayer(player, "qianheanyiting_yzs", "thunder", event.cards.length, animation)
 				},
 				sub: true,
@@ -5661,7 +5705,7 @@ const skills = {
 			const newPlayer = await game.addPlayerOL(player, ...["Makora_yzs", null], true, { source: player, animate });
 			result.target = newPlayer;
 			player.setStorage("tiaofuyishi_yzs_kill", newPlayer)
-			newPlayer.addSkill("yzs_dieRemove");
+			//	newPlayer.addSkill("yzs_dieRemove");
 			newPlayer.dieAfter = function () { }
 			newPlayer.dieAfter2 = function () { }
 			newPlayer.storage.isSub = true;
@@ -5813,8 +5857,32 @@ const skills = {
 	},
 	//中立态度
 	yzs_NeutralAttitude: {
-		group: ["yzs_NeutralAttitude_damage"],
+		group: ["yzs_NeutralAttitude_damage", "yzs_NeutralAttitude_die"],
 		subSkill: {
+			die: {
+				charlotte: true,
+				silent: true,
+				fixed: true,
+				forceDie: true,
+				forceOut: true,
+				trigger: {
+					player: ["dieAfter"],
+				},
+				filter(event, player) {
+					return !event.reverseOut
+				},
+				async content(event, trigger, player) {
+					const next = game.createEvent("yzs_dieRemove_after", false, trigger);
+					next.player = player;
+					next.forceDie = true;
+					next.forceOut = true;
+					next.setContent(async (event, trigger, player) => {
+						await player.yzs_removePlayerOL();
+					})
+					trigger.next.remove(next);
+					trigger.after.push(next);
+				},
+			},
 			damage: {
 				popup: false,
 				forced: true,
@@ -7073,9 +7141,9 @@ const skills = {
 				trigger: {
 					player: "judgeEnd",
 				},
-				forced:true,
+				forced: true,
 				filter(event, player) {
-					return _status._yzsStorm !== "LoveStorm" && get.suit(event.result.card,player)=="heart"
+					return _status._yzsStorm !== "LoveStorm" && get.suit(event.result.card, player) == "heart"
 				},
 				async content(event, trigger, player) {
 					await player.yzs_SummonStorm("LoveStorm");
@@ -7094,10 +7162,10 @@ const skills = {
 						}
 						return 2;
 					}).forResult();
-					if (get.suit(judgeResult.card,player) == "heart") {
+					if (get.suit(judgeResult.card, player) == "heart") {
 						game.log(player, "告白成功")
 						await player.recover()
-					} else if (get.suit(judgeResult.card,player) == "spade") {
+					} else if (get.suit(judgeResult.card, player) == "spade") {
 						game.log(player, "告白失败");
 						await player.loseHp()
 					} else {
@@ -7117,7 +7185,7 @@ const skills = {
 		locked: true,
 		priority: 520,
 		trigger: {
-			player:"useCardAfter"
+			player: "useCardAfter"
 		},
 		filter(event, player) {
 			return get.type(event.card) == "basic";
@@ -7183,8 +7251,8 @@ const skills = {
 				})
 				.set("ai1", get.unuseful3)
 				.set("ai2", target => {
-					const player=get.player()
-					return get.attitude(player, target)-2;
+					const player = get.player()
+					return get.attitude(player, target) - 2;
 				})
 				.set("position", "h")
 				.forResult() : { bool: false }
@@ -7283,6 +7351,457 @@ const skills = {
 				rejudge: 1,
 			},
 		},
+	},
+	//漏瑚
+	yzs_ronghuo: {
+		group: ["yzs_ronghuo_use","yzs_ronghuo_die"],
+		subSkill: {
+			die: {
+				popup: false,
+				priority: 314,
+				trigger: {
+					player:"die"
+				},
+				filter(event, player) {
+					return ["MegumiSukuna_yzs", "RyomenSukuna_yzs"].includes(event.source?.name);
+				},
+				async content(event, trigger, player) {
+					trigger.source.chat("自豪吧，你很强！")
+					game.broadcastAll((current) => {
+						game.playAudio("ext:一中杀/audio/skill/yzs_ronghuo_die.MP3");
+					}, player);
+				}
+			},
+			use: {
+				enable: ["chooseToUse"],
+				hiddenCard: function (player, name) {
+					return ["wuzhong", "tao"].includes(name)
+				},
+				filter: function (event, player) {
+					if (!player.hasCard(function (card) {
+						return card.hasGaintag("visible_yzs_ronghuo");
+					}, "h")) return false;
+					for (var i of ["wuzhong", "tao"]) {
+						if (event.filterCard({ name: i }, player, event)) return true;
+					}
+					return false
+				},
+				chooseButton: {
+					dialog: function (event, player) {
+						var list = [];
+						let pile = ["wuzhong", "tao"]
+						for (var i = 0; i < pile.length; i++) {
+							var name = pile[i];
+							var type = get.type2(name, false);
+							if (event.filterCard({ name: name }, player, event)) list.push([type, '', name]);
+						}
+						return ui.create.dialog('熔火', [list, 'vcard']);
+					},
+					filter: function (button, player) {
+						return _status.event.getParent().filterCard({ name: button.link[2] }, player, _status.event.getParent());
+					},
+					check: function (button) {
+						if (_status.event.getParent().type != 'phase') return 1;
+						var player = _status.event.player;
+						return player.getUseValue({
+							name: button.link[2],
+							nature: button.link[3],
+						});
+					},
+					backup: function (links, player) {
+						return {
+							filterCard(card, player) {
+								return card.hasGaintag("visible_yzs_ronghuo")
+							},
+							popname: true,
+							check: function (card) {
+								return 6 - get.value(card);
+							},
+							position: 'h',
+							viewAs: { name: links[0][2] },
+						}
+					},
+					prompt: function (links, player) {
+						return '将1张“熔火”牌当做' + (get.translation(links[0][3]) || '') + get.translation(links[0][2]) + '使用';
+					},
+				},
+				ai: {
+					save: true,
+					skillTagFilter(player, tag, arg) {
+						if (!player.hasCard(function (card) {
+							return card.hasGaintag("visible_yzs_ronghuo");
+						}, "h") || player.isTempBanned("Zoltraak_yzs")) {
+							return false;
+						}
+						return true
+					},
+					order: 4,
+					result: {
+						player(player) {
+							var allshown = true,
+								players = game.filterPlayer();
+							for (var i = 0; i < players.length; i++) {
+								if (players[i].ai.shown == 0) {
+									allshown = false;
+								}
+								if (players[i] != player && players[i].countCards("h") && get.attitude(player, players[i]) > 0) {
+									return 1;
+								}
+							}
+							if (allshown) {
+								return 1;
+							}
+							return 0;
+						},
+					},
+					threaten: 1.9,
+				},
+			},
+		},
+		priority: -5,
+		forced: true,
+		audio: "ext:一中杀/audio/skill:3",
+		trigger: {
+			player: "damageAfter",
+			source: "damageAfter",
+		},
+		filter(event, player) {
+			if (event.num <= 0) return false;
+			if (event.yzs_ronghuo) return false;
+			return true
+		},
+		async content(event, trigger, player) {
+			trigger.yzs_ronghuo = true;
+			let result = await player.draw(trigger.num).forResult();
+			if (result?.cards?.length && trigger.hasNature("fire")) {
+				const next = game.createEvent("faceUpCard");
+				next.player = player;
+				next.cards = result.cards;
+				next.skill = "yzs_ronghuo";
+				next.setContent(async (event, trigger, player) => {
+					const { cards } = event;
+					game.log(player, "明置了", cards);
+					game.addCardKnower(
+						cards,
+						game.filterPlayer(() => true)
+					);
+					game.broadcastAll(cards => {
+						cards.forEach(card => card.addGaintag("visible_yzs_ronghuo"));
+					}, cards);
+				});
+			}
+		},
+		mod: {
+			aiOrder(card, player, num) {
+				if (card.cards?.some?.(c => c.hasGaintag("visible_yzs_ronghuo"))) {
+					return num + 4;
+				}
+			},
+			aiValue(player, card, num) {
+				if (card.cards?.some?.(c => c.hasGaintag("visible_yzs_ronghuo"))) {
+					return num + 4;
+				}
+			},
+			aiUseful(player, card, num) {
+				if (card.cards?.some?.(c => c.hasGaintag("visible_yzs_ronghuo"))) {
+					return num + 4;
+				}
+			},
+			ignoredHandcard(card, player) {
+				if (card.hasGaintag("visible_yzs_ronghuo")) {
+					return true;
+				}
+			},
+			cardDiscardable(card, player, name) {
+				if (name === "phaseDiscard" && card.hasGaintag("visible_yzs_ronghuo")) {
+					return false;
+				}
+			},
+		},
+	},
+	yzs_yun: {
+		group: ["yzs_yun_use"],
+		subSkill: {
+			use: {
+				popup: false,
+				forced: true,
+				priority: 43,
+				trigger: {
+					player: "useCard",
+				},
+				filter(event, player) {
+					return event.card.name === "huogong" && event.card?.storage?.yzs_yun
+				},
+				forced: true,
+				async content(event, trigger, player) {
+					if (!trigger.baseDamage) trigger.baseDamage = 0;
+					trigger.baseDamage += trigger.card.storage.yzs_yun - 1;
+					if (trigger.card.storage.yzs_yun > 2&&trigger.targets?.some(target => ["MegumiSukuna_yzs", "RyomenSukuna_yzs"].includes(target.name))) {
+						game.broadcastAll(() => {
+							game.playAudio("ext:一中杀/audio/skill/yzs_yun_use1.MP3");
+						}, player);
+					} else if (trigger.targets?.some(target => ["GojoSatoru_yzs"].includes(target.name))) {
+						game.broadcastAll(() => {
+							game.playAudio("ext:一中杀/audio/skill/yzs_yun_use2.MP3");
+						}, player);
+					}
+				},
+			},
+			backup: {
+				viewAs: {
+					name: "huogong",
+				},
+				viewAsFilter(player) {
+					return player.countCards("he") > 0;
+				},
+				selectCard() {
+					return [1, Infinity];
+				},
+				selectTarget:1,
+				complexCard: true,
+				filterCard(card) {
+					return true;
+				},
+				check(card) {
+					const suits = [];
+					if (ui.selected?.cards?.length) {
+						for (let c of ui.selected.cards) {
+							if (!suits.includes(get.suit(c, false))) suits.push(get.suit(c, false));
+						}
+					}
+					if (suits.includes(get.suit(card, false))) return -1;
+					return 5 - get.value(card);
+				},
+				position: "he",
+				async precontent(event, trigger, player) {
+					const cards = event.result.cards;
+					const suits = [];
+					if (cards?.length) {
+						for (let c of cards) {
+							if (!suits.includes(get.suit(c, false))) suits.push(get.suit(c, false));
+						}
+					}
+					event.result.card.storage = { yzs_yun: suits.length };
+					if (suits.length > 2) {
+						game.broadcastAll((current) => {
+							game.playAudio("ext:一中杀/audio/skill/yzs_yun1.MP3");
+						}, player);
+					} else {
+						game.broadcastAll((current) => {
+							game.playAudio("ext:一中杀/audio/skill/yzs_yun2.MP3");
+						}, player);
+					}
+				},
+			},
+		},
+		forced: true,
+		popup: false,
+		priority: -6,
+		trigger: {
+			player:"phaseJieshuBegin"
+		},
+		filter(event, player) {
+			return player.countCards("he") > 0 && player.hasUseTarget({ name: "huogong" });
+		},
+		async content(event, trigger, player) {
+			var next = player.chooseToUse();
+			next.set("openskilldialog", `###${get.prompt("yzs_yun")}###你可将任意张牌当做【火攻】使用，此牌伤害为底牌花色数`);
+			next.set("norestore", true);
+			next.set("addCount", false);
+			next.set("_backupevent", "yzs_yun_backup");
+			next.set("custom", {
+				add: {},
+				replace: { window() { } },
+			});
+			next.backup("yzs_yun_backup");
+		},
+	},
+	yzs_gaiguantieweishan: {
+		group: ["yzs_gaiguantieweishan_fight"],
+		subSkill: {
+			fight: {
+				trigger: {
+					global: "yzs_ExpandDomainBegin",
+				},
+				priority: 98,
+				filter(event, player) {
+					if (event.player == player) return false;
+					if (event.ExpandPlayerList?.includes(player)) return false;
+					return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
+				},
+				async cost(event, trigger, player) {
+					event.result = await player.chooseToDiscard(`${get.translation(trigger.player)}展开了${trigger.num}个回合的领域${get.translation(trigger.domain)}，是否进行“领域对拼”？`, "h", [1, Infinity])
+						.set("chooseonly", true)
+						.set("target", trigger.player)
+						.set("ai", card => {
+							const player = get.event().player;
+							const target = get.event().target;
+							if (get.attitude(player, target) > 0) return 0;
+							else return 8 - get.value(card);
+						})
+						.set("allowChooseAll", true)
+						.forResult()
+				},
+				async content(event, trigger, player) {
+					await player.discard(event.cards);
+					player.tempBanSkill("yzs_gaiguantieweishan", { global: "roundStart" })
+					const animation = () => {
+						var video = document.createElement("VIDEO");
+						video.className = "anime";
+
+						Object.assign(video, {
+							src: lib.assetURL + "/extension/一中杀/image/background/yzs_gaiguantieweishan.MP4",
+							autoplay: true,//准备就绪后自动播放
+							loop: false,//是否循环播放
+							muted: false,//是否静音
+							preload: true,//是否提前加载
+						})
+						Object.assign(video.style, {
+							position: "fixed",
+							left: "0",
+							top: "0",
+							width: "100%",
+							height: "100%",
+							objectFit: "cover",
+							minWidth: "100vw",
+							minHeight: "100vh",
+							opacity: "0",//透明度
+							pointerEvents: "none",//不阻挡点击事件
+							zIndex: "2",
+							transition: "opacity 1s ease-out",
+						})
+						video.addEventListener("ended", () => {
+							video.style.opacity = "0";
+							setTimeout(() => {
+								document.body.removeChild(video);
+							}, 1000)//1s后移除视频
+						})
+						document.body.appendChild(video);
+						setTimeout(() => {
+							video.style.opacity = "1";
+						}, 50)
+						//if (_status.tempMusic == `ext:一中杀/audio/Malevolent Shrine.mp3`) return;
+						// 1. 设置音频路径
+						_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
+
+						// 2. 调用播放逻辑
+						game.playBackgroundMusic();
+						ui.backgroundMusic.addEventListener('ended', () => {
+							delete _status.tempMusic;
+							game.playBackgroundMusic();
+						}, { once: true });
+					}
+					trigger.addExpandPlayer(player, "yzs_gaiguantieweishan", "fire", event.cards.length, animation)
+				},
+				sub: true,
+				sourceSkill: "yzs_gaiguantieweishan",
+			},
+		},
+		nobracket: true,
+		limited: true,
+		skillAnimation: false,
+		locked: true,
+		nobracket: true,
+		enable: "phaseUse",
+		domain: true,
+		position: "h",
+		filterCard: true,
+		selectCard: [1, Infinity],
+		allowChooseAll: true,
+		prompt: `${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色回合结束时，你视为对其使用火【杀】`,
+		check(card) {
+			return 6 - get.value(card);
+		},
+		filter(event, player) {
+			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill(event.name);
+			player.tempBanSkill(event.name, { global: "roundStart" })
+			const animation = () => {
+				var video = document.createElement("VIDEO");
+				video.className = "anime";
+
+				Object.assign(video, {
+					src: lib.assetURL + "/extension/一中杀/image/background/yzs_gaiguantieweishan.MP4",
+					autoplay: true,//准备就绪后自动播放
+					loop: false,//是否循环播放
+					muted: false,//是否静音
+					preload: true,//是否提前加载
+				})
+				Object.assign(video.style, {
+					position: "fixed",
+					left: "0",
+					top: "0",
+					width: "100%",
+					height: "100%",
+					objectFit: "cover",
+					minWidth: "100vw",
+					minHeight: "100vh",
+					opacity: "0",//透明度
+					pointerEvents: "none",//不阻挡点击事件
+					zIndex: "2",
+					transition: "opacity 1s ease-out",
+				})
+				video.addEventListener("ended", () => {
+					video.style.opacity = "0";
+					setTimeout(() => {
+						document.body.removeChild(video);
+					}, 1000)//1s后移除视频
+				})
+				document.body.appendChild(video);
+				setTimeout(() => {
+					video.style.opacity = "1";
+				}, 50)
+				//if (_status.tempMusic == `ext:一中杀/audio/Malevolent Shrine.mp3`) return;
+				// 1. 设置音频路径
+				_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
+
+				// 2. 调用播放逻辑
+				game.playBackgroundMusic();
+				ui.backgroundMusic.addEventListener('ended', () => {
+					delete _status.tempMusic;
+					game.playBackgroundMusic();
+				}, { once: true });
+			}
+			let result = await player.yzs_ExpandDomain(event.name, "fire", event.cards.length, animation).forResult();
+		},
+		ai: {
+			order(item, player) {
+				if (player.countCards("h", card => 6 - player.hp - get.value(card, player) / 2) > 3) return 10;
+				return 0;
+			},
+			result: {
+				player: 1,
+			},
+			threaten: 1.5,
+		},
+	},
+	yzs_gaiguantieweishan_skill: {
+		locked: true,
+		popup: false,
+		domainskill: true,
+		forced: true,
+		trigger: {
+			player: ["phaseEnd", "useCard"],
+		},
+		filter(event, player) {
+			if (event.name == "useCard") {
+				return event.player == _status._yzsDomainPlayer && !event.yzs_gaiguantieweishan_skill_buff
+			}
+			if (player == _status._yzsDomainPlayer) return false;
+			if (player.hasSkill("SimpleDomain_yzs_buff")) return false;
+			return get.itemtype(_status._yzsDomainPlayer) == "player"
+		},
+		async content(event, trigger, player) {
+			if (trigger.name == "useCard") {
+				trigger.yzs_gaiguantieweishan_skill_buff = true;
+				trigger.directHit.addArray(game.filterPlayer(cur => !cur.hasSkill("SimpleDomain_yzs_buff")))
+				return;
+			}
+			await _status._yzsDomainPlayer.useCard({ name: "sha", nature: "fire" }, player, false)
+		},
+		priority: -25,
 	},
 }
 export default skills;

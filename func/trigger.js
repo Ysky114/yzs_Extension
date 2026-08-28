@@ -3429,7 +3429,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					} else {
 						game.me.throwEmotion(node, emotion);
 					}
-				//	uiintro._close();
+					//	uiintro._close();
 					_status.throwEmotionWait = true;
 					setTimeout(
 						function () {

@@ -196,6 +196,7 @@ const translates = {
 	yzs_DanHengImbibitorLunae: `饮月`,
 	yzs_Mazhikang: `马知康`,
 	LoveStorm:`告白风暴`,
+	yzs_JoGo: `漏瑚`,
 
     // 技能台词
 
@@ -1978,7 +1979,17 @@ const translates = {
 	LoveStorm_skill_info: `场上角色回合开始时选择：①：进行${get.poptip("yzs_idol_gaobai")}；②：给予除其外角色1张手牌，然后令该角色进行${get.poptip("yzs_idol_gaobai")}。`,
 	LoveStorm_instant_info: `告白风暴：召引者令任意角色进行${get.poptip("yzs_idol_gaobai")}。`,
 	yzs_zongqing: `纵情`,
-	yzs_zongqing_info:`场上角色的判定牌生效前，你可打出1张手牌代替之。然后若原判定牌为♥，你获得之。`,
+	yzs_zongqing_info: `场上角色的判定牌生效前，你可打出1张手牌代替之。然后若原判定牌为♥，你获得之。`,
+
+	yzs_ronghuo: `熔火`,
+	visible_yzs_ronghuo:`熔火`,
+	yzs_ronghuo_info: `你为来源或受伤角色的伤害结算后，你摸伤害量张牌。若为火焰伤害，则明置之，这些牌不计入手牌上限，且可当做【桃】或【无中生有】使用。`,
+	yzs_yun: `陨`,
+	yzs_yun_info: `结束阶段，你可将任意张牌当做【火攻】使用，此牌伤害为底牌花色数。`,
+	yzs_gaiguantieweishan: `盖棺铁围山`,
+	yzs_gaiguantieweishan_info: `限定技：${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色回合结束时，你视为对其使用火【杀】。`,
+	yzs_gaiguantieweishan_skill: `盖棺铁围山`,
+	yzs_gaiguantieweishan_skill_info:`领域主人使用的牌不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用火【杀】`,
 };
 
 export default translates;
