@@ -8105,6 +8105,14 @@ const skills = {
 			const num = player.countMark("yzs_zhanlong_awaken") ? 3 : 4;
 			return player.countExpansions("yzs_zhanlong") >= num;
 		},
+		onChooseToUse(event) {
+			event.targetprompt2.add(target => {
+				if (event.skill !== "yzs_zhanlong_backup" || !target.classList.contains("selectable")) {
+					return;
+				}
+				return Math.max(0,Math.floor(target.hp/2))
+			});
+		},
 		chooseButton: {
 			dialog(event, player) {
 				const cards = player.getExpansions("yzs_zhanlong");
@@ -8140,7 +8148,7 @@ const skills = {
 					async content(event, trigger, player) {
 						await player.loseToDiscardpile(player.getExpansions("yzs_zhanlong"));
 						let target = event.target;
-						let num = Math.floor(target.hp / 2);
+						let num = Math.max(0, Math.floor(target.hp / 2));
 						await target.damage(num);
 						player.addMark("yzs_zhanlong_awake", num)
 						if (player.countMark("yzs_zhanlong_awake") >= 3 && !player.countMark("yzs_zhanlong_awaken")) {
