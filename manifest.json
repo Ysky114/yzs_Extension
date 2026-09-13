@@ -457,6 +457,7 @@
     "audio/skill/tiance_yzs_damage1.mp3": "90717670fa0b37cff5aa8da65fbfe14a29d92b0b",
     "audio/skill/tiance_yzs_judge1.mp3": "9642de3853cd33233a80a4e61111729687fc5c42",
     "audio/skill/tiance_yzs_trick1.mp3": "63c94351b4b9f9f57e5a159ba2afbb40e3965f80",
+    "audio/skill/tiandu_yzs.mp3": "88b8acbf2ec8bb3a65e21eac1296d7e139679b0c",
     "audio/skill/tiangongkaiwu_yzs1.mp3": "3f5a37f2000a0eca6152c45a9096505cf56817fc",
     "audio/skill/tiangongkaiwu_yzs_die1.mp3": "143eb5fe04318d348b77ff96354824e0f82c5adf",
     "audio/skill/tianmou_yzs1.mp3": "580059207c929ac7ccbda2252af9752101dc26fc",
@@ -1024,7 +1025,7 @@
     "skill3.js": "c57432832ef8f60f7a93ee87ca47bf22c8c3bf69",
     "skill4.js": "ea1bfce00a1e46929e86de6c88877390a409873e",
     "skill5.js": "360879afb186c077f84edb0b7384c202a83c0e36",
-    "skill6.js": "f16eb6a88d0ecd577fc82f5b38ad2e9b0e594dea",
+    "skill6.js": "edf1cc6cbde9ce19b0d43c989cf5bcded7a4f7b3",
     "translate.js": "ea80f52d656a85293c2d5ea90e1966ab666d2dae",
     "update.js": "769b0a15b7f7385a9124f01f46bc68318add89b0"
   }

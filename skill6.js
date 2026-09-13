@@ -332,6 +332,12 @@ const skills = {
 					return player.countCards("h") > 0 && player.storage.tiandu_yzs;
 				},
 				async cost(event, trigger, player) {
+					game.log(trigger.player.judging[0])
+					if (get.suit(trigger.player.judging[0], player) == "spade" && get.number(trigger.player.judging[0], player) > 1 && get.number(trigger.player.judging[0], player) < 10) {
+						game.broadcastAll(() => {
+							game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
+						});
+					}
 					event.result = await player.chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "h", (card) => {
 						const player2 = get.player();
 						const mod2 = game.checkMod(card, player2, "unchanged", "cardEnabled2", player2);
@@ -425,6 +431,12 @@ const skills = {
 			return !player.storage?.tiandu_yzs && get.position(event.result.card, true) == "o";
 		},
 		async content(event, trigger, player) {
+			game.log(trigger.result.card)
+			if (get.suit(trigger.result.card, player) == "spade" && get.number(trigger.result.card, player) > 1 && get.number(trigger.result.card, player) < 10) {
+				game.broadcastAll(() => {
+					game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
+				});
+			}
 			player.changeZhuanhuanji("tiandu_yzs");
 			await player.gain(trigger.result.card, "gain2");
 		},
