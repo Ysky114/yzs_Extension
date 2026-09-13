@@ -1320,8 +1320,8 @@ const characters = {
 	Rafau_yzs: {
 		sex: "male",
 		group: "wei",
-		hp: 3,
-		skills: ["guanxing_yzs", "chushi_yzs", "cesuan_yzs"],
+		hp: 4,
+		skills: ["guanxing_yzs", "cesuan_yzs", "chushi_yzs"],
 		names: "拉法尔",
 		img: "extension/一中杀/image/Rafau_yzs.png",
 		BGM: "怪獣1",
@@ -1403,7 +1403,8 @@ const characters = {
 		names: "两面宿傩",
 		img: "extension/一中杀/image/RyomenSukuna_yzs.png",
 		BGM: ["Malevolent Shrine","霹靂"],
-	//	isUnseen: true,
+		//	isUnseen: true,
+		forbidai: true,
 	},
 
 	GojoSatoru_yzs: {
@@ -1414,7 +1415,8 @@ const characters = {
 		names: "五条悟",
 		img: "extension/一中杀/image/GojoSatoru_yzs.png",
 		BGM: "AIZO",
-	//	isUnseen: true,
+		//	isUnseen: true,
+		forbidai: true,
 	},
 
 	Sakuya_yzs: {
@@ -1744,6 +1746,16 @@ const characters = {
 		dieAudios: ["ext:一中杀/audio/die/yzs_JoGo.mp3"],
 		BGM: ["霹靂"],
 	},
+
+	yzs_DragonSlayerLLX: {
+		sex: "male",
+		group: "shu",
+		hp: 4,
+		skills: ["yzs_jianyou","yzs_jianshu", "yzs_jianxin", "yzs_zhanlong"],
+		names: "李砺心",
+		img: "extension/一中杀/image/yzs_DragonSlayerLLX.png",
+		dieAudios: ["ext:一中杀/audio/die/yzs_DragonSlayerLLX.mp3"],
+	},
 };
 
 const characterSubstitutes = {
@@ -1910,6 +1922,7 @@ const characterTitles = {
 	yzs_DanHengImbibitorLunae: `洞天幻化`,
 	yzs_Mazhikang: `我是爱神`,
 	yzs_JoGo: `火山怒目`,
+	yzs_DragonSlayerLLX: `斩龙勇者`,
 
 };
 const characterIntros = {
@@ -2050,7 +2063,9 @@ const characterIntros = {
 	yzs_DanHeng:`丹恒，米哈游出品的游戏《崩坏：星穹铁道》及其衍生作品中的角色。前世为罗浮龙尊“丹枫”，尊号“饮月君”。列车护卫，同时也是智库的管理员。个性认真，对时不时会乱来的三月七和身为“开拓”之旅新人的开拓者来说是非常值得信赖的存在。他出身于仙丹“罗浮”，但因为前世的诸多因缘导致身世较为复杂，最初正是为了逃避自己的过往而搭乘星穹列车`,
 	yzs_DanHengImbibitorLunae: `丹恒·饮月，游戏《崩坏：星穹铁道》中的五星角色，属于毁灭命途的虚数属性角色，定位为强化普攻型输出位丹恒·饮月继承了前代龙尊“饮月君”的力量，展现出持明族的本相，在接纳角冠的同时也背负了其过往的功过是非。他历经战争与放逐，最终登上星穹列车投身星际旅程，始终保持着独立于前世身份的自我认知`,
 	yzs_Mazhikang: ``,
-	yzs_JoGo:`漏瑚是芥见下下创作的漫画《咒术回战》及其衍生作品中的反派人物，由千叶繁配音。作为由人类对大地的恐惧形成的拥有智慧的特级咒灵，印象为老年男性、火山，具备与人类交流的能力，情绪激动时周围会变热。漏瑚接受伪夏油（羂索）指使参与封印五条悟计划，但在伏击中被五条悟重伤。涉谷事变中利用人群掩护与真人合作，促成五条悟被狱门疆封印后，通过喂食宿傩手指使其短暂觉醒，最终因与宿傩对战遭术式"开"击杀。其能力包含火焰术式、火烁虫、极之番•陨及领域展开"盖棺铁围山"，展开生得领域后普通术师会瞬间被烧成灰烬，但对五条悟无效。宿傩在漏瑚临终意识中承认其战斗能力`,
+	yzs_JoGo: `漏瑚是芥见下下创作的漫画《咒术回战》及其衍生作品中的反派人物，由千叶繁配音。作为由人类对大地的恐惧形成的拥有智慧的特级咒灵，印象为老年男性、火山，具备与人类交流的能力，情绪激动时周围会变热。漏瑚接受伪夏油（羂索）指使参与封印五条悟计划，但在伏击中被五条悟重伤。涉谷事变中利用人群掩护与真人合作，促成五条悟被狱门疆封印后，通过喂食宿傩手指使其短暂觉醒，最终因与宿傩对战遭术式"开"击杀。其能力包含火焰术式、火烁虫、极之番•陨及领域展开"盖棺铁围山"，展开生得领域后普通术师会瞬间被烧成灰烬，但对五条悟无效。宿傩在漏瑚临终意识中承认其战斗能力`,
+	yzs_DragonSlayerLLX: ``,
+
 };
 const characterReplaces = {
 };
@@ -2067,7 +2082,7 @@ const characterSort = {
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
 		"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "jianSheng_yzs", "RenEmperor_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs",
 		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs", "Guanjun_yzs",
-		"LawfulXu_yzs"],
+		"LawfulXu_yzs","yzs_DragonSlayerLLX"],
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",

@@ -9762,12 +9762,13 @@ const skills = {
 				.set("ai",button=>get.value(button))
 				.forResult();
 			if (!result1.bool) return false;
-			let prompt2 = "将1张装备牌当做" + get.translation(result1.links[0][2]) + "使用";
+			let prompt2 = "将1张装备牌当做" + get.translation(result1.links[0][3])+get.translation(result1.links[0][2]) + "使用";
 			let result2 = await player.chooseCardTarget(false)
 				.set("filterTarget", (card, player, target) => {
-					return player.canUse({ name: get.event().cardname, isCard: false }, target, true)
+					return player.canUse({ name: get.event().cardname, isCard: false, nature: get.event().cardnature }, target, true)
 				})
 				.set("cardname", result1.links[0][2])
+				.set("cardnature", result1.links[0][3])
 				.set("prompt", "幻武")
 				.set("prompt2", prompt2)
 				.set("filterCard", (card, player, target) => {
@@ -9784,7 +9785,7 @@ const skills = {
 				bool: true,
 				cards: result2.cards,
 				targets: result2.targets,
-				cost_data: result1.links[0][2],
+				cost_data: [result1.links[0][2],result1.links[0][3]],
 			}
 		},
 		async content(event, trigger, player) {
@@ -9798,7 +9799,7 @@ const skills = {
 					game.playAudio(damageAudioInfo);
 				}
 			}, `effect/${lib.card[name].subtype}.mp3`);
-			await player.useCard(cards, { name: cost_data, isCard: false }, targets[0]);
+			await player.useCard(cards, { name: cost_data[0], isCard: false,nature:cost_data[1] }, targets[0]);
 		}
 	},
 	//阿拉斯托

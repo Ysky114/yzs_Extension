@@ -197,6 +197,7 @@ const translates = {
 	yzs_Mazhikang: `马知康`,
 	LoveStorm:`告白风暴`,
 	yzs_JoGo: `漏瑚`,
+	yzs_DragonSlayerLLX:`李砺心`,
 
     // 技能台词
 
@@ -393,7 +394,7 @@ const translates = {
 	kila_yzs: "基拉",
 	kila_yzs_info: `锁定技：其他角色拥有${get.poptip("zhitui_yzs")}。你【质推】中的“${get.poptip("DeathNote_yzs")}”改为“一张牌”。每公轮开始时你获得【死亡笔记】，然后你弃置1张手牌。你使用【死亡笔记】目标角色多失去2点体力。 `,
 	juece_yzs: "谲策",
-	juece_yzs_info:`你不因此失去手牌后可摸X张牌，并分配或置底1张手牌，然后若你手牌数或X>体力上限，本回合本技能失效。（X为本技能本回合发动次数且包括本次）`,
+	juece_yzs_info:`你不因此失去手牌后可摸1张牌，并分配或置底1张手牌，然后若你手牌数或本技能本回合发动次数>体力上限，本回合本技能失效。`,
 	xinsega_yzs: "新世界",
 	xinsega_yzs_dn:"新世界",
 	xinsega_yzs_info: `使命技：失败：你即将死亡时：你扣除一半体力上限并恢复全部体力，此后每公轮结束时你视为使用【死亡笔记】。`,
@@ -1530,7 +1531,7 @@ const translates = {
 	chaodaoti_yzs: `超导体`,
 	chaodaoti_yzs_info: `锁定技：你因受到雷电伤害而体力减少时，改为恢复等量点体力并摸场上“超导”角色数张牌。<br>
     出牌阶段，你可弃1张♠牌并横置1名其他角色，视为处于“${get.poptip("chaodaoti_yzs_effect")}”。<br>
-    你的普通【杀】视为雷【杀】。你视为处于“超导状态”。`,
+    你的普通【杀】视为雷【杀】。你始终处于“超导状态”。`,
 	chaodaoti_yzs_effect:`超导`,
 	jingdianmabi_yzs: `静电麻痹`,
 	jingdianmabi_yzs_info: `你使用雷【杀】指定目标时，你可展示任意张黑色手牌然后扣置目标角色至多等量张手牌，其受到非雷电伤害时其获得之。`,
@@ -1600,9 +1601,8 @@ const translates = {
 	guanxing_yzs: `观星`,
 	guanxing_yzs_info: `你的回合开始时，你可展示牌堆顶5张牌，记录并分配其中至多2种点数的牌，然后将剩余牌任意置顶或置底。<br>
     若你已记录所有点数，其他角色回合你亦可发动本技能。<br>你即将死亡时，可将本技能及你的记录给予1名其他角色。`,
-	chushi_yzs: `处世`,
-	chushi_yzs_info: `锁定技：你成为其他角色伤害牌的目标时，若你手牌数不为全场最值，其需改为令你摸或弃1张牌。<br>
-    你濒死时可失去${get.poptip("guanxing_yzs")}，然后恢复全部体力并令${get.poptip("cesuan_yzs")}次数上限+1。`,
+	chushi_yzs: `从势`,
+	chushi_yzs_info: `你濒死时可失去${get.poptip("guanxing_yzs")}，然后恢复全部体力并令${get.poptip("cesuan_yzs")}次数上限+1。`,
 	cesuan_yzs: `测算`,
 	cesuan_yzs_info: `出牌阶段限1次：你弃2张手牌并发动${get.poptip("guanxing_yzs")}，然后亮出并获得牌堆底牌，若之点数为弃置牌点数之和/差，你可令任意角色恢复1点体力/受到1点伤害。`,
 
@@ -1989,7 +1989,18 @@ const translates = {
 	yzs_gaiguantieweishan: `盖棺铁围山`,
 	yzs_gaiguantieweishan_info: `限定技：${get.poptip("lingyuzhankai_yzs")}：你使用的牌不可响应。其他角色回合结束时，你视为对其使用火【杀】。`,
 	yzs_gaiguantieweishan_skill: `盖棺铁围山`,
-	yzs_gaiguantieweishan_skill_info:`领域主人使用的牌不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用火【杀】`,
+	yzs_gaiguantieweishan_skill_info: `领域主人使用的牌不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用火【杀】`,
+
+	yzs_jianyou: `剑佑`,
+	yzs_jianyou_info: `${get.poptip("zhuanlunji_yzs")}：你视为装备“${get.poptip("shizhongjian_yzs")}”。<br>你使用【杀】结算后，“”内牌名改为攻击距离为①；②；③的任意武器。<br>
+    你因此摸牌时多摸1张、因此弃自己牌改为扣置为【剑势】。`,
+	yzs_jianshu: `剑术`,
+	yzs_jianshu_info: `你可将X张基本牌当做任意基本牌使用或打出。（X为本技能本回合发动次数且包括本次）`,
+	yzs_jianxin: `剑心`,
+	yzs_jianxin_info: `出牌阶段开始时你可摸牌至手牌上限，每因此摸1张牌，本阶段你出【杀】数＋1。`,
+	yzs_zhanlong: `斩龙`,
+	yzs_zhanlong_info:`觉醒技：出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`
 };
 
 export default translates;

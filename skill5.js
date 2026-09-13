@@ -2408,6 +2408,7 @@ const skills = {
 		audio: "ext:一中杀/audio/skill:2",
 		preHidden: true,
 		filter(event, player) {
+			return false;
 			if (event.player == player) return false;
 			if (!get.tag(event.card, "damage")) return false;
 			return event.player && !player.isMaxCard() && !player.isMinCard();
@@ -4878,7 +4879,7 @@ const skills = {
 							game.playAudio("ext:一中杀/audio/skill/wuxiaxianshushi_yzs2.MP3");
 						});
 					}
-					await pos.yzs_addPlayerOL(pos, "GojoSatoru_yzs", null, true, { targetx: player, startCards: 4, dieRemove: false, noDieAfter: false, noDieAfter2: false, callback,log:false })
+					await pos.yzs_addPlayerOL(pos, "GojoSatoru_yzs", null, true, { isControl:true,targetx: player, startCards: 4, dieRemove: false, noDieAfter: false, noDieAfter2: false, callback,log:false })
 				}
 			}
 		},
@@ -6557,7 +6558,7 @@ const skills = {
 				popup:false,
 				async content(event, trigger, player) {
 					if (player.countCards("h") <= player.getHandcardLimit() / 2) {
-						player.addMark("hundunyutiaohe_yzs_draw", 2, false);
+						player.addMark("hundunyutiaohe_yzs_draw", 1, false);
 						player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
 						player.popup("适应");
 						game.trySkillAudio("hundunyutiaohe_yzs");
@@ -6688,7 +6689,7 @@ const skills = {
 				locked: true,
 				priority: 111,
 				trigger: {
-					player: ["damageBefore", "loseHpBefore", "loseMaxHpBefore"],
+					player: ["damageBefore", "loseHpBefore", "loseMaxHpBefore","turnOverBefore"],
 				},
 				filter(event, player) {
 					let evt = event.getParent();

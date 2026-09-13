@@ -7386,7 +7386,7 @@ const skills = {
 			player.addTempSkill(event.name + "_used");
 			player.addMark(event.name + "_used", 1, false);
 			const num = player.countMark(event.name + "_used");
-			await player.draw(num);
+			await player.draw();
 			const result = await player.chooseCard("谲策", "分配或置底1张手牌", "h", 1, false)
 				.set("ai", (card) => {
 					const player = get.player();

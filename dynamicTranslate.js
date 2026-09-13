@@ -1,5 +1,25 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_zhanlong(player) {
+		if (player.countMark("yzs_zhanlong_awaken")) return `觉醒技：出牌阶段，你可移去<font color="#fd816e">3</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    <span style="opacity:0.5">你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。</span>`;
+		return `觉醒技：出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。`;
+	},
+	yzs_jianshu(player) {
+		return `你可将X(${player.countMark("yzs_jianshu_used")+1})张基本牌当做任意基本牌使用或打出。（X为本技能本回合发动次数且包括本次）`
+	},
+	yzs_jianyou(player) {
+		let str = `${get.poptip("zhuanlunji_yzs")}：`;
+		const equip = player.getStorage("yzs_jianyou","shizhongjian_yzs")
+		str += `你视为装备“${get.poptip(equip)}”。<br>`;
+		const sign = "①";
+		if (player.countMark("yzs_jianyou_mark" == 1)) sign = "②";
+		if (player.countMark("yzs_jianyou_mark" == 2)) sign = "③";
+		str += `你使用【杀】结算后，“”内牌名改为攻击距离为${sign}的任意武器。<br>
+    你因此摸牌时多摸1张、因此弃自己牌改为扣置为【剑势】。`;
+		return str;
+	},
 	yzs_disi(player) {
 		const storage = player.countMark("yzs_disi")
 		let str = `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>`

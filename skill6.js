@@ -5832,7 +5832,11 @@ const skills = {
 				document.body.appendChild(video);
 				setTimeout(() => {
 					video.style.opacity = "1";
+					setTimeout(() => {
+						ui.background.setBackgroundImage('extension/一中杀/image/background/tiaofuyishi_yzs.jpg');
+					}, 500)
 				}, 50)
+
 				setTimeout(() => {
 					ui.background.style.transition = 'none';
 					ui.background.style.filter = 'brightness(1)';
@@ -5907,16 +5911,21 @@ const skills = {
 		},
 		forced: true,
 		async content(event, trigger, player) {
-			player.ai.modAttitudeTo = function (from, to, att) {
-				let at = att;
+			player.ai.modAttitudeFrom = function (from, to, att) {
+				let at = att || 0;
+				if (Number.isNaN(at)) at = 0;
 				//你对其他角色的态度
-				if (to == from?.source) at = -1;
-				if (from.storage.yzs_NeutralAttitude.has(to)) at -= from.storage.yzs_NeutralAttitude.get(to)
+				if (to == from?._source) {
+					//game.log(from._source)
+					at = -1;
+				}
+			//	game.log(from,at,to);
+				if (from.storage.yzs_NeutralAttitude?.has?.(to)) at -= from.storage.yzs_NeutralAttitude.get(to)
 				return at;
 			};
-			if (from.storage.yzs_NeutralAttitude === undefined) return;
-			for (let key of from.storage.yzs_NeutralAttitude) {
-				if (from.storage.yzs_NeutralAttitude.get(key) > 0) from.storage.yzs_NeutralAttitude.set(key, --from.storage.yzs_NeutralAttitude.get(key))
+			if (player.storage.yzs_NeutralAttitude === undefined) player.storage.yzs_NeutralAttitude = new Map();
+			for (let key of player.storage.yzs_NeutralAttitude) {
+				if (player.storage.yzs_NeutralAttitude.get(key) > 0) player.storage.yzs_NeutralAttitude.set(key, --player.storage.yzs_NeutralAttitude.get(key))
 			}
 		},
 	},
@@ -7802,6 +7811,353 @@ const skills = {
 			await _status._yzsDomainPlayer.useCard({ name: "sha", nature: "fire" }, player, false)
 		},
 		priority: -25,
+	},
+	//斩龙勇者
+	yzs_jianyou: {
+		group: ["yzs_jianyou_draw", "yzs_jianyou_discard"],
+		subSkill: {
+			draw: {
+			//	audio: "yzs_jianyou",
+				forced: true,
+				trigger: {
+					player:"drawBegin"
+				},
+				priority: 9,
+				filter(event, player) {
+					const evt = event.getParent();
+					if (evt?.name == player.getStorage("yzs_jianyou", "shizhongjian_yzs") + "_skill"&&evt.player==player) return true;
+					return false;
+				},
+				async content(event, trigger, player) {
+					trigger.num++;
+				}
+			},
+			discard: {
+			//	audio: "yzs_jianyou",
+				forced: true,
+				trigger: {
+					player: "discardBegin"
+				},
+				priority: -9,
+				filter(event, player) {
+					let evt = event.getParent();
+					if (evt?.name == "chooseToDiscard") evt = evt.getParent();
+					if (evt?.name == player.getStorage("yzs_jianyou", "shizhongjian_yzs") + "_skill"&&evt.player==player) return true;
+					return false;
+				},
+				async content(event, trigger, player) {
+					let cards = trigger.cards
+					trigger.cards=[];
+					let next = player.addToExpansion(cards, player, "giveAuto");
+					next.gaintag.add("yzs_zhanlong");
+					await next;
+				}
+			},
+		},
+		locked: true,
+		init(player, skill) {
+			player.setStorage("yzs_jianyou", "shizhongjian_yzs")
+			player.addAdditionalSkills("yzs_jianyou", player.storage.yzs_jianyou + "_skill");
+			player.addExtraEquip(skill, "shizhongjian_yzs", true, player => player.hasEmptySlot(1) && lib.card.shizhongjian_yzs);
+		},
+		onremove(player, skill) {
+			const equip = player.storage?.yzs_jianyou
+			player.removeExtraEquip(equip);
+		},
+		mod: {
+			attackRange: function (player, num) {
+				if (player.storage.yzs_jianyou) {
+					const info = lib.card[player.storage.yzs_jianyou];
+					let count = 0;
+					if (info?.distance?.attackFrom) count = info.distance.attackFrom
+					if (typeof num == "number") {
+						return num - count;
+					}
+				}
+			},
+		},
+		forced: true,
+		locked:false,
+		priority: 56,
+		audio: "ext:一中杀/audio/skill:3",
+		trigger: {
+			player:"useCardAfter"
+		},
+		filter(event, player) {
+			return event.card.name == "sha";
+		},
+		async content(event, trigger, player) {
+			const num = player.countMark("yzs_jianyou_mark") + 1;
+			player.setMark("yzs_jianyou_mark", num % 3, false);
+			const list = get.inpileVCardList(info => {
+				const name = info[2], type = get.type(name), infox = get.info({ name: name });
+				let count = 0;
+				if (infox?.distance?.attackFrom) count = infox.distance.attackFrom
+				return type == "equip"&&count-1==-num&&get.subtype(name)=="equip1";
+			})
+			if (!list.length) return;
+			const description = `你视为装备“${get.poptip(player.storage.yzs_jianyou)}”,将“”内牌名改为攻击距离为 ${num} 的任意武器`
+			const result = await player.chooseButton([description, [list, "vcard"]])
+				.set("filterButton", button => {
+					return true;
+				})
+				.set("ai", button => {
+					return 1 + Math.random();
+				})
+				.forResult();
+			if (result?.bool&&result?.links?.length) {
+				const name = result.links[0][2]
+				const equip = player.storage?.yzs_jianyou
+				if (name == equip) return;
+				player.removeExtraEquip(equip);
+				player.removeAdditionalSkills("yzs_jianyou", player.storage.yzs_jianyou + "_skill");
+
+				player.setStorage("yzs_jianyou", name);
+
+				player.addAdditionalSkills("yzs_jianyou", player.storage.yzs_jianyou + "_skill");
+				player.addExtraEquip("yzs_jianyou", name, true, player => player.hasEmptySlot(1) && lib.card[name]);
+			}
+		}
+	},
+	yzs_jianshu: {
+		enable: ["chooseToUse", "chooseToRespond"],
+		hiddenCard: function (player, name) {
+			if (player.countCards("h")< player.countMark("yzs_jianshu_used")+1) {
+				return false;
+			}
+			var type = get.type2(name);
+			return (type == 'basic') && player.countCards('h') > 0;
+		},
+		filter(event, player) {
+			if (player.countCards("h", card => get.type2(card) == "basic") < player.countMark("yzs_jianshu_used")+1 ) {
+				return false;
+			}
+			for (var i of lib.inpile) {
+				var type = get.type(i);
+				if ((type == "basic" ) && event.filterCard(get.autoViewAs({ name: i }, "unsure"), player, event)) {
+					return true;
+				}
+			}
+			return false;
+		},
+		chooseButton: {
+			dialog(event, player) {
+				var list = [];
+				for (var i = 0; i < lib.inpile.length; i++) {
+					var name = lib.inpile[i];
+					if (name == "sha") {
+						if (event.filterCard(get.autoViewAs({ name }, "unsure"), player, event)) {
+							list.push(["基本", "", "sha"]);
+						}
+						for (var nature of lib.inpile_nature) {
+							if (event.filterCard(get.autoViewAs({ name, nature }, "unsure"), player, event)) {
+								list.push(["基本", "", "sha", nature]);
+							}
+						}
+					} else if (get.type(name) == "basic" && event.filterCard(get.autoViewAs({ name }, "unsure"), player, event)) {
+						list.push(["基本", "", name]);
+					}
+				}
+				return ui.create.dialog("剑术", [list, "vcard"]);
+			},
+			check(button) {
+				if (_status.event.getParent().type != "phase") {
+					return 1;
+				}
+				const player = _status.event.player;
+				return player.getUseValue({
+					name: button.link[2],
+					nature: button.link[3],
+				});
+			},
+			backup(links, player) {
+				return {
+					filterCard(card, player) {
+						return get.type(card) == "basic";
+					},
+					audio: "yzs_jianyou",
+					popname: true,
+					check(card) {
+						return 8 - get.value(card);
+					},
+					selectCard() {
+						const player = get.player();
+						return player.countMark("yzs_jianshu_used") + 1;
+					},
+					position: "h",
+					viewAs: { name: links[0][2], nature: links[0][3] },
+					async precontent(event, trigger, player) {
+						player.addTempSkill("yzs_jianshu_used");
+						player.addMark("yzs_jianshu_used",1,false)
+					},
+				};
+			},
+			prompt(links, player) {
+				return "将" + get.cnNumber(player.countMark("yzs_jianshu_used")+1) + "张基本牌当做" + (get.translation(links[0][3]) || "") + get.translation(links[0][2]) + "使用或打出";
+			},
+		},
+		ai: {
+			fireAttack: true,
+			skillTagFilter(player) {
+				if (player.countCards("h") < player.countMark("yzs_jianshu_used")+1 ) {
+					return false;
+				}
+			},
+			order: 1,
+			result: {
+				player(player) {
+					if (_status.event.dying) {
+						return get.attitude(player, _status.event.dying);
+					}
+					return 1;
+				},
+			},
+		},
+		subSkill: {
+			used: {
+				onremove: true,
+				charlotte: true,
+				"skill_id": "yzs_jianshu_used",
+				sub: true,
+				sourceSkill: "yzs_jianshu",
+				"_priority": 0,
+			},
+		},
+	},
+	yzs_jianxin: {
+		priority: -5,
+		trigger: {
+			player:"phaseUseBegin"
+		},
+		audio: "yzs_jianyou",
+		frequent:true,
+		filter(event, player) {
+			return player.countCards("h") < player.getHandcardLimit();
+		},
+		async content(event, trigger, player) {
+			let num = player.getHandcardLimit() - player.countCards("h");
+			if (num <= 0) return;
+			await player.draw(num);
+			player.addTempSkill("yzs_jianxin_used","phaseUseAfer");
+			player.addMark("yzs_jianxin_used", num, false);
+		},
+		mod: {
+			cardUsable(card, player, num) {
+				if (card.name == "sha") {
+					return num + player.countMark("yzs_jianxin_used")
+				}
+			},
+		},
+		subSkill: {
+			used: {
+				onremove: true,
+				charlotte: true,
+				"skill_id": "yzs_jianxin_used",
+				sub: true,
+				sourceSkill: "yzs_jianxin",
+				"_priority": 0,
+			},
+		},
+	},
+	yzs_zhanlong: {
+		group: ["yzs_zhanlong_awake"],
+		subSkill: {
+			backup: {
+				sub: true,
+				sourceSkill:"yzs_zhanlong"
+			},
+			awake: {
+				juexingji: true,
+				skillAnimation: true,
+				animationColor: "fire",
+				async content(event, trigger, player) {
+					player.addMark("yzs_zhanlong_awaken", 1, false);
+					await player.recover();
+					await player.gainMaxHp();
+				}
+			},
+		},
+		marktext: "<span style=\"text-decoration: line-through;\">斩</span>",
+		intro: {
+			markcount:"expansion",
+			mark(dialog, content, player) {
+				let cards = player.getExpansions("yzs_zhanlong");
+				if (!cards.length) return "无【剑势】";
+				dialog.addAuto(cards);
+			},
+		},
+		enable:"phaseUse",
+		juexingji: true,
+		audio: "yzs_jianyou",
+		filter(event, player) {
+			const num = player.countMark("yzs_zhanlong_awaken") ? 3 : 4;
+			return player.countExpansions("yzs_zhanlong") >= num;
+		},
+		chooseButton: {
+			dialog(event, player) {
+				const cards = player.getExpansions("yzs_zhanlong");
+				const num = player.countMark("yzs_zhanlong_awaken") ? 3 : 4;
+				let prompt = `你可移去<font color="#fd816e">${num}</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害`;
+				return ui.create.dialog(prompt, cards, "hidden");
+			},
+			select() {
+				const player = _status.event.player
+				const num = player.countMark("yzs_zhanlong_awaken") ? 3 : 4;
+				return num;
+			},
+			filter(button, player) {
+				return true;
+			},
+			check(button) {
+				return Math.random()
+			},
+			backup(links, player) {
+				return {
+					name: "yzs_zhanlong",
+					cards: links,
+					filterCard(card) {
+						return lib.skill.yzs_zhanlong_backup.cards.includes(card);
+					},
+					filterTarget(card, player, target) {
+						return !target.hasSkill("hidden_yzs")
+					},
+					selectCard: -1,
+					discard: false,
+					lose: false,
+					position: "x",
+					async content(event, trigger, player) {
+						await player.loseToDiscardpile(player.getExpansions("yzs_zhanlong"));
+						let target = event.target;
+						let num = Math.floor(target.hp / 2);
+						await target.damage(num);
+						player.addMark("yzs_zhanlong_awake", num)
+						if (player.countMark("yzs_zhanlong_awake") >= 3 && !player.countMark("yzs_zhanlong_awaken")) {
+							await player.useSkill("yzs_zhanlong_awake")
+						}
+					},
+					ai: {
+						order: 8,
+						result: {
+							target(player, target) {
+								return -target.hp;
+							},
+						},
+						expose: 0.3,
+						threaten: 1.2
+					},
+				}
+			},
+			prompt(links, player) {
+				return ""
+			},
+		},
+		ai: {
+			order: 9,
+			threaten: 2.1,
+			result: {
+				player: 1,
+			},
+		},
 	},
 }
 export default skills;
