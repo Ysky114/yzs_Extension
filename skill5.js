@@ -3465,9 +3465,6 @@ const skills = {
 					},
 				},
 				mod: {
-					targetInRange(card, player, target) {
-						if (card.cards && card.cards.some(c => c.hasGaintag("KingsTrove_yzs"))) return true;
-					},
 					cardUsable(card, player, num) {
 						if (card.cards && card.cards.some(c => c.hasGaintag("KingsTrove_yzs"))) return Infinity;
 					},
@@ -4794,13 +4791,22 @@ const skills = {
 					await new Promise(r => setTimeout(r, 14000))
 					game.broadcastAll((die) => {
 						if (game.me.playerid != die.playerid) return;
-						let evt = _status.event.getParent("chooseToUse")
-						if (!evt) return;
-						evt.endButton?.close();
-						delete evt.endButton;
+						let evt = _status.event && _status.event.getParent ? _status.event.getParent("chooseToUse") : null;
+						if (evt) {
+							evt.endButton?.close();
+							delete evt.endButton;
+							evt.fakeforce = false;
+						}
 						ui.exit?.close();
 						delete ui.exit;
-						evt.fakeforce = false;
+						ui.continue_game?.close();
+						delete ui.continue_game;
+						ui.restart?.close();
+						delete ui.restart;
+						ui.revive?.close();
+						delete ui.revive;
+						ui.swap?.close();
+						delete ui.swap;
 					}, pos)
 					const callback = async function (event, player) {
 						player.addSkill("rg_treasure_ban")

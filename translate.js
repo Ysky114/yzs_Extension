@@ -276,7 +276,7 @@ const translates = {
 	fantasy_train_yzs_info: `锁定技：回合开始时，你可获得场上至多X张【病爱】。（X为【病爱】持有者数） 你可将黑色牌当做【闪】打出。你受到你${get.poptip("aimuduixiang_yzs")}造成的伤害时，可弃1张牌然后转移给其。你对你${get.poptip("jiduduixiang_yzs")}使用【杀】无距离限制且不可响应。`,
 
 	tears_yzs: "淚",
-	tears_yzs_info: "每自轮次限3次：你需使用或打出基本牌时，你可观看牌堆底2张牌，然后可将其中一张基本牌当做之使用或打出。你受到或造成伤害时可将牌堆底牌置顶。",
+	tears_yzs_info: "每自轮限3次：你需使用或打出基本牌时，你可观看牌堆底2张牌，然后可将其中一张基本牌当做之使用或打出。你受到或造成伤害时可将牌堆底牌置顶。",
 	wanhua_mirror_yzs:"万华镜",
 	wanhua_mirror_yzs_info: `转换技：回合开始时：<span class="bluetext">阴：你摸2张牌，然后将1张手牌置底或暗置于人物牌上称为【愿】；</span><br>阳：你摸1张牌，然后将2张手牌置底。`,
 	gathering_hopes_yzs:"集聚之愿",
@@ -287,7 +287,7 @@ const translates = {
 	copywork_yzs: "抄作业",
 	copywork_yzs_info:`锁定技：你仅可使用或打出与上张进入弃牌堆的牌同花色的手牌，且此牌牌名视为与之相同，因此转化的伤害牌视为【桃】。你使用【桃】无咏唱且目标改为任意角色。`,
 	drawfish_yzs: "摸鱼",
-	drawfish_yzs_info: `每自轮次限1次：${get.poptip("wuyongchang_yzs")}：你摸4张牌，然后调整手牌数至4。你失去最后的手牌后刷新本技能。`,
+	drawfish_yzs_info: `每自轮限1次：${get.poptip("wuyongchang_yzs")}：你摸3张牌，然后调整手牌数至3。你失去最后的手牌后刷新本技能。`,
 
 	wuying_yzs: "无影",
 	wuying_yzs_info: `锁定技：弃牌阶段，你可改为弃2张牌。你满足任意项时可倒置人物牌，然后进入${get.poptip("hidden_yzs")}：①致其他角色濒死后；②回合开始时跳过本回合出牌阶段。`,
@@ -306,7 +306,7 @@ const translates = {
 
 	blessing_yzs: "祈福",
 	blessing_yzs_info: `锁定技：你的【杀】造成伤害后目标获得1枚${get.poptip("blessing_yzs_fu_yzs")}标记。
-    每自轮次限1次：${get.poptip("wuyongchang_yzs")}：你令你至多2项吟唱-1。`,
+    每自轮限1次：${get.poptip("wuyongchang_yzs")}：你令你至多2项吟唱-1。`,
 	blessing_yzs_fu_yzs: "【福】",
 	blessing_yzs_fu_yzs_info: `【福】持有者回合开始时全部移除之并恢复等量点体力，然后你可令你1项${get.poptip("sing_yzs_count")}-1（每自轮次每项吟唱限1次）。`,
 	HolyBlessing_yzs: "圣佑",
@@ -369,7 +369,7 @@ const translates = {
 	yuan_yzs: "【怨】",
 	yuan_yzs_info:`拥有者回合开始时依次移除自己所有【怨】标记，然后弃置X张牌，不足的部分失去体力代替(X为移除的标记数)。`,
 	yotouXi_yzs: "妖刀·袭",
-	yotouXi_yzs_info: `${get.poptip("zhuanlunji_yzs")}：你于自轮次内每使用3张牌后：（转轮限1次。回合开始时重置本技能）<br>
+	yotouXi_yzs_info: `转换技：你于自轮内每使用3张牌后：（每项限2次。回合开始时重置本技能）<br>
 <font color="#b9b5ff">①：弃2张牌并摸3张牌。你的下回合开始时你可获得所弃牌其中一张。<br></font>
 ②：将牌堆顶牌当作${get.poptip("yotou_yzs")}置入你武器栏，然后你令【妖刀·心渡】中1项数值本局游戏内+1。<br>
 ③：弃1~4张牌，本自轮内你使用下张【杀】伤害+等量-1。<br>
@@ -562,7 +562,7 @@ const translates = {
 	breaktime_yzs: "休息时间",
 	breaktime_yzs_info:`转换技（所有角色共享此转换技状态）：①：摸2张牌；②弃2张牌。`,
 	daqijingshen_yzs: "打起精神！",
-	daqijingshen_yzs_info: `其他角色额定出牌阶段结束时，若其手牌数＝你，你可令其下一额定弃牌阶段改为你的出牌阶段。<br>出牌阶段限1次：摸或弃3张牌。`,
+	daqijingshen_yzs_info: `其他角色额定出牌阶段结束时，若其手牌数＝你，你可令其下一额定弃牌阶段改为你的出牌阶段。<br>出牌阶段限1次：摸或弃2张牌。`,
 
 	jixiong_yzs: "鸡雄",
 	jixiong_yzs_info: `锁定技：你对其他角色造成伤害时，你将牌堆顶牌明置于其人物牌旁，称为${get.poptip("jixiong_yzs_buff")}。你出【杀】数-1。受到伤害时，你获得对你造成伤害的牌。`,
@@ -603,7 +603,7 @@ const translates = {
 	xieshengzhijing_yzs_info:`锁定技：你造成伤害后获得1点sp、失去护甲后摸1张牌。出牌阶段你可弃1张【闪】，然后翻面。`,
 	niworuyi_yzs: "你我如一",
 	niworuyi_yzs_hujia:"你我如一(大招)",
-	niworuyi_yzs_info: `锁定技：每自轮次限1次：${get.poptip("wuyongchang_yzs")}：你消耗3点sp，然后翻面并摸2-X张牌（X为你护甲值）。<br>
+	niworuyi_yzs_info: `锁定技：每自轮限1次：${get.poptip("wuyongchang_yzs")}：你消耗3点sp，然后翻面并摸2-X张牌（X为你护甲值）。<br>
     出牌阶段你可消耗5点sp，然后获得2点护甲、令正反面人物退出【量子态】并获得弃牌堆中的1张【闪】。`,
 
 	aoman_yzs: "傲慢",
@@ -617,18 +617,18 @@ const translates = {
 	tiance_yzs: "天策",
 	tiance_yzs_info:`锁定技：游戏和出牌阶段开始时，你移去所有【策】，并摸场上人物数+3张牌称为【策】，然后依任意顺序正面向下叠置于人物牌上。<br>
     出牌阶段开始时若你无【策】可移去，【千面】蓝字描述改为：${get.poptip("qianmian_yzs_effect2")}
-    你的红色【策】称为【神算】，黑色【策】称为【鬼谋】。<br>转换技：满足条件时你可移去顶端【策】并发动对应效果，然后你可按序继续移去顶端【策】并发动对应效果。<br>
+    你的红色【策】称为【神算】，黑色【策】称为【鬼谋】。<br>满足条件时你可移去顶端【策】并发动对应效果，然后你可按序继续移去顶端【策】并发动对应效果。(不可连续发动相同效果)<br>
 ①：${get.poptip("tiance_yzs_1")}<br>②：${get.poptip("tiance_yzs_2")}<br>③：${get.poptip("tiance_yzs_3")}<br>④：${get.poptip("tiance_yzs_4")}`,
 	tiance_yzs_1: "其他角色使用锦囊牌时",
 	tiance_yzs_1_info: `【鬼谋】：无效之—》<br>【神算】或【鬼谋】：获得之`,
 	tiance_yzs_2: "其他角色使用基本牌时",
 	tiance_yzs_2_info: `【神算】：摸1张牌—》<br>【神算】：获得之`,
-	tiance_yzs_3: "每自轮次限1次：判定牌生效前",
+	tiance_yzs_3: "每自轮限1次：判定牌生效前",
 	tiance_yzs_3_info: `【鬼谋】：以此【鬼谋】代替之 —》<br>【神算】：你视为使用【顺手牵羊】—》<br>【神算】/【鬼谋】：令判定角色跳过其下一弃牌阶段/摸牌阶段`,
-	tiance_yzs_4: "每自轮次限1次：你受到伤害后",
+	tiance_yzs_4: "每自轮限1次：你受到伤害后",
 	tiance_yzs_4_info: `【鬼谋】：伤害来源弃1张黑色牌或失去1点体力—》<br>【鬼谋】：你恢复1点体力`,
 	shenzhiyishou_yzs: "神之一手",
-	shenzhiyishou_yzs_info: `锁定技：每自轮次限1次：你选择其中一项：①：${get.poptip("wuyongchang_yzs")}：移去顶端【神算】，然后将任意张手牌与【策】交换。
+	shenzhiyishou_yzs_info: `锁定技：每自轮限1次：你选择其中一项：①：${get.poptip("wuyongchang_yzs")}：移去顶端【神算】，然后将任意张手牌与【策】交换。
 ②：出牌阶段：移去顶端【鬼谋】，然后弃X张牌并令2名其他角色交换手牌（X=双方手牌数之差）。`,
 	shenzhiyishou_yzs_red: "【神算】",
 	shenzhiyishou_yzs_black: "【鬼谋】",
@@ -661,7 +661,7 @@ const translates = {
 	tiandikaipi_yzs_info: `锁定技：判定阶段，若你有${get.poptip("Fuka_yzs")}且手牌花色与【要石】均相同，你可弃X张与【要石】同花色的异花色手牌，然后视为使用X-1张火【杀】（X为【要石】数）。<br>
     出牌阶段限2次：置顶1张【天界】牌，然后摸至多4张牌`,
 	guruojintangtao_yzs: "固若金汤桃",
-	guruojintangtao_yzs_info: `${get.poptip("FukaSkill_yzs")}：每自轮次限3次：场上角色成为伤害牌的目标时，将之目标改为你；若该角色为你，改为无效之。
+	guruojintangtao_yzs_info: `${get.poptip("FukaSkill_yzs")}：每自轮限3次：场上角色成为伤害牌的目标时，将之目标改为你；若该角色为你，改为无效之。
 	无论如何，将【天界】顶牌置顶或与1张【要石】替换。`,
 	feixiangtian_yzs: "众生绯想天",
 	feixiangtian_yzs_info: `符卡：若你无【要石】，将全部手牌明置为【要石】，然后摸牌至手牌上限。`,
@@ -947,7 +947,7 @@ const translates = {
 	youzou_yzs: "游走",
 	youzou_yzs_info:`你使用或打出牌时，若之与你使用或打出的上张牌：颜色不同，你摸1张牌然后置顶1张手牌；花色相同，你获得1点行动力（上限为2）。`,
 	lvlin_yzs: "绿林",
-	lvlin_yzs_info: `转换技：满足对应条件时，你可消耗1点“行动力”，发动以下技能：<br>①${get.poptip("lvlin_yzs_yingjian")}<br>②${get.poptip("lvlin_yzs_qiequ")}<br>③${get.poptip("lvlin_yzs_fangun")}`,
+	lvlin_yzs_info: `锁定技：满足对应条件时，你可消耗1点“行动力”，发动以下技能：<br>①${get.poptip("lvlin_yzs_yingjian")}<br>②${get.poptip("lvlin_yzs_qiequ")}<br>③${get.poptip("lvlin_yzs_fangun")}。<br>(不可连续发动相同技能)`,
 	lvlin_yzs_yingjian: "影箭",
 	lvlin_yzs_yingjian_info: `${get.poptip("wuyongchang_yzs")}：你将牌堆顶牌当做普通【杀】使用。`,
 	lvlin_yzs_qiequ: "窃取",
@@ -1002,10 +1002,10 @@ const translates = {
 
 	shuhuenci_yzs: "倏忽恩赐",
 	shuhuenci_yzs_info: `锁定技：你体力值不因${get.poptip("dapiwansi_yzs")}而：上升（或溢出）/下降后，摸/弃等量牌。<br>
-    体力值等于你的其他角色受到非零伤害时，你可失去1点体力令伤害值±1。<br>回合内你使用红色牌时恢复1点体力。`,
+    体力值等于你的其他角色受到非零伤害时，你可失去1点体力令伤害值±1。<br>回合内你使用♥牌时恢复1点体力。`,
 	bianzangsong_yzs: "彼岸葬送",
 	bianzangsong_yzs_info: `锁定技：回合外你失去最后的手牌时摸1张牌，若因${get.poptip("shuhuenci_yzs")}，则改为摸已损体力值+1张牌并分配1点伤害。<br>
-    场上角色回合结束时，若你体力值大于其，你失去1点体力，否则你可恢复1点体力。`,
+    场上角色回合结束时，若你体力值：大于其，你失去1点体力；小于其，你可恢复1点体力。`,
 	dapiwansi_yzs: "大辟万死",
 	dapiwansi_yzs_info: `锁定技：游戏开始时记录你体力值。<br>你造成伤害后，记录你体力值并调整体力值至上一记录值。`,
 
@@ -1035,13 +1035,13 @@ const translates = {
 	${get.poptip("jianshu_yzs")}、${get.poptip("jilei_yzs")}、${get.poptip("wenzhong_yzs")}、${get.poptip("businiao_yzs")}。<br>
     回合开始时你摸2张牌，然后将上述X个“加护”移除或交给任意名其他角色，至你下一回合开始。（X为你体力上限）`,
 	jianshu_yzs: "剑术",
-	jianshu_yzs_info: `你每自轮次使用的首张【杀】不可响应。`,
+	jianshu_yzs_info: `你每自轮使用的首张【杀】不可响应。`,
 	jilei_yzs: "疾雷",
-	jilei_yzs_info: `你的进攻距离和防御距离+1。`,
+	jilei_yzs_info: `你使用牌无距离限制。`,
 	wenzhong_yzs: "稳重",
-	wenzhong_yzs_info: `你的摸牌数+1，手牌上限+2。`,
+	wenzhong_yzs_info: `你的摸牌数+1，手牌上限+1。`,
 	businiao_yzs: "不死鸟",
-	businiao_yzs_info: `你每自轮次首次进入濒死时恢复1点体力。`,
+	businiao_yzs_info: `你每自轮首次进入濒死时恢复1点体力。`,
 
 	shengyu_yzs: "圣谕",
 	shengyu_yzs_down:"圣谕(暗)",
@@ -1077,14 +1077,14 @@ const translates = {
     你【爱慕】发动次数上限+1。`,
 
 	tonglv_yzs: `同旅`,
-	tonglv_yzs_info: `锁定技：每公轮次开始时，你可选择1名其他角色，则本轮其每回合首次成为非延时锦囊牌的目标时，若你不为目标或使用者，你摸1张牌并成为额外目标。<br>
+	tonglv_yzs_info: `锁定技：每公轮开始时，你可选择1名其他角色，则本轮其每回合首次成为非延时锦囊牌的目标时，若你不为目标或使用者，你摸1张牌并成为额外目标。<br>
     游戏开始时，你依次视为使用【五谷丰登】和【桃园结义】。`,
 	cangfa_yzs: `藏法`,
 	cangfa_yzs_info: `你可将手牌当做【无懈可击】使用。若响应了你未记录过的牌，你记录之并增加1点手牌上限，本技能本回合失效。`,
 	huatian_yzs: `花田`,
 	huatian_yzs_info: `出牌阶段限1次：你令1名其他角色展示牌堆顶4张牌，其与你依次获得其中1种花色的牌，然后你令其或你恢复X点体力（X为剩余花色数）。`,
 	tanbao_yzs: `贪宝`,
-	tanbao_yzs_info: `你摸牌时可多摸至多2张，然后你展示所摸的牌，若其中有♠，你受到1点无来源伤害，或弃置等量张手牌。`,
+	tanbao_yzs_info: `你摸牌时，若你手牌数≤手牌上限，你可多摸至多2张，然后你展示所摸的牌，若其中有♠，你受到1点无来源伤害，或弃置等量张手牌。`,
 
 	zhenglv_yzs: `征旅`,
 	zhenglv_yzs_info: `锁定技：场上角色的出牌阶段限1次：其视为对你使用【借刀杀人】，若你因此造成伤害，你与其依次摸1张牌并可弃1张牌，你记录其所弃牌的点数。`,
@@ -1160,15 +1160,15 @@ const translates = {
 失败：牌堆洗切后：你失去【自由意志】，此后【指令】被达成后你分配1点伤害。`,
 	
 	MadeInAbyss_yzs: `来自深渊`,
-	MadeInAbyss_yzs_info: `${get.poptip("zhuanlunji_yzs")}：你使用或打出牌时，若之点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>
+	MadeInAbyss_yzs_info: `转换技：你使用或打出牌时，若之点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>
 <font color="#ffeac2">①重铸1张牌</font> ②弃置1张牌 ③弃置全部手牌 ④失去2点体力 ⑤翻至背面 ⑥失去全部通常技和体力 ⑦死亡。<br>
-然后若之点数为A，转轮至下一项。你摸牌数为当前项序号。<br>
-    转轮至②/⑤时，你获得${get.poptip("BlazeLeap_yzs")}/${get.poptip("YourWorth_yzs")}。<br>
+然后若之点数为A，转换至下一项。你摸牌数为当前项序号。<br>
+    转换至②/⑤时，你获得${get.poptip("BlazeLeap_yzs")}/${get.poptip("YourWorth_yzs")}。<br>
     出牌阶段若当前项为⑦，你可失去本技能，然后令任意名角色重新加入游戏（无初始手牌）。`,
 	BlazeLeap_yzs: `无尽锤`,
 	BlazeLeap_yzs_info: `你可将1张牌当做${get.poptip("kuangchangbaozha_yzs")}使用，若转化底牌不为武器牌，本技能本回合失效。`,
 	YourWorth_yzs: `白笛`,
-	YourWorth_yzs_info: `每自轮次限1次：出牌阶段，你可令任意角色于本回合结束后翻至正面并执行额外回合，若其不为你，你失去1点体力。`,
+	YourWorth_yzs_info: `每自轮限1次：出牌阶段，你可令任意角色于本回合结束后翻至正面并执行额外回合，若其不为你，你失去1点体力。`,
 
 	huozangpao_yzs: `火葬炮`,
 	huozangpao_yzs_info: `游戏开始时你翻面，然后横置并摸2张牌。<br>出牌阶段限1次：你视为使用伤害为2的${get.poptip("huogong")}，结算后你翻至背面，若未造成伤害则你摸2张牌。`,
@@ -1199,7 +1199,7 @@ const translates = {
 	若其手牌花色因此补齐，你与其复制对方角色牌上的通常技至各自下一回合结束，然后你与其交换手牌，你执行出牌阶段。`,
 
 	kuangbao_yzs: `狂暴`,
-	kuangbao_yzs_info: `锁定技：你受到伤害后摸等量张牌并标记伤害来源。<br>你发动过上述效果的回合结束时，你摸2张牌并执行额外回合，
+	kuangbao_yzs_info: `锁定技：你受到伤害后摸等量张牌并标记伤害来源。<br>你发动过上述效果的回合结束时，你摸1张牌并执行额外回合，
 	此回合内你视为拥有${get.poptip("wusheng")}${get.poptip("paoxiao")}且使用牌仅可指定你或你本回合标记过的角色为目标。`,
 
 	haiyi_yzs: `骇移`,
@@ -1213,7 +1213,7 @@ const translates = {
 
 	fuqu_yzs: `腐躯`,
 	fuqu_yzs_info: `你未装备防具时，视为装备【藤甲】。<br>
-	每公轮限1次：其他角色回合开始时，你可获得其至多2张牌并令其选择：①失去1点体力；②自己手牌上限-2并令你本回合调离。`,
+	每公轮限1次：其他角色回合开始时，你可获得其各区域1张牌并令其选择：①失去1点体力；②自己手牌上限-2并令你本回合调离。`,
 
 	LightContainmentBreak_yzs: `收容失效`,
 	LightContainmentBreak_yzs_info: `锁定技：游戏开始时你抽取X个随机的SCP（X为场上角色数，仅你可见）。每公轮开始时，你将武将牌替换为任意一个SCP，然后隐匿。`,
@@ -1272,8 +1272,7 @@ const translates = {
     你受到伤害后替换回原人物牌。摸牌阶段，你可改为受到1点无来源伤害。`,
 
 	zaoxingshu_yzs: `造形术`,
-	zaoxingshu_yzs_info:`锁定技：你使用的虚拟牌不可被响应。<br>
-    每回合每种牌名限1次：需要时，你可视为使用【无中生有】。你因此获得牌时，展示之并将其中任意个即时牌名加入上述描述。每加入1个基本牌名，你扣除1点体力上限。`,
+	zaoxingshu_yzs_info:`锁定技：你使用的非伤害牌不可响应。<br>每回合每种牌名限1次：需要时，你可视为使用【无中生有】。你因此获得牌时，展示之并将其中任意个即时牌名加入上述描述。每加入1个基本牌名，你扣除1点体力上限。`,
 
 	rg_zheng: `狰`,
 	rg_zheng_info: `每回合限2次：你受到其他角色造成的伤害结算后，可对伤害来源使用1张【杀】（无次数距离限制）。`,
@@ -1316,7 +1315,7 @@ const translates = {
 	sanbubisha_yzs_info: `锁定技：每局游戏限3次：需要时，你可视为使用【酒】（有次数限制）。<br>
 	若本技能已耗尽次数，你使用【杀】时重置本技能、摸3张牌并令之不可响应。`,
 	guiqikuanglan_yzs: `鬼气狂澜`,
-	guiqikuanglan_yzs_info: `觉醒技：每回合结束时，若你本回合造成伤害之和≥4，你觉醒：你使用【酒】的次数上限+1。`,
+	guiqikuanglan_yzs_info: `觉醒技：你累计使用8张【酒】或【杀】后觉醒：你使用【酒】的次数上限+1。`,
 
 	dajiejie_yzs: `大结界`,
 	dajiejie_yzs_info: `锁定技：回合开始时你获得[1]张${get.poptip("Fuka_yzs")}。你使用或打出红色牌时获得[0]张符卡。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`,
@@ -1633,7 +1632,7 @@ const translates = {
 
 	KingsTrove_yzs: `王之宝库`,
 	KingsTrove_yzs_info: `锁定技：场上角色使用${get.poptip("guowangmiling_yzs")}时，你摸1张牌，然后将1张手牌扣置为【国库】。<br>
-    你可无次数距离限制地使用或打出【国库】，然后若之为黑色，则本回合你不可再如此做。`,
+    你可无次数限制地使用或打出【国库】，然后若之为黑色，则本回合你不可再如此做。`,
 	zhengling_yzs: `政令`,
 	zhengling_yzs_info:`锁定技：每回合限1次：场上角色一次性摸≤3张牌时，你可改为令你摸2张牌扣置为【国库】，然后给予其2张【国库】。<br>
 给予的黑/红色牌本回合明置，视为${get.poptip("guowangmiling_yzs")}/【无中生有】，然后其获得${get.poptip("zhengpan_yzs")}。<br>每公轮开始时，你可重新标记1名其他角色为【叛军】。`,
@@ -1758,7 +1757,7 @@ const translates = {
 	yuzhe_yzs_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
 
 	eling_yzs: `恶伶`,
-	eling_yzs_info: `你可将手牌当做【闪】或【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。`,
+	eling_yzs_info: `你可将手牌当做【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。`,
 	shenyu_yzs: `神谕`,
 	shenyu_yzs_info: `锁定技：你使用♠牌无次数距离限制。<br>结束阶段，你摸2张牌，然后判定【闪电】。`,
 	tiandu_yzs: `天妒`,
@@ -1965,7 +1964,7 @@ const translates = {
 	yzs_canglongzhuoshi: `苍龙濯世`,
 	yzs_canglongzhuoshi_info: `锁定技：你登场时<font color="#77e1ff">摸牌至手牌上限</font>，离场时<font color="#77e1ff">获得1点“蚀”</font>或<font color="#77e1ff">恢复1点体力</font>。`,
 	yzs_disi: `抵死`,
-	yzs_disi_info: `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>
+	yzs_disi_info: `转换技：场上角色出牌阶段开始前，你获得：<br>
 <span class="bluetext">①${get.poptip("yzs_qianlong")}</span>②${get.poptip("yzs_shuofeng")}③${get.poptip("yzs_jiyu")}，然后扣除1点体力上限，若已获得则改为失去本技能并获得${get.poptip("yzs_longlizizai")}。`,
 	yzs_longlizizai: `龙力自在`,
 	yzs_longlizizai_info: `你手牌上限固定为4。<br>每回合限1次：${get.poptip("wuyongchang_yzs")}：你发动${get.poptip("yzs_canglongzhuoshi")}中的一个<font color="#77e1ff">效果</font>。`,
@@ -1992,15 +1991,15 @@ const translates = {
 	yzs_gaiguantieweishan_skill_info: `领域主人使用的牌不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用火【杀】`,
 
 	yzs_jianyou: `剑佑`,
-	yzs_jianyou_info: `${get.poptip("zhuanlunji_yzs")}：你视为装备“${get.poptip("shizhongjian_yzs")}”。<br>你使用【杀】结算后，“”内牌名改为攻击距离为①；②；③的任意武器。<br>
+	yzs_jianyou_info: `转换技：你视为装备“${get.poptip("shizhongjian_yzs")}”。<br>你使用【杀】结算后，“”内牌名改为攻击距离为①；②；③的任意武器。<br>
     你因此摸牌时多摸1张、因此弃自己牌改为扣置为【剑势】。`,
 	yzs_jianshu: `剑术`,
 	yzs_jianshu_info: `你可将X张基本牌当做任意基本牌使用或打出。（X为本技能本回合发动次数且包括本次）`,
 	yzs_jianxin: `剑心`,
 	yzs_jianxin_info: `出牌阶段开始时你可摸牌至手牌上限，每因此摸1张牌，本阶段你出【杀】数＋1。`,
 	yzs_zhanlong: `斩龙`,
-	yzs_zhanlong_info:`觉醒技：出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
-    你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`
+	yzs_zhanlong_info:`出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`
 };
 
 export default translates;

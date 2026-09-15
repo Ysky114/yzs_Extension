@@ -1007,7 +1007,7 @@ const skills = {
 	},
 	//埴安神袿姬
 	zaoxingshu_yzs: {
-		group: ["zaoxingshu_yzs_ex", "zaoxingshu_yzs_directHit", "zaoxingshu_yzs_gain"],
+		group: ["zaoxingshu_yzs_ex", "zaoxingshu_yzs_directHit","zaoxingshu_yzs_gain"],
 		subSkill: {
 			ex: {
 				priority: 5,
@@ -1077,7 +1077,7 @@ const skills = {
 				},
 				forced: true,
 				filter(event, player) {
-					return !event.cards || !event.cards.length;
+					return !get.is.damageCard(event.card);
 				},
 				async content(event, trigger, player) {
 					trigger.directHit.addArray(game.players);
@@ -2113,6 +2113,9 @@ const skills = {
 				},
 			},
 		},
+		intro: {
+			content: "已累计使用#/8张【酒】或【杀】",
+		},
 		nobracket: true,
 		locked: true,
 		forced: true,
@@ -2121,13 +2124,17 @@ const skills = {
 		animationColor: "fire",
 		priority: 3,
 		trigger: {
-			global: "phaseEnd",
+			player: "useCard",
 		},
 		filter(event, player) {
-			return player.getStat("damage") >= 4;
+			if (get.name(event.card, false) == "jiu" || get.name(event.card, false) == "sha") {
+				player.addMark("guiqikuanglan_yzs",1,false);
+			}
+			return player.countMark("guiqikuanglan_yzs") >= 8;
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
+			player.unmarkSkill("guiqikuanglan_yzs")
 			player.addSkill("guiqikuanglan_yzs_buff")
 		}
 	},

@@ -1051,7 +1051,7 @@ const characters = {
 	Keiki_yzs: {
 		sex: "female",
 		group: "wei",
-		hp: 5,
+		hp: 4,
 		skills: ["zaoxingshu_yzs"],
 		names: "埴安神袿姬",
 		img: "extension/一中杀/image/Keiki_yzs.png",

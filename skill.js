@@ -3267,35 +3267,26 @@ const skills = {
 		subSkill: {
 			wuyongchang: {
 				enable: ["chooseToUse", "chooseToRespond"],
+				prompt:`请选择【桃】的目标`,
 				filter(event, player) {
 					if (!event.getParent().name.includes("phase")) return false;
 					if (event.getParent(1).name == "copywork_yzs_wuyongchang" || event.getParent(1).name == "copywork_yzs") return false;
 					if (event.responded || event.copywork_yzs_wuyongchang || event.getParent().copywork_yzs_wuyongchang) return false;
-					return player.countCards("h", "tao") > 0;
+					return player.countCards("h", card => get.name(card, player) == "tao" && game.hasPlayer(target => player.canUse(get.autoViewAs({ name: "tao" }, [card]), target))) > 0;
 				},
+				filterCard: true,
+				filterTarget: function (card, player, target) {
+					const cards = ui.selected.cards || [];
+					const tao = get.autoViewAs({ name: "tao" }, cards);
+					return target.isDamaged() && player.canUse(tao, target);
+				},
+				complexCard: true,
+				complexSelect: true,
+				complexTarget: true,
+				selectTarget: 1,
 				async content(event, trigger, player) {
+					await player.useCard({ name: "tao" }, event.targets, event.cards);
 					const evt = event.getParent(2);
-					evt.set("copywork_yzs_wuyongchang", true);
-					let target = await player.chooseTarget("抄作业", "请选择【桃】的目标", false)
-						.set("filterTarget", (card, player, target) => {
-							if (target.hasSkill("hidden_yzs")) return false;
-							return target.getDamagedHp();
-						})
-						.set("ai", target => {
-							const player = get.player();
-							return get.effect(target, { name: "tao" }, player, player)
-						})
-						.forResult()
-					if (!target.bool) {
-						if (evt.name == "chooseToUse") {
-							evt.goto(0);
-							delete evt.openskilldialog;
-						}
-						return
-					}
-					const next = player.chooseToUse('对其使用【桃】', { name: 'tao' }, target.targets[0], true)
-					next.set("copywork_yzs_wuyongchang");
-					await next;
 					if (evt.name == "chooseToUse") {
 						evt.goto(0);
 						delete evt.openskilldialog;
@@ -3309,22 +3300,31 @@ const skills = {
 				}
 			}
 		},
+		hiddenCard: function (player, name) {
+			return name == 'jiu' || name == "tao" || name == "sha" || name == "shan"
+		},
 		clickable: function (player) {
 			player.yzs_UseShunfaji("copywork_yzs");
 		},
 		clickableFilter: function (player) {
-			return player.countCards("h", "tao") > 0;
+			return player.countCards("h", card => get.name(card, player) == "tao" && game.hasPlayer(target => player.canUse(get.autoViewAs({ name: "tao" }, [card]), target))) > 0;
 		},
 		clickableContent: async function (event, trigger, player) {
-			let target = await player.chooseTarget("抄作业", "请选择【桃】的目标", false)
+			let result = await player.chooseCardTarget()
+				.set('prompt',"请选择【桃】的目标")
 				.set("filterTarget", (card, player, target) => {
-					return target.getDamagedHp();
+					const cards = ui.selected.cards||[];
+					const tao = get.autoViewAs({ name: "tao" }, cards);
+					return target.isDamaged() && player.canUse(tao,target);
+				})
+				.set("filterCard", (card) => {
+					const player = get.player();
+					return get.name(card,player)=="tao"
 				})
 				.forResult()
-			if (!target.bool) return
-			const next = player.chooseToUse('对其使用【桃】', { name: 'tao' }, target.targets[0], true)
-			next.set("copywork_yzs_wuyongchang");
-			await next;
+			if (result?.bool && result.cards?.length && result.targets?.length) {
+				await player.useCard({ name: "tao" }, result.targets, result.cards);
+			}
 		},
 		forced: true,
 		locked: true,
@@ -3369,6 +3369,7 @@ const skills = {
 				}
 			},
 		},
+		priority:4,
 		trigger: {
 			global: ["loseAfter", "loseAsyncAfter", "cardsDiscardAfter", "equipAfter"],
 		},
@@ -3453,18 +3454,18 @@ const skills = {
 					const evt = event.getParent(2);
 					evt.set("drawfish_yzs_wuyongchang", true);
 					player.addMark("drawfish_yzs_used", 1, false);
-					await player.draw(4);
+					await player.draw(3);
 					const num = player.countCards("h");
-					if (num == 4) {
+					if (num == 3) {
 						if (evt.name == "chooseToUse") {
 							evt.goto(0);
 							delete evt.openskilldialog;
 						}
 						return;
 					}
-					if (num < 4) player.draw(4 - num);
+					if (num < 3) player.draw(3 - num);
 					else {
-						 await player.chooseToDiscard("摸鱼", "请弃置" + (num - 4) + "张手牌", "h", num - 4, true)
+						 await player.chooseToDiscard("摸鱼", "请弃置" + (num - 3) + "张手牌", "h", num - 3, true)
 					}
 					if (evt.name == "chooseToUse") {
 						evt.goto(0);
@@ -3489,12 +3490,12 @@ const skills = {
 		},
 		clickableContent: async function (event, trigger, player) {
 			player.addMark("drawfish_yzs_used", 1, false);
-			await player.draw(4);
+			await player.draw(3);
 			const num = player.countCards("h");
-			if (num == 4) return;
-			if (num < 4) player.draw(4 - num);
+			if (num == 3) return;
+			if (num < 3) player.draw(3 - num);
 			else {
-				await player.chooseToDiscard("摸鱼", "请弃置" + (num - 4) + "张手牌", "h", num - 4, true)
+				await player.chooseToDiscard("摸鱼", "请弃置" + (num - 3) + "张手牌", "h", num - 3, true)
 			}
 		},
 		trigger: { player: "phaseBegin" },

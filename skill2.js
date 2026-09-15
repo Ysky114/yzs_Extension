@@ -6430,7 +6430,7 @@ const skills = {
 	lvlin_yzs: {
 		group: "lvlin_yzs_use",
 		locked: true,
-		zhuanhuanji: true,
+	//	zhuanhuanji: true,
 		subSkill: {
 			use: {
 				charlotte: true,
@@ -8300,7 +8300,8 @@ const skills = {
 	//加羽
 	longzhiban_yzs: {
 		nobracket: true,
-		group: ["longzhiban_yzs_mark", "longzhiban_yzs_addDamage", "longzhiban_yzs_firstrecover", "longzhiban_yzs_draw", "longzhiban_yzs_skip", "longzhiban_yzs_wusheng", "longzhiban_yzs_protect", "longzhiban_yzs_recover", "longzhiban_yzs_damage", "longzhiban_yzs_renew"],
+		group: ["longzhiban_yzs_mark", "longzhiban_yzs_addDamage", "longzhiban_yzs_firstrecover", "longzhiban_yzs_draw", "longzhiban_yzs_skip",
+			"longzhiban_yzs_wusheng", "longzhiban_yzs_protect", "longzhiban_yzs_recover", "longzhiban_yzs_damage", "longzhiban_yzs_renew"],
 	//	global: ["longzhiban_yzs_MrDragon_auto"],
 		subSkill: {
 			mark: {
@@ -9282,7 +9283,7 @@ const skills = {
 					player: ["useCard"],
 				},
 				filter(event, player) {
-					return get.color(event.card) == "red" && player == _status.currentPhase;
+					return get.suit(event.card) == "heart" && player == _status.currentPhase;
 				},
 				async content(event, trigger, player) {
 					await player.recover();
@@ -9357,7 +9358,7 @@ const skills = {
 				},
 				filter(event, player) {
 					if (event.bianzangsong_yzs) return false;
-					return player.hp <= event.player.hp
+					return player.hp < event.player.hp
 				},
 				async content(event, trigger, player) {
 					trigger.bianzangsong_yzs = true;

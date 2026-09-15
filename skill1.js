@@ -2527,7 +2527,7 @@ const skills = {
 				}
 			}
 		},
-		prompt: "你摸或弃3张牌(不选牌则摸3张牌)",
+		prompt: "你摸或弃2张牌(不选牌则摸2张牌)",
 		enable: "phaseUse",
 		usable: 1,
 		selectTarget: -1,
@@ -2537,18 +2537,18 @@ const skills = {
 		filterCard: true,
 		selectCard() {
 			let player = get.event().player;
-			return [0, 3]
+			return [0, 2]
 		},
 		filterOk() {
 			const player = get.player();
-			return ui.selected.cards.length == 0 || ui.selected.cards.length == Math.min(player.countCards("hej"), 3);
+			return ui.selected.cards.length == 0 || ui.selected.cards.length == Math.min(player.countCards("he"), 2);
 		},
-		position: "hej",
+		position: "he",
 		check: function (card) {
 			return 0
 		},
 		async content(event, trigger, player) {
-			if (event.cards.length == 0) await player.draw(3);
+			if (event.cards.length == 0) await player.draw(2);
 		},
 		ai: {
 			order:7,
@@ -7450,7 +7450,7 @@ const skills = {
 				},
 				marktext: "化",
 				intro: {
-					content: "本回合使用$花色的牌无距离和次数限制",
+					content: "本回合使用$花色的牌无次数限制",
 				},
 				sub: true,
 				sourceSkill: "langhua_yzs",

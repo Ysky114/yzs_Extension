@@ -1,10 +1,10 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
 	yzs_zhanlong(player) {
-		if (player.countMark("yzs_zhanlong_awaken")) return `觉醒技：出牌阶段，你可移去<font color="#fd816e">3</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
-    <span style="opacity:0.5">你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。</span>`;
-		return `觉醒技：出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
-    你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。`;
+		if (player.countMark("yzs_zhanlong_awaken")) return `出牌阶段，你可移去<font color="#fd816e">3</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    <span style="opacity:0.5">觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。</span>`;
+		return `出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
+    觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。`;
 	},
 	yzs_jianshu(player) {
 		return `你可将X(${player.countMark("yzs_jianshu_used")+1})张基本牌当做任意基本牌使用或打出。（X为本技能本回合发动次数且包括本次）`

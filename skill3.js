@@ -312,11 +312,8 @@ const skills = {
 	jilei_yzs: {
 		nobracket: true,
 		mod: {
-			globalTo: function (from, to, distance) {
-				return distance + 1;
-			},
-			globalFrom: function (from, to, distance) {
-				return distance - 1;
+			targetInRange: function (card) {
+				return true;
 			},
 		}
 	},
@@ -339,7 +336,7 @@ const skills = {
 		},
 		mod: {
 			maxHandcardBase: function (player, num) {
-				return num + 2;
+				return num + 1;
 			},
 		},
 	},
@@ -2242,6 +2239,9 @@ const skills = {
 		priority: 41,
 		trigger: {
 			player: "drawBegin"
+		},
+		filter(event, player) {
+			return player.countCards("h") <= player.getHandcardLimit();
 		},
 		prompt2: function (event) {
 			const player = event.player
@@ -6402,7 +6402,7 @@ const skills = {
 					return event.skill == "kuangbao_yzs_phase"
 				},
 				async content(event, trigger, player) {
-					await player.draw(2)
+					await player.draw()
 					player.addSkill(["kuangbao_yzs_wusheng", "kuangbao_yzs_paoxiao"])
 				}
 			},
@@ -7136,6 +7136,12 @@ const skills = {
 				return num - player.countMark("fuqu_yzs");
 			},
 		},
+		init(player, skill) {
+			player.addExtraEquip(skill, "tengjia", true, (player2) => lib.card.tengjia);
+		},
+		onremove(player, skill) {
+			player.removeExtraEquip(skill);
+		},
 		marktext: "腐",
 		intro: {
 			name: "腐躯",
@@ -7147,20 +7153,22 @@ const skills = {
 		priority: -106,
 		logTarget: "player",
 		prompt2(event, player) {
-			return `你可获得 ${get.translation(event.player)} 2张牌，然后其选择：①跳过本回合；②自己手牌上限-2并令你本回合调离`
+			return `你可获得 ${get.translation(event.player)} 各区域1张牌，然后其选择：①失去1点体力；②自己手牌上限-2并令你本回合调离`
 		},
 		trigger: {
 			global: "phaseBegin"
 		},
 		filter(event, player) {
 			if (event.player.hasSkill("hidden_yzs")) return false;
-			return event.player != player;
+			return event.player != player&&event.player.countGainableCards(player,"hej");
 		},
 		check(event, player) {
 			return get.attitude(player, event.player) < -1;
 		},
 		async content(event, trigger, player) {
-			await player.gainPlayerCard(trigger.player, "he", false, [1, 2])
+			if (trigger.player.countGainableCards(player, "h")) await player.gainPlayerCard(trigger.player, "h", false, 1);
+			if (trigger.player.countGainableCards(player, "e")) await player.gainPlayerCard(trigger.player, "e", false, 1)
+			if (trigger.player.countGainableCards(player, "j")) await player.gainPlayerCard(trigger.player, "j", false, 1)
 			let result = await trigger.player.chooseButton([
 				`请选择一项`,
 				[
@@ -7682,6 +7690,7 @@ const skills = {
 						return 6 - get.value(card);
 					})
 					.set("ai2", target => {
+						const player = get.player();
 						if (get.effect(target, { name: "tiesuo" }, player, player) < 4) return -1;
 						return get.effect(target, { name: "tiesuo" }, player, player);
 					})
@@ -7710,6 +7719,7 @@ const skills = {
 						return 6 - get.value(card);
 					})
 					.set("ai2", target => {
+						let player = get.player();
 						return get.effect(target, { name: "sha",nature:"fire" }, player, player);
 					})
 					.set("selectCard", 1)
@@ -7903,6 +7913,7 @@ const skills = {
 							return 6 - get.value(card);
 						})
 						.set("ai2", target => {
+							const player = get.player();
 							return get.effect(target, { name: "tao" }, player, player);
 						})
 						.set("selectCard", 1)

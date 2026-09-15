@@ -77,13 +77,22 @@ const skills = {
 					if (current.isAlive() && current != player) {
 						game.broadcastAll((die) => {
 							if (game.me.playerid != die.playerid) return;
-							let evt = _status.event.getParent("chooseToUse")
-							if (!evt) return;
-							evt.endButton?.close();
-							delete evt.endButton;
+							let evt = _status.event && _status.event.getParent ? _status.event.getParent("chooseToUse") : null;
+							if (evt) {
+								evt.endButton?.close();
+								delete evt.endButton;
+								evt.fakeforce = false;
+							}
 							ui.exit?.close();
 							delete ui.exit;
-							evt.fakeforce = false;
+							ui.continue_game?.close();
+							delete ui.continue_game;
+							ui.restart?.close();
+							delete ui.restart;
+							ui.revive?.close();
+							delete ui.revive;
+							ui.swap?.close();
+							delete ui.swap;
 						}, player)
 						if (_status.connectMode) {
 							game.yzs_swapPlayerOL(player, current);
@@ -175,13 +184,13 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:3",
 		hiddenCard(player, name) {
-			var list = ["wuxie", "shan"];
+			var list = ["wuxie"];
 			return list.includes(name) && player.countCards("h");
 		},
 		enable: ["chooseToUse"],
 		filter(event, player) {
 			if (event.responded) return false;
-			var list = ["wuxie", "shan"];
+			var list = ["wuxie"];
 			if (!list.length) {
 				return false;
 			}
@@ -195,41 +204,21 @@ const skills = {
 			}
 			return false;
 		},
-		chooseButton: {
-			dialog(event, player) {
-				var list = ["wuxie", "shan"];
-				var list2 = [];
-				for (var i of list) {
-					var type = get.type2(i, false);
-					if (event.filterCard(get.autoViewAs({ name: i, storage: { eling_yzs: true, } }, "unsure"), player, event)) {
-						list2.push([type, "", i]);
-					}
-				}
-				return ui.create.dialog("恶伶", [list2, "vcard"]);
-			},
-			check(button) {
-				return _status.event.player.getUseValue({ name: button.link[2], storage: { eling_yzs: true, } }, null, true);
-			},
-			backup(links, player) {
-				return {
-					filterCard(card) {
-						return true
-					},
-					audio: "eling_yzs",
-					selectCard: 1,
-					position: "h",
-					popname: true,
-					viewAs: {
-						name: links[0][2],
-						storage: {
-							eling_yzs: true,
-						}
-					},
-				};
-			},
-			prompt(links, player) {
-				return "将1张手牌当做【" + get.translation(links[0][2]) + "】使用或打出";
-			},
+		filterCard(card) {
+			return true
+		},
+		selectCard: 1,
+		position: "h",
+		popname: true,
+		viewAs: {
+			name: "wuxie",
+			storage: {
+				eling_yzs: true,
+			}
+		},
+		prompt(links, player) {
+			const storage = player.getStorage("eling_yzs_damage")
+			return `将1张手牌当做【无懈可击】使用或打出，若不为${get.translation(storage)}，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后`;
 		},
 		mod: {
 			aiValue(player, card, num) {
@@ -332,7 +321,7 @@ const skills = {
 					return player.countCards("h") > 0 && player.storage.tiandu_yzs;
 				},
 				async cost(event, trigger, player) {
-					game.log(trigger.player.judging[0])
+				//	game.log(trigger.player.judging[0])
 					if (get.suit(trigger.player.judging[0], player) == "spade" && get.number(trigger.player.judging[0], player) > 1 && get.number(trigger.player.judging[0], player) < 10) {
 						game.broadcastAll(() => {
 							game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
@@ -431,7 +420,7 @@ const skills = {
 			return !player.storage?.tiandu_yzs && get.position(event.result.card, true) == "o";
 		},
 		async content(event, trigger, player) {
-			game.log(trigger.result.card)
+	//		game.log(trigger.result.card)
 			if (get.suit(trigger.result.card, player) == "spade" && get.number(trigger.result.card, player) > 1 && get.number(trigger.result.card, player) < 10) {
 				game.broadcastAll(() => {
 					game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
@@ -8084,8 +8073,8 @@ const skills = {
 				animationColor: "fire",
 				async content(event, trigger, player) {
 					player.addMark("yzs_zhanlong_awaken", 1, false);
-					await player.recover();
 					await player.gainMaxHp();
+					await player.recover();
 				}
 			},
 		},
