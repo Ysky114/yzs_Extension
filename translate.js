@@ -410,7 +410,7 @@ const translates = {
 	buxudong_yzs: "统统不许动",
 	buxudong_yzs_info:`锁定技：你使用牌指定其他角色时，扣置目标角色与此牌花色相同的牌至其受到伤害或回合开始时(你回合内对其造成伤害不触发拿回)。<br>你每种花色的【杀】分别独立计算出【杀】数。你对有手牌的角色造成伤害-1。`,
 	haixiangpao_yzs: "还想跑？",
-	haixiangpao_yzs_info: `锁定技：你回合内每使用一种花色的牌时摸3张牌，然后弃置或置底1张手牌。你可从牌堆底摸牌。其他角色因你而失去最后1张手牌后，你获得1枚${get.poptip("xianyiren_yzs")}标记。`,
+	haixiangpao_yzs_info: `锁定技：你回合内每使用一种花色的牌时摸2张牌，然后弃置或置底1张手牌。你可从牌堆底摸牌。其他角色因你而失去最后1张手牌后，你获得1枚${get.poptip("xianyiren_yzs")}标记。`,
 	buxudong_yzs_effect: "不许动！",
 	xianyiren_yzs: "【嫌疑人】",
 	xianyiren_yzs_info:`牌即将生效前，你可移除1枚此标记，然后无效之。`,
@@ -751,8 +751,8 @@ const translates = {
     "反叛的海贼-远舟春贺"回合开始及其使用${get.poptip("baozang_yzs")}时，你失去1点体力。`,
 
 	wangling_yzs:"亡灵",
-	wangling_yzs_info: `锁定技：你仅可因自己技能或【水风暴】恢复体力。你每累计受到4点伤害后，若未处于濒死，进入濒死状态。<br>
-    你脱离濒死时恢复全部体力、摸3张牌，并获得1张${get.poptip("Fuka_yzs")}。与你体力值相等的角色的出牌阶段结束时，你可转换至：${get.poptip("WaterStorm")}或${get.poptip("BulletStorm")}。`,
+	wangling_yzs_info: `锁定技：你仅可因自己技能或${get.poptip("WaterStorm")}恢复体力。你每累计受到4点伤害后，若未处于濒死，进入濒死状态。<br>
+    你脱离濒死时恢复全部体力、摸3张牌，并获得1张${get.poptip("Fuka_yzs")}。`,
 	fanhundie_yzs: "反魂蝶",
 	fanhundie_yzs_info: `转换技：场上角色进入濒死时，若其体力值为唯一最低，你可：<span class="bluetext">①令其恢复1点体力</span> ②对其造成1点伤害。<br>
     ${get.poptip("FukaSkill_yzs")}： ${get.poptip("wuyongchang_yzs")}：你与1名与你体力值之差等于1的角色交换体力值。`,
@@ -1261,7 +1261,7 @@ const translates = {
     你令一名角色脱离濒死后可失去${get.poptip("yinju_yzs")}，此后你的【桃】可指定任意角色为目标，且使用时目标角色摸1张牌。`,
 
 	Sacrifice_yzs: `献祭`,
-	Sacrifice_yzs_info: `${get.poptip("eternalSkill_yzs")}：每公轮限1次：每回合结束后，你可令1名体力值≤轮次数的人物替换人物牌至“${get.poptip("tentacle_yzs")}”并回复1点体力，
+	Sacrifice_yzs_info: `${get.poptip("eternalSkill_yzs")}：每公轮限1次：每回合结束后，你可令1名体力值＜轮次数的人物替换人物牌至“${get.poptip("tentacle_yzs")}”并回复1点体力，
 	或令1名“深渊之触”受到1点无来源伤害。`,
 	ReligiousOrder_yzs: `教团`,
 	ReligiousOrder_yzs_info: `锁定技：回合开始时和结束时，你刷新${get.poptip("Sacrifice_yzs")}或摸1张牌。<br>
@@ -1351,7 +1351,7 @@ const translates = {
 	HumanBuring_yzs_info: `${get.poptip("FukaSkill_yzs")}：你选择：①弃1张红色牌以视为使用【决斗】，然后摸1张牌；②弃任意张黑色牌，然后恢复弃牌数向下取半数点体力。`,
 
 	DreamCatcher_yzs: `捕梦网`,
-	DreamCatcher_yzs_info: `锁定技：场上角色弃牌阶段弃牌后，其可交换手牌与弃置的牌，则本回合结束后你与其依次执行额外出牌阶段。`,
+	DreamCatcher_yzs_info: `锁定技：场上角色弃牌阶段弃牌后，其可交换手牌与弃置的牌，则本阶段结束时其执行额外出牌阶段，本回合结束时你执行一个仅有出牌阶段的回合。`,
 	DreamInMe_yzs: `梦我梦中`,
 	DreamInMe_yzs_info: `锁定技：你使用牌被无效后，你可视为使用任意单体即时牌，因此使用伤害牌或${get.poptip("mengliaoshibian_yzs")}后本阶段本技能失效。<br>出牌阶段开始时你视为使用${get.poptip("mengliaoshibian_yzs")}。`,
 
@@ -1757,7 +1757,7 @@ const translates = {
 	yuzhe_yzs_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：升级【无下限】、获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("xushici_yzs")}`,
 
 	eling_yzs: `恶伶`,
-	eling_yzs_info: `你可将手牌当做【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。`,
+	eling_yzs_info: `你可将手牌当做【无懈可击】使用，若之花色不为♠，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后。若响应的牌未指定你为目标，本回合本技能失效。`,
 	shenyu_yzs: `神谕`,
 	shenyu_yzs_info: `锁定技：你使用♠牌无次数距离限制。<br>结束阶段，你摸2张牌，然后判定【闪电】。`,
 	tiandu_yzs: `天妒`,
@@ -1766,7 +1766,7 @@ const translates = {
 	cangyao_yzs: `苍耀`,
 	cangyao_yzs_info: `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
     出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
-    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：<span class="bluetext">①摸2张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`,
+    转换技：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：<span class="bluetext">①摸2张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`,
 	zhenjian_yzs: `振剑`,
 	zhenjian_yzs_info: `你需响应牌时，可将【杀】当做【闪】或【无懈可击】使用或打出。若响应的牌未指定你为目标，本回合本技能失效。`,
 	cangxingzhan_yzs: `苍星斩`,
@@ -1860,12 +1860,12 @@ const translates = {
 		name: "法仆塔",
 		type: "character",
 		dialog: "characterDialog",
-	})}”，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
+	})}”(无初始手牌)，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
 	duozi_yzs: `夺子`,
 	duozi_yzs_info: `每名角色的出牌阶段限1次：其可正面向上给予你1张基本牌，然后视为对你使用【决斗】`,
 
 	bianxing_yzs: `变形`,
-	bianxing_yzs_info: `每回合每种牌名限1次：需要时，你可令本技能本回合失效，或减少1点体力上限，然后视为使用或打出任意即时牌。`,
+	bianxing_yzs_info: `每回合每种牌名限1次：需要时，你可令本技能本回合失效，或减少1点体力上限，然后视为使用任意单目标即时牌。`,
 	jiazhi_yzs: `价值`,
 	jiazhi_yzs_info: `锁定技：你杀死其他角色后，获得其全部手牌，然后增加X点体力上限（X为其体力上限）。<br>准备阶段，你增加1点体力上限。`,
 

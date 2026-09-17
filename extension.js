@@ -576,7 +576,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			lib.arenaReady.push(function () {
 				//传说 SSS
 				var pj_sss = [
-					"NatsukiSubaru_yzs", "DarkKnight_yzs", "yzs_Elysia", "yzs_DanHeng", "jealous_witch_yzs", "Halo_yzs", "Qianmian_Limu_yzs",
+					"NatsukiSubaru_yzs", "DarkKnight_yzs", "yzs_Elysia", "jealous_witch_yzs", "Halo_yzs", "Qianmian_Limu_yzs",
 					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"
 				];
 				//史诗 SS
@@ -587,7 +587,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs", "VanXiongYong_yzs", "LilyCommie_yzs",
 					"KinMiho_yzs", "Guanjun_yzs", "LawfulXu_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
 					"Mokou_yzs", "Reisen_yzs", "toothFairy_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Stark_yzs", "Linie_yzs",
-					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "FushiguroToji_yzs", "yzs_JoGo", "SCP079_yzs", "LightCB_yzs", "DaZuo_yzs", "RatTiger_yzs"
+					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "FushiguroToji_yzs", "yzs_JoGo", "SCP079_yzs", "LightCB_yzs", "DaZuo_yzs", "RatTiger_yzs","yzs_DanHeng"
 				];
 				//精品 S
 				var pj_s = [
@@ -648,7 +648,13 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"Tanya_yzs",
 						"jianSheng_yzs",
 						"Keiki_yzs",
-						"Floris_yzs"
+						"Floris_yzs",
+						"Tanya_yzs",
+						"Irumyuui_yzs",
+						"FengCthulhu_yzs",
+						"hunziKing_yzs",
+						"Faputa_yzs",
+						"Yuyuko_yzs"
 					]
 				},
 			];
@@ -745,12 +751,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.97.5</div><br>
+            <div style="color:#ffa348">• 版本号：v0.97.6</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.97.5",
+			version: "0.97.6",
 		},
 		files: {}, connect: true
 	}

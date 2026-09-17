@@ -770,7 +770,7 @@ const skills = {
 		},
 		filter(event, player) {
 			if (player.countMark("Sacrifice_yzs_used")) return false;
-			if (game.hasPlayer(target => target.hp <= game.roundNumber && !target.storage.isSub)) return true;
+			if (game.hasPlayer(target => target.hp < game.roundNumber && !target.storage.isSub)) return true;
 			if (game.hasPlayer(target => target.name == "tentacle_yzs")) return true;
 			return false;
 		},
@@ -779,7 +779,7 @@ const skills = {
 				.set("filterTarget", function (card, player, target) {
 					if (target.hasSkill("hidden_yzs")) return false;
 					if (target.name == "tentacle_yzs") return true;
-					if (target.hp <= game.roundNumber && !target.storage.isSub) return true;
+					if (target.hp < game.roundNumber && !target.storage.isSub) return true;
 					return false;
 				})
 				.set("ai", target => {
@@ -4235,17 +4235,18 @@ const skills = {
 					global: "phaseEnd"
 				},
 				filter(event, player) {
-					return player.storage.DreamCatcher_yzs?.length
+					return player.countMark("DreamCatcher_yzs");
 				},
 				async content(event, trigger, player) {
-					let targets = player.storage.DreamCatcher_yzs;
-					player.storage.DreamCatcher_yzs = [];
-					player.markSkill("DreamCatcher_yzs")
-					for (let target of targets) {
-						var next = target.phaseUse();
-						next.skill = "DreamCatcher_yzs_phaseUse"
-						await next;
+					let list = [];
+					let num = player.countMark("DreamCatcher_yzs")
+					player.clearMark("DreamCatcher_yzs");
+					while (num--) {
+						list.push("phaseUse|DreamCatcher_yzs")
 					}
+					const next = player.insertPhase("DreamCatcher_yzs");
+					next.set("phaseList", list);
+					
 				}
 			},
 		},
@@ -4253,17 +4254,16 @@ const skills = {
 		locked: true,
 		priority: -2,
 		trigger: {
-			global: "loseAfter",
+			global: "phaseDiscardAfter",
 		},
 		filter(event, player) {
-			var evt = event.getParent(3);
-			return event.type == "discard" && evt.name == "phaseDiscard" && evt.player == event.player && event.cards2 && event.cards2.filterInD("d").length > 0;
+			return event.cards.filterInD("d").length > 0;
 		},
 		async cost(event, trigger, player) {
-			let cards = trigger.cards2.filterInD("d");
+			let cards = trigger.cards.filterInD("d");
 			event.result = { bool: false };
 			let result = await trigger.player
-				.chooseButton([`若选择其中任意张，则将你的手牌与你弃牌阶段弃置的牌交换，且本回合结束后 ${get.translation(player)} 与你依次执行额外出牌阶段`, cards], [1, Infinity], false)
+				.chooseButton([`若选择其中任意张，则将你的手牌与你弃牌阶段弃置的牌交换，且本阶段结束后你执行额外出牌阶段，本回合结束后${get.translation(player)}执行仅有出牌阶段的回合`, cards], [1, Infinity], false)
 				.set("ai", button => {
 					const player = get.event().player;
 					const cards = get.event().cards;
@@ -4274,11 +4274,15 @@ const skills = {
 			if (result.bool) event.result = { bool: true };
 		},
 		async content(event, trigger, player) {
-			let cards = trigger.cards2.filterInD("d");
+			let cards = trigger.cards.filterInD("d");
 			let target = trigger.player;
 			await target.loseToDiscardpile(target.getCards('h'));
 			await target.gain(cards, 'gain2')
-			player.markAuto(event.name, [player, target])
+			player.addMark(event.name, 1, false)
+			const evt = trigger.getParent("phase", true, true);
+			if (evt?.phaseList) {
+				evt.phaseList.splice(evt.num + 1, 0, "phaseUse|DreamCatcher_yzs");
+			}
 		},
 	},
 	DreamInMe_yzs: {

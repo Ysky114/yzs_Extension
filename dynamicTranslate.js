@@ -10,7 +10,7 @@ const dynamicTranslates = {
 		return `你可将X(${player.countMark("yzs_jianshu_used")+1})张基本牌当做任意基本牌使用或打出。（X为本技能本回合发动次数且包括本次）`
 	},
 	yzs_jianyou(player) {
-		let str = `${get.poptip("zhuanlunji_yzs")}：`;
+		let str = `转换技：`;
 		const equip = player.getStorage("yzs_jianyou","shizhongjian_yzs")
 		str += `你视为装备“${get.poptip(equip)}”。<br>`;
 		const sign = "①";
@@ -22,7 +22,7 @@ const dynamicTranslates = {
 	},
 	yzs_disi(player) {
 		const storage = player.countMark("yzs_disi")
-		let str = `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>`
+		let str = `转换技：场上角色出牌阶段开始前，你获得：<br>`
 		if (storage == 0) {
 			str +=`<span class="bluetext">`
 		}
@@ -145,7 +145,7 @@ const dynamicTranslates = {
 		const index = player.countMark("cangyao_yzs_zhuanlun") % 3;
 		let str = `锁定技：你点数为K的手牌视为雷【杀】且不计入手牌上限。<br>
     出牌阶段限1次：你摸2张牌，若你${get.poptip("zhenjian_yzs")}和${get.poptip("cangxingzhan_yzs")}均失效，本阶段你使用牌无次数距离限制。<br>
-    ${get.poptip("zhuanlunji_yzs")}：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：`;
+    转换技：你发动${get.poptip("zhenjian_yzs")}或${get.poptip("cangxingzhan_yzs")}后，你：`;
 		if (index == 0) {
 			str +=`<span class="bluetext">①摸2张牌</span> ②恢复1点体力 ③手牌点数+1（至多为K）。`
 		} else if (index == 1) {
@@ -201,7 +201,7 @@ const dynamicTranslates = {
 		return `锁定技：你使用牌时获得1点${get.poptip("Passion_yzs")}。<br>激情${x}：获得1张<font color="#f9e99e">【盈月】</font>。`
 	},
 	WeatherReport_yzs(player) {
-		let str = `${get.poptip("zhuanlunji_yzs")}：`;
+		let str = `转换技：`;
 		if (player.countMark("WeatherReport_yzs") == 0) str += `<span class="bluetext">①每名角色准备阶段</span> `
 		else str += `①每名角色准备阶段`
 		if (player.countMark("WeatherReport_yzs") == 1) str += `<span class="bluetext">②你的出牌阶段</span> `
@@ -449,7 +449,7 @@ const dynamicTranslates = {
 	longzhiban_yzs(player) {
 		if (!_status.MrDragon_auto) return `锁定技：游戏开始时你召唤“${get.poptip("MrDragon_yzs")}”至场上任意座次。<br>
     <font color="#9b9b9b">若“龙先生”在场：你无视受到的伤害或失去体力效果、不可因牌恢复体力、对其他人物造成伤害-1；<br>
-    每自轮次限3次：你可将红色牌当做普通【杀】使用或打出，并摸1张牌；<br>
+    每自轮限3次：你可将红色牌当做普通【杀】使用或打出，并摸1张牌；<br>
     回合开始时你可跳过本回合任意个阶段，则“龙先生”下一对应阶段连续执行2次；<br>
     你因自身技能效果摸牌后，“龙先生”摸等量张牌。<br>
     你每自轮次首次恢复体力后，“龙先生”恢复1点体力。</font><br>
@@ -459,7 +459,7 @@ const dynamicTranslates = {
 		let str = `锁定技：游戏开始时你召唤“${get.poptip("MrDragon_yzs")}”至场上任意座次。<br>`;
 		if (!game.hasPlayer(cur => cur.name == 'MrDragon_yzs')) str += `<font color="#9b9b9b">`;
 		str +=`若“龙先生”在场：你无视受到的伤害或失去体力效果、不可因牌恢复体力、对其他人物造成伤害-1；<br>
-    每自轮次限3次：你可将红色牌当做普通【杀】使用或打出，并摸1张牌；<br>
+    每自轮限3次：你可将红色牌当做普通【杀】使用或打出，并摸1张牌；<br>
     回合开始时你可跳过本回合任意个阶段，则“龙先生”下一对应阶段连续执行2次；<br>
     你因自身技能效果摸牌后，“龙先生”摸等量张牌。<br>
     你每自轮次首次恢复体力后，“龙先生”恢复1点体力。<br>`
@@ -663,7 +663,7 @@ const dynamicTranslates = {
 		return str;
 	},
 	yotouXi_yzs(player) {
-		let str = `${get.poptip("zhuanlunji_yzs")}：你于自轮次内每使用3张牌后：（转轮限1次。回合开始时重置本技能）`;
+		let str = `转换技：你于自轮内每使用3张牌后：（每项限2次。回合开始时重置本技能）`;
 		str += `<br>`;
 		if (player.storage.yotouXi_yzs == 1 || player.storage.yotouXi_yzs == 5) str +=`<font color="#b9b5ff">①：弃2张牌并摸3张牌。你的下回合开始时你可获得所弃牌其中一张。</font>`
 		else str += `①：弃2张牌并摸3张牌。你的下回合开始时你可获得所弃牌其中一张。`

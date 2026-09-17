@@ -76,7 +76,7 @@ const skills = {
 					num++;
 				}
 			}
-			let list = ["My Sunset", "泡沫、哀のまほろば", "Time Bomb", "inhuman", "Lupinus", "Pigstep (Stereo Mix)",
+			let list = ["My Sunset", "泡沫、哀のまほろば", "Time Bomb", "AIZO", "Lupinus", "Pigstep (Stereo Mix)",
 				"Puppet in the Dark(PartⅡBuried Away)", "RYUKYUVANIA V2", "Vagrant",
 				"果てなき風の軌跡さえ", "月に叢雲華に風"]
 			while (num < max && list.length) {
@@ -8096,7 +8096,7 @@ const skills = {
 			player.popup(suit);
 			player.addTempSkill("haixiangpao_yzs_used")
 			player.markAuto("haixiangpao_yzs_used", [suit]);
-			await player.draw(3);
+			await player.draw(2);
 			if (!player.countCards("h")) return
 			const result = await player.chooseCard("还想跑？", "弃置或置底1张手牌", "h", 1, true)
 				.set("ai", (card) => {

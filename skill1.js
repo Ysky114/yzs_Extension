@@ -421,7 +421,7 @@ const skills = {
 					})
 					.forResult()
 				if (result.bool) {
-					const { result: { bool, cards } } = await target
+					let result2 = await target
 						.choosePlayerCard(
 							"选择该角色的至少一张牌",
 							result.targets[0],
@@ -429,10 +429,10 @@ const skills = {
 							true,
 							function (button) { return true; },
 							1,
-						);
-					if (bool) {
-						result.targets[0].$throw(cards);
-						await target.chooseUseTarget(cards, { name: "jiu" }, true);
+						).forResult();
+					if (result2?.bool&&result2.cards?.length) {
+						result.targets[0].$throw(result2.cards);
+						await target.chooseUseTarget(result2.cards, { name: "jiu" }, true);
 					}
 				}
 			}
@@ -9047,7 +9047,7 @@ const skills = {
 	},
 	//西行寺幽幽子
 	wangling_yzs: {
-		group: ["wangling_yzs_unrecover", "wangling_yzs_dyingAfter", "wangling_yzs_storm"],
+		group: ["wangling_yzs_unrecover", "wangling_yzs_dyingAfter"],
 		locked: true,
 		charlotte: true,
 		unique: true,

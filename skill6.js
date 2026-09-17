@@ -138,6 +138,14 @@ const skills = {
 	eling_yzs: {
 		group: ["eling_yzs_use"],
 		subSkill: {
+			ban: {
+				charlotte: true,
+				mark: true,
+				marktext: "<span style=\"text-decoration: line-through;\">恶</span>",
+				intro: {
+					content: "【恶伶】失效了",
+				},
+			},
 			use: {
 				priority: 31,
 				direct: true,
@@ -184,11 +192,13 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:3",
 		hiddenCard(player, name) {
+			if (player.hasSkill("eling_yzs_ban")) return ;
 			var list = ["wuxie"];
 			return list.includes(name) && player.countCards("h");
 		},
 		enable: ["chooseToUse"],
 		filter(event, player) {
+			if (player.hasSkill("eling_yzs_ban")) return;
 			if (event.responded) return false;
 			var list = ["wuxie"];
 			if (!list.length) {
@@ -215,6 +225,28 @@ const skills = {
 			storage: {
 				eling_yzs: true,
 			}
+		},
+		async precontent(event, trigger, player) {
+			if (event.result.card.name != "wuxie") return;
+			let evt = event.getParent(4);
+			//game.log(evt.name);
+			let card = null;
+			if (!card && evt && evt.name == "phaseJudge" && evt.card) {
+				card = evt.card;
+			} else {
+				evt = evt.getParent()
+				if (!card && evt && evt.name == "useCard" && evt.card) {
+					card = evt.card;
+				}
+			}
+			if (!card || !card.name) return;
+			let targets = [];
+			if (evt?.name == "phaseJudge") {
+				targets = [evt.player]
+			} else if (evt?.name == "useCard") {
+				targets = evt.targets;
+			}
+			if (!targets.includes(player)) player.addTempSkill("eling_yzs_ban")
 		},
 		prompt(links, player) {
 			const storage = player.getStorage("eling_yzs_damage")
@@ -658,9 +690,9 @@ const skills = {
 			ban: {
 				charlotte: true,
 				mark: true,
-				marktext: "振",
+				marktext: "<span style=\"text-decoration: line-through;\">振</span>",
 				intro: {
-					content: "振剑失效了",
+					content: "【振剑】失效了",
 				},
 			},
 			use: {
@@ -679,27 +711,27 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:2",
 		hiddenCard(player, name) {
-			if (player.hasSkill("zhenjian_yzs_ban")) return false;
+			if (player.hasSkill("zhenjian_yzs_ban")) return ;
 			var list = ["wuxie", "shan"];
 			return list.includes(name) && player.countCards("h");
 		},
 		enable: ["chooseToUse", "chooseToRespond"],
 		filter(event, player) {
-			if (player.hasSkill("zhenjian_yzs_ban")) return false;
-			if (event.responded) return false;
+			if (player.hasSkill("zhenjian_yzs_ban")) return ;
+			if (event.responded) return ;
 			var list = ["wuxie", "shan"];
 			if (!list.length) {
-				return false;
+				return ;
 			}
 			if (!player.countCards("h")) {
-				return false;
+				return ;
 			}
 			for (var i of list) {
 				if (event.filterCard(get.autoViewAs({ name: i, storage: { zhenjian_yzs: true, } }, "unsure"), player, event)) {
 					return true;
 				}
 			}
-			return false;
+			return ;
 		},
 		chooseButton: {
 			dialog(event, player) {
@@ -3157,7 +3189,7 @@ const skills = {
 					return player.maxHp > 4 && !player.countMark("yunyu_yzs_summon")
 				},
 				async content(event, trigger, player) {
-					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, true, { isControl: true, dieRemove: false }).forResult();
+					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, true, { startCards:0,isControl: true, dieRemove: false }).forResult();
 					if (!result?.target) return;
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
@@ -3358,12 +3390,18 @@ const skills = {
 					if (get.type(name) != "trick" && get.type(name) != "basic") {
 						return false;
 					}
-					return !player.getStorage("bianxing_yzs_used").includes(name);
+					if (player.getStorage("bianxing_yzs_used").includes(name)) return false;
+					const infox = get.info({ name: name });
+					return (
+						infox &&
+						!infox.notarget &&
+						(infox.toself || infox.singleCard || !infox.selectTarget || infox.selectTarget === 1)
+					)
 				})
 			list = list.map(i => i = i[2]);
 			return list.includes(name)
 		},
-		enable: ["chooseToUse", "chooseToRespond"],
+		enable: ["chooseToUse"],
 		filter(event, player) {
 			if (event.responded) return false;
 			return get
@@ -3372,7 +3410,13 @@ const skills = {
 					if (get.type(name) != "trick" && get.type(name) != "basic") {
 						return false;
 					}
-					return !player.getStorage("bianxing_yzs_used").includes(name);
+					if (player.getStorage("bianxing_yzs_used").includes(name)) return false;
+					const infox = get.info({ name: name });
+					return (
+						infox &&
+						!infox.notarget &&
+						(infox.toself || infox.singleCard || !infox.selectTarget || infox.selectTarget === 1)
+					)
 				})
 				.some(card => event.filterCard({ name: card[2], nature: card[3], isCard: true }, player, event));
 		},
@@ -3384,7 +3428,13 @@ const skills = {
 						if (get.type(name) != "trick" && get.type(name) != "basic") {
 							return false;
 						}
-						return !player.getStorage("bianxing_yzs_used").includes(name) && event.filterCard({ name: info[2], nature: info[3], isCard: true }, player, event);
+						if (player.getStorage("bianxing_yzs_used").includes(name)) return false;
+						const infox = get.info({ name: name });
+						return (
+							infox &&
+							!infox.notarget &&
+							(infox.toself || infox.singleCard || !infox.selectTarget || infox.selectTarget === 1)
+						) && event.filterCard({ name: info[2], nature: info[3], isCard: true }, player, event)
 					})
 				return ui.create.dialog("变形", [list, "vcard"]);
 			},
@@ -3454,11 +3504,11 @@ const skills = {
 				if (player.isTempBanned("bianxing_yzs")) {
 					return false;
 				}
-				if (tag == "respondSha" || tag == "respondShan") {
+				if (tag == "respondSha") {
 					if (arg == "respond") {
 						return false;
 					}
-					return player.getStorage("bianxing_yzs").includes(tag == "respondSha" ? "sha" : "shan");
+					return player.getStorage("bianxing_yzs").includes("sha");
 				}
 				return true
 			},

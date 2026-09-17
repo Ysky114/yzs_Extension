@@ -224,6 +224,11 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		info: `召引者可令任意角色下次投掷结果为6。<br>场上角色回合开始时${get.poptip("throw_yzs")}4：恢复1点体力。`,
 	});
 	lib.poptip.add({
+		id: "LoveStorm",
+		name: "【告白风暴】",
+		info: `场上角色回合开始时选择：①：进行${get.poptip("yzs_idol_gaobai")}；②：给予除其外角色1张手牌，然后令该角色进行${get.poptip("yzs_idol_gaobai")}。`,
+	});
+	lib.poptip.add({
 		id: "jifengbaoxiang_yzs",
 		name: "疾风宝箱",
 		info: `"反叛的海贼—远舟村贺"的专属召唤物，没有回合、区域，初始体力值为8，不可成为除"反叛的海贼-远舟春贺"以外的角色使用牌的目标`,
