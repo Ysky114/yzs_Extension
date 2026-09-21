@@ -158,7 +158,7 @@ const translates = {
 	Getian_yzs: `葛天`,
 	chenyuStorm: `谶语风暴`,
 	KinMiho_yzs: `坷垃金 米霍`,
-	KaalaBaauna_yzs: `伽菈波那`,
+	KaalaBaauna_yzs: `伽菈波娜`,
 	Arlecchino_yzs: `阿蕾奇诺`,
 	MegumiSukuna_yzs: `宿傩(伏黑惠)`,
 	Makora_yzs:`魔虚罗`,
@@ -197,7 +197,9 @@ const translates = {
 	yzs_Mazhikang: `马知康`,
 	LoveStorm:`告白风暴`,
 	yzs_JoGo: `漏瑚`,
-	yzs_DragonSlayerLLX:`李砺心`,
+	yzs_DragonSlayerLLX: `李砺心`,
+	yzs_Youmu: `魂魄妖梦`,
+	yzs_Reimu:`博丽灵梦`,
 
     // 技能台词
 
@@ -426,7 +428,7 @@ const translates = {
 	shikuang_yzs_buff: "嗜狂",
 
 	yinju_yzs: "隐居",
-	yinju_yzs_info:`其他角色计算与你距离+1。目标不唯一的牌对你无效。`,
+	yinju_yzs_info:`其他角色计算与你距离+1。其他角色使用的目标不唯一的牌对你无效。`,
 	badaozhan_yzs: "拔刀斩",
 	badaozhan_yzs_info:`限定技：出牌阶段，你获得你的武器，然后摸1张牌并视为使用无距离限制的普通【杀】并刷新出【杀】数。`,
 	wuqizhangkong_yzs:"武器掌控",
@@ -613,7 +615,7 @@ const translates = {
 	qianmian_yzs_effect1:"千面",
 	qianmian_yzs_effect1_info: `你不可被牌或技能指定。`,
 	qianmian_yzs_effect2:"千面",
-	qianmian_yzs_effect2_info:`你手牌数固定为6，你出【杀】数+2。`,
+	qianmian_yzs_effect2_info:`你摸牌数、手牌上限、出【杀】数+2。`,
 	tiance_yzs: "天策",
 	tiance_yzs_info:`锁定技：游戏和出牌阶段开始时，你移去所有【策】，并摸场上人物数+3张牌称为【策】，然后依任意顺序正面向下叠置于人物牌上。<br>
     出牌阶段开始时若你无【策】可移去，【千面】蓝字描述改为：${get.poptip("qianmian_yzs_effect2")}
@@ -824,7 +826,7 @@ const translates = {
 	thief_yzs_equip: "装备盗",
 	thief_yzs_equip_info: `场上角色的阶段结束时，你可令任意角色调整体力值和手牌数至本阶段开始时值`,
 	qianying_yzs: "潜影",
-	qianying_yzs_info: `锁定技：其他角色摸牌阶段结束时，若你无【盗】，你可将其1张手牌加入【盗】。摸牌阶段，你可改为获得其他角色至多2张手牌。`,
+	qianying_yzs_info: `锁定技：其他角色摸牌阶段结束时，若你无【盗】，你可将其1张手牌加入【盗】。摸牌阶段，你可改为获得1~2名其他角色各1张手牌。`,
 
 	buxijinjun_yzs: "不息进军",
 	buxijinjun_yzs_info: `锁定技：游戏开始时，你将牌堆顶4张牌明置于人物牌旁，称为【源晶】。<br>
@@ -911,8 +913,7 @@ const translates = {
 	ErWangSaid_yzs_info: `锁定技：游戏开始时你令你和至多2名其他角色进入“里”${get.poptip("ErWangCiYuan_yzs")}，其余角色进入“外”次元状态。<br>
 	场上角色对所处次元状态与其不同的角色造成伤害时，无效之<span class="bluetext">，然后本次受伤角色翻转其次元状态</span>。<br>
     <span class="bluetext">你对同次元状态其他角色造成伤害时翻转其次元状态。你受到伤害时翻转次元状态；<br></span>
-    出牌阶段，你可弃2张红色牌以视为使用任意仅指定你为目标的非延时锦囊牌。<br>
-	回合内你翻转次元状态时可弃全部手牌。回合内你失去最后的手牌时摸3张牌。`,
+    出牌阶段限2次：你可弃置所有手牌并翻转次元状态<br>。回合内你失去最后的手牌时摸3张牌。`,
 	ErWangPlay_yzs: "二王乾坤戏",
 	ErWangPlay_yzs_info: `锁定技：你处于“外”次元时：你造成伤害-1、你可将2张黑色牌当做【决斗】使用。<br>
     你处于“里”次元时：<span class="bluetext">你回合结束时对所有其他角色造成1点伤害。其他角色回合结束时你可弃1张黑色牌然后对其造成1点伤害。</span>`,
@@ -980,7 +981,7 @@ const translates = {
 	fuse_yzs_info: `锁定技：出牌阶段限1次：你摸2张牌并可视为使用【火攻】。然后若你体力值为1，你恢复2点体力，并获得${get.poptip("boom_yzs")}；`,
 	boom_yzs: "爆炸",
 	boom_yzs_info:`锁定技：你对本回合受到过火焰伤害的角色使用牌无次数距离限制。<br>你使用或打出基本牌时，对当前回合角色造成1点火焰伤害。<br>
-你受到火焰伤害后，恢复等量点体力并摸等量张牌。<br>回合开始时，你失去本技能并恢复1点体力。`,
+你受到非零火焰伤害后，恢复等量点体力并摸1张牌。<br>回合开始时，你失去本技能并恢复1点体力。`,
 
 	longzhiban_yzs: "龙之绊", 
 	longzhiban_yzs_info: `锁定技：游戏开始时你召唤“${get.poptip("MrDragon_yzs")}”至场上任意座次。<br>
@@ -1010,10 +1011,10 @@ const translates = {
 	dapiwansi_yzs_info: `锁定技：游戏开始时记录你体力值。<br>你造成伤害后，记录你体力值并调整体力值至上一记录值。`,
 
 	AirFazen_yzs: "模仿",
-	AirFazen_yzs_info: `锁定技：每回合限1次：场上角色使用<font color="#f43e96">单目标转化牌</font>时，你可摸2张牌，然后<font color="#f43e96">记录此牌牌名</font>。<br>
+	AirFazen_yzs_info: `锁定技：每回合限1次：场上角色使用<font color="#f43e96">单目标转化牌</font>时，你可摸1张牌，然后<font color="#f43e96">记录此牌牌名</font>。<br>
     每回合每种牌名限1次：你可将手牌当做<font color="#f43e96">记录过的牌</font>使用。`,
 	xuanzhan_yzs: "旋斩",
-	xuanzhan_yzs_info: `需要时，你可将1张<font color="#f43e96">非延时锦囊牌</font>当做普通【杀】使用，然后可将1张【杀】当做<font color="#f43e96">前者的底牌</font>使用。`,
+	xuanzhan_yzs_info: `需要时，你可将1张<font color="#f43e96">非延时锦囊牌</font>当做普通【杀】使用，然后摸1张牌并可将1张【杀】当做<font color="#f43e96">前者的底牌</font>使用。`,
 	huanwu_yzs: "幻武",
 	huanwu_yzs_info:`锁定技：你视为拥有<font color="#f43e96">【仁王盾】</font>的装备效果。<br>
     每名角色的回合开始时，你可将1张<font color="#f43e96">装备牌</font>当做任意基本牌使用，并用<font color="#f43e96">此牌</font>替换<font color="#f43e96">上述牌名</font>。`,
@@ -1129,14 +1130,14 @@ const translates = {
 
 	chaoren_yzs: `超人`,
 	chaoren_yzs_info: `锁定技：回合开始时，你投掷3枚骰子，然后将投掷结果从高至低依次填入你以下数值：（无对应结果的项数值不变，至少为1）<br>
-	<small>手牌上限、摸牌数、进攻距离</small>`,
+	<small>手牌上限、摸牌数</small>`,
 	chaoren_yzs_name1: "超人「圣白莲」",
 	chaoren_yzs_name2:"大魔法「魔神复诵」",
 	youxingsheng_yzs: `游行圣`,
 	youxingsheng_yzs_name:"吉兆「紫色云路」",
 	youxingsheng_yzs_info: `锁定技：${get.poptip("chaoren_yzs")}结算后，你选择：<br>
 ①此后【超人】多投掷1枚骰子；<br>②将以下一项数值移动至【超人】描述末尾： <br>
-  <small>出【杀】数、防御距离、【杀】需响应数</small><br>
+  <small>出【杀】数、进攻距离、【杀】需响应数</small><br>
     以上均移动后，②选项改为“令【超人】中一项数值+2”，此后你投掷结果+1。`,
 
 	ReverseInvoker_yzs: `逆向呼神`,
@@ -1225,10 +1226,10 @@ const translates = {
 	每名角色再次被附着花色时失去其先前花色。`,
 	fuli_yzs: `符力`,
 	fuli_yzs_info: `锁定技：当其他角色附着的花色变动时，你根据变动前其附着的花色发动对应效果（优先结算♠的效果）：<br><small>
-♠：每自轮次限3次：你可令1名角色附着♠。<br>♣：你可将1张牌重铸或当做${get.poptip("tiesuo")}对其使用。<br>♥：你可将1张牌当做火【杀】对其使用。<br>
+♠：每自轮限3次：你可令1名角色附着♠。<br>♣：你可将1张牌重铸或当做${get.poptip("tiesuo")}对其使用。<br>♥：你可将1张牌当做火【杀】对其使用。<br>
 ♦：你获得其1张牌，然后其摸1张牌。<br>（第二名角色附着♠时，原先♠角色失去附着的花色。）</small>`,
 	yifu_yzs: `移符`,
-	yifu_yzs_info: `锁定技：每自轮次限1次：${get.poptip("wuyongchang_yzs")}：你失去1点体力，然后摸1张牌并令2名角色交换其附着的花色。`,
+	yifu_yzs_info: `锁定技：每自轮限1次：${get.poptip("wuyongchang_yzs")}：你失去1点体力，然后摸1张牌并令2名角色交换其附着的花色。`,
 	huanfu_yzs: `幻符`,
 	huanfu_yzs_info:`锁定技：你附着的花色变动时，你根据变动前附着的花色发动对应效果，然后可重铸1张手牌：<br><small>
 ♠：你刷新${get.poptip("yifu_yzs")}。<br>♣：你将护甲值调整至1。<br>♥：你可将1张牌当做【桃】对自己使用。<br>♦：你摸1张牌。</small>`,
@@ -1999,7 +2000,25 @@ const translates = {
 	yzs_jianxin_info: `出牌阶段开始时你可摸牌至手牌上限，每因此摸1张牌，本阶段你出【杀】数＋1。`,
 	yzs_zhanlong: `斩龙`,
 	yzs_zhanlong_info:`出牌阶段，你可移去<font color="#fd816e">4</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
-    觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`
+    觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`,
+
+	yzs_halfGhost: `半灵`,
+	yzs_halfGhost_info: `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1张符卡并交换手牌与“半灵”牌。<br>
+	符卡：你摸1张牌并交换手牌与“半灵”牌。
+<br>转换技：每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，<font color="#1fffc0">人：摸2张牌；</font>灵：执行仅有出牌阶段的额外回合。`,
+	yzs_zhanwang: `斩妄`,
+	yzs_zhanwang_info: `符卡：你可将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可：符卡：将1张“半灵”牌当做此牌使用。`,
+
+	yzs_bolijiejie: `博丽结界`,
+	yzs_bolijiejie_info: `${get.poptip("FukaSkill_yzs")}：若无角色处于“结界”内，你可指定1名角色并调整护甲值至1。你有护甲期间，这些角色处于“结界”内，其余角色处于“结界”外。`,
+	yzs_leyuan: `乐园`,
+	yzs_leyuan_info: `锁定技：你回合开始时或使用或打出红色牌时获得1张符卡。<br>
+“结界”内角色摸牌数和手牌上限+1，若为你则再+1。“结界”内角色受到致命伤害时，你无效之并失去等量点护甲。除你以外，“结界”内与外角色之间计算距离为无限。`,
+	yzs_yinyangyu: `阴阳玉`,
+	yzs_yinyangyu_info: `${get.poptip("FukaSkill_yzs")}：若你为“结界”外角色，你摸1张牌并指定1名其他角色，你观看其手牌并可与其交换1张手牌；
+若你为“结界”内角色，你本回合出【杀】数+1并获得1枚【梦】标记，然后你可令1名角色加入或离开“结界”内。`,
+	yzs_mengxiangfengyin: `梦想封印`,
+	yzs_mengxiangfengyin_info: `${get.poptip("FukaSkill_yzs")}：你指定1名“结界”内角色并移除3X枚【梦】标记，然后对其造成X次1点伤害。`,
 };
 
 export default translates;

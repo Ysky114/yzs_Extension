@@ -149,13 +149,41 @@ const skills = {
 			use: {
 				priority: 31,
 				direct: true,
+				popup:false,
 				trigger: {
-					player: ["useCard"],
+					player: ["useCard1"],
 				},
 				filter(event, player) {
-					return event.card?.storage?.eling_yzs && get.suit(event.card, player) != "spade";
+					return event.card?.storage?.eling_yzs;
 				},
 				async content(event, trigger, player) {
+					let evt = trigger.getParent(4);
+			//		game.log(evt.name)
+					let card = false;
+					if (!card && evt && evt.name == "phaseJudge" && evt.card) {
+						card = evt.card;
+					} else {
+						evt = evt.getParent()
+						if (!card && evt && evt.name == "useCard" && evt.card) {
+							card = evt.card;
+						}
+					}
+					//game.log(card)
+					if (card?.name) {
+						let targets = [];
+						if (evt?.name == "phaseJudge") {
+							targets = [evt.player]
+						} else if (evt?.name == "useCard") {
+							targets = evt.targets;
+						}
+						if (trigger.respondTo) {
+							let respondTo = trigger.respondTo[1];
+				//			game.log(card, respondTo, card == respondTo);
+							if (!targets.includes(player) || respondTo.name == "wuxie") player.addTempSkill("eling_yzs_ban")
+						}
+					}
+
+					if (get.suit(trigger.card, player) == "spade") return;
 					player.addSkill("eling_yzs_damage");
 					player.markAuto("eling_yzs_damage", get.suit(trigger.card, player))
 					await player.draw();
@@ -226,31 +254,10 @@ const skills = {
 				eling_yzs: true,
 			}
 		},
-		async precontent(event, trigger, player) {
-			if (event.result.card.name != "wuxie") return;
-			let evt = event.getParent(4);
-			//game.log(evt.name);
-			let card = null;
-			if (!card && evt && evt.name == "phaseJudge" && evt.card) {
-				card = evt.card;
-			} else {
-				evt = evt.getParent()
-				if (!card && evt && evt.name == "useCard" && evt.card) {
-					card = evt.card;
-				}
-			}
-			if (!card || !card.name) return;
-			let targets = [];
-			if (evt?.name == "phaseJudge") {
-				targets = [evt.player]
-			} else if (evt?.name == "useCard") {
-				targets = evt.targets;
-			}
-			if (!targets.includes(player)) player.addTempSkill("eling_yzs_ban")
-		},
 		prompt(links, player) {
 			const storage = player.getStorage("eling_yzs_damage")
-			return `将1张手牌当做【无懈可击】使用或打出，若不为${get.translation(storage)}，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后`;
+			return `将1张手牌当做【无懈可击】使用或打出，若不为${get.translation(storage)}，你摸1张牌，你此花色的手牌和判定牌视为♠至你下次受到伤害后<br>
+			若响应的牌未指定你为目标，本回合本技能失效`;
 		},
 		mod: {
 			aiValue(player, card, num) {
@@ -8216,6 +8223,319 @@ const skills = {
 			result: {
 				player: 1,
 			},
+		},
+	},
+	//魂魄妖梦
+	yzs_halfGhost: {
+		group: ["yzs_halfGhost_start", "yzs_halfGhost_phase", "yzs_halfGhost_fuka"],
+		subSkill: {
+			fuka: {
+				enable: "phaseUse",
+				filter(event, player) {
+					return player.countMark("Fuka_yzs") > 0;
+				},
+				async content(event, trigger, player) {
+					player.removeMark("Fuka_yzs");
+					await player.draw();
+					let cards = player.getExpansions("yzs_halfGhost");
+					let handcards = player.getCards("h");
+					let next = player.addToExpansion(handcards, player, "giveAuto")
+					next.gaintag.add("yzs_halfGhost")
+					next.untrigger(true);
+					await next
+					if (cards && cards.length) {
+						await player.gain(cards, "draw");
+						player.removeGaintag("yzs_halfGhost", cards);
+					}
+					await game.delayx();
+				},
+				ai: {
+					order(item, player) {
+						if (player.countCards("h")-2 > player.countExpansions("yzs_halfGhost")) return 1;
+						return 9;
+					},
+					threaten: 1.1,
+					result: {
+						player: 1,
+					},
+				},
+			},
+			phase: {
+				forced: true,
+				priority: 913,
+				trigger: {
+					player:["phaseBegin","phaseEnd"]
+				},
+				async content(event, trigger, player) {
+					if (player.countMark("Fuka_yzs")<player.getFukaLimit())player.addMark("Fuka_yzs");
+					let cards = player.getExpansions("yzs_halfGhost");
+					let handcards = player.getCards("h");
+					let next = player.addToExpansion(handcards, player, "giveAuto")
+					next.gaintag.add("yzs_halfGhost")
+					next.untrigger(true);
+					await next
+					if (cards && cards.length) {
+						await player.gain(cards, "draw");
+						player.removeGaintag("yzs_halfGhost", cards);
+					}
+					await game.delayx();
+				}
+			},
+			start: {
+				priority:8,
+				trigger: {
+					player: "enterGame",
+					global: "phaseBefore",
+				},
+				filter(event, player) {
+					return event.name != "phase" || game.phaseNumber == 0;
+				},
+				forced: true,
+				async content(event, trigger, player) {
+					await player.draw(4);
+					let result = player.countCards("h") > 4 ?
+						await player.chooseCard(4, true,"扣置4张手牌，称为“半灵”牌").forResult()
+						: { bool: true, cards: player.getCards("h") };
+					if (result?.bool&&result.cards?.length) {
+						let next = player.addToExpansion(result.cards, "giveAuto", player)
+						next.gaintag.add("yzs_halfGhost");
+						await next;
+					}
+				}
+			},
+		},
+		locked: true,
+		mark: true,
+		markimage: "extension/一中杀/image/guangyousheguainiao_yzs.png",
+		intro: {
+			markcount: "expansion",
+			mark(dialog, content, player) {
+				let cards = player.getExpansions("yzs_halfGhost");
+				if (!cards.length) return "无“半灵”牌";
+				if (player.isUnderControl(true) && cards.length) dialog.addAuto(cards);
+				else return "共有" + get.cnNumber(cards.length) + "张“半灵”牌";
+			},
+		},
+		frequent: true,
+		prompt2() {
+			const player = get.player();
+			return [
+				`转换技：每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，<font color="#1fffc0">人：摸2张牌；</font>灵：执行仅有出牌阶段的额外回合`,
+				`转换技：每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，人：摸2张牌；<font color="#ffac27">灵：执行仅有出牌阶段的额外回合</font>`,
+			][!player.storage.yzs_halfGhost ? 0 : 1];
+		},
+		trigger: {
+			global:"phaseAfter"
+		},
+		filter(event, player) {
+			return !event.skill && player.countCards("h") == player.countExpansions("yzs_halfGhost")
+		},
+		check(event, player) {
+			return true;
+		},
+		async content(event, trigger, player) {
+			player.changeZhuanhuanji("yzs_halfGhost");
+			const storage = player.storage["yzs_halfGhost"];
+			if (!storage) {
+				let list = ["phaseUse|yzs_halfGhost"];
+				const next = player.insertPhase("yzs_halfGhost");
+				next.set("phaseList", list);
+			} else {
+				await player.draw(2);
+			}
+		}
+	},
+	yzs_zhanwang: {
+		group: ["yzs_zhanwang_use","yzs_zhanwang_useAfter"],
+		subSkill: {
+			useAfter: {
+				priority: 23,
+				trigger: {
+					global:"useCardAfter"
+				},
+				filter(event, player) {
+					if (!event.yzs_zhanwang) return false;
+					if (!player.countMark("Fuka_yzs")) return false;
+					if (!player.countExpansions("yzs_halfGhost")) return false;
+					const name = event.card.name;
+					if (get.type(name) != "trick" && get.type(name) != "basic") {
+						return false;
+					}
+					const infox = get.info({ name: name });
+					return (
+						infox &&
+						!infox.notarget &&
+						(infox.toself || infox.singleCard || !infox.selectTarget || infox.selectTarget === 1)
+					)
+				},
+				async cost(event, trigger, player) {
+					event.result = {bool:false}
+					const cards = player.getExpansions("yzs_halfGhost")
+					let result = await player.chooseButtonTarget()
+						.set("createDialog", [`符卡：将1张“半灵”牌当做 ${get.translation(trigger.card.name)} 使用`, cards])
+						.set("selectButton", 1)
+						.set("filterButton", function (button) {
+							return true;
+						})
+						.set("complexSelect", true)
+						.set("filterTarget", (card, player, target) => {
+							if (!ui.selected?.buttons?.length) return false;
+							const cards = ui.selected.buttons;
+							const name = get.event().cardname;
+							const vcard = get.autoViewAs({ name:name }, cards, player);
+							return player.canUse(vcard,target);
+						})
+						.set("cardname",trigger.card.name)
+						.set("ai1", button => {
+							return 6 - get.value(button);
+						})
+						.set("ai2", target => {
+							const name = get.event().cardname;
+							const player = get.player();
+							return get.effect(target, { name: name }, player, player);
+						})
+						.forResult();
+					if (result?.bool && result?.links?.length && result.targets?.length) {
+						event.result = {
+							bool: true,
+							cards: result.links,
+							targets:result.targets
+						}
+					}
+				},
+				async content(event, trigger, player) {
+					player.removeMark("Fuka_yzs");
+					const name = trigger.card.name;
+					const words = ["狱神剑「业风神闪斩」", "畜趣剑「无为无策之冥罚」", "人符「现世斩」", "人鬼「未来永劫斩」", "断命剑「冥想斩」",
+						"断迷剑「迷津慈航斩」", "符之二「心眼迷想斩」", "符之三「业风神闪斩」", "奥义「西行春风斩」", "空观剑「六根清净斩」", "转生剑「圆心流转斩」",
+						].randomGet();
+					player.popup(words);
+					await player.useCard({ name: trigger.card.name }, event.targets, event.cards);
+				},
+			},
+			use: {
+				priority: 131,
+				direct: true,
+				popup: false,
+				trigger: {
+					player: ["useCard1"],
+				},
+				filter(event, player) {
+					if (!event.respondTo) return false;
+					if (!event.card?.storage?.yzs_zhanwang) return false;
+					let card = event.respondTo[1];
+					const name = card.name;
+					if (get.type(name) != "trick" && get.type(name) != "basic") {
+						return false;
+					}
+					const infox = get.info({ name: name });
+					return (
+						infox &&
+						!infox.notarget &&
+						(infox.toself || infox.singleCard || !infox.selectTarget || infox.selectTarget === 1)
+					)
+				},
+				async content(event, trigger, player) {
+					let evt = trigger.getParent(5);
+					//        game.log(evt.name)
+					let card = false;
+					if (evt && evt.name == "useCard" && evt.card) {
+						card = evt.card;
+					}
+					//game.log(card)
+					if (trigger.respondTo) {
+						let respondTo = trigger.respondTo[1];
+						//            game.log(card, respondTo, card == respondTo);
+						if (respondTo == card) evt.yzs_zhanwang = true;
+					}
+
+				},
+				"skill_id": "eling_yzs_use",
+				sub: true,
+				sourceSkill: "eling_yzs",
+				"_priority": 3100,
+			},
+		},
+		hiddenCard(player, name) {
+			if (!player.countMark("Fuka_yzs")) return false;
+			var list = ["wuxie"];
+			return list.includes(name) && player.countCards("h");
+		},
+		enable: ["chooseToUse"],
+		filter(event, player) {
+			if (!player.countMark("Fuka_yzs")) return;
+			if (event.responded) return false;
+			var list = ["wuxie"];
+			if (!list.length) {
+				return false;
+			}
+			if (!player.countCards("h")) {
+				return false;
+			}
+			for (var i of list) {
+				if (event.filterCard(get.autoViewAs({ name: i, storage: { yzs_zhanwang: true, } }, "unsure"), player, event)) {
+					return true;
+				}
+			}
+			return false;
+		},
+		filterCard(card) {
+			return true
+		},
+		selectCard: 1,
+		position: "h",
+		popname: true,
+		viewAs: {
+			name: "wuxie",
+			storage: {
+				"yzs_zhanwang": true,
+			},
+		},
+		async precontent(event, trigger, player) {
+			player.removeMark("Fuka_yzs");
+			const words = ["幽鬼剑「妖童饿鬼之断食」", "饿鬼剑「饿鬼道草纸」", "饿王剑「饿鬼十王的报应」", "狱界剑「二百由旬之一闪」", "狱炎剑「业风闪影阵」",
+				"修罗剑「现世妄执」", "人界剑「悟入幻想」", "人世剑「大悟显晦」", "人神剑「俗谛常住」", "天上剑「天人之五衰」", "天界剑「七魄忌讳」",
+				"天神剑「三魂七魄」", "六道剑「一念无量劫」", "魂符「幽明的苦轮」", "魂魄「幽明求闻持聪明之法」","符之一「二重的苦轮」"].randomGet();
+			player.popup(words);
+		},
+		prompt(links, player) {
+			return `符卡：你可将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可：符卡：将1张“半灵”牌当做此牌使用`;
+		},
+		mod: {
+			aiValue(player, card, num) {
+				if (get.name(card) != "shan" && get.name(card) != "wuxie" && get.color(card) != "black") {
+					return;
+				}
+				const cards2 = player.getCards("hs", function (card2) {
+					return get.name(card2) == "shan" || get.name(card2) == "wuxie" || get.color(card2) == "black";
+				});
+				cards2.sort(function (a, b) {
+					return (["wuxie", "shan"].includes(get.name(b)) ? 1 : 2) - (["wuxie", "shan"].includes(get.name(a)) ? 1 : 2);
+				});
+				const geti = function () {
+					if (cards2.includes(card)) {
+						return cards2.indexOf(card);
+					}
+					return cards2.length;
+				};
+				if (["wuxie", "shan"].includes(get.name(card))) {
+					return Math.min(num, [6, 4, 3][Math.min(geti(), 2)]) * 0.6;
+				}
+				return Math.max(num, [6, 4, 3][Math.min(geti(), 2)]);
+			},
+			aiUseful() {
+				return lib.skill.yzs_zhanwang.mod.aiValue.apply(this, arguments);
+			},
+		},
+		ai: {
+			basic: {
+				useful: [6, 4, 3],
+				value: [6, 4, 3],
+			},
+			result: {
+				player: 1,
+			},
+			expose: 0.2,
 		},
 	},
 }

@@ -1,5 +1,15 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_halfGhost(player) {
+		let str = `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1张符卡并交换手牌与“半灵”牌。<br>
+	符卡：你摸1张牌并交换手牌与“半灵”牌。<br>转换技：`;
+		if (player.storage.yzs_halfGhost) {
+			str +=`每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，人：摸2张牌；<font color="#ffac27">灵：执行仅有出牌阶段的额外回合。</font>`
+		} else {
+			str +=`每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，<font color="#1fffc0">人：摸2张牌；</font>灵：执行仅有出牌阶段的额外回合。`
+		}
+		return str
+	},
 	yzs_zhanlong(player) {
 		if (player.countMark("yzs_zhanlong_awaken")) return `出牌阶段，你可移去<font color="#fd816e">3</font>张【剑势】，然后对1名其他角色造成其体力值向下取半数点伤害。<br>
     <span style="opacity:0.5">觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你恢复全部体力，然后增加1点体力上限。</span>`;

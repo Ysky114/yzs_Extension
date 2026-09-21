@@ -1999,25 +1999,33 @@ const skills = {
 			},
 		},
 		locked: true,
-		//group: "cangfa_yzs_record",
+		group: "cangfa_yzs_record",
 		subSkill: {
 			ban: {
 				sub: true,
 				sourceSkill: `cangfa_yzs`
 			},
 			record: {
+				priority:22,
 				locked: true,
 				forced: true,
+				popup:false,
 				trigger: {
-					target: "useCardToAfter",
+					player: "useCard1",
 				},
 				filter(event, player) {
-					if (!player.storage.cangfa_yzs) return true;
-					if (player.storage.cangfa_yzs.includes(event.card.name)) return false;
-					return get.type(event.card) == "trick" || get.type(event.card) == "delay"
+					if (!event.card.storage.cangfa_yzs) return false;
+					if (!event.respondTo) {
+						return false;
+					}
+					let card = event.respondTo[1]
+					return !player.getStorage("cangfa_yzs").includes(card.name)
 				},
 				async content(event, trigger, player) {
-					player.markAuto("cangfa_yzs", trigger.card.name)
+					let card = trigger.respondTo[1]
+				//	game.log(trigger.respondTo)
+					player.markAuto("cangfa_yzs", card.name)
+					player.addTempSkill("cangfa_yzs_ban")
 				},
 			}
 		},
@@ -2061,24 +2069,12 @@ const skills = {
 		},
 		viewAs: {
 			name: "wuxie",
+			storage: {
+				cangfa_yzs:true,
+			}
 		},
 		position: "hs",
 		prompt: "将一张手牌当【无懈可击】使用",
-		async precontent(event, trigger, player) {
-			let evt = event.getParent(4);
-			//game.log(evt.name);
-			let card = null;
-			if (!card&&evt && evt.name == "phaseJudge" && evt.card) {
-				card = evt.card;
-			}
-			evt = evt.getParent()
-			if (!card&&evt && evt.name == "useCard" && evt.card) {
-				card = evt.card;
-			}
-			if (!card || !card.name) return;
-			player.markAuto("cangfa_yzs", card.name)
-			player.addTempSkill("cangfa_yzs_ban")
-		},
 		check(card) {
 			const tri = _status.event.getTrigger();
 			if (tri && tri.card && tri.card.name == "chiling") {
@@ -7042,6 +7038,20 @@ const skills = {
 	fuqu_yzs: {
 		group: ["fuqu_yzs_tengjia1", "fuqu_yzs_tengjia2", "fuqu_yzs_tengjia3",],
 		subSkill: {
+			buff: {
+				charlotte: true,
+				marktext: "腐",
+				intro: {
+					name: "腐躯",
+					"name2": "腐躯",
+					content: "手牌上限-#。",
+				},
+				mod: {
+					maxHandcard(player, num) {
+						return num - player.countMark("fuqu_yzs");
+					},
+				},
+			},
 			tengjia1: {
 				equipSkill: true,
 				noHidden: true,
@@ -7131,22 +7141,11 @@ const skills = {
 			},
 		},
 		locked: true,
-		mod: {
-			maxHandcard(player, num) {
-				return num - player.countMark("fuqu_yzs");
-			},
-		},
 		init(player, skill) {
 			player.addExtraEquip(skill, "tengjia", true, (player2) => lib.card.tengjia);
 		},
 		onremove(player, skill) {
 			player.removeExtraEquip(skill);
-		},
-		marktext: "腐",
-		intro: {
-			name: "腐躯",
-			"name2": "腐躯",
-			content: "手牌上限-#。",
 		},
 		preHidden: true,
 		round: 1,
@@ -7174,7 +7173,7 @@ const skills = {
 				[
 					[
 						["loseHp", "失去1点体力"],
-						["diaoli", `自己手牌上限-2并令 ${get.translation(player)} 本回合调离`],
+						["diaoli", `自己本回合手牌上限-2并令 ${get.translation(player)} 本回合调离`],
 					],
 					"textbutton",
 				],
@@ -7195,6 +7194,7 @@ const skills = {
 			if (result.links == "loseHp") {
 				await trigger.player.loseHp();
 			} else {
+				trigger.player.addTempSkill("fuqu_yzs_buff");
 				trigger.player.addMark("fuqu_yzs", 2, false)
 				player.addTempSkill("diaohulishan");
 			}

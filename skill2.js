@@ -1291,16 +1291,16 @@ const skills = {
 				filter(event, player) {
 					if (!game.hasPlayer(function (target) {
 						if (target.hasSkill("hidden_yzs")) return false;
-						return target.countCards("h") > 0;
+						return target.countGainableCards(player, "h") > 0;
 					})) return false;
 					return !event.numFixed;
 				},
 				async cost(event, trigger, player) {
-					event.result = await player.chooseTarget("潜影", "获得其他角色至多2张手牌(选择两名则各获得一张，选择一名则获得其1~2张)", false)
+					event.result = await player.chooseTarget("潜影", "摸牌阶段，你可改为获得1~2名其他角色各1张手牌", false)
 						.set("filterTarget", (card, player, target) => {
 							if (target == player) return false;
 							if (target.hasSkill("hidden_yzs")) return false;
-							return target.countCards("h") > 0
+							return target.countGainableCards(player,"h") > 0
 						})
 						.set("ai", (target) => {
 							const att = get.attitude(_status.event.player, target);
@@ -1309,15 +1309,11 @@ const skills = {
 							}
 							return 1 - att;
 						})
-						.set("selectTarget", [1, 2])
+						.set("selectTarget", [1,2])
 						.forResult()
 				},
 				async content(event, trigger, player) {
-					if (event.targets.length > 1) {
-						await player.gainMultiple(event.targets);
-					} else {
-						await player.gainPlayerCard(event.targets[0], "h", false, [1, 2]);
-					}
+					await player.gainMultiple(event.targets);
 					trigger.changeToZero();
 					await game.delay();
 				},
@@ -1500,6 +1496,7 @@ const skills = {
 		mark: true,
 		markimage: "extension/一中杀/image/buxijinjun_yzs.png",
 		intro: {
+			markcount: "expansion",
 			mark(dialog, content, player) {
 				let cards = player.getExpansions("buxijinjun_yzs");
 				if (!cards.length) return "无【源晶】";
@@ -1735,8 +1732,6 @@ const skills = {
 				sourceSkill: "mengliao_yzs",
 			},
 			recover: {
-				direct: true,
-				popup: true,
 				priority: 7,
 				trigger: {
 					global: ["eventNeutralized", "useCardEnd"]
@@ -5146,6 +5141,7 @@ const skills = {
 				player.addTip("ErWangSaid_yzs", "“里”次元 ", false);
 			}
 			if (!player.hasSkill("ErWangSaid_yzs")) return;
+			/*
 			if (_status.currentPhase != player) return;
 			if (!player.countCards("h")) return;
 			let str = "是否弃置所有手牌？"
@@ -5155,6 +5151,7 @@ const skills = {
 			if (!result.bool) return;
 			let cards = player.getCards("h");
 			await player.discard(cards);
+			*/
 		},
 		subSkill: {
 			backup: {
@@ -5288,100 +5285,18 @@ const skills = {
 			},
 		},
 		locked: true,
-		mod: {
-			playerEnabled(card, player, target) {
-				if (card.storage?.ErWangSaid_yzs) return target == player;
-				return;
-			},
-		},
+		prompt: `出牌阶段限2次：你可弃置所有手牌并翻转次元状态<br>(回合内你失去最后的手牌时摸3张牌)`,
 		enable: "phaseUse",
+		usable: 2,
 		filter(event, player) {
-			if (player.countCards('he', { color: "red" }) < 2) return false;
-			for (var i = 0; i < lib.inpile.length; i++) {
-				var name = lib.inpile[i];
-				var info = lib.card[name];
-				if (get.type(name) != "trick") continue;
-				if (name == "mengliaoshibian_yzs") continue;
-				if (!player.canUse({ name: name }, player)) continue;
-				if (info.toself) {
-					return true;
-					continue;
-				}
-				if (info.selectTarget == -1) continue;
-				return true;
-			}
-			return false;
+			return player.countCards("h") > 0;
 		},
-		chooseButton: {
-			dialog(event, player) {
-				var list = [];
-				for (var i = 0; i < lib.inpile.length; i++) {
-					var name = lib.inpile[i];
-					var info = lib.card[name];
-					if (get.type(name) != "trick") continue;
-					if (name == "mengliaoshibian_yzs") continue;
-					if (!player.canUse({ name: name }, player)) continue;
-					if (info.toself) {
-						list.push(["锦囊", "", name]);
-						continue;
-					}
-					if (info.selectTarget == -1) continue;
-					list.push(["锦囊", "", name]);
-				}
-				return ui.create.dialog("二王如是说", [list, "vcard"]);
-			},
-			filter(button, player) {
-				return _status.event.getParent().filterCard({ name: button.link[2] }, player, _status.event.getParent());
-			},
-			check(button) {
-				var player = _status.event.player;
-				var card = { name: button.link[2], nature: button.link[3] };
-				if (player.countCards("h", cardx => cardx.name == card.name)) {
-					return 0;
-				}
-				return player.getUseValue(card)
-			},
-			backup(links, player) {
-				return {
-					filterCard: {
-						color: "red",
-					},
-					selectCard: 2,
-					popname: true,
-					check(card) {
-						return 6 - get.value(card);
-					},
-					viewAs: {
-						name: links[0][2],
-						nature: links[0][3],
-						isCard: true,
-						check(card) {
-							return 6 - get.value(card);
-						},
-						storage: {
-							ErWangSaid_yzs: true,
-						}
-					},
-					position: "he",
-					async precontent(event, trigger, player) {
-						player.logSkill("ErWangSaid_yzs");
-						var cards = event.result.cards;
-						await player.discard(cards);
-						event.result.card = {
-							name: event.result.card.name,
-							nature: event.result.card.nature,
-							isCard: true,
-						};
-						event.result.cards = [];
-					},
-				};
-			},
-			prompt(links, player) {
-				return "请弃置2张牌，然后视为对自己使用" + (get.translation(links[0][3]) || "") + get.translation(links[0][2]);
-			},
+		async content(event, trigger, player) {
+			await player.discard(player.getDiscardableCards(player, "h"));
+			await lib.skill.ErWangSaid_yzs.changeCiYuan(player, event);
 		},
 		ai: {
-			order: 4,
+			order: 2,
 			result: {
 				player:2
 			},
@@ -8144,7 +8059,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					await player.recover(trigger.num);
-					await player.draw(trigger.num);
+					await player.draw();
 				},
 			},
 		},
@@ -9475,7 +9390,7 @@ const skills = {
 				audio: "ext:一中杀/audio/skill:2",
 				usable: 1,
 				prompt2(event, player) {
-					return "每回合限1次：你可摸2张牌，然后记录此牌牌名(" + get.translation(event.card.name) + ")";
+					return "每回合限1次：你可摸1张牌，然后记录此牌牌名(" + get.translation(event.card.name) + ")";
 				},
 				trigger: {
 					global: ["useCard", "respond"],
@@ -9499,7 +9414,7 @@ const skills = {
 					}
 				},
 				async content(event, trigger, player) {
-					await player.draw(2);
+					await player.draw();
 					if (!player.storage.AirFazen_yzs_record) player.storage.AirFazen_yzs_record = {};
 					player.storage.AirFazen_yzs_record[trigger.card.name] = trigger.player.name;
 					player.markSkill("AirFazen_yzs_record")
@@ -9620,6 +9535,7 @@ const skills = {
 					return event.card?.storage?.xuanzhan_yzs
 				},
 				async content(event, trigger, player) {
+					await player.draw();
 					const { cards } = trigger;
 					let name = cards[0].name;
 					if (lib.card[name].notarget) return;

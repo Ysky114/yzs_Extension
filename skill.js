@@ -7636,7 +7636,7 @@ const skills = {
 				async cost(event, trigger, player) {
 					let cards = trigger.getg(trigger.player).filter(card => card.name == "shengbaihu_yzs");
 					if (cards && cards.length) {
-						if (player.countMark("princetwittering_yzs_shengbaihu") > 1) return;
+						if (player.countMark("princetwittering_yzs_shengbaihu") > 0) return;
 						player.addMark("princetwittering_yzs_shengbaihu", 1, false);
 						await player.showCards(get.translation(player) + "获得【圣白虎】而恢复1点体力", cards);
 						await player.recover();
@@ -8514,7 +8514,7 @@ const skills = {
 		popup:true,
 		filter(event, player) {
 			if (event.getParent().triggeredTargets3.length > 1) return false;
-			return event.targets.length > 1 && event.targets.includes(player)
+			return event.targets.length > 1 && event.targets.includes(player)&&event.player!=player
 		},
 		async content(event, trigger, player) {
 			trigger.getParent().excluded.add(player);

@@ -3937,43 +3937,32 @@ const skills = {
 		group: "hidden_yzs",
 	},
 	qianmian_yzs_effect2: {
-		locked:true,
+		locked: true,
+		intro: {
+			content: "摸牌数、手牌上限、出【杀】数+2",
+		},
 		mod: {
 			cardUsable(card, player, num) {
 				if (card.name == "sha") {
 					return num + 2
 				}
 			},
+			maxHandcard(player, num) {
+				return num + 2;
+			},
 		},
 		trigger: {
-			player: "loseAfter",
-			global: ["equipAfter", "addJudgeAfter", "gainAfter", "loseAsyncAfter", "addToExpansionAfter"],
+			player: "phaseDrawBegin2",
 		},
 		forced: true,
 		filter(event, player) {
-			if (player.countCards("h") == 6) return false;
-			for (var i = 0; i < 4; i++) {
-				evt = evt.getParent("qianmian_yzs_effect2");
-				if (evt.name != "qianmian_yzs_effect2") {
-					return true;
-				}
-			}
-			return false;
+			return !event.numFixed;
 		},
-		async content(event,trigger,player) {
-			var num = 6 - player.countCards("h");
-			if (num > 0) {
-				await player.draw(num);
-			} else {
-				await player.chooseToDiscard("h", true, -num);
-			}
+		async content(event, trigger, player) {
+			trigger.num+=2;
 		},
 		ai: {
-			nogain: true,
-			nolose: true,
-			nodiscard: true,
-			nokeep: true,
-			noh:true,
+			threaten: 2.3,
 		},
 	},
 	tiance_yzs: {
@@ -5202,6 +5191,10 @@ const skills = {
 		nobracket: true,
 		trigger: {
 			target: "useCardToTargeted",
+		},
+		check(event, player) {
+			const cards = player.getCards("h");
+			return !cards.some(card => get.suit(card) == get.suit(event.card))
 		},
 		filter(event, player) {
 			return event.player != player && event.cards && event.cards.length;

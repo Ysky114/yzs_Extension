@@ -546,7 +546,7 @@ const characters = {
 	TimeThief_yzs: {
 		sex: "male",
 		group: "shu",
-		hp: 4,
+		hp: 3,
 		skills: ["thief_yzs", "qianying_yzs"],
 		names: "盘面塑造者",
 		img: "extension/一中杀/image/TimeThief_yzs.png",
@@ -812,6 +812,7 @@ const characters = {
 		img: "extension/一中杀/image/Youmu_yzs.png",
 		Fuka: 6,
 		BGM: "メグルユメ",
+		isUnseen:true,
 	},
 
 	Frisk_yzs: {
@@ -1076,6 +1077,7 @@ const characters = {
 		img: "extension/一中杀/image/Reimu_yzs.png",
 		Fuka: 3,
 		BGM: "神々が恋した幻想郷", 
+		isUnseen: true,
 	},
 
 	Reimu_yzs_Barrier_yzs: {
@@ -1756,6 +1758,28 @@ const characters = {
 		img: "extension/一中杀/image/yzs_DragonSlayerLLX.png",
 		dieAudios: ["ext:一中杀/audio/die/yzs_DragonSlayerLLX.mp3"],
 	},
+
+	yzs_Youmu: {
+		sex: "female",
+		group: "wu",
+		hp: 4,
+		skills: ["yzs_halfGhost", "yzs_zhanwang"],
+		names: "魂魄妖梦",
+		img: "extension/一中杀/image/Youmu_yzs.png",
+		Fuka: 4,
+		BGM: "メグルユメ",
+	},
+
+	yzs_Reimu: {
+		sex: "female",
+		group: "shu",
+		hp: 4,
+		skills: ["yzs_bolijiejie", "yzs_leyuan", "yzs_yinyangyu", "yzs_mengxiangfengyin"],
+		names: "博丽灵梦",
+		img: "extension/一中杀/image/Reimu_yzs.png",
+		Fuka: 3,
+		BGM: "神々が恋した幻想郷",
+	},
 };
 
 const characterSubstitutes = {
@@ -1923,7 +1947,8 @@ const characterTitles = {
 	yzs_Mazhikang: `我是爱神`,
 	yzs_JoGo: `火山怒目`,
 	yzs_DragonSlayerLLX: `斩龙勇者`,
-
+	yzs_Youmu: `幽人的庭师`,
+	yzs_Reimu:`乐园的巫女`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2065,7 +2090,8 @@ const characterIntros = {
 	yzs_Mazhikang: ``,
 	yzs_JoGo: `漏瑚是芥见下下创作的漫画《咒术回战》及其衍生作品中的反派人物，由千叶繁配音。作为由人类对大地的恐惧形成的拥有智慧的特级咒灵，印象为老年男性、火山，具备与人类交流的能力，情绪激动时周围会变热。漏瑚接受伪夏油（羂索）指使参与封印五条悟计划，但在伏击中被五条悟重伤。涉谷事变中利用人群掩护与真人合作，促成五条悟被狱门疆封印后，通过喂食宿傩手指使其短暂觉醒，最终因与宿傩对战遭术式"开"击杀。其能力包含火焰术式、火烁虫、极之番•陨及领域展开"盖棺铁围山"，展开生得领域后普通术师会瞬间被烧成灰烬，但对五条悟无效。宿傩在漏瑚临终意识中承认其战斗能力`,
 	yzs_DragonSlayerLLX: ``,
-
+	yzs_Youmu: `魂魄妖梦是日本由上海爱丽丝幻乐团开发的同人游戏《东方Project》中的角色。魂魄妖梦是半人半灵，作为《东方妖妖梦》第五关的头目初次登场。她是侍奉冥界西行寺家的园艺师，同时兼任剑术指导一职。她遵照幽幽子的想法把“春”从幻想乡中收集了起来，幻想乡则受此影响，一直停滞在冬天。异变因冬天一直没离去而败露，主人公们因此闯进冥界把妖梦教训了一顿，妖梦看上去是一个年幼的女孩子，但其实有一半是幽灵。从她有一半属于幽灵，而幽灵没有寿命一说来考虑，可以推测她成为半人半灵的时日，与她主人成为亡灵的年月一样久。妖梦大体上可以说是一位既坦率又认真的可靠之人，但不知是不是因为长年服侍捉摸不透的主人，她略微有些容易上当。或许是因为西行寺家被任命在冥界管理幽灵，妖梦所配的两把剑都带有与幽灵相关的能力。长的那把剑是楼观剑，据妖梦所说，它拥有“一挥便可杀伤十只幽灵”的威力；短的那把剑是白楼剑，据说此剑能斩断“目标”的迷惘，幽灵被砍中就会成佛，人类被砍中则会流血`,
+	yzs_Reimu: `博丽灵梦，系列作品《东方Project》中的主人公，幻想乡境内博丽神社的现有巫女，负责解决在幻想乡中发生的各种异变。在《东方》系列的游戏中均以主角出场，在其他作品中也作为主要角色登场。作为博丽神社的巫女，退治妖怪是她的日常工作。因为神社没什么参拜客，所以整天过着喝茶扫地的闲日子`,
 };
 const characterReplaces = {
 };
@@ -2086,7 +2112,7 @@ const characterSort = {
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",
-		"ReiujiUtsuho_yzs", "Sakuya_yzs", "KomeijiSatori_yzs", "UsamiSumireko_yzs","Flandre_yzs"],
+		"ReiujiUtsuho_yzs", "Sakuya_yzs", "KomeijiSatori_yzs", "UsamiSumireko_yzs", "Flandre_yzs", "yzs_Reimu","yzs_Youmu"],
 	reverse1999Pack_yzs: ["toothFairy_yzs", "APPLe_yzs", "Marcus_yzs", "Getian_yzs", "KaalaBaauna_yzs"],
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],

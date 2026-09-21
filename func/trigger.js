@@ -2,6 +2,10 @@
 //【新标签、新时机】
 "use strict";
 window.yzs = function (lib, game, ui, get, ai, _status) {
+	//获取符卡上限
+	lib.element.player.getFukaLimit = function () {
+		return get.character(this.name).Fuka || 1;
+	};
 	//-----------吟唱------------//
 	//本机制原出自扩展《恒宇苍穹》(扩展作者：苍宇)，由“终日羽禁”完成，“白银山幽灵”修复bug，本扩展仅作搬运和部分修改
 	/*
@@ -2149,7 +2153,34 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (!lib.translate[identity]) {
 				lib.translate[identity] = "仆";
 			}
-			target.setIdentity();
+
+			const goon = player !== game.me && target !== game.me &&
+				player.node?.identity?.classList.contains("guessing") && !player.identityShown;
+			if (goon) {
+				if (target.identityShown) delete target.identityShown;
+				if (target.node?.identity && !target.node.identity.classList.contains("guessing")) {
+					target.node.identity.classList.add("guessing");
+				}
+			}
+			// setIdentity会用lib.translate覆盖显示
+			const pRaw = player?.node?.identity?.firstChild?.innerHTML;
+			const pText = pRaw ? String(pRaw).replace(/<[^>]*>/g, "").trim() : "";
+			const pDefault = player?.identity ? String(get.translation(player.identity)) : "";
+			const isCustomLabel = !!pText && pText !== pDefault;
+			target.setIdentity(goon ? "cai" : undefined);
+			if (!goon && isCustomLabel) {
+				if (target.node?.identity?.firstChild) {
+					target.node.identity.firstChild.innerHTML = pRaw;
+					const pColor = p?.node?.identity?.dataset?.color;
+					if (pColor) target.node.identity.dataset.color = pColor;
+				}
+				if (target.node?.dieidentity) {
+					target.node.dieidentity.innerHTML = pText;
+				}
+			} else if (target.node?.dieidentity) {
+				target.node.dieidentity.innerHTML = get.translation(target.identity + 2);
+			}
+
 			if (get.mode() == 'guozhan') {
 				if (target.name2 == undefined) target.name2 = target.name1;
 			}
