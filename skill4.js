@@ -4257,7 +4257,7 @@ const skills = {
 			global: "phaseDiscardAfter",
 		},
 		filter(event, player) {
-			return event.cards.filterInD("d").length > 0;
+			return event.cards?.filterInD("d").length > 0;
 		},
 		async cost(event, trigger, player) {
 			let cards = trigger.cards.filterInD("d");
@@ -9414,7 +9414,7 @@ const skills = {
 		filter(event, player) {
 			if (event.player == player) return false;
 			if (event.player?.hasSkill("kanpo_yzs") && event.card.isCard) return false;
-			return get.type(event.card?.name) == "trick"
+			return get.type2(event.card?.name) == "trick"
 		},
 		content: function () {
 			trigger.cancel();
@@ -10019,7 +10019,7 @@ const skills = {
 			},
 			async (event, trigger, player) => {
 				event.targets = game.filterPlayer(function (current) {
-					return current != event.player && current.hasSkill("chaodaoti_yzs_effect")
+					return current != event.player && (current.hasSkill("chaodaoti_yzs_effect") || current.hasSkill("chaodaoti_yzs"))
 				});
 				lib.tempSortSeat = _status.currentPhase || player;
 				event.targets.sort(lib.sort.seat);

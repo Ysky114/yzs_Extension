@@ -4,8 +4,8 @@ const crypto = require('crypto');
 
 const EXT_DIR = './';          // 脚本放在扩展根目录运行
 const OUTPUT = 'manifest.json';
-const VERSION = '0.97.8';      // 版本号，每次更新请修改
-const UPDATE_NOTE = '0.97.8新增漏瑚、斩龙李砺心、魂魄妖梦，新增武将评级'; // 更新说明
+const VERSION = '0.98';      // 版本号，每次更新请修改
+const UPDATE_NOTE = '0.98新增漏瑚、斩龙李砺心、魂魄妖梦、终末鸟，新增武将评级'; // 更新说明
 
 // 递归获取所有文件相对路径
 function walkDir(dir, baseDir, fileList = []) {

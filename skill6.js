@@ -1085,7 +1085,7 @@ const skills = {
 			event.result = await player.chooseCard({
 				prompt: `你可重铸1张牌名为【${get.translation(get.name(trigger.card))}】的手牌`,
 				selectCard: 1,
-				filterCard: (card, player2) => player2.canRecast(card) && get.name(card, player) == get.event().cardname,
+				filterCard: (card, player2) => player2.canRecast(card) && get.name(card, player2) == get.event().cardname,
 				position: "h"
 			})
 				.set("ai", (card) => {
@@ -1105,7 +1105,7 @@ const skills = {
 			let result2 = player.hasCard((card) => player.canRecast(card), "h") ? await player.chooseCard({
 				prompt: `你可重铸1张点数为 ${get.number(trigger.card)} 的手牌`,
 				selectCard: 1,
-				filterCard: (card, player2) => player2.canRecast(card) && get.number(card, player) == get.event().number,
+				filterCard: (card, player2) => player2.canRecast(card) && get.number(card, player2) == get.event().number,
 				position: "h"
 			})
 				.set("ai", (card) => {
@@ -1125,7 +1125,7 @@ const skills = {
 				let result3 = player.hasCard((card) => player.canRecast(card), "h") ? await player.chooseCard({
 					prompt: `你可重铸1张花色为 ${get.translation(get.suit(trigger.card))} 的手牌`,
 					selectCard: 1,
-					filterCard: (card, player2) => player2.canRecast(card) && get.suit(card, player) == get.event().suit,
+					filterCard: (card, player2) => player2.canRecast(card) && get.suit(card, player2) == get.event().suit,
 					position: "h"
 				})
 					.set("ai", (card) => {
@@ -4454,7 +4454,7 @@ const skills = {
 				async content(event, trigger, player) {
 					let result = await player.chooseToUse("你摸牌后可使用其中一张牌，然后摸1张牌", function (card, player, event) {
 						const cards = get.event().cards;
-						if (!cards.includes(card)) {
+						if (!cards?.includes(card)) {
 							return false;
 						}
 						return lib.filter.filterCard.apply(this, arguments);
@@ -5348,7 +5348,7 @@ const skills = {
 				}
 			},
 			use: {
-				audio: "ext:一中杀/audio/skill:5",
+				audio: "ext:一中杀/audio/skill:4",
 				locked: true,
 				hiddenCard(player, name) {
 					var list = player.getStorage("shizhongying_yzs").slice(0);
@@ -5795,45 +5795,7 @@ const skills = {
 					return;
 				}
 				_status.yzs_addPlayerOL = true;
-				//检测游戏胜负
-				if (typeof game.checkResult === "function") {
-					const origin_checkResult = game.checkResult;
-					game.checkResult = function () {
-						const player = game.me._trueMe || game.me;
-						if (get.mode() == "single") {
-							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(true);
-							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(false);
-							}
-							return;
-						}
-						const targets = game.players.filter(i => i._noCheckResult);
-						game.players.removeArray(targets);
-						origin_checkResult();
-						game.players.addArray(targets);
-					};
-				}
-				if (typeof game.checkOnlineResult === "function") {
-					const origin_checkOnlineResult = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						if (player._noCheckResult) {
-							return false;
-						}
-						if (get.mode() == "single") {
-							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(true);
-							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(false);
-							}
-							return;
-						}
-						const targets = game.players.filter(i => i._noCheckResult);
-						game.players.removeArray(targets);
-						origin_checkOnlineResult();
-						game.players.addArray(targets);
-					};
-				}
+	
 				//敌友判定
 				target.getFriends = function (func, includeDie) {
 					const player = this;
@@ -5909,7 +5871,7 @@ const skills = {
 		},
 		ai: {
 			order(item, player2) {
-				return 3 - player.hp
+				return 3 - player2.hp
 			},
 			result: {
 				player: 1,

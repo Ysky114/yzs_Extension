@@ -8437,6 +8437,9 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
+			game.broadcastAll(function (current) {
+				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/ZeninMaki_yzs2.png");
+			}, player)
 			player.addSkill("shuangzizhoufu_yzs_awake")
 			await player.changeHujia(-player.hujia, "lose");
 			await player.turnOver();

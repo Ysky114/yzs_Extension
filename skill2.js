@@ -5753,19 +5753,24 @@ const skills = {
 		group: ["zhuanshi_yzs_revive", "zhuanshi_yzs_die"],
 		subSkill: {
 			die: {
+				forceDie: true,
 				locked: true,
+				eternalSkill_yzs: true,
+				charlotte: true,
+				superCharlotte: true,
+				unique: true,
+				locked: true,
+				popup:false,
 				forced: true,
 				priority: 2,
-				priority: -2341,
 				trigger: {
-					global: "phaseEnd",
+					player: "dieBefore",
 				},
 				filter(event, player) {
-					return player.countMark("zhuanshi_yzs") >= 30;
+					return true
 				},
 				async content(event, trigger, player) {
-					await player.die(event);
-					player.chat("卒，享年30岁");
+					trigger.noDieAfter2 = true;
 				},
 				sub: true,
 				sourceSkill: "zhuanshi_yzs",
@@ -5815,19 +5820,16 @@ const skills = {
 				dialog.addText("这一世记录点数之和为" + player.countMark("zhuanshi_yzs") + "/30");
 			},
 		},
-		forceDie: true,
-		locked: true,
 		eternalSkill_yzs: true,
 		charlotte: true,
 		superCharlotte: true,
-		unique: true,
 		forced: true,
 		unique: true,
 		trigger: {
-			player: "dieBefore",
+			global: "phaseEnd",
 		},
 		filter(event, player) {
-			return player.countCards("h")
+			return player.countMark("zhuanshi_yzs") >= 30;
 		},
 		async content(event, trigger, player) {
 			while (player.countCards("h")) {
@@ -5847,10 +5849,13 @@ const skills = {
 					.set("selectCard", [1, Infinity])
 					.set("position", "h")
 					.forResult()
-				if (!result.bool) return
-				player.chat("收下吧 " + get.translation(result.targets[0]) + "，这是我最后的波纹了！")
-				await player.give(result.cards, result.targets[0]);
+				if (result?.bool) {
+					player.chat("收下吧 " + get.translation(result.targets[0]) + "，这是我最后的波纹了！")
+					await player.give(result.cards, result.targets[0]);
+				}
 			}
+			await player.die(event);
+			player.chat("卒，享年30岁");
 		},
 		ai: {
 			threaten:1.2,

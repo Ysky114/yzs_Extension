@@ -1,5 +1,33 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_ezhao(player) {
+		let str = `锁定技：每项限1次：准备阶段，你删除【`;
+		if (player.countMark("yzs_chengjie")) str += `<span style="opacity:0.5">`;
+		str += `惩戒`;
+		if (player.countMark("yzs_chengjie")) str += `</span>`;
+		str += `/`;
+		if (player.countMark("yzs_shenpan")) str += `<span style="opacity:0.5">`;
+		str += `审判`;
+		if (player.countMark("yzs_shenpan")) str += `</span>`;
+		str += `/`;
+		if (player.countMark("yzs_jianshi")) str += `<span style="opacity:0.5">`;
+		str += `监视`;
+		if (player.countMark("yzs_jianshi")) str += `</span>`;
+		str += `】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`
+		return str;
+	},
+	yzs_chengjie(player) {
+		if (player.countMark("yzs_chengjie")) return `锁定技：你造成或受到伤害后，可对对方使用1张【杀】，此牌伤害+1。`
+		return `锁定技：回合内，你不可使用【杀】。<br>你造成或受到伤害后，可对对方使用1张【杀】，此牌伤害+1。`;
+	},
+	yzs_shenpan(player) {
+		if (player.countMark("yzs_shenpan")) return `锁定技：你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`
+		return `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。。`;
+	},
+	yzs_jianshi(player) {
+		if (player.countMark("yzs_jianshi")) return `锁定技：场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`
+		return `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`;
+	},
 	yzs_halfGhost(player) {
 		let str = `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1张符卡并交换手牌与“半灵”牌。<br>
 	符卡：你摸1张牌并交换手牌与“半灵”牌。<br>转换技：`;
@@ -249,9 +277,9 @@ const dynamicTranslates = {
 		return `觉醒技：你对其他角色使用【桃】后将牌堆顶牌加入【愿】，达4张时你扣除1点体力上限并令场上角色依次获得1点护甲然后觉醒：有【愿】时你获得之；你使用红色牌无次数限制。`
 	},
 	undyinghero_yzs(player) {
-		if (player.storage.undyinghero_yzs_awaken) return `觉醒技：你受到伤害后获得等量点【决心】，上限为9。你摸牌数+${Math.ceil(player.countMark("undyinghero_yzs")/2)}。<br>
+		if (player.storage.undyinghero_yzs_awaken) return `觉醒技：你受到伤害后获得等量点【决心】，上限为9。你摸牌数+X/2(${Math.ceil(player.countMark("undyinghero_yzs")/2)})。<br>
     <span style="opacity:0.5">你濒死时，若【决心】已达上限，恢复全部体力并获得9点护甲，然后觉醒：你受到非零伤害+1、你的【闪】视为【矛】、你回合开始时扣减1点体力上限。</span>`
-		return `觉醒技：你受到伤害后获得等量点【决心】，上限为9。你摸牌数+${Math.ceil(player.countMark("undyinghero_yzs") / 2)}。<br>
+		return `觉醒技：你受到伤害后获得等量点【决心】，上限为9。你摸牌数+X/2(${Math.ceil(player.countMark("undyinghero_yzs") / 2)})。<br>
     你濒死时，若【决心】已达上限，恢复全部体力并获得9点护甲，然后觉醒：你受到非零伤害+1、你的【闪】视为【矛】、你回合开始时扣减1点体力上限。`
 	},
 	InvisibleHand_yzs(player) {
@@ -326,14 +354,14 @@ const dynamicTranslates = {
 		return `锁定技：回合开始时你获得[1]张${get.poptip("Fuka_yzs")}。<font color="#9b9b9b">你使用或打出红色牌时获得[0]张符卡。</font>游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`;
 	},
 	sanbubisha_yzs(player) {
-		return `锁定技：每局游戏限${player.countMark("sanbubisha_yzs")}次：需要时，你可视为使用【酒】（有次数限制）。<br>
+		return `锁定技：每局游戏限${player.countMark("sanbubisha_yzs")}/3次：需要时，你可视为使用【酒】（有次数限制）。<br>
 	若本技能已耗尽次数，你使用【杀】时重置本技能、摸3张牌并令之不可响应。`
 	},
 	zaoxingshu_yzs(player) {
 		const storage = player.storage.zaoxingshu_yzs;
-		if (!storage || !storage.length) return `锁定技：你使用的虚拟牌不可被响应。<br>每回合每种牌名限1次：
+		if (!storage || !storage.length) return `锁定技：你使用的非伤害牌不可响应。<br>每回合每种牌名限1次：
 		需要时，你可视为使用<span class="bluetext">【无中生有】</span>。你因此获得牌时，展示之并将其中任意个即时牌名加入上述描述。每加入1个基本牌名，你扣除1点体力上限。`;
-		let str = `锁定技：你使用的虚拟牌不可被响应。<br>每回合每种牌名限1次：
+		let str = `锁定技：你使用的非伤害牌不可响应。<br>每回合每种牌名限1次：
 		需要时，你可视为使用`;
 		for (let i = 0; i < storage.length; i++) {
 			str += `<span class="bluetext">`;
@@ -613,7 +641,7 @@ const dynamicTranslates = {
 		if (num == 4) str += `<span class="bluetext">`
 		str += `④：将场上任意手牌当做【酒】使用。<br>`
 		if (num == 4) str += `</span>`
-		str += `出牌阶段若你未醉酒，你不可使用【杀】。`
+		str += `回合内若你未醉酒，你不可使用【杀】。`
 		return str;
 	},
 	qiancaogangmu_yzs(player) {

@@ -590,7 +590,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"KinMiho_yzs", "Guanjun_yzs", "LawfulXu_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
 					"Mokou_yzs", "Reisen_yzs", "toothFairy_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Stark_yzs", "Linie_yzs","Halo_yzs",
 					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "FushiguroToji_yzs", "yzs_JoGo", "SCP079_yzs", "LightCB_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng",
-					"yzs_Reimu"
+					"yzs_Reimu","yzs_ThreeBirds"
 				];
 				//精品 S
 				var pj_s = [
@@ -632,6 +632,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					type: "players", data: [
 						"yzs_JoGo",
 						"yzs_DragonSlayerLLX",
+						"yzs_ThreeBirds"
 					]
 				},
 				{
@@ -764,12 +765,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.97.8</div><br>
+            <div style="color:#ffa348">• 版本号：v0.98</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.97.8",
+			version: "0.98",
 		},
 		files: {}, connect: true
 	}

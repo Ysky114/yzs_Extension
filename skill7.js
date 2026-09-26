@@ -392,5 +392,307 @@ const skills = {
 			},
 		}
 	},
+	//终末鸟
+	yzs_chengjie: {
+		group: ["yzs_chengjie_damage"],
+		subSkill: {
+			damage: {
+				forced: true,
+				popup: false,
+				priority:89,
+				trigger: {
+					player:"useCard"
+				},
+				filter(event, player) {
+				//	game.log(event.getParent().name)
+					return event.getParent()?.logSkill =="yzs_chengjie"
+				},
+				async content(event, trigger, player) {
+					if (!trigger.baseDamage) trigger.baseDamage = 0;
+					trigger.baseDamage++;
+				}
+			}
+		},
+		locked: true,
+		forced: true,
+		popup:false,
+		priority:4,
+		mod: {
+			cardUsable: function (card, player, num) {
+				if (player.countMark("yzs_chengjie")) return;
+				if (_status.currentPhase == player) {
+					if (card.name == 'sha' ) return false;
+				}
+			},
+			cardEnabled(card, player) {
+				if (player.countMark("yzs_chengjie")) return;
+				if (_status.currentPhase == player) {
+					if (card.name == 'sha') return false;
+				}
+			},
+		},
+		trigger: {
+			player: "damageAfter",
+			source:'damageAfter',
+		},
+		filter(event, player) {
+			if (event.player == player) {
+				return event.source && player.canUse({ name: "sha" }, event.source, false);
+			}
+			if (event.source == player) {
+				return event.player && player.canUse({ name: "sha" }, event.player, false);
+			}
+			return false;
+		},
+		async content(event, trigger, player) {
+			let target = player == trigger.source ? trigger.player : trigger.source;
+			await player
+				.chooseToUse(
+					function (card, player, event) {
+						var name = get.name(card);
+						if (name != "sha") {
+							return false;
+						}
+						return lib.filter.cardEnabled.apply(this, arguments);
+					},
+					"惩戒：是否对【" + get.translation(target) + "】使用一张【杀】？(此牌伤害+1)"
+				)
+				.set("logSkill", "yzs_chengjie")
+				.set("complexSelect", true)
+				.set("filterTarget", function (card, player, target) {
+					return target == get.event().sourcex;
+				})
+				.set("sourcex", target)
+				.set("addCount", false);
+		},
+	},
+	yzs_shenpan: {
+		locked: true,
+		priority: 4,
+		mod: {
+			cardUsable: function (card, player, num) {
+				if (player.countMark("yzs_shenpan")) return;
+				if (_status.currentPhase == player) {
+					if (get.type2(card,player)=="trick") return false;
+				}
+			},
+			cardEnabled(card, player) {
+				if (player.countMark("yzs_shenpan")) return;
+				if (_status.currentPhase == player) {
+					if (get.type2(card, player) == "trick") return false;
+				}
+			},
+		},
+		trigger: {
+			player: "useCardToPlayered",
+			target: "useCardToTargeted",
+		},
+		filter(event, player) {
+			if (get.type2(event.card) != "trick") return false;
+			let target = event.player == player ? event.target : event.player;
+			return target?.isIn()&&player.canCompare(target);
+		},
+		check(event, player) {
+			return get.attitude(player, event.player) < 0 && player.countCards("h") >= event.player.countCards("h");
+		},
+		prompt(event, player) {
+			let target = event.player == player ? event.target : event.player;
+			return `是否与 ` + get.translation(target) + ` 拼点？`;
+		},
+		prompt2: "胜者摸1张牌",
+		async content(event, trigger, player) {
+			let target = trigger.player == player ? trigger.target : trigger.player;
+			let result = await player.chooseToCompare(target).forResult();
+			if (result.tie) { return }
+			var players = [player, target];
+			if (result.bool) players.reverse();
+			const winner = players[1];
+			const loser = players[0]
+			await winner.draw();
+		},
+	},
+	yzs_jianshi: {
+		locked: true,
+		priority: 4,
+		mod: {
+			cardUsable: function (card, player, num) {
+				if (player.countMark("yzs_jianshi")) return;
+				if (_status.currentPhase == player) {
+					if (get.type(card, player) == "equip") return false;
+				}
+			},
+			cardEnabled(card, player) {
+				if (player.countMark("yzs_jianshi")) return;
+				if (_status.currentPhase == player) {
+					if (get.type(card, player) == "equip") return false;
+				}
+			},
+		},
+		trigger: {
+			global:"useCardAfter"
+		},
+		filter(event, player) {
+			return get.type(event.card) == "equip"&&player.countCards("he");
+		},
+		async cost(event, trigger, player) {
+			let str = `你可弃置1张装备牌以与${get.translation(trigger.player)}各摸1张牌`
+			let next = player.chooseToDiscard("he", false);
+			next.set("filterCard", (card) => get.type(card) == "equip")
+			next.set("prompt", str)
+			next.set("ai", card => {
+				const player = get.event().player;
+				const target = get.event().target;
+				if (get.attitude(player, target) <= 0) return 0;
+				return 6 - get.value(card);
+			})
+			next.set("target", trigger.player)
+			next.set("chooseonly", true)
+			event.result = await next.forResult();
+		},
+		async content(event, trigger, player) {
+			await player.modedDiscard(event.cards);
+			await player.draw();
+			await trigger.player.draw();
+		},
+	},
+	yzs_ezhao: {
+		locked: true,
+		forced:true,
+		priority:312,
+		trigger: {
+			player:"phaseZhunbeiBegin"
+		},
+		async content(event, trigger, player) {
+			let result = await player.chooseButton([
+				`每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}`,
+				[
+					[
+						["yzs_chengjie", lib.translate["yzs_chengjie_info"]],
+						["yzs_shenpan", lib.translate["yzs_shenpan_info"]],
+						["yzs_jianshi", lib.translate["yzs_jianshi_info"]],
+					],
+					"textbutton",
+				],
+			])
+				.set("forced", true)
+				.set("selectButton", 1)
+				.set("filterButton", function (button) {
+					let player = _status.event.player
+					return !player.countMark(button.link)
+				})
+				.set("ai", (button) => {
+					return Math.random();
+				})
+				.forResult();
+			if (result?.bool && result.links?.length) {
+				let skill = result.links[0];
+				player.addMark(skill, 1, false);
+				if (player.countMark("yzs_chengjie") && player.countMark("yzs_shenpan") && player.countMark("yzs_jianshi")) {
+					await player.recoverTo(player.maxHp)
+					player.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
+					game.broadcastAll(function (current) {
+						_status.tempMusic = `ext:一中杀/audio/Second.mp3`;
+						game.playBackgroundMusic();
+						ui.background.setBackgroundImage('extension/一中杀/image/background/yzs_ezhao.jpg');
+					}, player)
+					//player.removeSkill("yzs_ezhao");
+					await player.reinitCharacter(player.name1, 'yzs_ThreeBirds2');
+					if (player.name2) {
+						await player.reinitCharacter(player.name2, 'yzs_ThreeBirds2');
+					}
+				}
+			}
+		}
+	},
+	yzs_zhongmo: {
+		group: ["yzs_zhongmo_lose"],
+		subSkill: {
+			lose: {
+				locked: true,
+				forced: true,
+				priority: 21,
+				trigger: {
+					player: "loseMaxHpAfter"
+				},
+				filter(event, player) {
+					let num = 0;
+					if (player.countMark("yzs_chengjie")) num++;
+					if (player.countMark("yzs_shenpan")) num++;
+					if (player.countMark("yzs_jianshi")) num++;
+					return player.maxHp <= 2 * num-2;
+				},
+				async content(event, trigger, player) {
+					let result = await player.chooseButton(["你体力上限下降至4/2时，复原【惩戒/审判/监视】中1处被删除的描述。",
+						[
+							[
+								["yzs_chengjie", lib.translate["yzs_chengjie_info"]],
+								["yzs_shenpan", lib.translate["yzs_shenpan_info"]],
+								["yzs_jianshi", lib.translate["yzs_jianshi_info"]],
+							],
+							"textbutton",
+						],
+					])
+						.set("forced", true)
+						.set("selectButton", 1)
+						.set("filterButton", function (button) {
+							let player = _status.event.player
+							return player.countMark(button.link)
+						})
+						.set("ai", (button) => {
+							return Math.random();
+						})
+						.forResult();
+					if (result?.bool && result.links?.length) {
+						let skill = result.links[0];
+						player.removeMark(skill, 1, false);
+						let num = 0;
+						if (player.countMark("yzs_chengjie")) num++;
+						if (player.countMark("yzs_shenpan")) num++;
+						if (player.countMark("yzs_jianshi")) num++;
+						if (player.maxHp <= 2 * num - 2) {
+							let result = await player.chooseButton(["你体力上限下降至4/2时，复原【惩戒/审判/监视】中1处被删除的描述。",
+								[
+									[
+										["yzs_chengjie", lib.translate["yzs_chengjie_info"]],
+										["yzs_shenpan", lib.translate["yzs_shenpan_info"]],
+										["yzs_jianshi", lib.translate["yzs_jianshi_info"]],
+									],
+									"textbutton",
+								],
+							])
+								.set("forced", true)
+								.set("selectButton", 1)
+								.set("filterButton", function (button) {
+									let player = _status.event.player
+									return player.countMark(button.link)
+								})
+								.set("ai", (button) => {
+									return Math.random();
+								})
+								.forResult();
+							if (result?.bool && result.links?.length) {
+								let skill = result.links[0];
+								player.removeMark(skill, 1, false);
+							}
+						};
+					}
+				}
+			},
+		},
+		locked: true,
+		forced: true,
+		priority:-2,
+		trigger: {
+			player:"damageBegin4"
+		},
+		filter(event, player) {
+			return player.isDamaged() && event.num > 0;
+		},
+		async content(event, trigger, player) {
+			trigger.cancel();
+			await player.loseMaxHp();
+			await player.draw(2);
+		}
+	},
 }
 export default skills;

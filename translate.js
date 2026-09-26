@@ -199,7 +199,9 @@ const translates = {
 	yzs_JoGo: `漏瑚`,
 	yzs_DragonSlayerLLX: `李砺心`,
 	yzs_Youmu: `魂魄妖梦`,
-	yzs_Reimu:`博丽灵梦`,
+	yzs_Reimu: `博丽灵梦`,
+	yzs_ThreeBirds: `小鸟&高鸟&大鸟`,
+	yzs_ThreeBirds2:`终末鸟`,
 
     // 技能台词
 
@@ -514,7 +516,7 @@ const translates = {
 	mengmengjiugui_yzs: "濛濛酒鬼",
 	mengmengjiugui_yzs_info:`锁定技：你使用【酒】无次数限制。你已损体力值与对应项序数相等时，你的【酒】效果改为对应项描述：<br>
 ①：恢复1点体力；<br>②：本阶段使用下张【杀】无次数限制；<br>③：恢复1点体力；<br>④：将场上任意手牌当做【酒】使用。<br>
-    出牌阶段若你未醉酒，你不可使用【杀】。`,
+    回合内若你未醉酒，你不可使用【杀】。`,
 	mengmengjiugui_yzs_buff:"濛濛酒鬼",
 	yichuirang_yzs: "伊吹瓤",
 	yichuirang_yzs_info: `锁定技：你使用或打出牌时摸1张牌并扣置自己1张手牌，扣置牌达4张时获得其中1张并移去剩余，然后获得1张${get.poptip("Fuka_yzs")}。回合开始时或结束时，你可获得依此法扣置的牌。<br>
@@ -924,8 +926,7 @@ const translates = {
 	qiuwen_yzs_info:`每回合每种牌名限1次：你可将手牌当做<span class="bluetext">【闪】</span>或<span class="bluetext">【无中生有】</span>使用或打出，并可令本技能本回合失效以摸3张牌并弃半数取下张手牌。`,
 	zhuanshi_yzs:"转世",
 	zhuanshi_yzs_info: `${get.poptip("eternalSkill_yzs")}：你因【求闻】弃置牌时，记录其点数，并将其中即时牌的牌名加入【求闻】。<br>
-    每回合结束时，若你此世记录总点数达30，你死亡。<br>
-    你即将死亡时可分配全部手牌至其他角色。<br>
+    每回合结束时，若你此世记录总点数达30，你死亡，因此死亡前可分配全部手牌至其他角色。<br>你被击杀无击杀奖惩。<br>
     你下家回合开始时，若你已死亡，你重新加入游戏。`,
 
 	putaojiu_yzs: "葡萄酒",
@@ -1206,7 +1207,7 @@ const translates = {
 	haiyi_yzs: `骇移`,
 	haiyi_yzs_info: `隐匿技：你于自己回合内登场后，获得场上任意张装备。<br>一张目标不包含你的牌结算后，你摸1张牌，然后若你手牌数＞手牌上限，你弃1张牌，若为装备牌则你对使用者造成1点伤害。`,
 
-	jianshi_yzs: `监视`,
+	jianshi_yzs: `骇入`,
 	jianshi_yzs_info: `隐匿技：你于自己回合内登场后，获得弃牌堆中至多2张任意牌。<br>其他角色的手牌对你可见。其他角色摸牌前，你观看牌堆顶等量张牌并可与你的手牌任意交换，然后你可获得其区域内1张牌，则本回合你不可再发动本效果。`,
 
 	chuyi_yzs: `除疫`,
@@ -1530,7 +1531,7 @@ const translates = {
 
 	chaodaoti_yzs: `超导体`,
 	chaodaoti_yzs_info: `锁定技：你因受到雷电伤害而体力减少时，改为恢复等量点体力并摸场上“超导”角色数张牌。<br>
-    出牌阶段，你可弃1张♠牌并横置1名其他角色，视为处于“${get.poptip("chaodaoti_yzs_effect")}”。<br>
+    出牌阶段，你可弃1张♠手牌并横置1名其他角色，视为处于“${get.poptip("chaodaoti_yzs_effect")}”。<br>
     你的普通【杀】视为雷【杀】。你始终处于“超导状态”。`,
 	chaodaoti_yzs_effect:`超导`,
 	jingdianmabi_yzs: `静电麻痹`,
@@ -1783,7 +1784,7 @@ const translates = {
     出牌阶段限1次：你与1名手牌数之差≤2的角色交换手牌，手牌数减少的一方<font color="#ffb1b7">恢复1点体力</font>或<font color="#adbeff">视为对对方使用普通【杀】</font>。`,
 
 	Qianmiankui_yzs: `千面傀`,
-	Qianmiankui_yzs_info:`锁定技：你登场时或回合开始时，选择其他角色的1个通常技，你复制之至你下一回合开始或死亡。<br>
+	Qianmiankui_yzs_info:`锁定技：你登场时或回合开始时，可选择其他角色的1个通常技，你复制之至你下一回合开始或死亡。<br>
     <font color="#ffb1b7">“王千”</font>或<font color="#adbeff">“千面傀儡”</font>的出牌阶段限1次：其可令二者之一失去1点体力，然后令二者之一：摸2张牌、本回合手牌上限视为4。`,
 
 	ziqi_yzs: `自弃`, 
@@ -2019,6 +2020,17 @@ const translates = {
 若你为“结界”内角色，你本回合出【杀】数+1并获得1枚【梦】标记，然后你可令1名角色加入或离开“结界”内。`,
 	yzs_mengxiangfengyin: `梦想封印`,
 	yzs_mengxiangfengyin_info: `${get.poptip("FukaSkill_yzs")}：你指定1名“结界”内角色并移除3X枚【梦】标记，然后对其造成X次1点伤害。`,
+
+	yzs_chengjie: `惩戒`,
+	yzs_chengjie_info: `锁定技：回合内，你不可使用【杀】。<br>你造成或受到伤害后，可对对方使用1张【杀】，此牌伤害+1。`,
+	yzs_shenpan: `审判`,
+	yzs_shenpan_info: `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`,
+	yzs_jianshi: `监视`,
+	yzs_jianshi_info: `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`,
+	yzs_ezhao: `厄兆`,
+	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
+	yzs_zhongmo: `终末`,
+	yzs_zhongmo_info:`锁定技：你受到非零伤害时，若你已受伤，改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，复原【惩戒/审判/监视】中1处被删除的描述。`,
 };
 
 export default translates;
