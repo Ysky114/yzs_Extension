@@ -2,6 +2,26 @@
 //【新标签、新时机】
 "use strict";
 window.yzs = function (lib, game, ui, get, ai, _status) {
+	//获取蓄能上限
+	lib.element.player.yzs_getPPLimit = function () {
+		return get.character(this.name).yzs_PP || 1;
+	};
+	//获取蓄能
+	lib.element.player.yzs_addPP = function (num = 1) {
+		const player = this;
+		if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return;
+		const gain = Math.min(num, player.yzs_getPPLimit() - player.countMark("yzs_PP"));
+		player.addMark("yzs_PP",gain, false);
+		game.log(player,"获得了",gain,"点蓄能")
+	};
+	//消耗蓄能
+	lib.element.player.yzs_removePP = function (num = 1) {
+		const player = this;
+		if (player.countMark("yzs_PP") <=0) return;
+		const lose = Math.min(num, player.countMark("yzs_PP"));
+		player.removeMark("yzs_PP", lose, false);
+		game.log(player, "消耗了", lose, "点蓄能")
+	};
 	//获取符卡上限
 	lib.element.player.getFukaLimit = function () {
 		return get.character(this.name).Fuka || 1;
@@ -1400,14 +1420,14 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		}
 	];
 	//-----改函数-----//
-	lib.element.player.damage = function (params) {
+	lib.element.player.damage = function damage(params) {
 		const next = game.createEvent("damage");
 		next.player = this;
 		let noCard = false;
 		let noSource = false;
 		const event = _status.event;
 		const args = [...arguments];
-		if (args.length === 1 && typeof params == "object" && get.itemtype(params) == null) {
+		if (args.length === 1 && typeof params == "object" && params !== null && get.itemtype(params) == null) {
 			Object.assign(next, params);
 			if (params.nosource) {
 				noSource = true;
@@ -1469,6 +1489,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			next.num = (typeof event.baseDamage == "number" ? event.baseDamage : 1) + (typeof event.extraDamage == "number" ? event.extraDamage : 0);
 		}
 		next.original_num = next.num;
+		if (next.original_num <= 0) next.forceZero = true;
 		next.change_history = [];
 		next.hasNature = function (nature) {
 			if (!nature) {
@@ -1497,17 +1518,17 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (num != this.num) {
 				this.change_history.push(this.num - num);
 			}
-			/*if (this.num <= 0) {
+			if (this.num <= 0 && !this.forceZero) {
 				delete this.filterStop;
 				this.trigger("damageZero");
 				this.finish();
 				this._triggered = null;
 				return true;
-			}*/
+			}
 			return false;
 		};
 		return next;
-	};//允许结算中途出现0点伤害
+	};//若伤害初始值≤0，允许结算中途出现0点伤害
 	lib.element.content.damage =  [
 		async (event, trigger, player) => {
 			event.forceDie = true;
@@ -2737,11 +2758,13 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			await game.addGlobalSkill(event.domainskill);
 
 			for (const target of event.ExpandPlayerList) {
+				if (event.finalPlayer == target) continue;
 				let skills = lib.character[target.name][3].filter(skill => {
 					const categories = get.skillCategoriesOf(skill, target);
-					return !categories.some(type => lib.skill.AiSi_yzs.bannedType.includes(type)) && target.hasSkill(skill);
+					return (!categories.some(type => lib.skill.AiSi_yzs.bannedType.includes(type)) || lib.skill[skill].domain) && target.hasSkill(skill);
 				});
-				target.tempBanSkill(skills)
+				target.tempBanSkill(skills, { player: "phaseEnd" })
+				game.log(target, "陷入了术式熔断")
 			}
 
 			if (lib.skill[event.domainskill + "_instant"]) event.finalPlayer.useSkill(event.domainskill + "_instant", false)

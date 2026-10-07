@@ -4593,6 +4593,7 @@ const skills = {
 				player.getStat().card.sha = 0;
 			} else {
 				trigger.num--;
+				trigger.forceZero = true;
 			}
 		}
 	},
@@ -4641,6 +4642,15 @@ const skills = {
 			return _status._yzsDomain || _status._yzsDomainCount > 0
 		},
 		async content(event, trigger, player) {
+			let target = _status._yzsDomainPlayer;
+			if (target) {
+				let skills = lib.character[target.name][3].filter(skill => {
+					const categories = get.skillCategoriesOf(skill, target);
+					return (!categories.some(type => lib.skill.AiSi_yzs.bannedType.includes(type)) || lib.skill[skill].domain) && target.hasSkill(skill);
+				});
+				target.tempBanSkill(skills, { player: "phaseEnd" })
+				game.log(target,"陷入了术式熔断")
+			}
 			game.broadcastAll(() => {
 				_status._yzsDomainCount--;
 				if (_status._yzsDomainCount > 0) return;
@@ -4811,7 +4821,7 @@ const skills = {
 					const callback = async function (event, player) {
 						player.addSkill("rg_treasure_ban")
 						const wtw = player;
-						game.broadcastAll(() => {
+						game.broadcastAll((player) => {
 							_status.tempMusic = `ext:一中杀/audio/虚式茈.mp3`;
 							game.playBackgroundMusic();
 							//	var music = lib.config.background_music;
@@ -4872,7 +4882,7 @@ const skills = {
 							setTimeout(() => {
 								player.$fullscreenpop("茈", "thunder", false, false)
 							}, 17500)
-						});
+						}, wtw);
 						await new Promise(r => setTimeout(r, 16000))
 						wtw.playEffectOL(lib.skill.xushici_yzs.Effect, event.targetx);
 						await new Promise(r => setTimeout(r, 2000))
@@ -7190,6 +7200,7 @@ const skills = {
 		async content(event, trigger, player) {
 			await player.modedDiscard(event.cards)
 			trigger.num -= event.cards.length;
+			trigger.forceZero = true;
 			let result = await player.draw().forResult();
 			let cards = event.cards.concat(result.cards)
 			let suits = get.suit(cards[0]);
@@ -9469,6 +9480,7 @@ const skills = {
 		async content(event, trigger, player) {
 			await player.modedDiscard(event.cards)
 			trigger.num -= event.cards.length;
+			trigger.forceZero = true;
 			let result = await player.draw().forResult();
 			let cards = event.cards.concat(result.cards)
 			let suits = get.suit(cards[0]);

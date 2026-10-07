@@ -4385,7 +4385,7 @@ const skills = {
 					//manualConfirm: true,
 					ai1: () => 1,
 					async content(event, trigger, player) {
-						const { links: items } = get.info(event.name);
+						const items = lib.skill.blessing_yzs_backup.links;
 						player.addMark("blessing_yzs_used", 1, false);
 						player.playEffectOL(lib.skill.blessing_yzs.Effect);
 						await player.yzs_updateCountDown(items);
@@ -7133,7 +7133,10 @@ const skills = {
 				trigger: {
 					player: "phaseUseEnd",
 				},
-				filter(event, player) { return player.countCards("h"); },
+				filter(event, player) {
+					if (!game.hasPlayer(cur => cur.hasSkill("kila_yzs"))) return false;
+					return player.countCards("h");
+				},
 				async cost(event, trigger, player) {
 					let target = await player.chooseTarget("质推", "选择1名其他角色，给予其1张手牌（可不给）", false)
 						.set("filterTarget", (card, player, target) => {
@@ -7177,6 +7180,10 @@ const skills = {
 		prompt: "你展示1名其他角色的手牌，然后弃置其中的【死亡笔记】或失去1点体力",
 		enable: "phaseUse",
 		usable: 1,
+		filter(event, player) {
+			if (!game.hasPlayer(cur => cur.hasSkill("kila_yzs"))) return false;
+			return game.hasPlayer((target) => lib.skill.zhitui_yzs_global.filterTarget(null, player, target));
+		},
 		filterTarget: function (card, player, target) {
 			if (target.hasSkill("hidden_yzs")) return false
 			return player != target && target.countCards("h") > 0;
@@ -8001,6 +8008,7 @@ const skills = {
 				popup: false,
 				async content(event, trigger, player) {
 					trigger.num--;
+					trigger.forceZero = true;
 				},
 				ai: {
 					damageBonus: false,
@@ -9071,6 +9079,7 @@ const skills = {
 			else {
 				await player.draw(2);
 				trigger.num--;
+				trigger.forceZero = true;
 			}
 		},
 		ai: {

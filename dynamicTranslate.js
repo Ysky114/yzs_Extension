@@ -1,5 +1,12 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_canghe(player) {
+		let str = `${get.poptip("yzs_PPSkill")}：转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
+		if (player.storage.yzs_canghe) str += `顺转：【苍】，并令本技能本回合失效；<font color="#ff4444">反转：【赫】</font>。`;
+		else str += `<font color="#44b6ff">顺转：【苍】，并令本技能本回合失效</font>；反转：【赫】。`;
+		str += `<br>你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`
+		return str;
+	},
 	yzs_ezhao(player) {
 		let str = `锁定技：每项限1次：准备阶段，你删除【`;
 		if (player.countMark("yzs_chengjie")) str += `<span style="opacity:0.5">`;
@@ -22,7 +29,7 @@ const dynamicTranslates = {
 	},
 	yzs_shenpan(player) {
 		if (player.countMark("yzs_shenpan")) return `锁定技：你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`
-		return `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。。`;
+		return `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`;
 	},
 	yzs_jianshi(player) {
 		if (player.countMark("yzs_jianshi")) return `锁定技：场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`
@@ -709,11 +716,11 @@ const dynamicTranslates = {
 		if (player.storage.yotouXi_yzs == 2 || player.storage.yotouXi_yzs == 6) str += `<font color="#b9b5ff">②：将牌堆顶牌当作${get.poptip("yotou_yzs")}置入你武器栏，然后你令【妖刀·心渡】中1项数值本局游戏内+1。</font>`
 		else str += `②：将牌堆顶牌当作${get.poptip("yotou_yzs")}置入你武器栏，然后你令【妖刀·心渡】中1项数值本局游戏内+1。`
 		str += `<br>`;
-		if (player.storage.yotouXi_yzs == 3 || player.storage.yotouXi_yzs == 7) str += `<font color="#b9b5ff">③：弃1~4张牌，本自轮次内你使用下张【卷】伤害+等量-1。</font>`
+		if (player.storage.yotouXi_yzs == 3 || player.storage.yotouXi_yzs == 7) str += `<font color="#b9b5ff">③：弃1~4张牌，本自轮次内你使用下张【杀】伤害+等量-1。</font>`
 		else str += `③：弃1~4张牌，本自轮次内你使用下张【杀】伤害+等量-1。`
 		str += `<br>`;
-		if (player.storage.yotouXi_yzs == 4 || player.storage.yotouXi_yzs >= 8) str += `<font color="#b9b5ff">④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮次内+1。。</font>`
-		else str += `④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮次内+1。`
+		if (player.storage.yotouXi_yzs == 4 || player.storage.yotouXi_yzs >= 8) str += `<font color="#b9b5ff">④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮内+1。。</font>`
+		else str += `④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮内+1。`
 		str += `<br>`;
 		str += `锁定技：【妖刀·心渡】不可被其他角色影响或装备。`;
 		return str;

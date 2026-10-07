@@ -6617,6 +6617,7 @@ const skills = {
 				async content(event, trigger, player) {
 					player.removeMark("jianzhi_yzs_damage", 1, false)
 					trigger.num = 0;
+					trigger.forceZero = true;
 				},
 			},
 		},

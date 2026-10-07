@@ -377,7 +377,7 @@ const translates = {
 <font color="#b9b5ff">①：弃2张牌并摸3张牌。你的下回合开始时你可获得所弃牌其中一张。<br></font>
 ②：将牌堆顶牌当作${get.poptip("yotou_yzs")}置入你武器栏，然后你令【妖刀·心渡】中1项数值本局游戏内+1。<br>
 ③：弃1~4张牌，本自轮内你使用下张【杀】伤害+等量-1。<br>
-④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮次内+1。<br>
+④：恢复1点体力，然后你令【妖刀·心渡】中2项不同数值本自轮内+1。<br>
      锁定技：【妖刀·心渡】不可被其他角色影响或装备。`,
 	yotou_yzs_skill_wusheng: "妖刀·心渡",
 
@@ -396,7 +396,7 @@ const translates = {
 	zhitui_yzs: "质推",
 	zhitui_yzs_info: `出牌阶段限1次：你展示1名其他角色的手牌，然后弃置其中的${get.poptip("DeathNote_yzs")}或失去1点体力。出牌阶段结束时，你分配1张手牌。`,
 	kila_yzs: "基拉",
-	kila_yzs_info: `锁定技：其他角色拥有${get.poptip("zhitui_yzs")}。你【质推】中的“${get.poptip("DeathNote_yzs")}”改为“一张牌”。每公轮开始时你获得【死亡笔记】，然后你弃置1张手牌。你使用【死亡笔记】目标角色多失去2点体力。 `,
+	kila_yzs_info: `锁定技：其他角色拥有${get.poptip("zhitui_yzs")}。你【质推】中的“${get.poptip("DeathNote_yzs")}”改为“一张牌”。每公轮开始时你获得【死亡笔记】，然后你弃置1张手牌。 `,
 	juece_yzs: "谲策",
 	juece_yzs_info:`你不因此失去手牌后可摸1张牌，并分配或置底1张手牌，然后若你手牌数或本技能本回合发动次数>体力上限，本回合本技能失效。`,
 	xinsega_yzs: "新世界",
@@ -695,12 +695,12 @@ const translates = {
 	siwanghuigui_yzs_record_ban: "死亡回归",
 
 	zhanqi_yzs: "战旗",
-	zhanqi_yzs_info: `锁定技：出牌阶段开始时，你获得全部【旗】，然后可将任意张花色各不相同的手牌明置于人物牌旁，称为【旗】。`,
+	zhanqi_yzs_info: `锁定技：出牌阶段开始时，你获得全部“${get.poptip("zhanqi_yzs_effect")}”，然后可将任意张花色各不相同的手牌明置于人物牌旁，称为“旗”。`,
 	zhanqi_yzs_effect: "旗",
 	zhanqi_yzs_effect_info:`♠：你可将♠手牌当做普通【杀】使用或打出。<br>♣：你可将♣手牌当做【过河拆桥】使用。<br>
 ♦：你可将♦手牌当做${get.poptip("guowangmiling_yzs")}使用。<br>♥：你可将♥手牌当做【无懈可击】使用。`,
 	KingsHand_yzs: "王之手",
-	KingsHand_yzs_info: `锁定技：依据${get.poptip("zhanqi_yzs_effect")}的花色你获得对应效果：
+	KingsHand_yzs_info: `锁定技：依据“${get.poptip("zhanqi_yzs_effect")}”的花色你获得对应效果：
     你使用造成了伤害的【杀】后发动${get.poptip("KingsHand_yzs_zhanyi")}（每回合限3次）。
     锁定技：你视为装备${get.poptip("SymmetricalSpear_yzs")}、武器牌视为${get.poptip("guowangmiling_yzs")}。`,
 	KingsHand_yzs_zhanyi: "战意",
@@ -761,7 +761,7 @@ const translates = {
 	fanhundie_yzs_info: `转换技：场上角色进入濒死时，若其体力值为唯一最低，你可：<span class="bluetext">①令其恢复1点体力</span> ②对其造成1点伤害。<br>
     ${get.poptip("FukaSkill_yzs")}： ${get.poptip("wuyongchang_yzs")}：你与1名与你体力值之差等于1的角色交换体力值。`,
 	yousi_yzs: "诱死",
-	yousi_yzs_info: `出牌阶段限1次：你视为使用伤害值为2的【决斗】，生效前，目标角色与你依次可令对方摸1张牌并令之伤害-1。`,
+	yousi_yzs_info: `出牌阶段限1次：你与1名其他角色拼点，若你的拼点牌为红/黑色，胜者恢复/失去1点体力。`,
 
 	wuwei_yzs: "无畏",
 	wuwei_yzs_info: `回合开始时你失去全部护甲，然后获得1点护甲。你受到伤害至多为1，你可将红色牌当做普通【杀】使用或打出。`,
@@ -811,7 +811,7 @@ const translates = {
 	chunzhen_yzs: "纯真",
 	chunzhen_yzs_info: `游戏开始时，你依次检索1张武器牌和防具牌并使用之。你摸牌数和出【杀】数+1。`,
 	zhenwu_yzs: "真武",
-	zhenwu_yzs_info: `每回合结束时，若你体力值为1，你亮出并任意使用牌堆顶X张牌，然后恢复1点体力（X为你已废除区域数+1）。`,
+	zhenwu_yzs_info: `每回合结束时，若你体力值为1，你亮出并任意使用牌堆顶X张牌，然后恢复1点体力（X为你已废除区域数）。`,
 	zhenyi_yzs: "真义",
 	zhenyi_yzs_info: `锁定技：你废除区域时获得1点护甲，均废除后调整体力上限至1并获得2点护甲。你有护甲且未濒死时恢复体力无效。<br>
     你进入濒死时可废除自己1个区域，然后恢复体力值至1。<br>准备阶段，你可废除自己1个无牌的区域。<br>结束阶段，你可失去体力值至1并获得失去体力点护甲。`,
@@ -2030,7 +2030,19 @@ const translates = {
 	yzs_ezhao: `厄兆`,
 	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
 	yzs_zhongmo: `终末`,
-	yzs_zhongmo_info:`锁定技：你受到非零伤害时，若你已受伤，改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，复原【惩戒/审判/监视】中1处被删除的描述。`,
+	yzs_zhongmo_info: `锁定技：你受到非零伤害时，若你未受伤，此伤害+1，否则改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，失去【惩戒/审判/监视】其中一个技能。`,
+
+	yzs_SixEyes: `六眼`,
+	yzs_SixEyes_info: `锁定技：每公轮开始时，你可获得1点${get.poptip("yzs_PP")}并摸牌至体力上限，然后失去1点体力`,
+	yzs_wuxiaxian: `无下限`,
+	yzs_wuxiaxian_info: `若你未装备防具，你视为装备${get.poptip("yzs_wuxiaxian_wuxian")}。你使用牌时，获得1点${get.poptip("yzs_PP")}。`,
+	yzs_canghe: `苍/赫`,
+	yzs_canghe_info: `${get.poptip("yzs_PPSkill")}：转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>顺转：【苍】，并令本技能本回合失效；反转：【赫】。<br>
+你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`,
+	yzs_xushici: `虚式·茈`,
+	yzs_xushici_info: `出牌阶段，你可弃置点数为X的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}各1张并可指定1名其他角色，然后对指定的角色造成X点伤害，未指定则对所有角色造成X点伤害。`,
+	yuzhe_yzs: `玉折`,
+	yuzhe_yzs_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("yzs_xushici")}`,
 };
 
 export default translates;

@@ -125,7 +125,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				reverseOrder: true,
 				cardPrompt(card) {
-					return `每公轮结束时，对1名其他角色使用。目标角色失去全部体力(至多5点)`;
+					return `每公轮结束时，对1名其他角色使用。目标角色失去全部体力(至少2点，至多5点)`;
 				},
 				async content(event, trigger, player) {
 					if (player.isDead() || event.target.isDead()) {
@@ -134,7 +134,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					}
 					player.line(event.target);
 					let num = Math.min(5, event.target.hp);
-					if (player.hasSkill("kila_yzs")) num += 2;
+					if (num < 2) num = 2;
 					await event.target.loseHp(num);
 				},
 				ai: {
@@ -3108,6 +3108,97 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				subtype: "equip4",
 				image: "ext:一中杀/image/yzs_Elysia.png",
 			},
+			yzs_wuxiaxian_wuxian: {
+				type: "equip",
+				subtype: "equip2",
+				loseDelay: false,
+				skills: ["yzs_wuxiaxian_wuxian_skill"],
+			},
+			//苍
+			yzs_cang: {
+				audio: "wtwCang_yzs",
+				fullskin: true,
+				image: "ext:一中杀/image/card/wtwCang_yzs.png",
+				type: "basic",
+				cardcolor: "black",
+				enable:true,
+				filterTarget(card, player, target) {
+					if (!player.hasSkill("yzs_canghe") || player.isTempBanned("yzs_canghe")) return player == target;
+					return true;
+				},
+				allowMultiple: false,
+				async content(event, trigger, player) {
+					const target = event.target;
+					if (player == target) {
+						player.addTempSkill("yzs_cang_buff");
+						player.addMark("yzs_cang_buff", 1, false);
+					} else {
+						const num = get.number(event.card, player);
+						if (typeof num == "number" && num > 0) {
+							await player.discardPlayerCard("he", event.target, num, true, false).set("target", event.target).set("complexSelect", false).set("ai", lib.card.guohe.ai.button);
+						}
+						if (event.cards.filterInD().length) {
+							await target.gain(event.cards.filterInD(), "gain2");
+						}
+						let cards = target.getCards("h");
+						cards = cards.filter(card => ["yzs_cang", "yzs_he"].includes(get.name(card, false)));
+						if (!cards.length) return false;
+						for (let card1 of cards) {
+							for (let card2 of cards) {
+								if (lib.skill.yzs_xushici.equal(card1, card2, player)) {
+									await target.discard(player, [card1, card2]);
+									let next = player.useSkill("yzs_xushici")
+									next.targets = [target];
+									await next;
+									return;
+								}
+							}
+						}
+					}
+				},
+			},
+			//赫
+			yzs_he: {
+				audio: "wtwHe_yzs",
+				fullskin: true,
+				image: "ext:一中杀/image/card/wtwHe_yzs.png",
+				type: "basic",
+				cardcolor: "red",
+				enable: true,
+				filterTarget(card, player, target) {
+					if (!player.hasSkill("yzs_canghe") || player.isTempBanned("yzs_canghe")) return player == target;
+					return true;
+				},
+				allowMultiple: false,
+				async content(event, trigger, player) {
+					const target = event.target;
+					if (player == target) {
+						player.addTempSkill("yzs_he_buff", { player: "phaseBegin" });
+					} else {
+						const num = get.number(event.card, player);
+						if (typeof num == "number" && num > 0) {
+							await player.discardPlayerCard("he", event.target, num, true, false).set("target", event.target).set("complexSelect", false).set("ai", lib.card.guohe.ai.button);
+						}
+						if (event.cards.filterInD().length) {
+							await target.gain(event.cards.filterInD(), "gain2");
+						}
+						let cards = target.getCards("h");
+						cards = cards.filter(card => ["yzs_cang", "yzs_he"].includes(get.name(card, false)));
+						if (!cards.length) return false;
+						for (let card1 of cards) {
+							for (let card2 of cards) {
+								if (lib.skill.yzs_xushici.equal(card1, card2, player)) {
+									await target.discard(player, [card1, card2]);
+									let next = player.useSkill("yzs_xushici")
+									next.targets = [target];
+									await next;
+									return;
+								}
+							}
+						}
+					}
+				},
+			},
 		},
 		skill: {
 			//石中剑
@@ -3186,6 +3277,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							trigger.baseDamage = 1;
 						}
 						trigger.baseDamage--;
+						trigger.forceZero = true;
 					}
 					else {
 						if (event.cards?.length) await player.modedDiscard(event.cards);
@@ -3203,7 +3295,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				mod: {
 					playerEnabled(card, player, target) {
 						if (player.hasSkillTag("unequip2")) {
-							return ;
+							return;
 						}
 						if (player == target && card.name == "tao") {
 							return false;
@@ -3399,7 +3491,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					return player.countMark("shuangzishuidai_yzs_delay")
 				},
 				async content(event, trigger, player) {
-					player.removeMark("shuangzishuidai_yzs_delay",1, false);
+					player.removeMark("shuangzishuidai_yzs_delay", 1, false);
 					let result = await player.chooseButton([
 						"请选择一项",
 						[
@@ -4109,10 +4201,10 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				popup: false,
 				priority: 4,
 				filter(event, player) {
-					if (event.directHit?.includes(player) || !event.player||event.player==player) {
+					if (event.directHit?.includes(player) || !event.player || event.player == player) {
 						return false;
 					}
-					return player.hasUsableCard("tuotu_yzs") && player.countUsed("tuotu_yzs",true)<1;
+					return player.hasUsableCard("tuotu_yzs") && player.countUsed("tuotu_yzs", true) < 1;
 				},
 				async content(event, trigger, player) {
 					await player
@@ -4121,7 +4213,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							if (get.name(card) != "tuotu_yzs") {
 								return false;
 							}
-							return lib.filter.cardEnabled(card, player, "forceEnable") && lib.filter.cardUsable(card,player,get.event());
+							return lib.filter.cardEnabled(card, player, "forceEnable") && lib.filter.cardUsable(card, player, get.event());
 						})
 						.set("respondTo", [trigger.player, trigger.card])
 						.set("goon", (() => {
@@ -4140,7 +4232,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				forced: true,
 				locked: true,
 				popup: false,
-				priority:-31,
+				priority: -31,
 				trigger: {
 					player: "useCardAfter",
 				},
@@ -4185,9 +4277,90 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				async content(event, trigger, player) {
 					const targets = trigger.targets;
 					for (let target of targets) {
-						if (target.hujia>0) await target.changeHujia(-1,"lose");
+						if (target.hujia > 0) await target.changeHujia(-1, "lose");
 					}
 				}
+			},
+			//无限
+			yzs_wuxiaxian_wuxian_skill: {
+				subSkill: {
+					mark: {
+						charlotte: true,
+						onremove: true,
+					}
+				},
+				priority: 2,
+				audio: "wuxiaxianshushi_yzs",
+				equipSkill: true,
+				yzs_PPSkill: true,
+				trigger: {
+					player: "damageBegin3",
+				},
+				prompt2(event, player) {
+					const num = Math.pow(2 ,player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
+					return `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
+				},
+				filter(event, player) {
+					if (player.hasSkillTag("unequip2")) {
+						return false;
+					}
+					if (
+						event.source &&
+						event.source.hasSkillTag("unequip", false, {
+							name: event.card ? event.card.name : null,
+							target: player,
+							card: event.card,
+						})
+					) {
+						return false;
+					}
+					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
+			//		game.log(num)
+					if (player.countMark("yzs_PP") < num) return false;
+					return true;
+				},
+				async content(event, trigger, player) {
+					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
+					player.yzs_removePP(num)
+					trigger.cancel();
+					player.addTempSkill("yzs_wuxiaxian_wuxian_skill_mark");
+					player.addMark("yzs_wuxiaxian_wuxian_skill_mark", 1, false)
+				},
+			},
+			//苍
+			yzs_cang_buff: {
+				charlotte: true,
+				onremove: true,
+				forced: true,
+				popup:false,
+				priority: -23,
+				trigger: {
+					player: "useCard1"
+				},
+				filter(event, player) {
+					return event.card.name == "sha"
+				},
+				async content(event, trigger, player) {
+					if (!trigger.baseDamage) trigger.baseDamage = 1;
+					trigger.baseDamage += player.countMark("yzs_cang_buff");
+					player.removeSkill("yzs_cang_buff");
+				},
+				mod: {
+					targetInRange(card) {
+						if (get.name(card) == "sha") {
+							return true;
+						}
+					},
+				},
+			},
+			//赫
+			yzs_he_buff: {
+				charlotte: true,
+				mod: {
+					globalTo: function (from, to, distance) {
+						return distance + 1;
+					},
+				},
 			},
 		},
 		translate: {
@@ -4206,7 +4379,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			"Mystic": `<span class="yzs_Mystic">神秘术</span>`,
 			"animal": "动物",
 			"DeathNote_yzs": "死亡笔记",
-			"DeathNote_yzs_info": `每公轮结束时，对1名其他角色使用。目标角色失去全部体力(至多5点)。`,
+			"DeathNote_yzs_info": `每公轮结束时，对1名其他角色使用。目标角色失去全部体力(至少2点，至多5点)。`,
 			"maotouying_yzs": "猫头鹰",
 			"maotouying_yzs_info": `此牌离开场上角色的手牌区时，“璐璐杨·哈洛”获得此牌。<br>出牌阶段对1名与你手牌数之差≤1的其他角色使用：你展示此牌然后与其交换手牌。`,
 			"pomochong_yzs": "破魔虫",
@@ -4371,7 +4544,12 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			yzs_Girlyheart_equip3_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
 			yzs_Girlyheart_equip4: `少女心`,
 			yzs_Girlyheart_equip4_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
-
+			yzs_cang: `苍`,
+			yzs_cang_info: `出牌阶段对你自己使用。你本回合下张【杀】无距离限制且伤害+1。`,
+			yzs_he: `赫`,
+			yzs_he_info: `出牌阶段对你自己使用。其他角色计算至你距离+1至你下回合开始。`,
+			yzs_wuxiaxian_wuxian: `无限`,
+			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
 		},
 		list: [
 			["spade", 1, "juedou"], ["spade", 1, "shandian"], ["spade", 1, "guding"], ["spade", 1, "wugu"],

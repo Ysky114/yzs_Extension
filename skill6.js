@@ -706,7 +706,7 @@ const skills = {
 				priority: 33,
 				direct: true,
 				trigger: {
-					player: ["useCard"],
+					player: ["useCard","respond"],
 				},
 				filter(event, player) {
 					return event.card?.storage?.zhenjian_yzs
@@ -730,7 +730,7 @@ const skills = {
 			if (!list.length) {
 				return ;
 			}
-			if (!player.countCards("h")) {
+			if (!player.countCards("h", {name:"sha"})) {
 				return ;
 			}
 			for (var i of list) {
@@ -1727,7 +1727,7 @@ const skills = {
 						cards.addArray(target.getCards("h"))
 					}
 					let name = num + sum >= 12 ? "newLifeChimera_yzs1" : "newLifeChimera_yzs"
-					let result = await player.yzs_addPlayerOL(player, name, null, true, { startCards: 0, isControl: true, noCheckResult: true }).forResult()
+					let result = await player.yzs_addPlayerOL(player, name, null, true, { startCards: 0, isControl: true, noCheckResult: true, noDieAfter: true, noDieAfter2: true }).forResult()
 					if (!result?.target) return;
 					const Chimera = result.target;
 					Chimera.setMark("Guanjun_Chimera_yzs", sum, false);
@@ -1838,7 +1838,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			let name = "GuanjunServant_yzs" + (Math.floor(3 * Math.random()) + 1)
-			let result = await player.yzs_addPlayerOL(event.target, name, null, true, { startCards: 0, isControl: true, noCheckResult: true }).forResult()
+			let result = await player.yzs_addPlayerOL(event.target, name, null, true, { startCards: 0, isControl: true, noCheckResult: true,noDieAfter:true,noDieAfter2:true }).forResult()
 			if (!result?.target) return;
 			const evt = event.getParent("phaseUse", true);
 			if (evt?.player == player) {
@@ -2696,6 +2696,7 @@ const skills = {
 					target: "useCardToTargeted",
 				},
 				filter(event, player) {
+					if (!game.hasPlayer(cur => cur.hasSkill("mingji_yzs"))) return false;
 					if (!["basic", "trick"].includes(get.type(event.card))) return false;
 					if (player.hasSkill("mingji_yzs_used") && !(get.itemtype(player.storage.MindControl_yzs) == "player" && player.storage?.MindControl_yzs?.isIn?.())) return false;
 					const cards = player.getExpansions("mingji_yzs");
@@ -4460,7 +4461,7 @@ const skills = {
 						return lib.filter.filterCard.apply(this, arguments);
 					})
 						.set("logSkill", event.name)
-						.set("cards", trigger.result.cards || [])
+						.set("cards", trigger.result?.cards?.length ? trigger.result.cards : [])
 						.forResult()
 					if (result?.bool) await player.draw();
 				},
@@ -5518,7 +5519,8 @@ const skills = {
 		trigger: {
 			player: "phaseJieshuBegin"
 		},
-		direct: true,
+		forced: true,
+		popup:false,
 		async content(event, trigger, player) {
 			await player.gain(lib.skill.zongying_yzs.getYing(2), "gain2");
 			await player.chooseToUse("你可以使用一张牌",).set("logSkill", event.name);
@@ -7440,7 +7442,7 @@ const skills = {
 					backup: function (links, player) {
 						return {
 							filterCard(card, player) {
-								return card.hasGaintag("visible_yzs_ronghuo")
+								return card?.hasGaintag?.("visible_yzs_ronghuo")
 							},
 							popname: true,
 							check: function (card) {
@@ -7501,7 +7503,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			trigger.yzs_ronghuo = true;
-			let result = await player.draw(trigger.num).forResult();
+			let result = await player.draw(Math.min(trigger.num,5)).forResult();
 			if (result?.cards?.length && trigger.hasNature("fire")) {
 				const next = game.createEvent("faceUpCard");
 				next.player = player;
@@ -7625,6 +7627,7 @@ const skills = {
 		},
 		forced: true,
 		popup: false,
+		locked:false,
 		priority: -6,
 		trigger: {
 			player:"phaseJieshuBegin"

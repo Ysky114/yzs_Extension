@@ -2228,7 +2228,7 @@ const skills = {
 				lastDo: true,
 				name: "完全净化",
 				trigger: {
-					source: "damageBegin4"
+					source: "damageZero"
 				},
 				filter(event, player) {
 					return event.num < 0;
@@ -2338,6 +2338,7 @@ const skills = {
 					}
 					if (trigger.card.storage.weiGuang_yzs_sha_sub && trigger.card.storage.weiGuang_yzs_sha_sub.includes(trigger.player)) {
 						trigger.num--;
+						trigger.forceZero = true;
 					}
 				},
 				ai: {
@@ -7689,6 +7690,7 @@ const skills = {
 					if (trigger.name == "damage"&&player.countMark("bushi_yzs_effect") > 0) {
 						player.removeMark("bushi_yzs_effect")
 						trigger.num--;
+						trigger.forceZero = true;
 					}
 					if (trigger.name == "phase") {
 						const num = player.countMark("bushi_yzs_effect");
@@ -7747,6 +7749,7 @@ const skills = {
 				trigger: { source: "damageBegin1" },
 				async content(event, trigger, player) {
 					trigger.num--;
+					trigger.forceZero = true;
 				}
 			},
 			target: {
@@ -9270,66 +9273,47 @@ const skills = {
 		},
 	},
 	yousi_yzs: {
+		group: ["yousi_yzs_result"],
+		subSkill: {
+			result: {
+				forced: true,
+				popup:false,
+				priority: -2,
+				trigger: {
+					player: "chooseToCompareAfter"
+				},
+				filter(event, player) {
+					if (event.result?.tie) return false;
+					if (!event.card1 || !["red", "black"].includes(get.color(event.card1))) return false;
+					const evt = event.getParent();
+					return evt?.name == "yousi_yzs";
+				},
+				async content(event, trigger, player) {
+					var players = [player, trigger.target];
+					if (trigger.result.bool) players.reverse();
+					let winner = players[1];
+					if (get.color(trigger.card1) == "red") {
+						await winner.recover();
+					} else {
+						await winner.loseHp();
+					}
+				},
+			},
+		},
 		enable: "phaseUse",
 		usable: 1,
 		filter(event, player) {
 			return (game.hasPlayer(function (target) {
 				if (target.hasSkill("hidden_yzs")) return false;
-				return player.canUse({ name: "juedou", isCard: false }, target)
+				return player.canCompare(target);
 			}))
 		},
 		filterTarget: function (card, player, target) {
-			return player.canUse({ name: "juedou", isCard: false }, target)
+			return player.canCompare(target);
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			let target = event.targets[0];
-			let num = 2;
-			let result1 = await target.chooseBool("【决斗】即将对 你 生效，是否令 幽幽子 摸1张牌以令此牌伤害-1？")
-				.set("ai", () => {
-					return _status.event.bool;
-				})
-				.set(
-					"bool",
-					(function () {
-						const player = get.event().player;
-						const target = get.event().target
-						if (get.attitude(player, target) > 0) return true;
-						if (player.countCards("h", { name: "sha" }) > target.countCards("h") / 2) return false;
-						return true;
-					})()
-			)
-				.set("target",player)
-				.forResult();
-			if (result1.bool) {
-				num--;
-				await player.draw();
-			}
-			let result2 = await player.chooseBool(`【决斗】即将对 ${get.translation(target)} 生效，是否令 ${get.translation(target)} 摸1张牌以令此牌伤害-1？`)
-				.set("ai", () => {
-					return _status.event.bool;
-				})
-				.set(
-					"bool",
-					(function () {
-						const player = get.event().player;
-						const target = get.event().target
-						if (get.attitude(player, target) > 0) return true;
-						if (player.countCards("h", { name: "sha" }) > target.countCards("h") / 2) return false;
-						return true;
-					})()
-				)
-				.set("target", target)
-				.forResult();
-			if (result2.bool) {
-				num--;
-				await target.draw();
-			}
-			let next = player.useCard({ name: "juedou", isCard: false }, target);
-			if (typeof next.baseDamage !== "number") {
-				next.baseDamage = num;
-			}
-			await next;
+			await player.chooseToCompare(event.targets[0]).forResult();
 		},
 		ai: {
 			result: {

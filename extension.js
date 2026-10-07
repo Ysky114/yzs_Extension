@@ -630,9 +630,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"yzs_JoGo",
-						"yzs_DragonSlayerLLX",
-						"yzs_ThreeBirds"
 					]
 				},
 				{
@@ -641,34 +638,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"Rafau_yzs",
-						"yagamiLight_yzs",
-						"Ren_yzs",
-						"Frieren_yzs",
-						"SCP096_yzs",
-						"SCP106_yzs",
-						"Yugi_yzs",
-						"KinMiho_yzs",
-						"Tanya_yzs",
-						"jianSheng_yzs",
-						"Keiki_yzs",
-						"Floris_yzs",
-						"Tanya_yzs",
-						"Irumyuui_yzs",
-						"FengCthulhu_yzs",
-						"hunziKing_yzs",
-						"Faputa_yzs",
-						"Yuyuko_yzs",
-						"Halo_yzs",
-						"yinBochen_yzs",
-						"Qianmian_Limu_yzs",
-						"TimeThief_yzs",
-						"Linie_yzs",
-						"Byakuren_yzs",
-						"yzs_Youmu",
-						"Reze_yzs",
-						"weaponmaster_yzs",
-						"yzs_Reimu"
+						"GojoSatoru_yzs",
+						"YoungGojo_yzs"
 					]
 				},
 			];
@@ -765,12 +736,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.98</div><br>
+            <div style="color:#ffa348">• 版本号：v0.98.1</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.98",
+			version: "0.98.1",
 		},
 		files: {}, connect: true
 	}

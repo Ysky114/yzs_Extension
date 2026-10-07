@@ -691,31 +691,33 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:1",
 		async content(event, trigger, player) {
-			let drawnum = 1;
+			let drawnum = 0;
 			if (player.storage.disabledhandcard) drawnum++;
 			if (player.storage.disabledequip) drawnum++;
 			if (player.storage.disabledjudge) drawnum++;
-			var cards = game.cardsGotoOrdering(get.cards(drawnum)).cards;
-			player.addGaintag(cards, "zhenwu_yzs");
-			player.$gain2(cards, false);
-			while (cards.some(i => player.hasUseTarget(i))) {
-				let result = await player
-					.chooseButton(["真武：是否使用其中的一张牌？", cards])
-					.set("filterButton", button => {
-						return _status.event.player.hasUseTarget(button.link);
-					})
-					.set("ai", button => {
-						return get.player().getUseValue(button.link, true, false);
-					})
-					.forResult();
-				if (result.bool) {
-					var card = result.links[0];
-					cards.remove(card);
-					game.delayx();
-					player.chooseUseTarget(true, card, false);
-				} else break
+			if (drawnum > 0) {
+				var cards = game.cardsGotoOrdering(get.cards(drawnum)).cards;
+				player.addGaintag(cards, "zhenwu_yzs");
+				player.$gain2(cards, false);
+				while (cards.some(i => player.hasUseTarget(i))) {
+					let result = await player
+						.chooseButton(["真武：是否使用其中的一张牌？", cards])
+						.set("filterButton", button => {
+							return _status.event.player.hasUseTarget(button.link);
+						})
+						.set("ai", button => {
+							return get.player().getUseValue(button.link, true, false);
+						})
+						.forResult();
+					if (result.bool) {
+						var card = result.links[0];
+						cards.remove(card);
+						game.delayx();
+						player.chooseUseTarget(true, card, false);
+					} else break
+				}
+				for (let i = 0; i < cards.length; i++) { cards[i].discard(); }
 			}
-			for (let i = 0; i < cards.length; i++) { cards[i].discard(); }
 			await player.recover();
 		},
 		ai: {
@@ -5332,6 +5334,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					trigger.num--;
+					trigger.forceZero = true;
 				}
 			},
 			inside: {
@@ -8633,6 +8636,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					trigger.num--;
+					trigger.forceZero = true;
 				},
 				sub: true,
 				sourceSkill: "longzhiban_yzs",
@@ -9244,7 +9248,10 @@ const skills = {
 		async content(event, trigger, player) {
 			await player.loseHp();
 			if (event.cost_data == "add") trigger.num++;
-			else trigger.num--;
+			else {
+				trigger.num--;
+				trigger.forceZero = true;
+			}
 		},
 		ai: {
 			damageBonus:true,
