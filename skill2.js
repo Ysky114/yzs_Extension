@@ -9146,7 +9146,7 @@ const skills = {
 	},
 	//刃
 	shuhuenci_yzs: {
-		group: ["shuhuenci_yzs_up1", "shuhuenci_yzs_up2", "shuhuenci_yzs_down", "shuhuenci_yzs_recover"],
+		group: ["shuhuenci_yzs_up1", "shuhuenci_yzs_up2", "shuhuenci_yzs_down"],
 		subSkill: {
 			up1: {
 				sub: true,
@@ -9547,7 +9547,7 @@ const skills = {
 					return event.card?.storage?.xuanzhan_yzs
 				},
 				async content(event, trigger, player) {
-					await player.draw();
+				//	await player.draw();
 					const { cards } = trigger;
 					let name = cards[0].name;
 					if (lib.card[name].notarget) return;

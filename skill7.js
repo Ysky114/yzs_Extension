@@ -723,7 +723,7 @@ const skills = {
 			return player.maxHp - player.countCards("h") > 2;
 		},
 		async content(event, trigger, player) {
-			player.yzs_addPP();
+			player.yzs_addPP(2);
 			await player.drawTo(player.maxHp);
 			await player.loseHp();
 		}
@@ -1129,7 +1129,7 @@ const skills = {
 			if (!cards.length) return false;
 			for (let card1 of cards) {
 				for (let card2 of cards) {
-					if (lib.skill.xushici_yzs.equal(card1, card2, player)) return true
+					if (lib.skill.yzs_xushici.equal(card1, card2, player)) return true
 				}
 			}
 			return false;
@@ -1182,8 +1182,7 @@ const skills = {
 		},
 		selectTarget: [0,1],
 		async content(event, trigger, player) {
-			await player.tempBanSkill(event.name);
-			const target = event.target;
+		//	await player.tempBanSkill(event.name);
 			if (typeof event.baseDamage !== "number") {
 				event.baseDamage = 0;
 			}
@@ -1269,7 +1268,7 @@ const skills = {
 
 				});
 			} else {
-				player.playEffectOL(lib.skill.yzs_xushici.Effect, target);
+				player.playEffectOL(lib.skill.yzs_xushici.Effect, event.target);
 			}
 			if (event.baseDamage >= 3) {
 				player.$fullscreenpop("虚式", "thunder")
@@ -1280,7 +1279,8 @@ const skills = {
 			await new Promise(r => setTimeout(r, 2000))
 
 			if (!event.targets?.length) event.targets = game.filterPlayer(cur => !cur.hasSkill("hidden_yzs"));
-			for (let target in event.targets) {
+		//	game.log(event.targets)
+			for (let target of event.targets) {
 				await target.damage();
 			}
 		},
@@ -1355,19 +1355,12 @@ const skills = {
 		hiddenCard(player, name) {
 			return name == "tao"
 		},
-		onChooseToUse(event) {
-			if (!game.online) {
-				const player = event.player;
-				if (!player) return;
-				event.set("yzs_yuzhe", true)
-			}
-		},
 		juexingji: true,
 		enable: "chooseToUse",
 		position: "h",
 		viewAs: {
 			name: "tao",
-			storage: { yzs_yuzhe: true, }
+			storage: { yzs_yuzhe_dying: true, }
 		},
 		filter(event, player) {
 			return player.countCards("h") > 1;
@@ -1390,12 +1383,12 @@ const skills = {
 		complexCard: true,
 		mod: {
 			playerEnabled(card, player, target) {
-				if (card?.storage?.yzs_yuzhe && card?.name == "tao") {
+				if (card?.storage?.yzs_yuzhe_dying && card?.name == "tao") {
 					if (target != player || (!target.isDying() && !_status.dying.includes(target))) return false;
 				}
 			},
 			cardSavable(card, player) {
-				if (card?.storage?.yzs_yuzhe && player !== _status.event.dying && card?.name === "tao") {
+				if (card?.storage?.yzs_yuzhe_dying && player !== _status.event.dying && card?.name === "tao") {
 					return false;
 				}
 			},
@@ -1626,6 +1619,412 @@ const skills = {
 				recover: 1,
 				save: 1,
 			},
+		},
+	},
+	//万芊之魔女
+	yzs_xiebeng: {
+		derivation: "yzs_shengjie",
+		subSkill: {
+			awake: {
+				juexingji: true,
+				skillAnimation: "epic",
+				animationColor: "thunder",
+				async content(event, trigger, player) {
+					
+				}
+			},
+		},
+		locked: true,
+		init(player, skill) {
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_xiebeng";
+						const index = 4;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						let num = game.roundNumber;
+						if (num > 0) {
+							const maps = {};
+							while (num > 0) {
+								const result = await player.chooseTarget(`###邪迸###请选择分配伤害的目标（剩余${num}点）`, 1)
+									.set('ai', target => {
+										const player = get.player();
+										return get.damageEffect(target, player, player);
+									})
+									.forResult();
+								if (result.bool) {
+									const next2 =
+										num == 1
+											? {
+												bool: true,
+												numbers: [1],
+											}
+											: await player
+												.chooseNumbers('邪迸', [{ prompt: '请选择你要分配数值', min: 1, max: num }], true)
+												.set('processAI', () => {
+													return [get.event().numz];
+												})
+												.set('numz', num)
+												.forResult();
+									if (next2.bool) {
+										const num2 = next2.numbers?.[0];
+										maps[result.targets[0].playerid] = (maps[result.targets[0].playerid] || 0) + num2;
+										num -= num2;
+									}
+								} else {
+									break;
+								}
+							}
+							if (Object.keys(maps).length) {
+								for (const target of game.filterPlayer()) {
+									if (maps[target.playerid]) {
+										await target.damage(maps[target.playerid]);
+									}
+								}
+							}
+						}
+						await player.loseMaxHp(2);
+						for (let target of game.filterPlayer()) {
+							target.addSkill("yzs_fengmo")
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "yzs_xiebeng",
+				prompt: `你分配X点伤害并减少2点体力上限，然后所有其他角色获得${get.poptip("yzs_fengmo")}。（X为当前轮次数）`,
+				skill: "yzs_xiebeng"
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			game.log(1)
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_xiebeng";
+						const index = 4;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						let num = game.roundNumber;
+						if (num > 0) {
+							const maps = {};
+							while (num > 0) {
+								const result = await player.chooseTarget(`###邪迸###请选择分配伤害的目标（剩余${num}点）`, 1)
+									.set('ai', target => {
+										const player = get.player();
+										return get.damageEffect(target, player, player);
+									})
+									.forResult();
+								if (result.bool) {
+									const next2 =
+										num == 1
+											? {
+												bool: true,
+												numbers: [1],
+											}
+											: await player
+												.chooseNumbers('邪迸', [{ prompt: '请选择你要分配数值', min: 1, max: num }], true)
+												.set('processAI', () => {
+													return [get.event().numz];
+												})
+												.set('numz', num)
+												.forResult();
+									if (next2.bool) {
+										const num2 = next2.numbers?.[0];
+										maps[result.targets[0].playerid] = (maps[result.targets[0].playerid] || 0) + num2;
+										num -= num2;
+									}
+								} else {
+									break;
+								}
+							}
+							if (Object.keys(maps).length) {
+								for (const target of game.filterPlayer()) {
+									if (maps[target.playerid]) {
+										await target.damage(maps[target.playerid]);
+									}
+								}
+							}
+						}
+						await player.loseMaxHp(2);
+						for (let target of game.filterPlayer()) {
+							target.addSkill("yzs_fengmo")
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "yzs_xiebeng",
+				prompt: `你分配X点伤害并减少2点体力上限，然后所有其他角色获得${get.poptip("yzs_fengmo")}。（X为当前轮次数）`,
+				skill: "yzs_xiebeng"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
+			}
+		},
+		forced: true,
+		audio: "ext:一中杀/audio/skill:4",
+		usable:1,
+		priority: -93,
+		trigger: {
+			player:"dying"
+		},
+		async content(event, trigger, player) {
+			await player.recover();
+			if (player.getEquips(1).length && player.getEquips(2).length) {
+				await player.gain(player.getEquips(1).concat(player.getEquips(2)));
+				await player.useSkill("yzs_xiebeng_awake");
+				game.broadcastAll(function (current) {
+					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/yzs_QianSaint.png");
+				}, player)
+				await player.recoverTo(player.maxHp);
+				await player.removeSkills("yzs_xiebeng");
+				await player.addSkills("yzs_shengjie")
+			}
+		}
+	},
+	yzs_fengmo: {
+		enable: "phaseUse",
+		discard: false,
+		lose: false,
+		delay: 0,
+		filter(event, player) {
+			return player.countCards("h", card => get.type(card, player) == "equip" && game.hasPlayer(cur => cur.name =="yzs_QianWitch"));
+		},
+		filterCard(card) {
+			return get.type(card) == 'equip';
+		},
+		selectCard: true,
+		prompt: `出牌阶段，你可对“钟映暄”使用装备牌并与其各摸1张牌，然后若其对应装备栏本无牌，你可令其${get.poptip("yzs_xiebeng")}${get.poptip("sing_yzs_count")}+1，或令其
+${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合本技能失效`,
+		filterTarget: function (card, player, target) {
+			if (target.hasSkill("hidden_yzs") || target.name !== "yzs_QianWitch") return false;
+			if (!ui.selected?.cards?.length) return false;
+			return true
+		},
+		selectTarget: 1,
+		async content(event, trigger, player) {
+			if (player.name != "yzs_QianWitch") player.tempBanSkill("yzs_fengmo");
+			let card = event.cards[0];
+			await player.useCard(card, event.target, "yzs_fengmo");
+			await player.draw();
+			await event.target.draw();
+			if (get.subtype(card).startsWith("equip")) {
+				let pos = get.subtype(card).slice(5, 6);
+				if (!event.target.getEquips(pos).length) {
+					if (event.target.yzs_hasCountDown(i => i.name == "yzs_xiebeng")) {
+						let result = await player.chooseTarget(`你可令${get.translation(event.target)}${get.poptip("yzs_xiebeng")}${get.poptip("sing_yzs_count")}+1`)
+							.set("filterTarget", (card, player, target) => {
+								return target == _status.event.target;
+							})
+							.set("ai", target => {
+								return get.attitude(player, target)
+							})
+							.set('target', event.target)
+							.set("onChooseTarget", function () {
+								const event = get.event();
+								event.targetprompt2.add(target => {
+									if (!target.classList.contains("selectable")) {
+										return;
+									}
+									return "邪迸";
+								});
+							})
+							.forResult();
+						if (result?.bool) {
+							await event.target.yzs_updateCountDown(event.target.yzs_getCountDown(i => i.name == "yzs_xiebeng"),-1);
+						}
+					} else if (player.yzs_hasCountDown(i => i.name == "yzs_shengjie")) {
+						let result = await player.chooseTarget(`你可令${get.translation(event.target)}${get.poptip("yzs_shengjie")}${get.poptip("sing_yzs_count")}-1`)
+							.set("filterTarget", (card, player, target) => {
+								return target == _status.event.target;
+							})
+							.set("ai", target => {
+								return get.attitude(player, target)
+							})
+							.set('target', event.target)
+							.set("onChooseTarget", function () {
+								const event = get.event();
+								event.targetprompt2.add(target => {
+									if (!target.classList.contains("selectable")) {
+										return;
+									}
+									return "圣洁";
+								});
+							})
+							.forResult();
+						if (result?.bool) {
+							await event.target.yzs_updateCountDown(event.target.yzs_getCountDown(i => i.name == "yzs_shengjie"));
+						}
+					}
+				}
+			}
+		},
+		ai: {
+			order: 8,
+			result: {
+				target: 2,
+			}
+		}
+	},
+	yzs_shengjie: {
+		locked: true,
+		init(player, skill) {
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_shengjie";
+						const index = 5;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						await player.discard(player.getDiscardableCards(player, "ej"));
+						const result = await player.chooseCard("展示任意张不同牌名的即时牌，视为使用之", [1, Infinity], "h", "allowChooseAll", (card, player) => {
+							if (!ui.selected.cards.length) {
+								return true;
+							}
+							const name = get.name(card, player);
+							var type = get.type(name);
+							if (type != 'basic' && type != 'trick') return false
+							if (!player.hasUseTarget(card)) return false;
+							return ui.selected.cards.every((cardx) => get.name(cardx, player)!=name);
+						})
+							.set("complexCard", true)
+						    .set("ai", (card) => {
+								return 5;
+							})
+							.forResult();
+						if (result?.bool && result.cards?.length) {
+							await player.showCards(result.cards, "【圣洁】展示牌");
+							let cards = result.cards;
+							while (cards.some(i => player.hasUseTarget(i))) {
+								let result = await player
+									.chooseButton(["圣洁：是否使用其中的一张牌？", cards])
+									.set("filterButton", button => {
+										return _status.event.player.hasUseTarget(button.link);
+									})
+									.forResult();
+								if (!result?.bool) break;
+								let card = result.links[0];
+								cards.remove(card);
+								await player.chooseUseTarget(true, card, false);
+							}
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "yzs_shengjie",
+				prompt: `你弃置装备区和延时区的所有牌，然后展示任意张不同牌名的即时牌，视为使用之`,
+				skill: "yzs_shengjie"
+			}]
+			for (let item of countDowns) {
+				if (!player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_setCountDown(item);
+			}
+		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 3,
+				repeatNum: 3,
+				command: {
+					async todo(player) {
+						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_shengjie";
+						const index = 5;
+						damageAudioInfo += index + ".mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						await player.discard(player.getDiscardableCards(player, "ej"));
+						const result = await player.chooseCard("展示任意张不同牌名的即时牌，视为使用之", [1, Infinity], "h", "allowChooseAll", (card, player) => {
+							if (!ui.selected.cards.length) {
+								return true;
+							}
+							const name = get.name(card, player);
+							var type = get.type(name);
+							if (type != 'basic' && type != 'trick') return false
+							if (!player.hasUseTarget(card)) return false;
+							return ui.selected.cards.every((cardx) => get.name(cardx, player) != name);
+						})
+							.set("complexCard", true)
+							.set("ai", (card) => {
+								return 5;
+							})
+							.forResult();
+						if (result?.bool && result.cards?.length) {
+							await player.showCards(result.cards, "【圣洁】展示牌");
+							let cards = result.cards;
+							while (cards.some(i => player.hasUseTarget(i))) {
+								let result = await player
+									.chooseButton(["圣洁：是否使用其中的一张牌？", cards])
+									.set("filterButton", button => {
+										return _status.event.player.hasUseTarget(button.link);
+									})
+									.forResult();
+								if (!result?.bool) break;
+								let card = result.links[0];
+								cards.remove(card);
+								await player.chooseUseTarget(true, card, false);
+							}
+						}
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "yzs_shengjie",
+				prompt: `你弃置装备区和延时区的所有牌，然后展示任意张不同牌名的即时牌，视为使用之`,
+				skill: "yzs_shengjie"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
+			}
+		},
+		priority: 7,
+		mod: {
+			maxHandcard: function (player, num) {
+				return  7;
+			},
+		},
+		audio: "ext:一中杀/audio/skill:5",
+		trigger: {
+			player: "useCardToTargeted",
+		},
+		forced: true,
+		filter: function (event, player) {
+			return get.suit(event.card, player) == "heart";
+		},
+		async content(event,trigger,player) {
+			trigger.getParent().effectCount ++;
 		},
 	},
 }

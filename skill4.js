@@ -3744,7 +3744,7 @@ const skills = {
 					})
 					.set("num", num)
 					.forResult()
-			if (result.bool) await event.target.give(result.cards, player);
+			if (result?.bool) await event.target.give(result.cards, player);
 			if (num >= 3) {
 				let map = ["phaseUse", "phaseDiscard"];
 				let list = map.slice().map(function (i) {
@@ -3754,7 +3754,7 @@ const skills = {
 					.set("forced", true)
 					.set("selectButton", 1)
 					.forResult();
-				if (result.bool) {
+				if (result?.bool&&result.links?.length) {
 					let phase = result.links[0][2];
 					event.target.skip(phase);
 					event.target.addTempSkill(`pingpongWaiJiao_yzs_${phase}`, { player: `${phase}Skipped` });
@@ -8253,7 +8253,7 @@ const skills = {
 				skill: "LavaShell_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 
@@ -9606,7 +9606,7 @@ const skills = {
 		charlotte: true,
 	},
 	Deeagorze_yzs: {
-		group: ["Deeagorze_yzs_dianjin"],
+		group: ["Deeagorze_yzs_dianjin","Deeagorze_yzs_start"],
 		subSkill: {
 			backup: {
 				audio: "Deeagorze_yzs",
@@ -9653,7 +9653,33 @@ const skills = {
 					await next;
 				},
 			},
+			start: {
+				priority: -24,
+				trigger: {
+					global: "phaseBefore",
+					player: "enterGame",
+				},
+				filter: function (event, player) {
+					return (event.name != 'phase' || game.phaseNumber == 0);
+				},
+				async cost(event, trigger, player) {
+					event.result = await player.chooseTarget("选择一名角色，对其发动【点金】")
+						.set("filterTarget", (card, player, target) => {
+							return !target.hasSkillTag("hidden_yzs", null, player) && !target.hasSkill("dianjin_yzs_buff")
+						})
+						.set("ai", (target2) => {
+							return get.attitude(get.event().player, target2);
+						})
+						.forResult();
+				},
+				async content(event, trigger, player) {
+					let next = player.useSkill("dianjin_yzs")
+					next.targets = event.targets;
+					await next;
+				},
+			},
 		},
+		locked:true,
 		mod: {
 			playerEnabled(card, player, target) {
 				if (card?.storage?.Deeagorze_yzs) {
@@ -9661,7 +9687,6 @@ const skills = {
 				}
 			},
 		},
-		locked: true,
 		enable: "chooseToUse",
 		filter(event, player) {
 			if (!player.countCards("h", { name: "wuzhong" })) {
@@ -9673,7 +9698,7 @@ const skills = {
 					if (get.type(name) != "trick" && get.type(name) != "basic") {
 						return false;
 					}
-					if (lib.card[name]?.notarget) return false;
+				//	if (lib.card[name]?.notarget) return false;
 					return !player.getStorage("Deeagorze_yzs_used").includes(name);
 				})
 				.some(card => event.filterCard(get.autoViewAs({ name: card[2], nature: card[3] }, "unsure"), player, event));
@@ -9686,7 +9711,7 @@ const skills = {
 						if (get.type(name) != "trick" && get.type(name) != "basic") {
 							return false;
 						}
-						if (lib.card[name]?.notarget) return false;
+					//	if (lib.card[name]?.notarget) return false;
 						return !player.getStorage("Deeagorze_yzs_used").includes(name);
 					})
 					.filter(card => event.filterCard(get.autoViewAs({ name: card[2], nature: card[3] }, "unsure"), player, event));
@@ -9731,7 +9756,7 @@ const skills = {
 				};
 			},
 			prompt(links, player) {
-				let prompt = `将1张手牌当作${get.translation(links[0][3] || "")}【${get.translation(links[0][2])}】对“黄金化”的角色使用`
+				let prompt = `将1张手牌当作${get.translation(links[0][3] || "")}【${get.translation(links[0][2])}】使用`
 				return `###${prompt}###`;
 			},
 		},
@@ -9742,7 +9767,7 @@ const skills = {
 			if (get.type(name) != "trick" && get.type(name) != "basic") {
 				return false;
 			}
-			if (lib.card[name]?.notarget) return false;
+		//	if (lib.card[name]?.notarget) return false;
 			if (player.getStorage("Deeagorze_yzs_used").includes(name)) {
 				return false;
 			}

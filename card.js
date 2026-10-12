@@ -3148,6 +3148,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 								if (lib.skill.yzs_xushici.equal(card1, card2, player)) {
 									await target.discard(player, [card1, card2]);
 									let next = player.useSkill("yzs_xushici")
+									next.cards = [card1, card2];
 									next.targets = [target];
 									await next;
 									return;
@@ -3190,6 +3191,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 								if (lib.skill.yzs_xushici.equal(card1, card2, player)) {
 									await target.discard(player, [card1, card2]);
 									let next = player.useSkill("yzs_xushici")
+									next.cards = [card1, card2];
 									next.targets = [target];
 									await next;
 									return;
@@ -4298,9 +4300,10 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				prompt2(event, player) {
 					const num = Math.pow(2 ,player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
-					return `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
+					return `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
 				},
 				filter(event, player) {
+					if (get.itemtype(_status._yzsDomainPlayer) == "player" && _status._yzsDomainPlayer != player) return false;
 					if (player.hasSkillTag("unequip2")) {
 						return false;
 					}
@@ -4549,7 +4552,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			yzs_he: `赫`,
 			yzs_he_info: `出牌阶段对你自己使用。其他角色计算至你距离+1至你下回合开始。`,
 			yzs_wuxiaxian_wuxian: `无限`,
-			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
+			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
 		},
 		list: [
 			["spade", 1, "juedou"], ["spade", 1, "shandian"], ["spade", 1, "guding"], ["spade", 1, "wugu"],

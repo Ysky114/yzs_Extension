@@ -1467,8 +1467,8 @@ const characters = {
 	YoungGojo_yzs: {
 		sex: "male",
 		group: "wei",
-		hp: 4,
-		skills: ["yzs_SixEyes", "yzs_wuxiaxian", "yzs_canghe","yuzhe_yzs"],
+		hp: 3,
+		skills: ["yzs_SixEyes", "yzs_wuxiaxian", "yzs_canghe","yzs_yuzhe"],
 		names: "五条悟",
 		img: "extension/一中杀/image/YoungGojo_yzs.png",
 		BGM: "AIZO",
@@ -1802,6 +1802,16 @@ const characters = {
 		BGM: "Second",
 		isUnseen:true,
 	},
+
+	yzs_QianWitch: {
+		sex: "female",
+		group: "jin",
+		hp: 3,
+		maxHp:6,
+		skills: ["yzs_xiebeng","yzs_fengmo"],
+		names: "钟映暄",
+		img: "extension/一中杀/image/yzs_QianWitch.png",
+	},
 };
 
 const characterSubstitutes = {
@@ -1972,7 +1982,8 @@ const characterTitles = {
 	yzs_Youmu: `幽人的庭师`,
 	yzs_Reimu: `乐园的巫女`,
 	yzs_ThreeBirds: `黑森林的守护者`,
-	yzs_ThreeBirds2:`黑森林的毁灭者`,
+	yzs_ThreeBirds2: `黑森林的毁灭者`,
+	yzs_QianWitch:`万芊之魔女`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2118,7 +2129,7 @@ const characterIntros = {
 	yzs_Reimu: `博丽灵梦，系列作品《东方Project》中的主人公，幻想乡境内博丽神社的现有巫女，负责解决在幻想乡中发生的各种异变。在《东方》系列的游戏中均以主角出场，在其他作品中也作为主要角色登场。作为博丽神社的巫女，退治妖怪是她的日常工作。因为神社没什么参拜客，所以整天过着喝茶扫地的闲日子`,
 	yzs_ThreeBirds:`很久很久以前，在一片温暖又繁茂的森林里住着三只快乐的鸟儿。<br>长有许多眼睛的大鸟监视着森林寻找入侵者。大鸟的眼睛能看到很远的地方，甚至能看到我们看不见的东西。<br>为了维持森林的和平，高鸟审判着动物们的罪孽，它的天平能够绝对公正地衡量任何罪恶。<br>小鸟决定用它的喙来惩罚那些犯了错的动物们。`,
 	yzs_ThreeBirds2: `在嘈杂的哭喊中，在惊恐的尖叫中，有人大声喊道：“是那个怪物！黑暗的森林里有一个可怕的大怪物！”<br>大鸟那可以看到数百里外的眼睛，现在再也看不见了...<br>高鸟那一直仰望着星空的头颅，现在再也抬不起来了...<br>小鸟那可以吞噬一切动物的巨口，现在再也张不开了...<br>三只鸟————现在成为了一只，四处张望着寻找那个怪物，可没有任何结果。那儿已经什么都没有了，没有动物，没有日月，也没有怪物。只有那只鸟，还有那片黑暗的森林...`,
-
+	yzs_QianWitch:`"合适的容器死后，其体内的‘芊’便会消亡。历代圣女的使命，就是成为这样的容器。"-----一本古书中记载到`,
 };
 const characterReplaces = {
 };
@@ -2135,7 +2146,7 @@ const characterSort = {
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",
 		"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "jianSheng_yzs", "RenEmperor_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs",
 		"ChenDao_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs", "VanXiongYong_yzs", "LeiChenjing_yzs", "LilyCommie_yzs", "KinMiho_yzs", "Guanjun_yzs",
-		"LawfulXu_yzs","yzs_DragonSlayerLLX"],
+		"LawfulXu_yzs", "yzs_DragonSlayerLLX","yzs_QianWitch"],
 	touhouPack_yzs: ["Remilia_Scarlet_yzs", "SukunaShinmyoumaru_yzs", "Cirno_yzs", "Patchouli_Knowledge_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs",
 		"RatTiger_yzs", "Marisa_yzs", "Tenshi_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs", "Yuyuko_yzs", "LilyWhite_yzs", "Akyuu_yzs",
 		"Youmu_yzs", "Byakuren_yzs", "Okina_yzs", "Mamizou_yzs", "Keiki_yzs", "Yugi_yzs", "Reimu_yzs", "Mokou_yzs", "DoremySweet_yzs", "Reisen_yzs",

@@ -3525,9 +3525,9 @@ const skills = {
 				mod: {
 					cardname(card, player) {
 						if (card.hasGaintag("visible_zhengling_yzs")) {
-							if (get.color(card) == "black") {
+							if (get.suit(card) == "spade") {
 								return "guowangmiling_yzs"
-							} else if (get.color(card) == "red") {
+							} else if (get.suit(card) == "heart") {
 								return "wuzhong"
 							}
 						}
@@ -4522,7 +4522,7 @@ const skills = {
 				skill: "chijingzhiyi_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 
@@ -5962,17 +5962,11 @@ const skills = {
 					source: "damageBegin1",
 				},
 				filter(event, player) {
-					if (event.player.maxHp < 1) return false;
 					return event.card && event.card.storage.ba_yzs && (event.card.name == "sha") && event.notLink();
 				},
 				forced: true,
 				async content(event, trigger, player) {
 					trigger.player.playEffectOL(lib.skill.jie_yzs.Effect);
-					trigger.num += Math.min(Math.ceil(trigger.player.maxHp / 2), 5) - 1;
-					trigger.num *= trigger.card.storage.ba_yzs;
-					if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
-						trigger.num += 2;
-					}
 					if (trigger.player.name == "GojoSatoru_yzs" && player.name == "MegumiSukuna_yzs") {
 						game.broadcastAll(() => {
 							var video = document.createElement("VIDEO");
@@ -6032,6 +6026,12 @@ const skills = {
 					if (trigger.addCount !== false) {
 						trigger.addCount = false;
 						trigger.player.getStat("card")[trigger.card.name]--;
+					}
+					if (!trigger.baseDamage) trigger.baseDamage = 1;
+					trigger.baseDamage++;
+					trigger.baseDamage *= trigger.card.storage.ba_yzs;
+					if (player.hasSkill("liangmianguishen_yzs") && !player.isTempBanned("liangmianguishen_yzs")) {
+						trigger.baseDamage++;
 					}
 				},
 				mod: {

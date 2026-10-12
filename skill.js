@@ -1870,10 +1870,10 @@ const skills = {
 	"yifuzhiming_yzs": {
 		nobracket: true,
 		derivation: ["dangxian_yzs", "wushuang_yzs", "qiancaogangmu_yzs"],
-		"prompt2": "你可摸1张牌并展示之，然后可重复本操作直至展示黑桃牌或依此法获得3张牌",
+		"prompt2": "你可摸1~3张牌，若其中有黑桃，你跳过本回合额定出牌阶段",
 		locked: true,
 		forced: true,
-		group: ["yifuzhiming_yzs_loseSkill"],
+		//group: ["yifuzhiming_yzs_loseSkill"],
 		subSkill: {
 			loseSkill: {
 				forced: true,
@@ -1923,37 +1923,9 @@ const skills = {
 			player: "phaseZhunbei",
 		},
 		async content(event, trigger, player) {
-			let num = 0;
-			let is_spade = false;
-			while (num < 3) {
-				const result = await player.chooseBool("是否摸1张牌？")
-					.set("ai", function () {
-						return 6;
-					})
-					.forResult();
-				if (!result.bool) return
-				let cards = await player.draw().forResult();
-				cards = cards.cards;
-				await player.showCards(get.translation(player) + "【以父之名】展示牌", cards);
-				num++;
-				let suits = cards.map(card => get.suit(card)).toUniqued();
-				if (suits.includes("spade")) {
-					is_spade = true;
-					break;
-				}
-			}
-			if (is_spade) {
-				game.broadcastAll(function (damageAudioInfo) {
-					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
-					}
-				}, "effect/lose.mp3");
-				player.skip("phaseUse")
-			}
-			if (num == 3) {
-				if (player.hasSkill("dangxian_yzs") && player.hasSkill("wushuang_yzs") && player.hasSkill("qiancaogangmu_yzs")) return
+			if (!(player.hasSkill("dangxian_yzs") && player.hasSkill("wushuang_yzs") && player.hasSkill("qiancaogangmu_yzs"))) {
 				let result = await player.chooseButton([
-					get.prompt("yifuzhiming_yzs"),
+					"你选择并获得下列一个技能",
 					[
 						[
 							["dangxian_yzs", "获得技能【当先】"],
@@ -1982,11 +1954,35 @@ const skills = {
 				player.addSkill(result.links[0]);
 				player.popup(result.links[0]);
 				game.log(player, "获得了", "【" + get.translation(result.links[0]) + "】");
-				game.broadcastAll(function (damageAudioInfo) {
-					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
-					}
-				}, "effect/throw_flower1.mp3");
+			}
+
+			const next2 = await player
+				.chooseNumbers('以父之名', [{ prompt: '请选择摸牌的数量(1~3)，若其中有黑桃，你跳过本回合额定出牌阶段', min: 1, max: 3 }], false)
+				.set('processAI', () => {
+					return [get.event().numz];
+				})
+				.set('numz', 3)
+				.forResult();
+			if (next2?.bool) {
+				const num2 = next2.numbers?.[0];
+				if (num2 == 0) return;
+				let cards = await player.draw(num2).forResult();
+				cards = cards.cards;
+				await player.showCards(get.translation(player) + "【以父之名】展示牌", cards);
+				if (cards.some(card => get.suit(card, false) == "spade")) {
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+						}
+					}, "effect/lose.mp3");
+					player.skip("phaseUse")
+				} else if (num2 == 3) {
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+						}
+					}, "effect/throw_flower1.mp3");
+				}
 			}
 		},
 		ai: {
@@ -2067,7 +2063,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			let result = await player.chooseButton([
-				get.prompt("yifuzhiming_yzs"),
+				"你选择并获得其中一项效果",
 				[
 					[
 						["qiancaogangmu_yzs_effect1", "本阶段你造成伤害+1直至你致角色濒死"],
@@ -4126,7 +4122,7 @@ const skills = {
 					}, damageAudioInfo);
 					player.addMark("blessing_yzs_used", 1, false);
 					player.playEffectOL(lib.skill.blessing_yzs.Effect);
-					await player.yzs_updateCountDown(result2.links);
+					await player.yzs_updateCountDown(player.yzs_getCountDown(i => result2.links.some(link=>link.name==i.name)));
 				}
 			}
 		},
@@ -4388,7 +4384,7 @@ const skills = {
 						const items = lib.skill.blessing_yzs_backup.links;
 						player.addMark("blessing_yzs_used", 1, false);
 						player.playEffectOL(lib.skill.blessing_yzs.Effect);
-						await player.yzs_updateCountDown(items);
+						await player.yzs_updateCountDown(player.yzs_getCountDown(i => items.some(link => link.name == i.name)));
 						const evt = event.getParent(2);
 						if (evt.name == "chooseToUse") {
 							evt.goto(0);
@@ -4478,7 +4474,7 @@ const skills = {
 							player.storage.blessing_yzs_renew.push(result2.links[0]);
 							player.markSkill("blessing_yzs_renew");
 							player.playEffectOL(lib.skill.blessing_yzs.Effect);
-							await player.yzs_updateCountDown(result2.links);
+							await player.yzs_updateCountDown(player.yzs_getCountDown(i => result2.links.some(link => link.name == i.name)));
 						}
 					}
 				},
@@ -4764,7 +4760,7 @@ const skills = {
 				skill: "HolyBlessing_yzs_wushen"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 		priority:-21,
@@ -6119,6 +6115,46 @@ const skills = {
 				skill: "brokenheart_yzs"
 			});
 		},
+		onremove(player, skill) {
+			const countDowns = [{
+				num: 4,
+				repeatNum: 1,
+				command: {
+					async todo(player) {
+						const bool = await player
+							.chooseBool(`是否失去1点体力？<br>（否则你失去【残心】）`)
+							.set("ai", () => {
+								return _status.event.bool;
+							})
+							.set(
+								"bool",
+								(function () {
+									const player = get.event().player;
+									if (player.hp > player.maxHp / 2) return true;
+									return false;
+								})()
+							)
+							.forResult();
+						if (bool.bool) {
+							await player.loseHp();
+							return;
+						}
+						await player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == "brokenheart_yzs"));
+						player.removeSkill("brokenheart_yzs");
+					},
+					list: [player],
+				},
+				value(item, player) {
+					return 3;
+				},
+				name: "brokenheart_yzs",
+				prompt: `失去【残心】或失去1点体力并令本吟唱变为1`,
+				skill: "brokenheart_yzs"
+			}]
+			for (let item of countDowns) {
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
+			}
+		},
 		trigger: {
 			player: "phaseDiscardBegin",
 		},
@@ -7049,7 +7085,7 @@ const skills = {
 				}
 			}
 		},
-		marktext: "审判",
+		marktext: "审",
 		intro: {
 			name: "审判点数",
 			"name2": "审判点数",

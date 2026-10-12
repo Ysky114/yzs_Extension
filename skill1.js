@@ -10432,7 +10432,7 @@ const skills = {
 				skill: "quanbing_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 	},

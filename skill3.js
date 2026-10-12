@@ -1080,7 +1080,7 @@ const skills = {
 				skill: "tongshe_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 	},
@@ -1120,7 +1120,7 @@ const skills = {
 					};
 				},
 				async content(event, trigger, player) {
-					await player.yzs_updateCountDown(event.cost_data);
+					await player.yzs_updateCountDown(player.yzs_getCountDown(i => event.cost_data.name==i.name));
 					if (_status.currentPhase == player) await player.recover();
 				},
 			},
@@ -1149,8 +1149,8 @@ const skills = {
 				.set("selectButton", [1, Infinity])
 				.set("owner", player)
 				.forResult()
-			if (!result.bool) return;
-			await player.yzs_updateCountDown(result.links);
+			if (!result.bool||!result.links?.length) return;
+			await player.yzs_updateCountDown(player.yzs_getCountDown(i => result.links.some(link=>link.name==i.name)));
 		},
 	},
 	TimeBomb_yzs: {
@@ -1237,7 +1237,7 @@ const skills = {
 				skill: "TimeBomb_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 		priority: 12,
@@ -1372,7 +1372,7 @@ const skills = {
 				skill: "TimeMachine_yzs"
 			}]
 			for (let item of countDowns) {
-				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(item);
+				if (player.yzs_hasCountDown(i => i.name == item.name)) player.yzs_clearCountDown(player.yzs_getCountDown(i => i.name == item.name));
 			}
 		},
 		audio: "ext:一中杀/audio/skill:1",
@@ -1404,7 +1404,7 @@ const skills = {
 			};
 		},
 		async content(event, trigger, player) {
-			await player.yzs_updateCountDown(event.cost_data);
+			await player.yzs_updateCountDown(player.yzs_getCountDown(i => event.cost_data.name==i.name));
 		},
 	},
 	//恋人W
@@ -6803,7 +6803,8 @@ const skills = {
 					.set('prompt', `你弃1张牌，若为装备牌则对 ${get.translation(trigger.player)} 造成1点伤害`)
 					.forResult();
 				if (result.bool && result.cards.some(card => get.type(card, player) == "equip")) {
-					if(!trigger.player.hasSkill("hidden_yzs"))await trigger.player.damage();
+					if (!trigger.player.hasSkill("hidden_yzs")) await trigger.player.damage();
+					player.tempBanSkill("haiyi_yzs")
 				}
 			}
 		}

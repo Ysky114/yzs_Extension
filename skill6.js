@@ -3186,7 +3186,7 @@ const skills = {
 				trigger: {
 					player: "phaseJieshu"
 				},
-				prompt2: `限定技：结束阶段，若你体力上限>8，你可于下家召唤“${get.poptip({
+				prompt2: `限定技：结束阶段，若你体力上限>8，你可于上家召唤“${get.poptip({
 					id: "character_Faputa_yzs",
 					name: "法仆塔",
 					type: "character",
@@ -3194,10 +3194,10 @@ const skills = {
 				})}”，然后你扣除一半体力上限（向上取整），或令“法仆塔”翻面。`,
 				priority: 5,
 				filter(event, player) {
-					return player.maxHp > 4 && !player.countMark("yunyu_yzs_summon")
+					return player.maxHp > 8 && !player.countMark("yunyu_yzs_summon")
 				},
 				async content(event, trigger, player) {
-					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, true, { startCards:0,isControl: true, dieRemove: false }).forResult();
+					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, false, { startCards:0,isControl: true, dieRemove: false }).forResult();
 					if (!result?.target) return;
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
@@ -7385,7 +7385,7 @@ const skills = {
 	},
 	//漏瑚
 	yzs_ronghuo: {
-		group: ["yzs_ronghuo_use","yzs_ronghuo_die"],
+		group: ["yzs_ronghuo_use", "yzs_ronghuo_die","yzs_ronghuo_zhuque"],
 		subSkill: {
 			die: {
 				popup: false,
@@ -7488,6 +7488,43 @@ const skills = {
 					threaten: 1.9,
 				},
 			},
+			zhuque: {
+				trigger: {
+					player: "useCard1",
+				},
+				filter(event, player) {
+					if (event.card.name === "sha" && !game.hasNature(event.card)) {
+						return true;
+					}
+				},
+				audio: "zhuque_skill",
+				check(event, player) {
+					let eff = 0;
+					const nature = event.card.nature;
+					for (const target of event.targets) {
+						eff -= get.effect(target, event.card, player, player);
+						event.card.nature = "fire";
+						eff += get.effect(target, event.card, player, player);
+						event.card.nature = nature;
+					}
+					return eff > 0;
+				},
+				prompt2(event, player) {
+					return `将${get.translation(event.card)}改为火属性`;
+				},
+				async content(event, trigger, player) {
+					game.setNature(trigger.card, "fire");
+					if (get.itemtype(trigger.card) === "card") {
+						const next = game.createEvent("yzs_ronghuo_clear");
+						next.card = trigger.card;
+						event.next.remove(next);
+						trigger.after.push(next);
+						next.setContent(async (event2, trigger2) => {
+							game.setNature(trigger2.card, []);
+						});
+					}
+				},
+			}
 		},
 		priority: -5,
 		forced: true,
