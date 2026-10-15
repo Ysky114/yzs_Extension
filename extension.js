@@ -601,7 +601,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
 					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", "APPLe_yzs",
 					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Aura_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
-					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch","KunYee_yzs"
+					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs","yzs_ItadoriYuji"
 				];
 				//平凡
 				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", "lianjinzhencai_yzs", "Remilia_Scarlet_yzs", "TimeGuard_yzs",
@@ -630,7 +630,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"yzs_QianWitch"
+						"yzs_QianWitch",
+						"yzs_ItadoriYuji"
 					]
 				},
 				{
@@ -746,12 +747,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.98.4</div><br>
+            <div style="color:#ffa348">• 版本号：v0.98.5</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.98.4",
+			version: "0.98.5",
 		},
 		files: {}, connect: true
 	}

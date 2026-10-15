@@ -4719,7 +4719,7 @@ const skills = {
 		},
 	},
 	zuzhouzhiwang_yzs: {
-		group: ["zuzhouzhiwang_yzs_summon", "zuzhouzhiwang_yzs_die"],
+		group: [ "zuzhouzhiwang_yzs_die"],
 		subSkill: {
 			die: {
 				priority: 23,
@@ -4966,7 +4966,7 @@ const skills = {
 			return cards;
 		},
 		cards: ["yuquan_yzs", "ye_yzs", "dashe_yzs", "hama_yzs", "manxiang_yzs", "tuotu_yzs", "guanniu_yzs", "yuanlu_yzs", "huzang_yzs", "moxuluo_yzs"],
-		group: ["shizhongyingfashu_yzs_start", "shizhongyingfashu_yzs_targeted", "shizhongyingfashu_yzs_use", "shizhongyingfashu_yzs_break"],
+		group: ["shizhongyingfashu_yzs_start", "shizhongyingfashu_yzs_targeted", "shizhongyingfashu_yzs_use", "shizhongyingfashu_yzs_break","zuzhouzhiwang_yzs_summon"],
 		subSkill: {
 			start: {
 			    firstDo:true,
@@ -4982,6 +4982,13 @@ const skills = {
 					return (event.name != "phase" || game.phaseNumber == 0);
 				},
 				async content(event, trigger, player) {
+					for (let target of game.filterPlayer()) {
+						if (target.hasSkill("yzs_suzhou")) target.removeSkill("yzs_suzhou");
+						if (target.hasSkill("yzs_chuilian")) {
+							target.addMark("yzs_chuilian_awake", 1, false);
+							target.markAuto("yzs_chuilian", [1, 2, 3, 4, 5, 6])
+						}
+					}
 					game.broadcastAll(() => {
 						// 1. 设置音频路径
 						_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
@@ -7070,7 +7077,7 @@ const skills = {
 						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs_die.png");
 					}, player)
 					let name = get.translation(trigger.source);
-					if (name.includes("宿傩")) name = "宿傩"
+					if (trigger.source.hasSkill("zuzhouzhiwang_yzs")) name = "宿傩"
 					player.chat(`没能让${name}大人尽兴，真是抱歉啊`)
 					trigger.source.chat("令人愉悦！")
 					setTimeout(() => {

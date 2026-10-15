@@ -779,9 +779,9 @@ const skills = {
 		},
 		forced: true,
 		locked: false,
-		priority:21,
+		priority: 21,
 		trigger: {
-			player:"useCard"
+			player: "useCard"
 		},
 		filter(event, player) {
 			return player.countMark("yzs_PP") < player.yzs_getPPLimit();
@@ -795,10 +795,10 @@ const skills = {
 		subSkill: {
 			reset: {
 				forced: true,
-				priority:231,
+				priority: 231,
 				popup: false,
 				trigger: {
-					global:"phaseBegin"
+					global: "phaseBegin"
 				},
 				async content(event, trigger, player) {
 					if (player.storage.yzs_canghe) player.changeZhuanhuanji("yzs_canghe");
@@ -1180,9 +1180,9 @@ const skills = {
 		filterTarget: function (card, player, target) {
 			return !target.hasSkill("hidden_yzs") && player != target;
 		},
-		selectTarget: [0,1],
+		selectTarget: [0, 1],
 		async content(event, trigger, player) {
-		//	await player.tempBanSkill(event.name);
+			//	await player.tempBanSkill(event.name);
 			if (typeof event.baseDamage !== "number") {
 				event.baseDamage = 0;
 			}
@@ -1279,7 +1279,7 @@ const skills = {
 			await new Promise(r => setTimeout(r, 2000))
 
 			if (!event.targets?.length) event.targets = game.filterPlayer(cur => !cur.hasSkill("hidden_yzs"));
-		//	game.log(event.targets)
+			//	game.log(event.targets)
 			for (let target of event.targets) {
 				await target.damage();
 			}
@@ -1303,7 +1303,7 @@ const skills = {
 				forced: true,
 				popup: false,
 				priority: 33,
-			//	audio: "ext:一中杀/audio/skill:1",
+				//	audio: "ext:一中杀/audio/skill:1",
 				trigger: {
 					player: "dyingAfter"
 				},
@@ -1630,7 +1630,7 @@ const skills = {
 				skillAnimation: "epic",
 				animationColor: "thunder",
 				async content(event, trigger, player) {
-					
+
 				}
 			},
 		},
@@ -1709,7 +1709,6 @@ const skills = {
 			}
 		},
 		onremove(player, skill) {
-			game.log(1)
 			const countDowns = [{
 				num: 3,
 				repeatNum: 3,
@@ -1784,10 +1783,10 @@ const skills = {
 		},
 		forced: true,
 		audio: "ext:一中杀/audio/skill:4",
-		usable:1,
+		usable: 1,
 		priority: -93,
 		trigger: {
-			player:"dying"
+			player: "dying"
 		},
 		async content(event, trigger, player) {
 			await player.recover();
@@ -1809,7 +1808,7 @@ const skills = {
 		lose: false,
 		delay: 0,
 		filter(event, player) {
-			return player.countCards("h", card => get.type(card, player) == "equip" && game.hasPlayer(cur => cur.name =="yzs_QianWitch"));
+			return player.countCards("h", card => get.type(card, player) == "equip" && game.hasPlayer(cur => cur.name == "yzs_QianWitch"));
 		},
 		filterCard(card) {
 			return get.type(card) == 'equip';
@@ -1852,7 +1851,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 							})
 							.forResult();
 						if (result?.bool) {
-							await event.target.yzs_updateCountDown(event.target.yzs_getCountDown(i => i.name == "yzs_xiebeng"),-1);
+							await event.target.yzs_updateCountDown(event.target.yzs_getCountDown(i => i.name == "yzs_xiebeng"), -1);
 						}
 					} else if (player.yzs_hasCountDown(i => i.name == "yzs_shengjie")) {
 						let result = await player.chooseTarget(`你可令${get.translation(event.target)}${get.poptip("yzs_shengjie")}${get.poptip("sing_yzs_count")}-1`)
@@ -1912,10 +1911,10 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 							var type = get.type(name);
 							if (type != 'basic' && type != 'trick') return false
 							if (!player.hasUseTarget(card)) return false;
-							return ui.selected.cards.every((cardx) => get.name(cardx, player)!=name);
+							return ui.selected.cards.every((cardx) => get.name(cardx, player) != name);
 						})
 							.set("complexCard", true)
-						    .set("ai", (card) => {
+							.set("ai", (card) => {
 								return 5;
 							})
 							.forResult();
@@ -2012,7 +2011,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		priority: 7,
 		mod: {
 			maxHandcard: function (player, num) {
-				return  7;
+				return 7;
 			},
 		},
 		audio: "ext:一中杀/audio/skill:5",
@@ -2023,9 +2022,574 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		filter: function (event, player) {
 			return get.suit(event.card, player) == "heart";
 		},
-		async content(event,trigger,player) {
-			trigger.getParent().effectCount ++;
+		async content(event, trigger, player) {
+			trigger.getParent().effectCount++;
 		},
+	},
+	//虎杖悠仁
+	yzs_chuilian: {
+		subSkill: {
+			jie: {
+				enable: "phaseUse",
+				filter(event, player) {
+					return game.countPlayer(function (target) {
+						return lib.skill.yzs_chuilian_jie.filterTarget(null, player, target)
+					}) > 0
+				},
+				filterTarget: function (card, player, target) {
+					return !target.hasSkill("hidden_yzs") && player != target;
+				},
+				selectTarget: 1,
+				async content(event, trigger, player) {
+					await player.tempBanSkill(event.name);
+					event.target.playEffectOL(lib.skill.jie_yzs.Effect);
+					await player.discardPlayerCard(event.target, 'h', true);
+					await player.discardPlayerCard(event.target, 'e', true);
+					await event.target.damage();
+				},
+				ai: {
+					order: 8,
+					result: {
+						target(player, target) {
+							return get.damageEffect(target, player, target);
+						},
+					},
+					expose: 0.3,
+					threaten: 1.2,
+				},
+			}
+		},
+		audio: "ext:一中杀/audio/skill:3",
+		locked: true,
+		priority: -8,
+		marktext: "炼",
+		forced: true,
+		intro: {
+			markcount: "storage",
+			mark(dialog, content, player) {
+				const storage = player.getStorage("yzs_chuilian").sort(function (a, b) {
+					return a - b;
+				});
+				if (storage.length) {
+					dialog.addText(`已弃置过的点数：`);
+					let str = ``;
+					for (let num of storage) {
+						str += num + ' ';
+					}
+					dialog.addText(str);
+				} else {
+					dialog.addText(`当前未弃置过牌`);
+				}
+			},
+		},
+		trigger: {
+			player: ["useCardAfter", "respondAfter"],
+		},
+		filter(event, player) {
+			return get.type(event.card) == "basic";
+		},
+		async content(event, trigger, player) {
+			let target = player;
+			await target.draw();
+			let result =
+				target.countDiscardableCards("h", target) < 1
+					? { bool: false }
+					: await target
+						.chooseToDiscard('h', "锤炼", `你可弃1张手牌`)
+						.set("forced", false)
+						.set("ai", card => {
+							const player = get.event().player;
+							const target = get.event().target;
+							if (get.attitude(player, target) <= 0) return 0;
+							let v = 7 - get.value(card, player);
+							if (!target.storage.yzs_chuilian || !target.storage.yzs_chuilian.includes(get.number(card))) v += 4;
+							return v;
+						})
+						.set("target", player)
+						.forResult();
+			if (result?.bool && result.cards?.length) player.markAuto("yzs_chuilian", result.cards[0].number)
+			if (player.countMark("yzs_chuilian_awake") && player.getStorage("yzs_chuilian").length >= 13) {
+				player.addSkill("yzs_chuilian_jie")
+			}
+		}
+	},
+	yzs_jintingquan: {
+		group: "yzs_jintingquan_effect",
+		subSkill: {
+			effect: {
+				forced: true,
+				popup: false,
+				priority: -32,
+				trigger: {
+					source: "damageBegin4"
+				},
+				filter(event, player) {
+					const evt = event.getParent(2);
+					//	game.log(evt.name)
+					if (evt?.yzs_jintingquan) return true;
+				},
+				async content(event, trigger, player) {
+					trigger.player.playEffectOL(lib.skill.yzs_jintingquan.Effect);
+					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_jintingquan1.mp3";
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+						}
+					}, damageAudioInfo);
+				}
+			}
+		},
+		Effect: function (player, target) {
+			if (!player) return;
+
+			/* ---------- 工具 ---------- */
+			const toEl = v => {
+				if (!v) return null;
+				if (v.nodeType === 1) return v;
+				if (v.jquery && v[0]) return v[0];
+				if (v.element) return toEl(v.element);
+				if (v.$element) return toEl(v.$element);
+				return null;
+			};
+			const pEl = toEl(player);
+			if (!pEl) return;
+
+			const rect = pEl.getBoundingClientRect();
+			if (!rect.width && !rect.height) return;
+
+			const cx = rect.left + rect.width / 2;
+			const cy = rect.top + rect.height / 2;
+			const baseLen = Math.max(rect.width, rect.height) / 2 + 26;
+			const rand = (a, b) => a + Math.random() * (b - a);
+			const NS = 'http://www.w3.org/2000/svg';
+
+			/* ---------- 容器 ---------- */
+			const wrap = document.createElement('div');
+			wrap.style.cssText =
+				'position:fixed;left:0;top:0;width:100%;height:100%;' +
+				'pointer-events:none;overflow:visible;z-index:999999;';
+			document.body.appendChild(wrap);
+
+			/* ---------- SVG 画布 ---------- */
+			const svg = document.createElementNS(NS, 'svg');
+			svg.setAttribute('width', '100%');
+			svg.setAttribute('height', '100%');
+			svg.style.cssText = 'position:absolute;left:0;top:0;overflow:visible;';
+			wrap.appendChild(svg);
+
+			/* 红色辉光滤镜 */
+			const fid = 'bf' + Math.random().toString(36).slice(2, 8);
+			const defs = document.createElementNS(NS, 'defs');
+			const filter = document.createElementNS(NS, 'filter');
+			filter.setAttribute('id', fid);
+			filter.setAttribute('x', '-150%');
+			filter.setAttribute('y', '-150%');
+			filter.setAttribute('width', '400%');
+			filter.setAttribute('height', '400%');
+
+			const blur = document.createElementNS(NS, 'feGaussianBlur');
+			blur.setAttribute('stdDeviation', '5');
+			blur.setAttribute('result', 'glow');
+
+			const merge = document.createElementNS(NS, 'feMerge');
+			['glow', 'glow', 'SourceGraphic'].forEach(name => {
+				const node = document.createElementNS(NS, 'feMergeNode');
+				node.setAttribute('in', name);
+				merge.appendChild(node);
+			});
+
+			filter.appendChild(blur);
+			filter.appendChild(merge);
+			defs.appendChild(filter);
+			svg.appendChild(defs);
+
+			/* ---------- 生成中心线（相对中心 0,0） ---------- */
+			const genCenterLine = (angle, len) => {
+				const SEG = 6;
+				const pts = [];
+				for (let i = 0; i <= SEG; i++) {
+					const t = i / SEG;
+					const r = len * t;
+					const env = 0.3 + 0.7 * Math.sin(Math.PI * t);   // 中段抖动大，两端收敛
+					const off = i === 0 ? 0 : (Math.random() - 0.5) * len * 0.45 * env;
+					const x = Math.cos(angle) * r - Math.sin(angle) * off;
+					const y = Math.sin(angle) * r + Math.cos(angle) * off;
+					pts.push([x, y]);
+				}
+				return pts;
+			};
+
+			/* ---------- 按渐宽把中心线展开为填充多边形 ----------
+			   baseW：根部宽度；tipW：末端宽度（越大越粗） */
+			const taperPath = (pts, baseW, tipW) => {
+				const N = pts.length;
+				const left = [], right = [];
+				for (let i = 0; i < N; i++) {
+					const t = i / (N - 1);
+					const w = baseW + (tipW - baseW) * t;      // 宽度随距离线性增长
+					const prev = pts[Math.max(0, i - 1)];
+					const next = pts[Math.min(N - 1, i + 1)];
+					let dxs = next[0] - prev[0];
+					let dys = next[1] - prev[1];
+					const dl = Math.hypot(dxs, dys) || 1;
+					dxs /= dl; dys /= dl;
+					const nx = -dys, ny = dxs;                 // 中心线的法线方向
+					left.push([pts[i][0] + nx * w / 2, pts[i][1] + ny * w / 2]);
+					right.push([pts[i][0] - nx * w / 2, pts[i][1] - ny * w / 2]);
+				}
+				let d = 'M ' + left[0][0].toFixed(1) + ' ' + left[0][1].toFixed(1);
+				for (let i = 1; i < N; i++) {
+					d += ' L ' + left[i][0].toFixed(1) + ' ' + left[i][1].toFixed(1);
+				}
+				for (let i = N - 1; i >= 0; i--) {
+					d += ' L ' + right[i][0].toFixed(1) + ' ' + right[i][1].toFixed(1);
+				}
+				return d + ' Z';
+			};
+
+			/* ---------- 生成并播放一条闪电 ---------- */
+			const spawnBolt = (angle, len) => {
+				const pts = genCenterLine(angle, len);
+
+				// 每道闪电整体粗细再随机浮动一下，避免千篇一律
+				const R = rand(0.85, 1.2);
+
+				// 三层各自的渐宽：辉光最宽 → 红轮廓 → 黑芯最窄
+				const glowD = taperPath(pts, 9 * R, 30 * R);   // 根部 ~9px  末端 ~30px
+				const edgeD = taperPath(pts, 5.5 * R, 21 * R);  // 根部 ~5.5px 末端 ~21px
+				const coreD = taperPath(pts, 3.2 * R, 15 * R);  // 根部 ~3.2px 末端 ~15px
+
+				const g = document.createElementNS(NS, 'g');
+
+				// 1) 外层红色辉光（模糊）
+				const halo = document.createElementNS(NS, 'path');
+				halo.setAttribute('d', glowD);
+				halo.setAttribute('fill', '#ff1414');
+				halo.setAttribute('opacity', '0.85');
+				halo.setAttribute('filter', 'url(#' + fid + ')');
+				halo.setAttribute('stroke-linejoin', 'miter');
+
+				// 2) 红色外轮廓
+				const edge = document.createElementNS(NS, 'path');
+				edge.setAttribute('d', edgeD);
+				edge.setAttribute('fill', '#ff3a3a');
+				edge.setAttribute('stroke-linejoin', 'miter');
+
+				// 3) 黑色闪电主体
+				const core = document.createElementNS(NS, 'path');
+				core.setAttribute('d', coreD);
+				core.setAttribute('fill', '#08080b');
+				core.setAttribute('stroke-linejoin', 'miter');
+
+				g.appendChild(halo);
+				g.appendChild(edge);
+				g.appendChild(core);
+				svg.appendChild(g);
+
+				const LIFE = 320;
+
+				// 从中心向外"窜"出 + 闪烁淡出
+				g.style.willChange = 'transform, opacity';
+				g.animate([
+					{ transform: `translate(${cx}px, ${cy}px) scale(0.02)`, opacity: 0 },
+					{ transform: `translate(${cx}px, ${cy}px) scale(1.08)`, opacity: 1, offset: 0.22 },
+					{ transform: `translate(${cx}px, ${cy}px) scale(1)`, opacity: 1, offset: 0.48 },
+					{ transform: `translate(${cx}px, ${cy}px) scale(1)`, opacity: 0.35, offset: 0.68 },
+					{ transform: `translate(${cx}px, ${cy}px) scale(1)`, opacity: 0 }
+				], { duration: LIFE, easing: 'ease-out', fill: 'forwards' });
+
+				setTimeout(() => g.remove(), LIFE + 60);
+			};
+
+			/* ---------- 三波放射状闪电（0 / 150 / 300ms） ---------- */
+			[
+				{ delay: 0, count: 5 },
+				{ delay: 150, count: 4 },
+				{ delay: 300, count: 4 }
+			].forEach(wave => {
+				const base = Math.random() * Math.PI * 2;
+				for (let i = 0; i < wave.count; i++) {
+					const angle = base + (i / wave.count) * Math.PI * 2 + rand(-0.35, 0.35);
+					const len = baseLen + rand(8, 76);
+					setTimeout(() => spawnBolt(angle, len), wave.delay + rand(0, 70));
+				}
+			});
+
+			/* ---------- 暗色核心闪光 ---------- */
+			const dark = document.createElement('div');
+			dark.style.cssText =
+				`position:absolute;left:${cx}px;top:${cy}px;` +
+				'width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;' +
+				'pointer-events:none;opacity:0;' +
+				'background:radial-gradient(circle,' +
+				'rgba(0,0,0,.98) 0%,' +
+				'rgba(14,0,0,.85) 38%,' +
+				'rgba(255,30,30,.4) 66%,' +
+				'rgba(255,30,30,0) 100%);';
+			wrap.appendChild(dark);
+			dark.animate([
+				{ transform: 'scale(.35)', opacity: 0 },
+				{ transform: 'scale(1.15)', opacity: 1, offset: .35 },
+				{ transform: 'scale(1.7)', opacity: 0 }
+			], { duration: 620, easing: 'ease-out', fill: 'forwards' });
+
+			/* ---------- 红色冲击环 ---------- */
+			const ring = document.createElement('div');
+			ring.style.cssText =
+				`position:absolute;left:${cx}px;top:${cy}px;` +
+				'width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;' +
+				'border:3px solid rgba(255,45,45,.95);pointer-events:none;opacity:0;' +
+				'box-shadow:0 0 26px rgba(255,40,40,.95), inset 0 0 26px rgba(255,40,40,.7);';
+			wrap.appendChild(ring);
+			ring.animate([
+				{ transform: 'scale(.25)', opacity: 1, borderWidth: '6px' },
+				{ transform: 'scale(1.9)', opacity: 0, borderWidth: '1px' }
+			], { duration: 480, easing: 'cubic-bezier(.15,.8,.3,1)', fill: 'forwards' });
+
+			/* ---------- 角色受击抖动 ---------- */
+			if (pEl.animate) {
+				pEl.animate([
+					{ transform: 'translate(0px, 0px)' },
+					{ transform: 'translate(2px, -2px)' },
+					{ transform: 'translate(-3px, 1px)' },
+					{ transform: 'translate(2px, 2px)' },
+					{ transform: 'translate(-1px, -1px)' },
+					{ transform: 'translate(0px, 0px)' }
+				], { duration: 240, easing: 'linear' });
+			}
+
+			/* ---------- 清理 ---------- */
+			setTimeout(() => { wrap.remove(); }, 820);
+		},
+		locked: true,
+		nobracket: true,
+		forced: true,
+		priority: -11,
+		trigger: {
+			player: "useCard",
+		},
+		filter(event, player) {
+			if (event.card.name != "sha") return false;
+			return true
+		},
+		async content(event, trigger, player) {
+			//	trigger.yzs_jintingquan = true;
+			if (player.getStorage("yzs_chuilian").includes(trigger.card.number)) {
+				if (!trigger.baseDamage) trigger.baseDamage = 1;
+				trigger.baseDamage++;
+				trigger.yzs_jintingquan = true;
+				player.getStat().card.sha = 0;
+			} else {
+				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_jintingquan2.mp3";
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, damageAudioInfo);
+				trigger.card.nature = "stab";
+			}
+		}
+	},
+	yzs_suzhou: {
+		subSkill: {
+			count2: {
+				charlotte: true,
+				onremove: true,
+			},
+			count: {
+				forced: true,
+				priority: 29,
+				trigger: {
+					player: "taoBegin"
+				},
+				filter(event, player) {
+					if (!player.hasSkill("yzs_suzhou") && !player.hasSkill("yzs_qikuo")) return false;
+					return true
+				},
+				async content(event, trigger, player) {
+					player.addTempSkill("yzs_suzhou_count2");
+					player.addMark("yzs_suzhou_count2", 1, false)
+					if (player.countMark("yzs_suzhou_count2") >= 5) {
+						player.removeSkill("yzs_suzhou_count")
+						await player.useSkill("yzs_suzhou_summon")
+					}
+				}
+			},
+			summon: {
+				skillAnimation: true,
+				animationColor: "orange",
+				forced: true,
+				priority: 29,
+				async content(event, trigger, player) {
+					player.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
+					player.removeSkill("yzs_qikuo")
+					await player.reinitCharacter(player.name1, 'yzs_ItadoriSukuna');
+					if (player.name2) {
+						await player.reinitCharacter(player.name2, 'yzs_ItadoriSukuna');
+					}
+					if (player.identity == "zhu") player.addSkill("BossRule_yzs")
+				}
+			},
+		},
+		limited: true,
+		audio: "ext:一中杀/audio/skill:1",
+		derivation: "yzs_qikuo",
+		skillAnimation: true,
+		animationColor: "orange",
+		priority: -5,
+		init(player, skill) {
+			player.addSkill("yzs_suzhou_count");
+		},
+		trigger: {
+			player: "dieBefore",
+		},
+		frequent: true,
+		check(event, player) {
+			return true;
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill("yzs_suzhou")
+			player.flashAvatar("yzs_suzhou", "yzs_ItadoriSukuna");
+			trigger.cancel("yzs_suzhou");
+			player.addSkill("yzs_qikuo");
+			await player.recoverTo(player.maxHp);
+			await player.drawTo(4);
+		},
+		mark: true,
+		intro: {
+			content: "limited",
+		},
+	},
+	yzs_qikuo: {
+		limited: true,
+		skillAnimation: true,
+		animationColor: "orange",
+		priority: 5,
+		trigger: {
+			player: "phaseUseBegin"
+		},
+		check(event, player) {
+			return false;
+		},
+		async content(event, trigger, player) {
+			player.awakenSkill("yzs_qikuo")
+			player.addSkill("yzs_qikuo_buff");
+			player.removeSkill("yzs_qikuo")
+			await player.reinitCharacter(player.name1, 'yzs_ItadoriSukuna');
+			if (player.name2) {
+				await player.reinitCharacter(player.name2, 'yzs_ItadoriSukuna');
+			}
+			let skills = lib.character["yzs_ItadoriSukuna"][3].filter(skill => {
+				return player.hasSkill(skill);
+			});
+			player.tempBanSkill(skills)
+		}
+	},
+	yzs_qikuo_buff: {
+		group: ["yzs_qikuo_buff_use"],
+		subSkill: {
+			use: {
+				usable:1,
+				priority: 134,
+				forced: true,
+				popup: false,
+				trigger: {
+					player:"useCard"
+				},
+				filter(event, player) {
+					return get.is.damageCard(event.card) && event.targets?.includes(player);
+				},
+				async content(event, trigger, player) {
+					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_qikuo_buff_use.mp3";
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+						}
+					}, damageAudioInfo);
+				}
+			},
+		},
+		charlotte: true,
+		forced: true,
+		onremove(player, skill) {
+			for (let target of game.filterPlayer()) {
+				target.clearMark("yzs_qikuo_buff", false);
+			}
+		},
+		popup: false,
+		mod: {
+			playerEnabled(card, player, target) {
+				if (get.is.damageCard(card) && target != player) return false;
+			},
+		},
+		priority: 1277,
+		trigger: {
+			global: ["phaseEnd", "dieAfter"]
+		},
+		async content(event, trigger, player) {
+			if (trigger.name == "die") {
+				trigger.player.addMark("yzs_qikuo_buff")
+			} else {
+				if (game.hasPlayer2(target => target.isDead() && target.countMark("yzs_qikuo_buff"))) {
+					let result = await player.chooseTarget(false, `令1名本回合死亡的角色复活并恢复体力值至1，然后其将身份改为内奸、获得你全部技能并与你互换操作权`, (card, player, target) => {
+						if (!target.isDead() || !target.countMark("yzs_qikuo_buff")) return false;
+						return true
+					})
+						.set("deadTarget", true)
+						.forResult();
+					if (result?.bool && result.targets?.length) {
+						let target = result.targets[0];
+						if (!target.isDead()) {
+							return;
+						}
+						await target.reviveEvent();
+
+						game.broadcastAll(
+							function (source, identity2) {
+								if (source.node.dieidentity) {
+									source.node.dieidentity.innerHTML = get.translation(identity2 + 2);
+								}
+								source.identity = identity2;
+								source.setIdentity();
+							},
+							target,
+							"nei"
+						);
+
+						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_qikuo1.mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						if (target.name == "FushiguroMegumi_yzs") {
+							game.broadcastAll(function (current) {
+								if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/FushiguroMegumi_yzs2.png");
+								_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
+								game.playBackgroundMusic();
+							}, target)
+						}
+						target.addSkill(["zuzhouzhiwang_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "zao_yzs", "fumoyuchuzi_yzs"]);
+
+						if (_status.connectMode) {
+							if ((player.isOnline2() || player == game.me) && player != target) {
+								game.yzs_swapPlayerOL(player, target);
+							};
+						} else if (player == game.me && !_status.auto && player != target) {
+							game.swapPlayerAuto(target);
+						};
+					}
+
+				}
+				player.removeSkill("yzs_qikuo")
+				await player.reinitCharacter(player.name1, 'yzs_ItadoriYuji');
+				if (player.name2) {
+					await player.reinitCharacter(player.name2, 'yzs_ItadoriYuji');
+				}
+			}
+		},
+		sub: true,
+		sourceSkill: "yzs_qikuo"
 	},
 }
 export default skills;

@@ -1381,7 +1381,7 @@ const characters = {
 		skills: ["BossRule_yzs", "rg_treasure", "zuzhouzhiwang_yzs", "shizhongyingfashu_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs","fumoyuchuzi_yzs"],
 		names: "宿傩(伏黑惠)",
 		img: "extension/一中杀/image/MegumiSukuna_yzs.png",
-		BGM: "霹靂",
+		BGM: ["Malevolent Shrine", "霹靂"],
 		isBoss: true,
 		isBossAllowed: true,
 	},
@@ -1670,6 +1670,7 @@ const characters = {
 		skills: ["Metamorphosis_yzs", "MiracleRetail_yzs"],
 		names: "宇佐见堇子",
 		img: "extension/一中杀/image/UsamiSumireko_yzs.png",
+		isAiForbidden: true,
 	},
 
 	LawfulXu_yzs: {
@@ -1811,6 +1812,28 @@ const characters = {
 		skills: ["yzs_xiebeng","yzs_fengmo"],
 		names: "钟映暄",
 		img: "extension/一中杀/image/yzs_QianWitch.png",
+	},
+
+	yzs_ItadoriYuji: {
+		sex: "male",
+		group: "shu",
+		hp: 4,
+		skills: ["yzs_chuilian", "yzs_jintingquan","yzs_suzhou"],
+		names: "虎杖悠仁",
+		img: "extension/一中杀/image/yzs_ItadoriYuji.png",
+		BGM: "AIZO",
+	},
+
+	yzs_ItadoriSukuna: {
+		sex: "male",
+		group: "shu",
+		hp: 4,
+		skills: ["zuzhouzhiwang_yzs", "fanzhuanshushi_yzs", "jie_yzs", "ba_yzs", "zao_yzs", "fumoyuchuzi_yzs"],
+		names: "宿傩(虎杖悠仁)",
+		img: "extension/一中杀/image/yzs_ItadoriSukuna.png",
+		BGM: ["Malevolent Shrine", "霹靂"],
+		isBoss: true,
+		isBossAllowed: true,
 	},
 };
 
@@ -1983,7 +2006,9 @@ const characterTitles = {
 	yzs_Reimu: `乐园的巫女`,
 	yzs_ThreeBirds: `黑森林的守护者`,
 	yzs_ThreeBirds2: `黑森林的毁灭者`,
-	yzs_QianWitch:`万芊之魔女`,
+	yzs_QianWitch: `万芊之魔女`,
+	yzs_ItadoriYuji: `吞下诅咒的少年`,
+	yzs_ItadoriSukuna:`史上最强咒术师`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2129,7 +2154,9 @@ const characterIntros = {
 	yzs_Reimu: `博丽灵梦，系列作品《东方Project》中的主人公，幻想乡境内博丽神社的现有巫女，负责解决在幻想乡中发生的各种异变。在《东方》系列的游戏中均以主角出场，在其他作品中也作为主要角色登场。作为博丽神社的巫女，退治妖怪是她的日常工作。因为神社没什么参拜客，所以整天过着喝茶扫地的闲日子`,
 	yzs_ThreeBirds:`很久很久以前，在一片温暖又繁茂的森林里住着三只快乐的鸟儿。<br>长有许多眼睛的大鸟监视着森林寻找入侵者。大鸟的眼睛能看到很远的地方，甚至能看到我们看不见的东西。<br>为了维持森林的和平，高鸟审判着动物们的罪孽，它的天平能够绝对公正地衡量任何罪恶。<br>小鸟决定用它的喙来惩罚那些犯了错的动物们。`,
 	yzs_ThreeBirds2: `在嘈杂的哭喊中，在惊恐的尖叫中，有人大声喊道：“是那个怪物！黑暗的森林里有一个可怕的大怪物！”<br>大鸟那可以看到数百里外的眼睛，现在再也看不见了...<br>高鸟那一直仰望着星空的头颅，现在再也抬不起来了...<br>小鸟那可以吞噬一切动物的巨口，现在再也张不开了...<br>三只鸟————现在成为了一只，四处张望着寻找那个怪物，可没有任何结果。那儿已经什么都没有了，没有动物，没有日月，也没有怪物。只有那只鸟，还有那片黑暗的森林...`,
-	yzs_QianWitch:`"合适的容器死后，其体内的‘芊’便会消亡。历代圣女的使命，就是成为这样的容器。"-----一本古书中记载到`,
+	yzs_QianWitch: `"合适的容器死后，其体内的‘芊’便会消亡。历代圣女的使命，就是成为这样的容器。"-----一本古书中记载到`,
+	yzs_ItadoriYuji:`虎杖悠仁，日本漫画《咒术回战》及其衍生作品的主人公。虎杖仁与香织之子、虎杖倭助之孙，就读于宫城县杉泽第三高中。他中等身高，有着浅棕色眼眸和粉色头发，成为两面宿傩容器后获得第二双眼睛。性格重视生命价值，具备超人般的体魄与咒力操控天赋，能感知灵魂形态。日常喜欢卡拉OK、漫画和电视节目，擅长模仿秀，偏爱盖饭与面食。<br>因在灵异现象研究会活动中吞下特级咒物两面宿傩的手指，虎杖成为其宿主，并以特殊体质压制宿傩意识。他本应被处以极刑，经五条悟介入改为缓期执行，随后转入东京咒术高专，习得以咒力包裹拳头的攻击方式。少年院任务中，虎杖首次死亡后通过束缚契约复活。涩谷事变中，他在目睹七海建人牺牲后彻底掌握迳庭拳，并在与真人的决战中接连打出多次黑闪。此后参与死灭回游，与日车宽见合作修改规则，并借助天使术式剥离宿傩灵魂。决战前一个月，他自行领悟反转术式治愈损伤，又从胀相处习得赤血操术强化攻击力。虎杖曾通过植入不存在记忆从胀相手下逃生，并与东堂葵结为挚友，共同对抗特级咒灵。与宿傩决战临近尾声时，他施展了领域展开。最终决战中，虎杖接过日车宽见的处刑人之剑，对抗两面宿傩并见证其消散。2086年，虎杖成为这个时代唯一仍活跃在世间的特级咒术师；在续作《咒术回战 Modulo》中，他掌握了与宿傩一样的原版“御厨子”，并计划永远改变日本咒术师社会`,
+	yzs_ItadoriSukuna:`两面宿傩，日本漫画《咒术回战》及其衍生作品中的角色。千年前的诅咒之王，附身在虎杖悠仁的体内。本性好自由，不喜受任何人束缚，行动全凭心意，是真正的自由主义者`,
 };
 const characterReplaces = {
 };
@@ -2155,7 +2182,7 @@ const characterSort = {
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
 	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs", "Makora_yzs",
-		"FushiguroMegumi_yzs","yzs_JoGo"],
+		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji","yzs_ItadoriSukuna"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

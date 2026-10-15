@@ -3166,6 +3166,9 @@ const skills = {
 				if (card.cards?.some(c => c.hasGaintag("shixue_yzs"))) return Infinity;
 			},
 			cardname(card, player) {
+				if (get.itemtype(card) == "card" && card.hasGaintag("shixue_yzs")) {
+					return ;
+				}
 				if (card.cards?.some(c=>c.hasGaintag("shixue_yzs"))) return;
 				if (player.hp == 0) return "jiu";
 				else if (player.hp == 1) return "tao";
@@ -6931,7 +6934,7 @@ const skills = {
 							_status.currentPhase?.damage?.()
 						}
 					}
-					if (method == "draw") {
+					if (method == "recover") {
 						await player.recover()
 					}
 				}
@@ -7049,7 +7052,7 @@ const skills = {
 						_status.currentPhase?.damage?.()
 					}
 				}
-				if (method == "draw") {
+				if (method == "recover") {
 					await player.recover()
 				}
 			}
@@ -7394,7 +7397,7 @@ const skills = {
 					player:"die"
 				},
 				filter(event, player) {
-					return ["MegumiSukuna_yzs", "RyomenSukuna_yzs"].includes(event.source?.name);
+					return event.source?.hasSkill?.("zuzhouzhiwang_yzs");
 				},
 				async content(event, trigger, player) {
 					trigger.source.chat("自豪吧，你很强！")

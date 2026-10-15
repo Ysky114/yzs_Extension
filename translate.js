@@ -202,7 +202,9 @@ const translates = {
 	yzs_Reimu: `博丽灵梦`,
 	yzs_ThreeBirds: `小鸟&高鸟&大鸟`,
 	yzs_ThreeBirds2: `终末鸟`,
-	yzs_QianWitch:`钟映暄`,
+	yzs_QianWitch: `钟映暄`,
+	yzs_ItadoriYuji: `虎杖悠仁`,
+	yzs_ItadoriSukuna:`宿傩(虎杖悠仁)`,
 
     // 技能台词
 
@@ -586,7 +588,7 @@ const translates = {
 	xueke_yzs_info: `锁定技：受到非零伤害时你摸1张牌然后给予伤害来源1张手牌，此牌标记为${get.poptip("xueyin_yzs")}，不可被弃置或获取。
     你体力值为1时处于${get.poptip("shikong_yzs")}状态，然后若为你的回合内，你无视受到的伤害直至你的下一回合结束。`,
 	xueyin_yzs: "血印",
-	xueyin_yzs_info: `被明置时你恢复1点体力，然后取消标记。“琪诺”的【血印】不计入手牌上限`,
+	xueyin_yzs_info: `被展示、使用、打出、弃置时你恢复1点体力，然后取消标记。“琪诺”的【血印】不计入手牌上限`,
 	shikong_yzs: "失控",
 	shikong_yzs_info:`锁定技：手牌上限固定为4，造成伤害时恢复等量点体力。拥有【血印】的其他角色回合开始时展示其全部【血印】，然后你对其造成等量点伤害。`,
 	xueke_yzs_tag:"血印",
@@ -1435,7 +1437,7 @@ const translates = {
 	jianren_yzs: `坚韧`,
 	jianren_yzs_info: `锁定技：你体力值减少后，获得等量点护甲。<br>结束阶段，你失去所有护甲，然后恢复等量点体力。`,
 	shantianji_yzs: `闪天击`,
-	shantianji_yzs_info: `你可将基本牌当做伤害+X的普通【杀】使用，若底牌不为【杀】则不可响应。（X为你护甲值）`,
+	shantianji_yzs_info: `每回合限1次：你可将基本牌当做伤害+X的普通【杀】使用，若底牌不为【杀】则不可响应。（X为你护甲值）`,
 	qieyong_yzs: `怯勇`,
 	qieyong_yzs_info:`锁定技：若你无护甲，你受到非零伤害+1。<br>
     其他角色受到非零伤害时，若伤害来源不为你，你可弃置全部手牌（至少1张），然后无效之并受到伤害来源造成的等量点伤害。`,
@@ -2057,6 +2059,20 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_shengjie: `圣洁`,
 	yzs_shengjie_info:`锁定技：你的手牌上限为7。你的红桃牌结算两次。<br>
 	${get.poptip("sing_yzs")}3：你弃置装备区和延时区的所有牌，然后展示任意张不同牌名的即时牌，视为使用之。`,
+
+	yzs_chuilian: `锤炼`,
+	yzs_chuilian_info: `锁定技：你使用或打出基本牌后，摸1张牌并可弃1张手牌。`,
+	yzs_jintingquan: `径庭拳`,
+	yzs_jintingquan_info: `锁定技：你使用【杀】时，若此牌点数你${get.poptip("yzs_chuilian")}弃置过，则你刷新本回合出【杀】数并令之伤害+1；否则此牌改为刺【杀】。`,
+	yzs_suzhou: `宿咒`,
+	yzs_suzhou_info: `限定技：你即将死亡时，可获得${get.poptip("yzs_qikuo")}，然后恢复全部体力并摸牌至4张。`,
+	yzs_qikuo: `契阔`,
+	yzs_qikuo_info: `限定技：出牌阶段开始时，你可切换角色牌至“${get.poptip({
+		id: "character_yzs_ItadoriSukuna",
+		name: "宿傩(虎杖悠仁)",
+		type: "character",
+		dialog: "characterDialog",
+	})}”，期间你所有技能失效且不可对其他角色使用伤害牌。本回合结束时你切回，此前你可先令1名本回合死亡的角色复活并恢复体力值至1，然后其将身份改为内奸、获得你全部技能并与你互换操作权。`,
 };
 
 export default translates;

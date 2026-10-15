@@ -7197,6 +7197,7 @@ const skills = {
 		},
 		audio: "ext:一中杀/audio/skill:1",
 		nobracket: true,
+		usable:1,
 		position: "h",
 		enable: "chooseToUse",
 		hiddenCard: function (player, name) {

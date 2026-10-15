@@ -3116,7 +3116,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			},
 			//苍
 			yzs_cang: {
-				audio: "wtwCang_yzs",
+				audio: "ext:一中杀/audio/card",
 				fullskin: true,
 				image: "ext:一中杀/image/card/wtwCang_yzs.png",
 				type: "basic",
@@ -3134,6 +3134,10 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						player.addMark("yzs_cang_buff", 1, false);
 					} else {
 						const num = get.number(event.card, player);
+						game.trySkillAudio("bagua_skill")
+						game.broadcastAll((player, target, num) => {
+							lib.skill.luoxuanwan_yzs.Effect(player, target, num)
+						}, player, target, num)
 						if (typeof num == "number" && num > 0) {
 							await player.discardPlayerCard("he", event.target, num, true, false).set("target", event.target).set("complexSelect", false).set("ai", lib.card.guohe.ai.button);
 						}
@@ -3160,7 +3164,121 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			},
 			//赫
 			yzs_he: {
-				audio: "wtwHe_yzs",
+				Effect: function (player, target, sizeMultiplier = 1) {
+					if (!player || !target) return;
+
+					// 1. 特效画布层
+					const container = document.createElement('div');
+					Object.assign(container.style, {
+						position: 'fixed',
+						top: '0', left: '0', width: '100vw', height: '100vh',
+						zIndex: '99999', pointerEvents: 'none', overflow: 'visible'
+					});
+					document.body.appendChild(container);
+
+					// 2. 坐标与尺寸计算
+					const pRect = player.getBoundingClientRect();
+					const tRect = target.getBoundingClientRect();
+					const startX = pRect.left + pRect.width / 2;
+					const startY = pRect.top + pRect.height / 2;
+					const endX = tRect.left + tRect.width / 2;
+					const endY = tRect.top + tRect.height / 2;
+
+					// 根据参数动态计算尺寸（基础 60px）
+					const baseSize = 60 * sizeMultiplier;
+					const shadowBlur = 15 * sizeMultiplier; // 阴影随体积扩散
+
+					// 3. 构造雷电螺旋丸 (Rasengan)
+					const rasengan = document.createElement('div');
+					Object.assign(rasengan.style, {
+						position: 'absolute',
+						width: `${baseSize}px`,
+						height: `${baseSize}px`,
+						left: `${startX}px`,
+						top: `${startY}px`,
+						borderRadius: '50%',
+						background: `
+        radial-gradient(circle at center, #fff 10%, #ff4d4d 40%, transparent 75%),
+        repeating-conic-gradient(from 0deg, transparent 0deg, #ff2e2e 15deg, transparent 30deg)
+    `,
+						filter: `
+        drop-shadow(0 0 ${shadowBlur}px #ff3333)
+        drop-shadow(0 0 ${shadowBlur * 2}px #b71c1c)
+        brightness(1.6)
+    `,
+						boxShadow: `inset 0 0 ${20 * sizeMultiplier}px #fff`,
+						opacity: '0',
+						transformOrigin: 'center center',
+						transform: `translate(-50%, -50%) scale(0.1)`,
+						willChange: 'transform, opacity, filter'
+					});
+
+					// 内部旋转流光层
+					const innerCore = document.createElement('div');
+					Object.assign(innerCore.style, {
+						width: '100%', height: '100%', borderRadius: '50%',
+						border: `${2 * sizeMultiplier}px dashed rgba(255,255,255,0.7)`,
+						animation: 'rasengan-spin 0.15s linear infinite'
+					});
+					rasengan.appendChild(innerCore);
+
+					if (!document.getElementById('rasengan-style')) {
+						const style = document.createElement('style');
+						style.id = 'rasengan-style';
+						style.innerHTML = `@keyframes rasengan-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
+						document.head.appendChild(style);
+					}
+
+					container.appendChild(rasengan);
+
+					// 4. 动画时间参数
+					const chargeTime = 800; // 显著延长蓄力时间（从300ms增至800ms）
+					const travelTime = 350; // 飞行速度略微加快，增加冲击感
+
+					// 第一阶段：蓄力 (搓丸子阶段)
+					rasengan.animate([
+						{ transform: 'translate(-50%, -50%) scale(0.1) rotate(0deg)', opacity: '0' },
+						{ transform: 'translate(-50%, -50%) scale(1.3) rotate(360deg)', opacity: '1', offset: 0.7 }, // 蓄力瞬间膨胀
+						{ transform: 'translate(-50%, -50%) scale(1) rotate(720deg)', opacity: '1' } // 回稳准备发射
+					], {
+						duration: chargeTime,
+						easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' // 带有回弹感的蓄力
+					}).onfinish = () => {
+
+						// 第二阶段：疾驰与爆炸
+						rasengan.animate([
+							{
+								left: `${startX}px`, top: `${startY}px`,
+								transform: 'translate(-50%, -50%) scale(1)',
+								filter: 'blur(0px) brightness(1.6)'
+							},
+							{
+								left: `${endX}px`, top: `${endY}px`,
+								transform: 'translate(-50%, -50%) scale(1)',
+								filter: 'blur(0px) brightness(2)',
+								opacity: '1',
+								offset: 0.9
+							},
+							{
+								// 最终爆炸：根据 sizeMultiplier 同步增大爆炸半径
+								left: `${endX}px`, top: `${endY}px`,
+								transform: `translate(-50%, -50%) scale(${5 * sizeMultiplier})`,
+								filter: `blur(${15 * sizeMultiplier}px) brightness(3)`,
+								opacity: '0',
+								offset: 1
+							}
+						], {
+							duration: travelTime,
+							easing: 'ease-in'
+						}).onfinish = () => {
+							// 清理容器
+							setTimeout(() => {
+								if (container.parentNode) container.parentNode.removeChild(container);
+							}, 150);
+						};
+					};
+				},
+				audio: "ext:一中杀/audio/card",
 				fullskin: true,
 				image: "ext:一中杀/image/card/wtwHe_yzs.png",
 				type: "basic",
@@ -3177,6 +3295,10 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						player.addTempSkill("yzs_he_buff", { player: "phaseBegin" });
 					} else {
 						const num = get.number(event.card, player);
+						game.trySkillAudio("bagua_skill")
+						game.broadcastAll((player, target, num) => {
+							lib.card.yzs_he.Effect(player, target, num)
+						}, player, target, num)
 						if (typeof num == "number" && num > 0) {
 							await player.discardPlayerCard("he", event.target, num, true, false).set("target", event.target).set("complexSelect", false).set("ai", lib.card.guohe.ai.button);
 						}
@@ -4203,6 +4325,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				popup: false,
 				priority: 4,
 				filter(event, player) {
+					return false;
 					if (event.directHit?.includes(player) || !event.player || event.player == player) {
 						return false;
 					}
