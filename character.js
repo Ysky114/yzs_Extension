@@ -1835,6 +1835,17 @@ const characters = {
 		isBoss: true,
 		isBossAllowed: true,
 	},
+
+	yzs_Mahito:{
+		sex: "male",
+		group: "jin",
+		hp: 4,
+		skills: ["yzs_wuweizhuanbian", "yzs_suhun", "yzs_tuisheng","yzs_zibiyuandunguo"],
+		names: "真人",
+		img: "extension/一中杀/image/yzs_Mahito.png",
+		dieAudios: ["ext:一中杀/audio/die/yzs_Mahito.mp3"],
+		BGM: "自闭圆顿裹",
+	},
 };
 
 const characterSubstitutes = {
@@ -2009,6 +2020,7 @@ const characterTitles = {
 	yzs_QianWitch: `万芊之魔女`,
 	yzs_ItadoriYuji: `吞下诅咒的少年`,
 	yzs_ItadoriSukuna:`史上最强咒术师`,
+	yzs_Mahito:`真正的诅咒`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2157,6 +2169,8 @@ const characterIntros = {
 	yzs_QianWitch: `"合适的容器死后，其体内的‘芊’便会消亡。历代圣女的使命，就是成为这样的容器。"-----一本古书中记载到`,
 	yzs_ItadoriYuji:`虎杖悠仁，日本漫画《咒术回战》及其衍生作品的主人公。虎杖仁与香织之子、虎杖倭助之孙，就读于宫城县杉泽第三高中。他中等身高，有着浅棕色眼眸和粉色头发，成为两面宿傩容器后获得第二双眼睛。性格重视生命价值，具备超人般的体魄与咒力操控天赋，能感知灵魂形态。日常喜欢卡拉OK、漫画和电视节目，擅长模仿秀，偏爱盖饭与面食。<br>因在灵异现象研究会活动中吞下特级咒物两面宿傩的手指，虎杖成为其宿主，并以特殊体质压制宿傩意识。他本应被处以极刑，经五条悟介入改为缓期执行，随后转入东京咒术高专，习得以咒力包裹拳头的攻击方式。少年院任务中，虎杖首次死亡后通过束缚契约复活。涩谷事变中，他在目睹七海建人牺牲后彻底掌握迳庭拳，并在与真人的决战中接连打出多次黑闪。此后参与死灭回游，与日车宽见合作修改规则，并借助天使术式剥离宿傩灵魂。决战前一个月，他自行领悟反转术式治愈损伤，又从胀相处习得赤血操术强化攻击力。虎杖曾通过植入不存在记忆从胀相手下逃生，并与东堂葵结为挚友，共同对抗特级咒灵。与宿傩决战临近尾声时，他施展了领域展开。最终决战中，虎杖接过日车宽见的处刑人之剑，对抗两面宿傩并见证其消散。2086年，虎杖成为这个时代唯一仍活跃在世间的特级咒术师；在续作《咒术回战 Modulo》中，他掌握了与宿傩一样的原版“御厨子”，并计划永远改变日本咒术师社会`,
 	yzs_ItadoriSukuna:`两面宿傩，日本漫画《咒术回战》及其衍生作品中的角色。千年前的诅咒之王，附身在虎杖悠仁的体内。本性好自由，不喜受任何人束缚，行动全凭心意，是真正的自由主义者`,
+	yzs_Mahito: `真人整体形象是一名约二十岁的青年男子，身形高挑，常着黑袍，蓝色中长发、异色瞳（左眼蓝色，右眼黄色），脸上和身上布满黑色缝合线—其身体由不同人类的身体部位缝合而成，因此受伤流出的是与人类一样的红色血液，而非漏瑚等咒灵的紫色血液。他性格天真残忍，视人类为实验品，以扭曲灵魂为乐，兼具孩子气与冷酷，善伪装，对同伴重情义，把战斗当作游戏。真人作为特级咒灵，初登场于幼鱼与逆罚篇，利用吉野顺平实验术式“无为转变”，诱杀七海建人未果，后教唆顺平复仇，又将其粗暴改造致死，也因此发现虎杖悠仁能够攻击自己的灵魂。京都交流会篇，他趁机偷走宿傩手指与咒胎九相图。宵祭时，他击杀机械丸本体与幸吉。涩谷事变中，他释放改造人袭击民众，参与围攻五条悟，后与虎杖、七海、钉崎等人激战，重创钉崎、杀死七海，最终被虎杖与东堂葵联手用黑闪击败。濒死之际，真人被羂索吸收，术式被夺走而彻底消失。死后，他在灵魂轮回通道先后见到宿傩与多年后的虎杖，试图对抗时被瞬间击败，最终孤独留在虚无之中。真人是纯粹之恶的化身，以残忍反衬主角对生命的珍视，推动虎杖成长，揭露人咒对立，是探讨人性恶意的重要载体`,
+
 };
 const characterReplaces = {
 };
@@ -2182,7 +2196,7 @@ const characterSort = {
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
 	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs", "Makora_yzs",
-		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji","yzs_ItadoriSukuna"],
+		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji", "yzs_ItadoriSukuna","yzs_Mahito"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

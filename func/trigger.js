@@ -2,6 +2,31 @@
 //【新标签、新时机】
 "use strict";
 window.yzs = function (lib, game, ui, get, ai, _status) {
+	// 修复联机聊天输入时，鼠标离开事件导致输入框随弹窗一起被删除。
+	// 本体 noname/ui/click/index.js 的 hoverpopped 会绑定 leavehoverpopped，
+	// 后者未检查输入焦点；输入法候选窗等引起的 mouseleave 也会关闭聊天。
+	// 只保护正在输入的聊天弹窗，点击外部仍由本体 game.closePopped 正常关闭。
+	if (!ui.click.leavehoverpopped._yzsChatFocusFixed) {
+		const originalLeaveHoverPopped = ui.click.leavehoverpopped;
+		ui.click.leavehoverpopped = function () {
+			const activeElement = document.activeElement;
+			if (
+				ui.chatButton && this._poppedorigin === ui.chatButton &&
+				activeElement && activeElement.tagName === "INPUT" && this.contains(activeElement)
+			) {
+				return;
+			}
+			return originalLeaveHoverPopped.apply(this, arguments);
+		};
+		ui.click.leavehoverpopped._yzsChatFocusFixed = true;
+		// trigger.js 异步导入时，聊天弹窗可能已绑定了旧函数，需要同步替换。
+		const chatDialog = ui.chatButton && ui.chatButton._uiintro;
+		if (chatDialog && !lib.config.touchscreen) {
+			chatDialog.removeEventListener("mouseleave", originalLeaveHoverPopped);
+			chatDialog.addEventListener("mouseleave", ui.click.leavehoverpopped);
+		}
+	}
+
 	//获取蓄能上限
 	lib.element.player.yzs_getPPLimit = function () {
 		return get.character(this.name).yzs_PP || 1;
@@ -2690,6 +2715,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			}
 			let parsedPath = "extension/一中杀/image/background/";
 			parsedPath += event.domain + ".png";
+			let lines = [];
+			for (let [key, value] of event.ExpandPlayerMap) {
+				lines.push("ext:一中杀/audio/skill/" + value.domain + ".mp3")
+			}
+			if (lines.length) {
+				game.broadcastAll(function (lines) {
+					if (!lib.config.background_audio) return;
+					for (let audio of lines) {
+						game.playAudio(audio);
+					}
+				}, lines);
+			}
 			if (event.animation) game.broadcastAll(event.animation)
 			event.finalPlayer.$fullscreenpop("领域展开", event.color);
 			await new Promise(r => setTimeout(r, 2500))

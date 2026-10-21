@@ -3129,7 +3129,7 @@ const skills = {
 			next.set("complexSelect", true);
 			next.set("ai", processAI);
 			let result = await next.forResult();
-			if (result.bool && result.links.length) {
+			if (result?.bool && result.links.length) {
 				let cards1 = result.links.filter(i => get.owner(i) == player)
 				let cards2 = result.links.filter(i => get.owner(i) != player)
 				await player.swapHandcards(target, cards1, cards2);

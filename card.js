@@ -3292,7 +3292,8 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				async content(event, trigger, player) {
 					const target = event.target;
 					if (player == target) {
-						player.addTempSkill("yzs_he_buff", { player: "phaseBegin" });
+						await player.draw(2);
+						//player.addTempSkill("yzs_he_buff", { player: "phaseBegin" });
 					} else {
 						const num = get.number(event.card, player);
 						game.trySkillAudio("bagua_skill")
@@ -4673,7 +4674,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			yzs_cang: `苍`,
 			yzs_cang_info: `出牌阶段对你自己使用。你本回合下张【杀】无距离限制且伤害+1。`,
 			yzs_he: `赫`,
-			yzs_he_info: `出牌阶段对你自己使用。其他角色计算至你距离+1至你下回合开始。`,
+			yzs_he_info: `出牌阶段对你自己使用。你摸2张牌。`,
 			yzs_wuxiaxian_wuxian: `无限`,
 			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
 		},

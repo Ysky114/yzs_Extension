@@ -205,6 +205,7 @@ const translates = {
 	yzs_QianWitch: `钟映暄`,
 	yzs_ItadoriYuji: `虎杖悠仁`,
 	yzs_ItadoriSukuna:`宿傩(虎杖悠仁)`,
+	yzs_Mahito:`真人`,
 
     // 技能台词
 
@@ -1861,7 +1862,7 @@ const translates = {
     你体力值为0/1/2/3时，你于本回合前获得的牌视为【酒】/【桃】/【杀】／【闪】。 `,
 
 	yunyu_yzs: `孕欲`,
-	yunyu_yzs_info: `锁定技：你每回合首次受到伤害时，改为增加1点体力上限，然后令伤害来源（若无来源则为你）恢复2点体力或摸3张牌。<br>
+	yunyu_yzs_info: `锁定技：你每回合首次受到伤害时，改为增加1点体力上限，然后将1张手牌当做【桃】或【无中生有】对伤害来源使用。<br>
     限定技：结束阶段，若你体力上限>8，你可于上家召唤“${get.poptip({
 		id: "character_Faputa_yzs",
 		name: "法仆塔",
@@ -2072,7 +2073,20 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		name: "宿傩(虎杖悠仁)",
 		type: "character",
 		dialog: "characterDialog",
-	})}”，期间你所有技能失效且不可对其他角色使用伤害牌。本回合结束时你切回，此前你可先令1名本回合死亡的角色复活并恢复体力值至1，然后其将身份改为内奸、获得你全部技能并与你互换操作权。`,
+	})}”，期间你所有技能失效且不可对其他角色使用伤害牌。本回合结束时你切回，此前你可先令1名期间死亡的角色复活并恢复体力值至1，然后其将身份改为内奸、获得你全部技能并与你互换操作权。`,
+
+	yzs_wuweizhuanbian: `无为转变`,
+	yzs_wuweizhuanbian_info: `你使用基本牌对目标角色生效后，可观看并将其1张手牌当做任意装备牌对其使用。`,
+	yzs_suhun: `塑魂`,
+	yzs_suhun_info: `出牌阶段，你可弃置任意角色装备区内1张牌，然后令其恢复或失去1点体力。若弃置的为装备牌，本技能本阶段失效。`,
+	yzs_tuisheng: `蜕生`,
+	yzs_tuisheng_info: `锁定技：你恢复体力时，若你体力上限<8，可改为增加1点体力上限。你体力上限首次增加至6/8时，获得${get.poptip("yzs_zibiyuandunguo")}/${get.poptip("yzs_bianshajilingti")}。`,
+	yzs_zibiyuandunguo: `自闭圆顿裹`,
+	yzs_zibiyuandunguo_info: `限定技：${get.poptip("lingyuzhankai_yzs")}：你使用的【杀】无视防具且不可响应。其他角色回合结束时，你视为对其使用普通【杀】。`,
+	yzs_zibiyuandunguo_skill: `自闭圆顿裹`,
+	yzs_zibiyuandunguo_skill_info: `领域主人使用的【杀】无视防具且不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用普通【杀】`,
+	yzs_bianshajilingti: `遍杀即灵体`,
+	yzs_bianshajilingti_info:`锁定技：你武器栏无上限。准备和结束阶段，你可扣除1点体力上限，然后摸2张牌。`,
 };
 
 export default translates;

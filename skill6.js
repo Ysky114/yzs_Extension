@@ -3287,32 +3287,65 @@ const skills = {
 			player: "damageBegin4"
 		},
 		async content(event, trigger, player) {
-			const target = get.itemtype(trigger.source) == "player" ? trigger.source : player;
 			trigger.cancel();
 			await player.gainMaxHp();
-			const controls = ["draw_card", "recover_hp"];
-			const prompt = `令 ` + get.translation(target) + ` 摸3张牌或恢复2点体力`
-			const next = player.chooseControl(controls);
-			next.set("ai", function () {
-				const player = get.event().player;
-				const target = get.event().target;
-				if (get.attitude(player, target) > 0) {
-					if (target.isHealthy()) return "draw_card"
-					return "recover_hp"
-				} else {
-					if (target.isHealthy()) return "recover_hp"
-					return "draw_card"
+			if (trigger.source?.isIn()) {
+				let dialog = [];
+				const target = trigger.source;
+				function filterButton(button, player) {
+					if (!ui.selected.buttons || !ui.selected.buttons.length) return true;
+					const cardsx = get.event().cardsx;
+					if (ui.selected.buttons.some(btn => cardsx.includes(btn.link))) return !cardsx.includes(button.link)
+					return cardsx.includes(button.link)
 				}
-				return "recover_hp"
-			})
-			next.set("target", target)
-			next.set("prompt", prompt);
-			next.set("forced", true);
-			let result = await next.forResult();
-			if (result.control == "draw_card") {
-				await target.draw(3);
-			} else {
-				await target.recover(2);
+				function filterOk(button) {
+					if (!ui.selected.buttons || !ui.selected.buttons.length) return false;
+					const cardsx = get.event().cardsx;
+					if (ui.selected.buttons.some(btn => cardsx.includes(btn.link)) && ui.selected.buttons.some(btn => !cardsx.includes(btn.link))) return true
+					return false;
+				}
+
+				function processAI(button) {
+					const cardsx = get.event().cardsx;
+					const target = get.event().target;
+					const player = get.event().player;
+					if (cardsx.includes(button.link)) {
+						return (get.attitude(player, target) > 0 ? -1 : 1) * get.value(button.link, target);
+					} else {
+						return (get.attitude(player, target) > 0 ? 1 : -1) * get.value(button.link, target);
+					}
+				}
+
+				if (player.getCards("h").length > 0) {
+					dialog.push(`${get.translation(player)}的手牌`);
+					dialog.push(player.getCards("h"))
+				}
+				const list = get.inpileVCardList(info => {
+					const name = info[2], type = get.type(name), infox = get.info({ name: name });
+					return ["tao", "wuzhong"].includes(name);
+				})
+				if (list.length > 0) {
+					dialog.push(`需转化的牌`);
+					dialog.push([list, "vcard"])
+				}
+				if (dialog.length < 4) {
+					return;
+				}
+				let cardsx = target.getCards("h")
+				let next = player.chooseButton(2, dialog);
+				next.set("target", target);
+				next.set("forced", true);
+				next.set("filterButton", filterButton);
+				next.set("filterOk", filterOk);
+				next.set("cardsx", cardsx)
+				next.set("complexSelect", true);
+				next.set("ai", processAI);
+				let result = await next.forResult();
+				if (result?.bool && result.links.length) {
+					let cards = result.links.filter(card => cardsx.includes(card));
+					let name = result.links.filter(card => !cardsx.includes(card))[0][2];
+					await player.useCard(cards, { name }, target);
+				}
 			}
 		},
 		ai: {
@@ -3466,6 +3499,7 @@ const skills = {
 					popname: true,
 					viewAs: {
 						name: links[0][2],
+						nature: links[0][3],
 						isCard: false,
 					},
 					async precontent(event, trigger, player) {
@@ -5352,7 +5386,7 @@ const skills = {
 				}
 			},
 			use: {
-				audio: "ext:一中杀/audio/skill:4",
+				audio: "ext:一中杀/audio/skill:5",
 				locked: true,
 				hiddenCard(player, name) {
 					var list = player.getStorage("shizhongying_yzs").slice(0);
@@ -5566,7 +5600,7 @@ const skills = {
 							src: lib.assetURL + "/extension/一中杀/image/background/qianheanyiting_yzs.MP4",
 							autoplay: true,//准备就绪后自动播放
 							loop: false,//是否循环播放
-							muted: false,//是否静音
+							muted: true,//是否静音
 							preload: true,//是否提前加载
 						})
 						Object.assign(video.style, {
@@ -5641,7 +5675,7 @@ const skills = {
 					src: lib.assetURL + "/extension/一中杀/image/background/qianheanyiting_yzs.MP4",
 					autoplay: true,//准备就绪后自动播放
 					loop: false,//是否循环播放
-					muted: false,//是否静音
+					muted: true,//是否静音
 					preload: true,//是否提前加载
 				})
 				Object.assign(video.style, {
@@ -6736,6 +6770,7 @@ const skills = {
 			player.maxHp = maxHp;
 			player.hp = maxHp;
 			player.update();
+			player.clearMark("yzs_disi",false)
 			await event.trigger("yzs_canglongzhuoshi");
 		},
 	},
@@ -6950,7 +6985,7 @@ const skills = {
 		marktext: "抵",
 		intro: {
 			content: function (storage, player) {
-				let str = `${get.poptip("zhuanlunji_yzs")}：场上角色出牌阶段开始前，你获得：<br>`
+				let str = `转换技：场上角色出牌阶段开始前，你获得：<br>`
 				if (storage == 0) {
 					str += `①${get.poptip("yzs_qianlong")}`
 				} else if (storage == 1) {
@@ -7725,7 +7760,7 @@ const skills = {
 							src: lib.assetURL + "/extension/一中杀/image/background/yzs_gaiguantieweishan.MP4",
 							autoplay: true,//准备就绪后自动播放
 							loop: false,//是否循环播放
-							muted: false,//是否静音
+							muted: true,//是否静音
 							preload: true,//是否提前加载
 						})
 						Object.assign(video.style, {
@@ -7798,7 +7833,7 @@ const skills = {
 					src: lib.assetURL + "/extension/一中杀/image/background/yzs_gaiguantieweishan.MP4",
 					autoplay: true,//准备就绪后自动播放
 					loop: false,//是否循环播放
-					muted: false,//是否静音
+					muted: true,//是否静音
 					preload: true,//是否提前加载
 				})
 				Object.assign(video.style, {

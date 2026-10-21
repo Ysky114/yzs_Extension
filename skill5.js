@@ -6235,7 +6235,7 @@ const skills = {
 							src: lib.assetURL + "/extension/一中杀/image/background/fumoyuchuzi_yzs.MP4",
 							autoplay: true,//准备就绪后自动播放
 							loop: false,//是否循环播放
-							muted: false,//是否静音
+							muted: true,//是否静音
 							preload: true,//是否提前加载
 						})
 						Object.assign(video.style, {
@@ -6356,7 +6356,7 @@ const skills = {
 					src: lib.assetURL + "/extension/一中杀/image/background/fumoyuchuzi_yzs.MP4",
 					autoplay: true,//准备就绪后自动播放
 					loop: false,//是否循环播放
-					muted: false,//是否静音
+					muted: true,//是否静音
 					preload: true,//是否提前加载
 				})
 				Object.assign(video.style, {
@@ -6637,7 +6637,7 @@ const skills = {
 					}
 					player.storage.hundunyutiaohe_yzs_skill[trigger.skill]++;
 					if (player.storage.hundunyutiaohe_yzs_skill[trigger.skill] == 1) {
-						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill[trigger.skill]++;
+						if (Math.random() > 0.2) player.storage.hundunyutiaohe_yzs_skill[trigger.skill]++;
 					}
 					player.markSkill("hundunyutiaohe_yzs_skill")
 					if (player.storage.hundunyutiaohe_yzs_skill[trigger.skill] == 2) {
@@ -6732,7 +6732,7 @@ const skills = {
 					}
 					player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
 					if (player.storage.hundunyutiaohe_yzs_skill3[trigger.skill] == 1) {
-						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
+						if (Math.random() > 0.2) player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
 					}
 					player.markSkill("hundunyutiaohe_yzs_skill3")
 				}
@@ -6785,7 +6785,7 @@ const skills = {
 			}
 			player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
 			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 1) {
-				if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
+				if (Math.random() > 0.2) player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
 			}
 			player.markSkill("hundunyutiaohe_yzs_card")
 			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 2) {
@@ -7069,7 +7069,7 @@ const skills = {
 					player: "dieBegin",
 				},
 				filter(event, player) {
-					return player.name == "GojoSatoru_yzs" && event.source && event.source.isAlive();
+					return player.name == "GojoSatoru_yzs" && event.source && event.source.isAlive()&&event.source!=player;
 				},
 				async content(event, trigger, player) {
 					player.addMark("wuxiaxianshushi_yzs_die",1,false)
@@ -7686,7 +7686,7 @@ const skills = {
 							src: lib.assetURL + "/extension/一中杀/image/background/wuliangkongchu_yzs.MP4",
 							autoplay: true,//准备就绪后自动播放
 							loop: false,//是否循环播放
-							muted: false,//是否静音
+							muted: true,//是否静音
 							preload: true,//是否提前加载
 						})
 						Object.assign(video.style, {
@@ -7796,7 +7796,7 @@ const skills = {
 					src: lib.assetURL + "/extension/一中杀/image/background/wuliangkongchu_yzs.MP4",
 					autoplay: true,//准备就绪后自动播放
 					loop: false,//是否循环播放
-					muted: false,//是否静音
+					muted: true,//是否静音
 					preload: true,//是否提前加载
 				})
 				Object.assign(video.style, {
@@ -8636,7 +8636,7 @@ const skills = {
 		},
 	},
 	toushezhoufa_yzs: {
-		group: ["toushezhoufa_yzs_sha", "toushezhoufa_yzs_damage","toushezhoufa_yzs_draw"],
+		group: ["toushezhoufa_yzs_sha", "toushezhoufa_yzs_damage", "toushezhoufa_yzs_draw","toushezhoufa_yzs_die"],
 		subSkill: {
 			sha: {
 				priority: 3,
@@ -8675,6 +8675,16 @@ const skills = {
 					return event.player != player;
 				},
 				async content(event, trigger, player) {
+					if (player.name == "ZeninNaoya_yzs" && trigger.player.name == "ZeninMaki_yzs" && !player.countMark("toushezhoufa_yzs_damage")) {
+						player.addMark("toushezhoufa_yzs_damage", 1, false)
+						var damageAudioInfo = "ext:一中杀/audio/skill/toushezhoufa_yzs_draw5.mp3";
+						game.broadcastAll(function (damageAudioInfo) {
+							if (lib.config.background_audio) {
+								game.playAudio(damageAudioInfo);
+							}
+						}, damageAudioInfo);
+						player.chat("你永远都不可能比得过甚尔。能够与甚尔比肩的人是我！")
+					}
 					await trigger.player.useSkill("huizhen_yzs")
 				}
 			},
@@ -8730,6 +8740,27 @@ const skills = {
 			mark: {
 				onremove: true,
 				charlotte:true,
+			},
+			die: {
+				forced: true,
+				popup: false,
+				priority: 31234,
+				trigger: {
+					global:"dieAfter"
+				},
+				filter(event, player) {
+					return player.name == "ZeninNaoya_yzs" && trigger.source?.name == "ZeninMaki_yzs" && !player.countMark("toushezhoufa_yzs_die")
+				},
+				async content(event, trigger, player) {
+					player.addMark("toushezhoufa_yzs_die", 1, false);
+					var damageAudioInfo = "ext:一中杀/audio/skill/toushezhoufa_yzs_die.mp3";
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+						}
+					}, damageAudioInfo);
+					player.chat("真残忍啊。你这家伙，难道没有心吗？")
+				}
 			}
 		},
 		nobracket: true,

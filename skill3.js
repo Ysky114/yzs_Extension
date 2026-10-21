@@ -3547,6 +3547,7 @@ const skills = {
 					return event.overflow > 0;
 				},
 				async content(event, trigger, player) {
+					await player.draw(3);
 					trigger.player.addSkill("yuduo_yzs_saved")
 					if (!_status.yuduo_yzs) {
 						if (typeof game.checkResult === 'function') {
@@ -3578,7 +3579,6 @@ const skills = {
 						})
 					}
 					game.checkResult();
-					await player.draw(3);
 				}
 			}
 		},
