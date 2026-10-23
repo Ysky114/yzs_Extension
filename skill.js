@@ -7678,22 +7678,29 @@ const skills = {
 				},
 				async cost(event, trigger, player) {
 					let cards = trigger.getg(trigger.player).filter(card => card.name == "shengbaihu_yzs");
-					if (cards && cards.length) {
-						if (player.countMark("princetwittering_yzs_shengbaihu") > 0) return;
-						player.addMark("princetwittering_yzs_shengbaihu", 1, false);
-						await player.showCards(get.translation(player) + "获得【圣白虎】而恢复1点体力", cards);
-						await player.recover();
-					}
-					event.result = await player.chooseCard("公主的呢喃", "你可扣置1张手牌", "h", [0, 1])
+					event.result = await player.chooseCard("公主的呢喃", "你可扣置1张手牌", "h", 1)
 						.set("ai", (card) => {
 							return 8 - get.value(card)
 						})
 						.forResult()
+					if (cards && cards.length) {
+						if (player.countMark("princetwittering_yzs_shengbaihu") > 0) return;
+						event.result.bool = true;
+						event.result.cost_data = cards
+					}
 				},
 				async content(event, trigger, player) {
-					let next = player.addToExpansion(event.cards, player, "giveAuto")
-					next.gaintag.add("princetwittering_yzs")
-					await next
+					if (event.cards?.length) {
+						let next = player.addToExpansion(event.cards, player, "giveAuto")
+						next.gaintag.add("princetwittering_yzs")
+						await next
+					}
+					if (event.cost_data?.length) {
+						let cards = event.princetwittering_yzs_shengbaihu
+						player.addMark("princetwittering_yzs_shengbaihu", 1, false);
+						await player.showCards(get.translation(player) + "获得【圣白虎】而恢复1点体力", cards);
+						await player.recover();
+					}
 				},
 			},
 			use: {
@@ -7811,7 +7818,7 @@ const skills = {
 				audio: "ext:一中杀/audio/skill:1",
 				markimage: 'extension/一中杀/image/shengbaihu_yzs_used.png',
 				intro: {
-					content: "已因【圣白虎】而恢复过#/2点体力",
+					content: "已因【圣白虎】而恢复过#/1点体力",
 				},
 				sub: true,
 				sourceSkill: "princetwittering_yzs",

@@ -5830,6 +5830,44 @@ const skills = {
 					target.ai.shown = source.ai.shown;
 				}
 				target._noCheckResult = true;
+				if (typeof game.checkResult === "function") {
+					const origin_checkResult = game.checkResult;
+					game.checkResult = function () {
+						const player = game.me._trueMe || game.me;
+						if (get.mode() == "single") {
+							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+								game.over(true);
+							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+								game.over(false);
+							}
+							return;
+						}
+						const targets = game.players.filter(i => i._noCheckResult);
+						game.players.removeArray(targets);
+						origin_checkResult();
+						game.players.addArray(targets);
+					};
+				}
+				if (typeof game.checkOnlineResult === "function") {
+					const origin_checkOnlineResult = game.checkOnlineResult;
+					game.checkOnlineResult = function (player) {
+						if (player._noCheckResult) {
+							return false;
+						}
+						if (get.mode() == "single") {
+							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+								game.over(true);
+							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
+								game.over(false);
+							}
+							return;
+						}
+						const targets = game.players.filter(i => i._noCheckResult);
+						game.players.removeArray(targets);
+						origin_checkOnlineResult();
+						game.players.addArray(targets);
+					};
+				}
 				if (_status.yzs_addPlayerOL) {
 					return;
 				}

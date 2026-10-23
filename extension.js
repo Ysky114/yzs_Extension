@@ -12,6 +12,10 @@ import skills7 from "./skill7.js";
 import translates from "./translate.js";
 import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
+
+// 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
+const EXTENSION_VERSION = "0.98.7";
+
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
 	return {
@@ -656,7 +660,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 			];
 			game.showExtensionChangeLog(gengxin_yzs, "一中杀");
-			if (lib.config.extension_一中杀_auto_update && navigator.onLine) update(false);
+			if (lib.config.extension_一中杀_auto_update && navigator.onLine) update(false, EXTENSION_VERSION);
 		
 		},
 		help: {},
@@ -688,8 +692,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				onclick: async function () {
 					this.innerHTML = `<span style="color:#f61515ff;text-decoration: underline">正在检测更新...`;
 					try {
-						await update(true);
-						this.innerHTML = `<span style="color:#4caf50;text-decoration: underline">更新完成`;
+						await update(true, EXTENSION_VERSION);
+						this.innerHTML = `<span style="color:#4caf50;text-decoration: underline">检查完成`;
 					} catch {
 						this.innerHTML = `<span style="color:#f44336;text-decoration: underline">更新失败`;
 					}
@@ -748,12 +752,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
             <div style="color:#ffa348">• 有问题可加群：</div><br>
             <div style="color:#ffa348">&nbsp;&nbsp;Q:1015772605</div><br>
             <div style="color:#ffa348">• 角色设计：御.sky/先天虚体阿阳/加农/海马吉人/Etermpty</div><br>
-            <div style="color:#ffa348">• 版本号：v0.98.6</div><br>
+            <div style="color:#ffa348">• 版本号：v${EXTENSION_VERSION}</div><br>
             `,
 			author: "御.sky",
 			diskURL: "",
 			forumURL: "",
-			version: "0.98.6",
+			version: EXTENSION_VERSION,
 		},
 		files: {}, connect: true
 	}

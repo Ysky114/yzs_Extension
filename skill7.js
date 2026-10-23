@@ -2409,7 +2409,18 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						game.playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
-				trigger.card.nature = "stab";
+				for (let target of game.filterPlayer()) {
+					const id = target.playerid;
+					const map = trigger.customArgs;
+					if (!map[id]) {
+						map[id] = {};
+					}
+					if (typeof map[id].shanRequired == "number") {
+						map[id].shanRequired++;
+					} else {
+						map[id].shanRequired = 2;
+					}
+				}
 			}
 		}
 	},
@@ -2899,7 +2910,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						}
 						player.yzs_tuisheng_expandEquip(1)
 
-						await player.recover(2);
+					//	await player.recover(2);
 					}
 				}
 			}

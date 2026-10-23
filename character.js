@@ -667,6 +667,7 @@ const characters = {
 		skills: ["tianping_yzs", "Auserlese_yzs"],
 		names: "阿乌拉",
 		img: "extension/一中杀/image/Aura_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	Marcus_yzs: {
@@ -718,7 +719,8 @@ const characters = {
 	Ren_yzs: {
 		sex: "male",
 		group: "shu",
-		hp: 4,
+		hp: 3,
+		maxHp:4,
 		skills: ["shuhuenci_yzs", "bianzangsong_yzs", "dapiwansi_yzs"],
 		names: "刃",
 		img: "extension/一中杀/image/Ren_yzs.png",
@@ -731,6 +733,7 @@ const characters = {
 		skills: ["AirFazen_yzs", "xuanzhan_yzs", "huanwu_yzs"],
 		names: "莉涅",
 		img: "extension/一中杀/image/Linie_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	Alastor_yzs: {
@@ -1184,6 +1187,7 @@ const characters = {
 		skills: ["jianren_yzs", "shantianji_yzs", "qieyong_yzs"],
 		names: "休塔尔克",
 		img: "extension/一中杀/image/Stark_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	BDCheTianke_yzs: {
@@ -1249,6 +1253,7 @@ const characters = {
 		skills: ["wanfa_yzs", "kanpo_yzs", "jiejie_yzs"],
 		names: "赛丽艾",
 		img: "extension/一中杀/image/Serie_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	Macht_yzs: {
@@ -1258,6 +1263,7 @@ const characters = {
 		skills: ["dianjin_yzs", "Deeagorze_yzs"],
 		names: "马哈特",
 		img: "extension/一中杀/image/Macht_yzs.png",
+		BGM: "Zoltraak",
 	},
 
 	LeiChenjing_yzs: {
@@ -1840,7 +1846,7 @@ const characters = {
 		sex: "male",
 		group: "jin",
 		hp: 4,
-		skills: ["yzs_wuweizhuanbian", "yzs_suhun", "yzs_tuisheng","yzs_zibiyuandunguo"],
+		skills: ["yzs_wuweizhuanbian", "yzs_suhun", "yzs_tuisheng"],
 		names: "真人",
 		img: "extension/一中杀/image/yzs_Mahito.png",
 		dieAudios: ["ext:一中杀/audio/die/yzs_Mahito.mp3"],

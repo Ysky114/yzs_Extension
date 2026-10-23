@@ -195,7 +195,7 @@ const skills = {
 				if (gain2.length) player.$gain2(gain2)
 				await player.addSkill(skills);
 			}
-			await player.draw(2);
+			await player.draw();
 			let num = player.maxHp;
 			while (num > 0) {
 				let nameList = [];

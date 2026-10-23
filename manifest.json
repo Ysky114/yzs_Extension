@@ -1,6 +1,6 @@
 {
-  "version": "0.98.6",
-  "update": "0.98.6新增蓄能技，五条悟重做，新增虎杖悠仁、真人",
+  "version": "0.98.7",
+  "update": "0.98.7新增蓄能技，五条悟重做，新增虎杖悠仁、真人",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -679,13 +679,13 @@
     "audio/雨爱.mp3": "dd0902a361b41b31649b033bfc5d6bb327496f7b",
     "audio/霹靂.mp3": "f3fe69877b0d87b0977a0cdea1c3206a1982c599",
     "card.js": "b355be7f94c85add0b374d124e073fd3c8783535",
-    "character.js": "ae03d229b5437877013a85b7e060e2ec34f9f648",
+    "character.js": "8a18b86f176c82685b19cfdb98335b2a0ed97673",
     "dynamicTranslate.js": "59b90220725c9e2ee093894e57d576ad4ede3f15",
     "extension.css": "0cdc14624cafc2af6871d789775ccc5334a4186d",
-    "extension.js": "80d20fa199fdf3d1407d02bb3ee3d471d8dd3909",
+    "extension.js": "a1f568c74afb30d94f5e91941783a493fb16303b",
     "func/settle.js": "468371fa96adde2fc64769959d270d415cfeda07",
     "func/trigger.js": "0d75927603211ad30b139a25acce24e03c9f25bf",
-    "genManifest.js": "55e8d78a46167c189575ab0826b73d01896c6e1e",
+    "genManifest.js": "23f757bec861e808fac7094440ac79afd7f8a22c",
     "image/AdmiredWitch_yzs.png": "7aa1424e93435d7ae1a0e8822773f929e588e8de",
     "image/aiqi_yzs_discard.png": "6dbb7e741cc9dd7f50ec0613dd533c6b8ccb4fbb",
     "image/AiSi_yzs.png": "4a242b4c265fa10cdf36b61f7935a2adf11df43c",
@@ -1073,15 +1073,15 @@
     "info.json": "3ff39878a4eced961f4b20a11c2de8651ea5c8b2",
     "LICENSE": "8624bcdae55baeef00cd11d5dfcfa60f68710a02",
     "README.md": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-    "skill.js": "6231e87173056065bf308bbf21f472ce98e9fb13",
+    "skill.js": "f4e42d20fa5919830f23d86be6dae9f6b6992865",
     "skill1.js": "a05fb0e218d95f10f8e0835331f35f69c7c194a5",
     "skill2.js": "1d274a23b24f8a58eac045c981fd196c0bb45c1c",
-    "skill3.js": "26a20ea42e74a4e81dc032aff4f223c739950872",
+    "skill3.js": "066e94a518e92e011e559940c22748181c0a01dd",
     "skill4.js": "773e9d9497f27e9c7b16068010361240613b430b",
     "skill5.js": "f551bc155b6bd8ad734bbccf6f39ef1af61dbcd0",
-    "skill6.js": "5c1303cbfea3eb21aa68c3d3556550b494d1bf4e",
-    "skill7.js": "11728f98afcb295cd5ef649b68e561c3a0637871",
-    "translate.js": "bbe66534c54a16725add1c3289dde33422027270",
-    "update.js": "769b0a15b7f7385a9124f01f46bc68318add89b0"
+    "skill6.js": "bec7d4587d61f170c32fcdd9cfe089710775f190",
+    "skill7.js": "39b251dff421ce4dbae34a8cc56372c844523611",
+    "translate.js": "67404a9d55a2252c1867bf66b8f59ef0ac9302c6",
+    "update.js": "5db1fa5549599f727bbf44c76589a5347821e129"
   }
 }

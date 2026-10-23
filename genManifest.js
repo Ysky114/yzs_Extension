@@ -2,10 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const EXT_DIR = './';          // 脚本放在扩展根目录运行
+const EXT_DIR = __dirname;    // 始终以脚本所在的扩展目录为准
 const OUTPUT = 'manifest.json';
-const VERSION = '0.98.6';      // 版本号，每次更新请修改
-const UPDATE_NOTE = '0.98.6新增蓄能技，五条悟重做，新增虎杖悠仁、真人'; // 更新说明
+// 只读取版本常量，不执行依赖游戏环境的 extension.js。
+const extensionSource = fs.readFileSync(path.join(EXT_DIR, 'extension.js'), 'utf-8');
+const versionMatch = extensionSource.match(/^\s*const\s+EXTENSION_VERSION\s*=\s*(['"])(\d+(?:\.\d+)*)\1\s*;?[ \t]*(?:\/\/[^\r\n]*)?\r?$/m);
+if (!versionMatch) {
+	throw new Error('无法读取 extension.js 的 EXTENSION_VERSION，请使用点分数字字符串，例如 const EXTENSION_VERSION = "0.98.11";');
+}
+const VERSION = versionMatch[2];
+const UPDATE_NOTE = `${VERSION}新增蓄能技，五条悟重做，新增虎杖悠仁、真人`; // 发布时修改更新说明，版本号自动添加
 
 // 递归获取所有文件相对路径
 function walkDir(dir, baseDir, fileList = []) {
@@ -59,4 +65,4 @@ const manifest = {
 };
 
 fs.writeFileSync(path.join(baseDir, OUTPUT), JSON.stringify(manifest, null, 2));
-console.log(`✅ manifest.json 生成完毕，包含 ${fileList.length} 个文件。`);
+console.log(`✅ manifest.json 生成完毕，版本 ${VERSION}，包含 ${fileList.length} 个文件。`);

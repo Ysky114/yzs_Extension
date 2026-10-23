@@ -1,8 +1,8 @@
-import { lib, game, ui, get, ai, _status } from "../../../noname.js";
-import { createProgress } from "../../../noname/library/update.js";
+import { lib, game, ui, get, ai, _status } from "../../noname.js";
+import { checkVersion, createProgress } from "../../noname/library/update.js";
 
 // ============ 提取出的核心更新逻辑 ============
-async function performUpdate(isManual) {
+async function performUpdate(isManual, localVersion) {
 	// 网络状态检查（手动才弹窗）
 	if (_status.connectMode && isManual) {
 		alert("联机状态下无法更新");
@@ -38,6 +38,14 @@ async function performUpdate(isManual) {
 		const msg = '清单文件获取失败，请检查网络连接';
 		if (isManual) alert(msg);
 		throw new Error(msg);
+	}
+
+	// 先比较版本，再检查哈希，避免本地开发版被仓库旧版覆盖。
+	// checkVersion 按数字分段比较（0.98.11 > 0.98.6），相同版本仍允许修复文件。
+	if (checkVersion(localVersion, m.version) > 0) {
+		sessionStorage.yzs_check = true;
+	//	if (isManual) alert(`本地《一中杀》版本 ${localVersion} 高于仓库版本 ${m.version}，已跳过更新`);
+		return;
 	}
 
 	// 比对文件
@@ -173,14 +181,14 @@ async function performUpdate(isManual) {
 
 
 // ============ 导出主函数 ============
-export default async (b) => {
+export default async (b, localVersion = lib.extensionPack["一中杀"]?.version) => {
 	let autoUpdateQueue = Promise.resolve();
 
 	if (b) {
 		// ===== 手动更新：强制获取锁，执行核心逻辑 =====
 		game.importedPack = true;
 		try {
-			await performUpdate(true);
+			await performUpdate(true, localVersion);
 		} catch (e) {
 			// performUpdate 内部对于手动更新的错误已 alert，这里可不再弹窗
 			console.warn(e);
@@ -205,7 +213,7 @@ export default async (b) => {
 
 			game.importedPack = true;
 			try {
-				await performUpdate(false);
+				await performUpdate(false, localVersion);
 			} finally {
 				game.importedPack = false;
 			}

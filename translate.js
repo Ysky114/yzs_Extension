@@ -1040,7 +1040,7 @@ const translates = {
 	jiahu_yzs: "加护",
 	jiahu_yzs_info: `锁定技：你拥有以下“加护”：<br>
 	${get.poptip("jianshu_yzs")}、${get.poptip("jilei_yzs")}、${get.poptip("wenzhong_yzs")}、${get.poptip("businiao_yzs")}。<br>
-    回合开始时你摸2张牌，然后将上述X个“加护”移除或交给任意名其他角色，至你下一回合开始。（X为你体力上限）`,
+    回合开始时你摸1张牌，然后将上述X个“加护”移除或交给任意名其他角色，至你下一回合开始。（X为你体力上限）`,
 	jianshu_yzs: "剑术",
 	jianshu_yzs_info: `你每自轮使用的首张【杀】不可响应。`,
 	jilei_yzs: "疾雷",
@@ -2064,7 +2064,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_chuilian: `锤炼`,
 	yzs_chuilian_info: `锁定技：你使用或打出基本牌后，摸1张牌并可弃1张手牌。`,
 	yzs_jintingquan: `径庭拳`,
-	yzs_jintingquan_info: `锁定技：你使用【杀】时，若此牌点数你${get.poptip("yzs_chuilian")}弃置过，则你刷新本回合出【杀】数并令之伤害+1；否则此牌改为刺【杀】。`,
+	yzs_jintingquan_info: `锁定技：你使用【杀】时，若此牌点数你${get.poptip("yzs_chuilian")}弃置过，则你刷新本回合出【杀】数并令之伤害+1；否则此牌需要2张【闪】响应。`,
 	yzs_suzhou: `宿咒`,
 	yzs_suzhou_info: `限定技：你即将死亡时，可获得${get.poptip("yzs_qikuo")}，然后恢复全部体力并摸牌至4张。`,
 	yzs_qikuo: `契阔`,
