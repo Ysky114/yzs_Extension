@@ -44,7 +44,7 @@ async function performUpdate(isManual, localVersion) {
 	// checkVersion 按数字分段比较（0.98.11 > 0.98.6），相同版本仍允许修复文件。
 	if (checkVersion(localVersion, m.version) > 0) {
 		sessionStorage.yzs_check = true;
-	//	if (isManual) alert(`本地《一中杀》版本 ${localVersion} 高于仓库版本 ${m.version}，已跳过更新`);
+		if (isManual) alert(`本地《一中杀》版本 ${localVersion} 高于仓库版本 ${m.version}，已跳过更新`);
 		return;
 	}
 

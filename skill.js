@@ -1341,7 +1341,7 @@ const skills = {
 				else if (player.hp > 2 / player.storage.BitetheDust) await player.loseHp(player.hp - 2 / player.storage.BitetheDust);
 				if (trigger.player.hp < 2 / player.storage.BitetheDust) await trigger.player.recover(2 / player.storage.BitetheDust - trigger.player.hp);
 				else if (trigger.player.hp > 2 / player.storage.BitetheDust) await trigger.player.loseHp(trigger.player.hp - 2 / player.storage.BitetheDust);
-				await player.draw(4 / player.storage.BitetheDust);
+				await player.draw(2 / player.storage.BitetheDust);
 				player.addMark("BitetheDust_yzs", 1, false);
 				player.updateMark("BitetheDust_yzs");
 
@@ -1371,7 +1371,7 @@ const skills = {
 						target.node.avatar.overlayElement_BitetheDust_yzs = overlay;//将这个遮罩图层保存为 avatar 元素的一个自定义属性,便于后续操作（如修改或清除该图层），避免重复查找或创建；
 					}
 				}, trigger.player)
-				await trigger.player.draw(4 / player.storage.BitetheDust);
+				await trigger.player.draw(2 / player.storage.BitetheDust);
 				trigger.player.addMark("BitetheDust_yzs", 1, false);
 				trigger.player.updateMark("BitetheDust_yzs");
 			}
@@ -1445,7 +1445,7 @@ const skills = {
 					} else {
 						player.useSkill("BitetheDust_awaken_yzs")
 					}
-					if (player.maxHp > player.hp) await player.recover(player.maxHp - player.hp);
+					if (player.maxHp > player.hp) await player.recoverTo(2 / player.storage.BitetheDust_yzs);
 					let target = game.filterPlayer(function (current) {
 						return current != player && current.hasMark("BitetheDust_yzs");
 					});
@@ -1459,7 +1459,7 @@ const skills = {
 								delete target.node.avatar.overlayElement_BitetheDust_yzs;
 							}
 						}, target);
-						target.draw(4 / player.storage.BitetheDust_yzs)
+						target.draw(2 / player.storage.BitetheDust_yzs)
 					}
 					player.clearMark("BitetheDust_yzs", false)
 

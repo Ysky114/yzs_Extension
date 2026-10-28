@@ -10,7 +10,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.poptip.add({
 		id: "yzs_PP",
 		name: "蓄能",
-		info: "一种标记，作为蓄能技的cost使用，每名角色的蓄能点上限不等(在武将信息中查看)，同一名角色不同的蓄能技共用蓄能点",
+		info: "一种标记，作为蓄能技的cost使用，蓄能点初始为0，每名角色的蓄能点上限不等(在武将信息中查看)，同一名角色不同的蓄能技共用蓄能点",
 	});
 	lib.poptip.add({
 		id: "jinling_yzs_tip",

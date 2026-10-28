@@ -7807,7 +7807,7 @@ const skills = {
 					if (typeof lib.card["tao"].enable === "function") {
 						let enable = lib.card["tao"].enable;
 						lib.card["tao"].enable = function (card, player) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								return game.hasPlayer(cur => cur.isDamaged())
 							}
 							return enable.call(this,card,player)
@@ -7816,21 +7816,21 @@ const skills = {
 					if (typeof lib.card["tao"].selectTarget === "function") {
 						let selectTarget = lib.card["tao"].selectTarget;
 						lib.card["tao"].selectTarget = function (card, player) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								return 1
 							}
 							return selectTarget.call(this, card, player)
 						};
 					} else {
 						lib.card["tao"].selectTarget = function (card, player) {
-							if (player.hasSkill("shengxin_yzs")) return 1;
+							if (player?.hasSkill("shengxin_yzs")) return 1;
 							return -1
 						};
 					}
 					if (typeof lib.card["tao"].filterTarget === "function") {
 						let filterTarget = lib.card["tao"].filterTarget;
 						lib.card["tao"].filterTarget = function (card, player, target) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								return target.isDamaged()
 							}
 							return filterTarget.call(this, card, player,target)
@@ -7845,7 +7845,7 @@ const skills = {
 					if (typeof lib.card["jiu"].savable === "function") {
 						let savable = lib.card["jiu"].savable;
 						lib.card["jiu"].savable = function (card, player, dying) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								return true
 							}
 							return savable.call(this, card, player, dying)
@@ -7854,21 +7854,21 @@ const skills = {
 					if (typeof lib.card["jiu"].selectTarget === "function") {
 						let selectTarget = lib.card["jiu"].selectTarget;
 						lib.card["jiu"].selectTarget = function (card, player) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								return 1
 							}
 							return selectTarget.call(this, card, player)
 						};
 					} else {
 						lib.card["jiu"].selectTarget = function (card, player) {
-							if (player.hasSkill("shengxin_yzs")) return 1;
+							if (player?.hasSkill("shengxin_yzs")) return 1;
 							return -1
 						};
 					}
 					if (typeof lib.card["jiu"].filterTarget === "function") {
 						let filterTarget = lib.card["jiu"].filterTarget;
 						lib.card["jiu"].filterTarget = function (card, player, target) {
-							if (player.hasSkill("shengxin_yzs")) {
+							if (player?.hasSkill("shengxin_yzs")) {
 								if(target!=player)return true
 							}
 							return filterTarget.call(this, card, player, target)
@@ -7883,7 +7883,7 @@ const skills = {
 							if (typeof lib.card["tao"].enable === "function") {
 								let enable = lib.card["tao"].enable;
 								lib.card["tao"].enable = function (card, player) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										return game.hasPlayer(cur => cur.isDamaged())
 									}
 									return enable.call(this, card, player)
@@ -7892,21 +7892,21 @@ const skills = {
 							if (typeof lib.card["tao"].selectTarget === "function") {
 								let selectTarget = lib.card["tao"].selectTarget;
 								lib.card["tao"].selectTarget = function (card, player) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										return 1
 									}
 									return selectTarget.call(this, card, player)
 								};
 							} else {
 								lib.card["tao"].selectTarget = function (card, player) {
-									if (player.hasSkill("shengxin_yzs")) return 1;
+									if (player?.hasSkill("shengxin_yzs")) return 1;
 									return -1
 								};
 							}
 							if (typeof lib.card["tao"].filterTarget === "function") {
 								let filterTarget = lib.card["tao"].filterTarget;
 								lib.card["tao"].filterTarget = function (card, player, target) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										return target.isDamaged()
 									}
 									return filterTarget.call(this, card, player, target)
@@ -7917,7 +7917,7 @@ const skills = {
 							if (typeof lib.card["jiu"].savable === "function") {
 								let savable = lib.card["jiu"].savable;
 								lib.card["jiu"].savable = function (card, player, dying) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										return true
 									}
 									return savable.call(this, card, player, dying)
@@ -7926,21 +7926,21 @@ const skills = {
 							if (typeof lib.card["jiu"].selectTarget === "function") {
 								let selectTarget = lib.card["jiu"].selectTarget;
 								lib.card["jiu"].selectTarget = function (card, player) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										return 1
 									}
 									return selectTarget.call(this, card, player)
 								};
 							} else {
 								lib.card["jiu"].selectTarget = function (card, player) {
-									if (player.hasSkill("shengxin_yzs")) return 1;
+									if (player?.hasSkill("shengxin_yzs")) return 1;
 									return -1
 								};
 							}
 							if (typeof lib.card["jiu"].filterTarget === "function") {
 								let filterTarget = lib.card["jiu"].filterTarget;
 								lib.card["jiu"].filterTarget = function (card, player, target) {
-									if (player.hasSkill("shengxin_yzs")) {
+									if (player?.hasSkill("shengxin_yzs")) {
 										if (target != player) return true
 									}
 									return filterTarget.call(this, card, player, target)

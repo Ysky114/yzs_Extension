@@ -1,4 +1,4 @@
-import { lib, game, ui, get, ai, _status } from "../../noname.js";
+ import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const translates = {
     SCHyzs: "一中杀",
     normalPack_yzs: "标准包",
@@ -205,7 +205,8 @@ const translates = {
 	yzs_QianWitch: `钟映暄`,
 	yzs_ItadoriYuji: `虎杖悠仁`,
 	yzs_ItadoriSukuna:`宿傩(虎杖悠仁)`,
-	yzs_Mahito:`真人`,
+	yzs_Mahito: `真人`,
+	yzs_Ishigoriryu:`石流龙`,
 
     // 技能台词
 
@@ -238,7 +239,7 @@ const translates = {
     出牌阶段你可扣置任意张手牌称为“弹”，上限为3。<br>你的判定牌生效前，你可用1张“弹”代替之。`,
 	BitetheDust_yzs: "败者食尘",
 	BitetheDust_yzs_info: `觉醒技：若你不处于“命运”：你进入濒死时可回复<span class="bluetext">2</span>点体力并摸<span class="bluetext">4</span>张牌；其他角色进入濒死时，
-	你可调整你与其体力值至<span class="bluetext">2</span>，然后你与其摸<span class="bluetext">4</span>张牌并进入“命运”：<span class="bluetext">2</span>公轮内若你死亡，改为你恢复全部体力、你与其退出“命运”并摸<span class="bluetext">4</span>张牌；若否，其死亡，你与其退出“命运”。<br>
+	你可调整你与其体力值至<span class="bluetext">2</span>，然后你与其摸<span class="bluetext">2</span>张牌并进入“命运”：<span class="bluetext">2</span>公轮内若你死亡，改为你恢复至<span class="bluetext">2</span>点体力、你与其退出“命运”并摸<span class="bluetext">2</span>张牌；若否，其死亡，你与其退出“命运”。<br>
 	发动本技能后上述数字减半，发动2次后你失去本技能并觉醒：你下一回合开始时获得${get.poptip("normal_life_yzs")}。`,
 	BitetheDust_awaken_yzs: "败者食尘觉醒",
 	BitetheDust_awaken_yzs_info: `觉醒：你下一回合开始时获得${get.poptip("normal_life_yzs")}。`,
@@ -2033,7 +2034,7 @@ const translates = {
 	yzs_shenpan: `审判`,
 	yzs_shenpan_info: `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`,
 	yzs_jianshi: `监视`,
-	yzs_jianshi_info: `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`,
+	yzs_jianshi_info: `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备以与其各摸1张牌。`,
 	yzs_ezhao: `厄兆`,
 	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
 	yzs_zhongmo: `终末`,
@@ -2044,12 +2045,12 @@ const translates = {
 	yzs_wuxiaxian: `无下限`,
 	yzs_wuxiaxian_info: `若你未装备防具，你视为装备${get.poptip("yzs_wuxiaxian_wuxian")}。你使用牌时，获得1点${get.poptip("yzs_PP")}。`,
 	yzs_canghe: `苍/赫`,
-	yzs_canghe_info: `${get.poptip("yzs_PPSkill")}：转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>顺转：【苍】，并令本技能本回合失效；反转：【赫】。<br>
+	yzs_canghe_info: `转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>顺转：【苍】，并令本技能本回合失效；反转：【赫】。<br>
 你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`,
 	yzs_xushici: `虚式·茈`,
 	yzs_xushici_info: `出牌阶段，你可弃置点数为X的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}各1张并可指定1名其他角色，然后对指定的角色造成X点伤害，未指定则对所有角色造成X点伤害。`,
 	yzs_yuzhe: `玉折`,
-	yzs_yuzhe_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("yzs_xushici")}`,
+	yzs_yuzhe_info: `觉醒技：你可将2张同点数的手牌当做【桃】对濒死的自己使用，结算后若你脱离濒死，你觉醒：失去本技能，获得${get.poptip("fanzhuanshushi_yzs")}和${get.poptip("yzs_xushici")}`,
 
 	yzs_xiebeng: `邪迸`,
 	yzs_xiebeng_info: `${get.poptip("sing_yzs")}3：你分配X点伤害并减少2点体力上限，然后所有其他角色获得${get.poptip("yzs_fengmo")}。（X为当前轮次数）<br>
@@ -2086,7 +2087,12 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_zibiyuandunguo_skill: `自闭圆顿裹`,
 	yzs_zibiyuandunguo_skill_info: `领域主人使用的【杀】无视防具且不可响应。领域主人以外的角色回合结束时，领域主人视为对其使用普通【杀】`,
 	yzs_bianshajilingti: `遍杀即灵体`,
-	yzs_bianshajilingti_info:`锁定技：你武器栏无上限。准备和结束阶段，你可扣除1点体力上限，然后摸2张牌。`,
+	yzs_bianshajilingti_info: `锁定技：你武器栏无上限。准备和结束阶段，你可扣除1点体力上限，然后摸2张牌。`,
+
+	yzs_GraniteBlast: `冰沙冲击波`,
+	yzs_GraniteBlast_info: `你可消耗1点${get.poptip("yzs_PP")}，视为使用或打出普通【杀】，你可额外消耗1点蓄能以令此【杀】无次数距离限制并改为雷【杀】。`,
+	yzs_yinzhan: `饮战`,
+	yzs_yinzhan_info: `出牌阶段限1次：你可视为使用【决斗】。生效前，目标与你依次可令对方摸1张牌以令此牌伤害+1，然后目标体力值和手牌数每有一项≥你，你获得1点${get.poptip("yzs_PP")}并摸1张牌。`,
 };
 
 export default translates;

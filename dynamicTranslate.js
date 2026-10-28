@@ -1,7 +1,7 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
 	yzs_canghe(player) {
-		let str = `${get.poptip("yzs_PPSkill")}：转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
+		let str = `：转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
 		if (player.storage.yzs_canghe) str += `顺转：【苍】，并令本技能本回合失效；<font color="#ff4444">反转：【赫】</font>。`;
 		else str += `<font color="#44b6ff">顺转：【苍】，并令本技能本回合失效</font>；反转：【赫】。`;
 		str += `<br>你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`
@@ -396,7 +396,7 @@ const dynamicTranslates = {
 		return `出牌阶段限${player.countMark("CrimsonShadow_yzs") + 1}次：你摸1张牌，然后视为使用${get.poptip("wugu")}，因此获得红色牌的其他角色于本回合不可使用或打出牌。`
 	},
 	MadeInAbyss_yzs(player){
-		let str = `${get.poptip("zhuanlunji_yzs")}：你使用或打出牌时，若之点数≤本自轮次你使用或打出的上张牌，摸1张牌，否则你：<br>`;
+		let str = `${get.poptip("zhuanlunji_yzs")}：你使用或打出牌时，若之点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>`;
 		if (player.countMark("MadeInAbyss_yzs") == 0) str += `<font color="#ffeac2">①重铸1张牌</font> `
 		else str += `①重铸1张牌 `
 		if (player.countMark("MadeInAbyss_yzs") == 1) str += `<font color="#ffeac2">②弃置1张牌</font> `
@@ -609,8 +609,8 @@ const dynamicTranslates = {
 	BitetheDust_yzs(player) {
 		let storage = player.storage.BitetheDust || 1;
 		let str = `觉醒技：若你不处于“命运”：你进入濒死时可回复` + '<span class="bluetext">' + 2 / storage + "</span>" + `点体力并摸` + '<span class="bluetext">' + 4 / storage + "</span>" +`张牌；
-		其他角色进入濒死时，你可调整你与其体力值至` + '<span class="bluetext">' + 2 / storage + "</span>" + `，然后你与其摸` + '<span class="bluetext">' + 4 / storage + "</span>" + `张牌并进入“命运”：`
-			+ '<span class="bluetext">' + 2 / storage + "</span>" + `公轮内若你死亡，改为你恢复全部体力、你与其退出“命运”并摸` + '<span class="bluetext">' + 4 / storage + "</span>" + `张牌；
+		其他角色进入濒死时，你可调整你与其体力值至` + '<span class="bluetext">' + 2 / storage + "</span>" + `，然后你与其摸` + '<span class="bluetext">' + 2 / storage + "</span>" + `张牌并进入“命运”：`
+			+ '<span class="bluetext">' + 2 / storage + "</span>" + `公轮内若你死亡，改为你恢复至` + '<span class="bluetext">' + 2 / storage + "</span>" + `体力、你与其退出“命运”并摸` + '<span class="bluetext">' + 2 / storage + "</span>" + `张牌；
 若否，其死亡，你与其退出“命运”。<br>发动本技能后上述数字减半，发动2次后你失去本技能并觉醒：你下一回合开始时获得${get.poptip("normal_life_yzs")}。`
 		return str
 	},

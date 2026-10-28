@@ -3331,7 +3331,7 @@ const skills = {
 				if (dialog.length < 4) {
 					return;
 				}
-				let cardsx = target.getCards("h")
+				let cardsx = player.getCards("h")
 				let next = player.chooseButton(2, dialog);
 				next.set("target", target);
 				next.set("forced", true);
@@ -5591,7 +5591,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					await player.discard(event.cards);
-					player.tempBanSkill("qianheanyiting_yzs", { global: "roundStart" })
+			//		player.tempBanSkill("qianheanyiting_yzs", { global: "roundStart" })
 					const animation = () => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
@@ -5666,7 +5666,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
-			player.tempBanSkill(event.name, { global: "roundStart" })
+	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";
@@ -7789,7 +7789,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					await player.discard(event.cards);
-					player.tempBanSkill("yzs_gaiguantieweishan", { global: "roundStart" })
+				//	player.tempBanSkill("yzs_gaiguantieweishan", { global: "roundStart" })
 					const animation = () => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
@@ -7862,7 +7862,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
-			player.tempBanSkill(event.name, { global: "roundStart" })
+		//	player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";

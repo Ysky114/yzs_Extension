@@ -546,11 +546,11 @@ const skills = {
 			global: "useCardAfter"
 		},
 		filter(event, player) {
-			return get.type(event.card) == "equip" && player.countCards("he");
+			return get.type(event.card) == "equip" && player.countCards("e");
 		},
 		async cost(event, trigger, player) {
-			let str = `你可弃置1张装备牌以与${get.translation(trigger.player)}各摸1张牌`
-			let next = player.chooseToDiscard("he", false);
+			let str = `你可弃置1张装备以与${get.translation(trigger.player)}各摸1张牌`
+			let next = player.chooseToDiscard("e", false);
 			next.set("filterCard", (card) => get.type(card) == "equip")
 			next.set("prompt", str)
 			next.set("ai", card => {
@@ -729,10 +729,7 @@ const skills = {
 		}
 	},
 	yzs_wuxiaxian: {
-		group: "yzs_wuxiaxian_equip",
-		init: function (player, skill) {
-			player.addSkill("wuxiaxianshushi_yzs_die", "wuxiaxianshushi_yzs_revive");
-		},
+		group: ["yzs_wuxiaxian_equip", "yzs_wuxiaxian_die","yzs_wuxiaxian_revive"],
 		subSkill: {
 			equip: {
 				yzs_PPSkill: true,
@@ -767,6 +764,52 @@ const skills = {
 					trigger.cancel();
 					player.addTempSkill("yzs_wuxiaxian_wuxian_skill_mark");
 					player.addMark("yzs_wuxiaxian_wuxian_skill_mark", 1, false)
+				},
+			},
+			revive: {
+				audio: "SixEyes_yzs_revive",
+				forced: true,
+				forceDie: true,
+				priority: 13,
+				trigger: {
+					player: ["reviveEnd", "recoverEnd"]
+				},
+				async content(event, trigger, player) {
+					if (player.hp <= 0) return false;
+					if (player.name != "GojoSatoru_yzs") return;
+					if (!player.countMark("wuxiaxianshushi_yzs_die")) return;
+					player.clearMark("wuxiaxianshushi_yzs_die", false)
+					game.broadcastAll(function (current) {
+						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs.png");
+					}, player)
+					for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
+						target.chat("真的假的？")
+					}
+				}
+			},
+			die: {
+				forceDie: true,
+				forced: true,
+				popup: false,
+				priority: -21314,
+				trigger: {
+					player: "dieBegin",
+				},
+				filter(event, player) {
+					return player.name == "GojoSatoru_yzs" && event.source && event.source.isAlive() && event.source != player;
+				},
+				async content(event, trigger, player) {
+					player.addMark("wuxiaxianshushi_yzs_die", 1, false)
+					game.broadcastAll(function (current) {
+						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs_die.png");
+					}, player)
+					let name = get.translation(trigger.source);
+					if (trigger.source.hasSkill("zuzhouzhiwang_yzs")) name = "宿傩"
+					player.chat(`没能让${name}大人尽兴，真是抱歉啊`)
+					trigger.source.chat("令人愉悦！")
+					setTimeout(() => {
+						trigger.source.chat(`${get.translation(player)}，我大概这辈子都不会忘了你吧`)
+					}, 1500)
 				},
 			},
 		},
@@ -1348,6 +1391,7 @@ const skills = {
 							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
 						})
 					}
+					player.removeSkill("yzs_yuzhe")
 					await player.addSkill(['fanzhuanshushi_yzs', "yzs_xushici"]);
 				}
 			}
@@ -1363,7 +1407,11 @@ const skills = {
 			storage: { yzs_yuzhe_dying: true, }
 		},
 		filter(event, player) {
-			return player.countCards("h") > 1;
+			let cards = player.getCards("h");
+			for (let card of cards) {
+				if (cards.some(c => c!=card&&get.number(c, player) == get.number(card, player))) return true;
+			}
+			return false;
 		},
 		filterCard(card, player) {
 			if (ui.selected.cards.length) {
@@ -2462,7 +2510,27 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					if (player.name2) {
 						await player.reinitCharacter(player.name2, 'yzs_ItadoriSukuna');
 					}
+					game.broadcastAll(function (damageAudioInfo) {
+						if (lib.config.background_audio) {
+							game.playAudio(damageAudioInfo);
+							_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
+							game.playBackgroundMusic();
+						}
+					}, damageAudioInfo);
 					if (player.identity == "zhu") player.addSkill("BossRule_yzs")
+					else {
+						game.broadcastAll(
+							function (source, identity2) {
+								if (source.node.dieidentity) {
+									source.node.dieidentity.innerHTML = get.translation(identity2 + 2);
+								}
+								source.identity = identity2;
+								source.showIdentity()
+							},
+							player,
+							"nei"
+						);
+					}
 				}
 			},
 		},
@@ -2963,7 +3031,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				},
 				async content(event, trigger, player) {
 					await player.discard(event.cards);
-					player.tempBanSkill("yzs_zibiyuandunguo", { global: "roundStart" })
+			//		player.tempBanSkill("yzs_zibiyuandunguo", { global: "roundStart" })
 					const animation = () => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
@@ -3047,7 +3115,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
-			player.tempBanSkill(event.name, { global: "roundStart" })
+	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";
@@ -3162,6 +3230,133 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			await player.loseMaxHp();
 			await player.draw(2);
 		}
+	},
+	//石流龙
+	yzs_GraniteBlast: {
+		nobracket: true,
+		locked: false,
+		yzs_PPSkill: true,
+		enable: ["chooseToUse", "chooseToRespond"],
+		getCard(nature) {
+			return new lib.element.VCard({
+				name: "sha",
+				nature,
+				isCard: true,
+				storage: { yzs_GraniteBlast: nature == "thunder" },
+			});
+		},
+		filter(event, player) {
+			const num = player.countMark("yzs_PP");
+			if (event.responded || num < 1) return false;
+			return [undefined, "thunder"].some(nature => {
+				if (nature == "thunder" && num < 2) return false;
+				return event.filterCard(lib.skill.yzs_GraniteBlast.getCard(nature), player, event);
+			});
+		},
+		chooseButton: {
+			dialog(event, player) {
+				return ui.create.dialog("冰沙冲击波", [[["基本", "", "sha"], ["基本", "", "sha", "thunder"]], "vcard"], "hidden");
+			},
+			filter(button, player) {
+				const nature = button.link[3];
+				if (player.countMark("yzs_PP") < (nature == "thunder" ? 2 : 1)) return false;
+				const evt = get.event().getParent();
+				return evt.filterCard(lib.skill.yzs_GraniteBlast.getCard(nature), player, evt);
+			},
+			check(button) {
+				// 响应时优先选消耗较低的普通杀。
+				if (get.event().getParent().type != "phase") return button.link[3] == "thunder" ? 1 : 2;
+				return get.player().getUseValue(lib.skill.yzs_GraniteBlast.getCard(button.link[3])) - (button.link[3] == "thunder" ? 0.5 : 0);
+			},
+			backup(links, player) {
+				return {
+					audio: "ext:一中杀/audio/skill:2",
+					yzs_PPSkill: true,
+					filterCard: () => false,
+					selectCard: -1,
+					viewAs: lib.skill.yzs_GraniteBlast.getCard(links[0][3]),
+					async precontent(event, trigger, player) {
+						// 从本次选牌结果取消耗，避免联机重建 backup 后丢失闭包变量。
+						const enhanced = event.result.card.storage?.yzs_GraniteBlast;
+						const cost = enhanced ? 2 : 1;
+						if (player.countMark("yzs_PP") < cost) {
+							event.result.cancel = true;
+							return;
+						}
+						player.yzs_removePP(cost);
+						if (enhanced) {
+							// 传给实际 useCard/respond 事件，不影响普通杀的计次。
+							event.result._apply_args ??= {};
+							event.result._apply_args.addCount = false;
+						}
+					},
+				};
+			},
+			prompt(links, player) {
+				return links[0][3] == "thunder" ? "消耗2点蓄能，视为使用或打出无次数、距离限制且不计入次数的雷【杀】" : "消耗1点蓄能，视为使用或打出普通【杀】";
+			},
+		},
+		mod: {
+			cardUsable(card) {
+				if (card.name == "sha" && card.storage?.yzs_GraniteBlast) return Infinity;
+			},
+			targetInRange(card) {
+				if (card.name == "sha" && card.storage?.yzs_GraniteBlast) return true;
+			},
+		},
+		hiddenCard(player, name) {
+			return name == "sha" && player.countMark("yzs_PP") >= 1;
+		},
+		ai: {
+			order: 3,
+			respondSha: true,
+			skillTagFilter(player) {
+				return player.countMark("yzs_PP") >= 1;
+			},
+			result: { player: 1 },
+		},
+	},
+	yzs_yinzhan: {
+		audio: "ext:一中杀/audio/skill:2",
+		enable: "phaseUse",
+		usable: 1,
+		filterCard: () => false,
+		selectCard: -1,
+		selectTarget: 1,
+		viewAs: { name: "juedou", isCard: true },
+		filterTarget(card, player, target) {
+			return lib.filter.filterTarget(card, player, target);
+		},
+		async precontent(event, trigger, player) {
+			const target = event.result.targets[0];
+			if (!target || !target.isIn() || !player.isIn()) return;
+			event.result._apply_args ??= {};
+			const args = event.result._apply_args;
+			if (typeof args.baseDamage != "number") args.baseDamage = get.info(event.result.card, false).baseDamage || 1;
+			// 目标先选择、自己后选择；各次摸牌完整结算后再继续。
+			for (const current of [target, player]) {
+				if (!target.isIn() || !player.isIn()) return;
+				const other = current == target ? player : target;
+				const result = await current.chooseBool(`饮战：是否令${get.translation(other)}摸1张牌，使此【决斗】的伤害+1？`)
+					.set("choice", get.effect(target, event.result.card, player, current) > 0)
+					.set("ai", () => get.event().choice)
+					.forResult();
+				if (result?.bool) {
+					args.baseDamage++;
+					await other.draw(1);
+				}
+			}
+			if (!target.isIn() || !player.isIn()) return;
+			// 同时确定两项奖励，避免第一项摸牌改变第二项的手牌数比较。
+			const num = Number(target.hp >= player.hp) + Number(target.countCards("h") >= player.countCards("h"));
+			if (num > 0) {
+				player.yzs_addPP(num);
+				await player.draw(num);
+			}
+		},
+		ai: {
+			order: 8,
+		},
 	},
 }
 export default skills;

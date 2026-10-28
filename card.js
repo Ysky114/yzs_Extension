@@ -2952,36 +2952,56 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				shizhongyingfashu_yzs_cost: 5,
 				fullskin: true,
 				type: "basic",
-				enable: true,
+				adaptationStorage: ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4", "hundunyutiaohe_yzs_HandcardLimit", "hundunyutiaohe_yzs_draw"],
+				getOwner(target) {
+					return target.storage?.moxuluo_yzs_source || target._source;
+				},
+				getSummon(player) {
+					// 调离只是不参与当前结算，仍占用其主人的召唤名额。
+					return game.findPlayer(cur => !cur.removed && cur.name == "Makora_yzs" && lib.card.moxuluo_yzs.getOwner(cur) == player, true);
+				},
+				isDestroyed(player) {
+					return !!player.storage.moxuluo_yzs_dead || !!player.storage.shizhongyingfashu_yzs_break?.includes("moxuluo_yzs");
+				},
+				enable(card, player) {
+					if (lib.card.moxuluo_yzs.isDestroyed(player)) return false;
+					const Makora = lib.card.moxuluo_yzs.getSummon(player);
+					return !Makora || Makora.isIn();
+				},
 				selectTarget: 1,
 				allowMultiple: true,
 				image: "ext:一中杀/image/card/moxuluo_yzs.png",
 				filterTarget(card, player, target) {
-					const players = game.filterPlayer(cur => !cur.storage.isSub);
-					if (players.some(cur => cur.name == "Makora_yzs", true)) {
-						return target.name == "Makora_yzs"
-					} else {
-						return true;
-					}
+					if (lib.card.moxuluo_yzs.isDestroyed(player) || !target.isIn()) return false;
+					const Makora = lib.card.moxuluo_yzs.getSummon(player);
+					return !Makora || target == Makora;
 				},
 				async content(event, trigger, player) {
 					const target = event.target;
-					if (target.name == "Makora_yzs") {
+					// 结算时重新检查，防止选目标后状态变化或额外目标重复召唤。
+					if (lib.card.moxuluo_yzs.isDestroyed(player) || !target.isIn()) return;
+					const summoned = lib.card.moxuluo_yzs.getSummon(player);
+					if (summoned) {
+						if (target != summoned) return;
 						await target.recover(3);
-						player.setStorage("Makora_yzs", target.hp);
-						const hundunyutiaohe_yzs = {}
-						const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4"];
-						for (let item of list) {
-							hundunyutiaohe_yzs[item] = target.getStorage(item);
+						if (target.isDead() || target.removed) return;
+						const hundunyutiaohe_yzs = {};
+						for (const item of lib.card.moxuluo_yzs.adaptationStorage) {
+							const value = target.storage[item];
+							hundunyutiaohe_yzs[item] = item == "hundunyutiaohe_yzs_HandcardLimit" || item == "hundunyutiaohe_yzs_draw"
+								? target.countMark(item) : get.copy({ ...value });
 						}
-						player.setStorage("Makora_yzs_hundunyutiaohe_yzs", hundunyutiaohe_yzs);
-
-						if (target.hp <= 0 && target.storage?.moxuluo_yzs_source) {
-							target.storage.moxuluo_yzs_source.markAuto("shizhongyingfashu_yzs_break", "moxuluo_yzs")
-						}
+						game.broadcastAll(function (owner, hp, adaptation) {
+							owner.setStorage("Makora_yzs", hp);
+							owner.setStorage("Makora_yzs_hundunyutiaohe_yzs", adaptation);
+						}, player, target.hp, hundunyutiaohe_yzs);
 						if (_status.roundStart == target) _status.roundStart = target.next;
 						if (lib.playerOL) delete lib.playerOL[target.playerid];
 						game.broadcastAll(player => {
+							if (game.players.includes(player)) {
+								player.previous.next = player.next;
+								player.next.previous = player.previous;
+							}
 							game.players.remove(player);
 							game.dead.remove(player);
 							if (player.seatNum == 1) player.nextSeat.setSeatNum(1);
@@ -3014,43 +3034,57 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							}
 						});
 					} else {
-						if (game.hasPlayer(cur => cur.name == "Makora_yzs", true)) {
-							return;
-						}
 						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true, dieRemove: false, noCheckResult: true }).forResult()
 						if (!result?.target) return;
 						const Makora = result.target;
-						if (player.storage.Makora_yzs && player.storage.Makora_yzs) {
-							Makora.hp = player.storage.Makora_yzs;
-							Makora.update();
-						}
-						if (player.storage.Makora_yzs_hundunyutiaohe_yzs) {
-							const list = ["hundunyutiaohe_yzs_card", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4"];
-							for (let item of list) {
-								Makora.setStorage(item, player.storage.Makora_yzs_hundunyutiaohe_yzs[item])
+						game.broadcastAll(function (Makora, owner, hp, adaptation) {
+							Makora.storage.moxuluo_yzs_source = owner;
+							if (typeof hp == "number" && hp > 0) {
+								Makora.hp = hp;
+								Makora.update();
 							}
-						}
+							if (adaptation) {
+								for (const item of lib.card.moxuluo_yzs.adaptationStorage) {
+									if (item == "hundunyutiaohe_yzs_HandcardLimit" || item == "hundunyutiaohe_yzs_draw") {
+										Makora.setStorage(item, typeof adaptation[item] == "number" ? adaptation[item] : 0);
+									} else {
+										Makora.setStorage(item, get.copy({ ...adaptation[item] }));
+									}
+								}
+							}
+						}, Makora, player, player.storage.Makora_yzs, player.storage.Makora_yzs_hundunyutiaohe_yzs);
 						Makora.addSkill("rg_treasure_ban")
 						Makora
 							.when({ global: "die" })
 							.filter((evt, player2) => {
-								if (evt.reserveOut) return false;
-								return evt.player == player || evt.player == player2;
+								if (evt.reserveOut || player2.removed) return false;
+								return evt.player == lib.card.moxuluo_yzs.getOwner(player2) || evt.player == player2;
 							})
 							.assign({
 								forceDie: true,
+								forceOut: true,
 							})
 							.step(lib.card["moxuluo_yzs"].dieRemove);
 						game.log(player, '召唤了', lib.translate['Makora_yzs']);
 					}
 				},
 				async dieRemove(event, trigger, player) {
-					if (player.storage?.moxuluo_yzs_source) {
-						player.storage.moxuluo_yzs_source.markAuto("shizhongyingfashu_yzs_break", "moxuluo_yzs")
+					if (trigger.reserveOut || player.removed) return;
+					const owner = lib.card.moxuluo_yzs.getOwner(player);
+					// 主人死亡只清理召唤物；魔虚罗本人死亡才永久禁止其主人再召唤。
+					if (trigger.player == player && owner) {
+						game.broadcastAll(function (owner) {
+							owner.setStorage("moxuluo_yzs_dead", true);
+							owner.markAuto("shizhongyingfashu_yzs_break", "moxuluo_yzs");
+						}, owner);
 					}
 					if (_status.roundStart == player) _status.roundStart = player.next;
 					if (lib.playerOL) delete lib.playerOL[player.playerid];
 					game.broadcastAll(player => {
+						if (game.players.includes(player)) {
+							player.previous.next = player.next;
+							player.next.previous = player.previous;
+						}
 						game.players.remove(player);
 						game.dead.remove(player);
 						if (player.seatNum == 1) player.nextSeat.setSeatNum(1);
@@ -4427,6 +4461,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					return `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
 				},
 				filter(event, player) {
+					if (event.source?.hasSkill("wuxiaxianshushi_yzs_ban")) return false;
 					if (get.itemtype(_status._yzsDomainPlayer) == "player" && _status._yzsDomainPlayer != player) return false;
 					if (player.hasSkillTag("unequip2")) {
 						return false;
@@ -4660,7 +4695,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			huzang_yzs: `虎葬`,
 			huzang_yzs_info: `消耗4：出牌阶段限1次：对1名其他角色使用。若目标角色有护甲，其失去2点护甲，否则你对其造成1点伤害。<br>融合：目标牌结算后目标角色失去1点护甲。`,
 			moxuluo_yzs: `魔虚罗`,
-			moxuluo_yzs_info: `消耗5：出牌阶段：若“魔虚罗”①不在场：对1名角色使用，于其下家召唤“魔虚罗”（继承上次退场时的体力值）；②在场：对“魔虚罗”使用，令其恢复3点体力并退场。<br>此牌无融合效果，且仅会因“魔虚罗”死亡而被破坏。`,
+			moxuluo_yzs_info: `消耗5：出牌阶段：若你召唤的“魔虚罗”①不在场：对1名角色使用，于其下家召唤属于你的“魔虚罗”（继承上次退场时的体力值和适应进度）；②在场且未被调离：仅可对其使用，令其恢复3点体力并退场。每名角色至多同时拥有一只“魔虚罗”，调离仍视为占用召唤名额，其他角色的“魔虚罗”不影响你的召唤。<br>此牌无融合效果；你召唤的“魔虚罗”死亡后，此牌被破坏，且你本局不能再召唤“魔虚罗”。`,
 			yzs_Girlyheart: `少女心`,
 			yzs_Girlyheart_info: `场上角色装备区的此牌数量变动后，若为奇/偶数，其下次伤害结算伤害值-1/+1 （覆盖上次的效果）。持有者回合结束后将装备区内与本回合被使用过的牌花色相同的此牌置顶。`,
 			yzs_Girlyheart_equip1: `少女心`,

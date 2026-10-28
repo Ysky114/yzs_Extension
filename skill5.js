@@ -5116,10 +5116,14 @@ const skills = {
 						}
 					}
 
-					for (let target of game.filterPlayer(cur => cur.name == "Makora_yzs")) {
+					for (let target of game.filterPlayer(cur => cur.name == "Makora_yzs" && lib.card.moxuluo_yzs.getOwner(cur) == player, null, true)) {
 						if (_status.roundStart == target) _status.roundStart = target.next;
 						if (lib.playerOL) delete lib.playerOL[target.playerid];
 						game.broadcastAll(player => {
+							if (game.players.includes(player)) {
+								player.previous.next = player.next;
+								player.next.previous = player.previous;
+							}
 							game.players.remove(player);
 							game.dead.remove(player);
 							if (player.seatNum == 1) player.nextSeat.setSeatNum(1);
@@ -5859,6 +5863,15 @@ const skills = {
 		},
 	},
 	ba_yzs: {
+		init(player) {
+			player.addAdditionalSkill("ba_yzs", [
+				"ba_yzs_use",
+				"ba_yzs_damage",
+			]);
+		},
+		onremove(player) {
+			player.removeAdditionalSkill("ba_yzs");
+		},
 		Effect: function (target) {
 			const duration = 3000;
 			const slashLife = 600;
@@ -6057,9 +6070,6 @@ const skills = {
 			}
 		},
 		audio: "ext:一中杀/audio/skill:1",
-		init: function (player, skill) {
-			player.addSkill(["ba_yzs_use", "ba_yzs_damage"]);
-		},
 		enable: "phaseUse",
 		filter(event, player) {
 			return (
@@ -6088,11 +6098,10 @@ const skills = {
 		},
 		filterCard: () => false,
 		selectCard: -1,
-		prompt: "出牌阶段，你可视为使用无次数、距离限制的【杀】，此【杀】伤害值改为目标角色体力上限的一半（向上取整至多为5），然后本技能本回合失效",
+		prompt: "出牌阶段，你可视为使用无次数距离限制，且伤害为2的【杀】，然后本技能本回合失效",
 		log: false,
 		check: () => 1,
 		precontent() {
-			player.addSkill(["ba_yzs_use", "ba_yzs_damage"]);
 			player.tempBanSkill("ba_yzs");
 		},
 		ai: {
@@ -6226,7 +6235,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					await player.discard(event.cards);
-					player.tempBanSkill("fumoyuchuzi_yzs", { global: "roundStart" })
+				//	player.tempBanSkill("fumoyuchuzi_yzs", { global: "roundStart" })
 					const animation = () => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
@@ -6280,6 +6289,10 @@ const skills = {
 									this.currentTime = 50;
 								}, { once: true });
 							}
+							ui.backgroundMusic.addEventListener('ended', () => {
+								_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
+								game.playBackgroundMusic();
+							}, { once: true });
 						}
 					};
 					if (trigger.ExpandPlayerList?.some(target => target.name == "GojoSatoru_yzs")) {
@@ -6347,7 +6360,7 @@ const skills = {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
 		},
 		async content(event, trigger, player) {
-			player.tempBanSkill(event.name, { global: "roundStart" })
+	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";
@@ -6401,7 +6414,12 @@ const skills = {
 							this.currentTime = 50;
 						}, { once: true });
 					}
+					ui.backgroundMusic.addEventListener('ended', () => {
+						_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
+						game.playBackgroundMusic();
+					}, { once: true });
 				}
+
 			}
 			let result = await player.yzs_ExpandDomain(event.name, "fire", event.cards.length, animation).forResult();
 		},
@@ -6506,6 +6524,14 @@ const skills = {
 		},
 	},
 	hundunyutiaohe_yzs: {
+		// 新版五条悟的继承分支与实际防具共用适应进度，不合并回充 PP 的主技能。
+		getAdaptationKey(skill) {
+			if (skill == "yzs_wuxiaxian_equip") return "yzs_wuxiaxian_wuxian_skill";
+			return skill;
+		},
+		isOwnCardEvent(event, player) {
+			return event.getParent("useCard", true)?.player === player;
+		},
 		Effect: function (player) {
 			// 1. 创建图片元素并设置基础样式
 			const img = document.createElement('img');
@@ -6549,7 +6575,7 @@ const skills = {
 				img.remove();
 			};
 		},
-		group: ["hundunyutiaohe_yzs_HandcardLimit", "hundunyutiaohe_yzs_draw", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill1", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3"],
+		group: ["hundunyutiaohe_yzs_HandcardLimit", "hundunyutiaohe_yzs_draw", "hundunyutiaohe_yzs_damage", "hundunyutiaohe_yzs_skill1", "hundunyutiaohe_yzs_skill2", "hundunyutiaohe_yzs_skill3", "hundunyutiaohe_yzs_skill4"],
 		subSkill: {
 			HandcardLimit: {
 				trigger: {
@@ -6653,57 +6679,50 @@ const skills = {
 				popup: false,
 				priority: 213,
 				trigger: {
-					global: ["logSkillBegin"],
+					// 技能结算后才累计，保证第二次正常生效，第三次起取消。
+					global: "logSkill",
 				},
 				filter(event, player) {
-					if (["global", "equip"].includes(event.type)) {
-						return false;
-					}
-					if (event.player == player) return false;
-					let skill = get.sourceSkillFor(event);
-					if (!skill || skill === "hundunyutiaohe_yzs" || lib.skill.hundunyutiaohe_yzs.group.includes(skill)) {
-						return false;
-					}
-					let info = get.info(skill);
-					if (!info || info.charlotte || info.equipSkill) {
-						return false;
-					}
-
-					let evt = event.getParent(3);
-					if (!evt || !evt.name) return false;
-					if (evt.name == "damage") {
-						return evt.source == player
-					} else if (["useCard", "useCardToPlayer", "useCardToTarget", "useCardToPlayered", "useCardToTargeted"].includes(evt.name)) {
-						return evt.player == player
-					}
-
-					return false;
+					if (event.type == "global" || event.player == player) return false;
+					const skill = event.skill;
+					if (!skill || get.sourceSkillFor(event) == "hundunyutiaohe_yzs") return false;
+					const info = get.info(skill);
+					// 装备技能也可以适应；以实际发动的子技能判断和记录。
+					if (!info || info.charlotte) return false;
+					return lib.skill.hundunyutiaohe_yzs.isOwnCardEvent(event, player);
 				},
 				async content(event, trigger, player) {
-					let skill = get.sourceSkillFor(trigger);
-					if (!player.storage.hundunyutiaohe_yzs_skill2) player.storage.hundunyutiaohe_yzs_skill2 = {};
-					if (!player.storage.hundunyutiaohe_yzs_skill2[skill]) player.storage.hundunyutiaohe_yzs_skill2[skill] = 0;
-					if (player.storage.hundunyutiaohe_yzs_skill2[skill] >= 2) {
-						if (!lib.skill.hundunyutiaohe_yzs_skill4.trigger.global.includes(skill + "Begin")) {
-							game.trySkillAudio("hundunyutiaohe_yzs");
-							player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
-							game.log(player, `适应了`, skill)
-							lib.skill.hundunyutiaohe_yzs_skill4.trigger.global.push(skill + "Begin");
-							player.removeSkill("hundunyutiaohe_yzs_skill4")
-							if (skill == "wuxiaxianshushi_yzs") {
-								for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
-									target.addSkill("wuxiaxianshushi_yzs_ban")
-								}
+					const skill = lib.skill.hundunyutiaohe_yzs.getAdaptationKey(trigger.skill);
+					const stored = player.storage.hundunyutiaohe_yzs_skill2?.[skill];
+					const count = Number.isFinite(stored) ? stored : 0;
+					if (count >= 2) return;
+					const nextCount = Math.min(count + 1, 2);
+					const skills = skill == "yzs_wuxiaxian_wuxian_skill"
+						? ["yzs_wuxiaxian_wuxian_skill", "yzs_wuxiaxian_equip"] : [trigger.skill];
+					game.broadcastAll(function (player, skill, count, skills) {
+						if (!player.storage.hundunyutiaohe_yzs_skill2) player.storage.hundunyutiaohe_yzs_skill2 = {};
+						player.storage.hundunyutiaohe_yzs_skill2[skill] = count;
+						if (count == 2) {
+							const triggers = lib.skill.hundunyutiaohe_yzs_skill4.trigger.global;
+							for (const name of skills) {
+								if (!triggers.includes(name + "Begin")) triggers.push(name + "Begin");
 							}
-							//		game.log(lib.skill.hundunyutiaohe_yzs_skill4.trigger.global);
+							// group 技能已初始化，需显式刷新触发器，不重复初始化技能。
+							player.addSkillTrigger("hundunyutiaohe_yzs_skill4", false, true);
 						}
-						player.addSkill("hundunyutiaohe_yzs_skill4")
+					}, player, skill, nextCount, skills);
+					player.syncStorage("hundunyutiaohe_yzs_skill2");
+					if (nextCount == 2) {
+						player.popup("适应");
+						game.trySkillAudio("hundunyutiaohe_yzs");
+						player.playEffectOL(lib.skill.hundunyutiaohe_yzs.Effect);
+						game.log(player, "适应了", skill == "yzs_wuxiaxian_wuxian_skill" ? "#g【无下限】" : skill);
+						if (skill == "yzs_wuxiaxian_wuxian_skill") {
+							for (const target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
+								target.addSkill("wuxiaxianshushi_yzs_ban");
+							}
+						}
 					}
-					player.storage.hundunyutiaohe_yzs_skill2[trigger.skill]++;
-					if (player.storage.hundunyutiaohe_yzs_skill2[trigger.skill] == 1) {
-						if (Math.random() > 0.5) player.storage.hundunyutiaohe_yzs_skill2[trigger.skill]++;
-					}
-					player.markSkill("hundunyutiaohe_yzs_skill")
 				},
 			},
 			skill3: {
@@ -6732,7 +6751,7 @@ const skills = {
 					}
 					player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
 					if (player.storage.hundunyutiaohe_yzs_skill3[trigger.skill] == 1) {
-						if (Math.random() > 0.2) player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
+						if (Math.random() > 0.7) player.storage.hundunyutiaohe_yzs_skill3[trigger.skill]++;
 					}
 					player.markSkill("hundunyutiaohe_yzs_skill3")
 				}
@@ -6747,15 +6766,10 @@ const skills = {
 				},
 				filter(event, player) {
 					if (event.player == player) return false;
-					let evt = event.getParent(3);
-					if (!evt || !evt.name) return false;
-					return true;
-					if (evt.name == "damage") {
-						return evt.source == player
-					} else if (["useCard", "useCardToPlayer", "useCardToTarget", "useCardToPlayered", "useCardToTargeted"].includes(evt.name)) {
-						return evt.player == player
-					}
-					return false;
+					const skill = lib.skill.hundunyutiaohe_yzs.getAdaptationKey(event.name);
+					// 监听列表由所有角色共享，是否已经适应必须检查当前魔虚罗的记录。
+					if (!(player.storage.hundunyutiaohe_yzs_skill2?.[skill] >= 2)) return false;
+					return lib.skill.hundunyutiaohe_yzs.isOwnCardEvent(event, player);
 				},
 				async content(event, trigger, player) {
 					player.popup("适应");
@@ -6785,7 +6799,7 @@ const skills = {
 			}
 			player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
 			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 1) {
-				if (Math.random() > 0.2) player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
+				if (Math.random() > 0.7) player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)]++;
 			}
 			player.markSkill("hundunyutiaohe_yzs_card")
 			if (player.storage.hundunyutiaohe_yzs_card[get.name(trigger.card)] == 2) {
@@ -7677,7 +7691,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					await player.discard(event.cards);
-					player.tempBanSkill("wuliangkongchu_yzs", { global: "roundStart" })
+		//			player.tempBanSkill("wuliangkongchu_yzs", { global: "roundStart" })
 					const animation = () => {
 						var video = document.createElement("VIDEO");
 						video.className = "anime";
@@ -7787,7 +7801,7 @@ const skills = {
 			return _status._yzsDomainPlayer != player && player.countCards("h") > 0;
 		},
 		async content(event, trigger, player) {
-			player.tempBanSkill(event.name, { global: "roundStart" })
+//			player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
 				var video = document.createElement("VIDEO");
 				video.className = "anime";

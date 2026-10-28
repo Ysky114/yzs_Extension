@@ -14,7 +14,7 @@ import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.98.7";
+const EXTENSION_VERSION = "0.98.9";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -605,7 +605,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
 					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", "APPLe_yzs",
 					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Aura_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
-					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji","yzs_Mahito"
+					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito","yzs_Ishigoriryu"
 				];
 				//平凡
 				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", "lianjinzhencai_yzs", "Remilia_Scarlet_yzs", "TimeGuard_yzs",
@@ -636,7 +636,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					type: "players", data: [
 						"yzs_QianWitch",
 						"yzs_ItadoriYuji",
-						"yzs_Mahito"
+						"yzs_Mahito",
+						"yzs_Ishigoriryu"
 					]
 				},
 				{
@@ -655,7 +656,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"SCP173_yzs",
 						"Ren_yzs",
 						"Macht_yzs",
-						"yzs_JoGo"
+						"yzs_JoGo",
+						"Ren_yzs",
+						"JiLiangJiTao_yzs"
 					]
 				},
 			];
