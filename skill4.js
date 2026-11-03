@@ -2153,10 +2153,10 @@ const skills = {
 					player: "phaseBegin",
 				},
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") < get.character(player.name).Fuka
+					return player.countMark("yzs_PP") < player.yzs_getPPLimit()
 				},
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs", 1);
+					player.yzs_addPP( 1);
 				},
 			},
 			use: {
@@ -2170,10 +2170,10 @@ const skills = {
 					player: ["useCard", "respond"],
 				},
 				filter(event, player) {
-					return get.color(event.card) == "red" && player.countMark("Fuka_yzs") < get.character(player.name).Fuka && player.hasSkill("InBarrier_yzs_skill")
+					return get.color(event.card) == "red" && player.countMark("yzs_PP") < player.yzs_getPPLimit() && player.hasSkill("InBarrier_yzs_skill")
 				},
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs", 1);
+					player.yzs_addPP(1);
 				},
 			}
 		},
@@ -2933,7 +2933,7 @@ const skills = {
 					return event.player.name == "Reimu_yzs_subBarrier_yzs"
 				},
 				async content(event, trigge, player) {
-					if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs", 1);
+					player.yzs_addPP();
 				}
 			},
 		},
@@ -2943,7 +2943,7 @@ const skills = {
 		prompt: `在目标角色下家召唤“子结界”`,
 		enable: "phaseUse",
 		filter: function (event, player) {
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			return !game.hasPlayer(function (current) {
 				return current.name == 'Reimu_yzs_subBarrier_yzs';
 			});
@@ -2952,7 +2952,7 @@ const skills = {
 			return true;
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			if (game.countPlayer(function (current) {
 				return current.name == 'Reimu_yzs_subBarrier_yzs';
 			})) return;
@@ -3251,16 +3251,16 @@ const skills = {
 		locked: true,
 		nobracket: true,
 		prompt(event, player) {
-			if (player.hasSkill("InBarrier_yzs_skill")) return `符卡：你本回合出【杀】数+1并获得1枚【梦】标记，然后可令“结界”或“子结界”顺或逆时针移动1个座次`;
-			return `符卡：你摸1张牌，然后观看并与1名其他角色交换1张手牌`
+			if (player.hasSkill("InBarrier_yzs_skill")) return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，你本回合出【杀】数+1并获得1枚【梦】标记，然后可令“结界”或“子结界”顺或逆时针移动1个座次`;
+			return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸1张牌，然后观看并与1名其他角色交换1张手牌`
 		},
 		enable: "phaseUse",
 		filter: function (event, player) {
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			return true
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			game.trySkillAudio("bagua_skill");
 			player.playEffectOL(lib.skill.yinyangyu_yzs.Effect);
 			if (player.hasSkill("InBarrier_yzs_skill")) {
@@ -3406,10 +3406,10 @@ const skills = {
 			name: "梦",
 		},
 		enable: "phaseUse",
-		prompt: `符卡：移除X枚【梦】标记，然后从任意结界内角色开始，结界内角色依次受到1点伤害，共计X/3点。（向下取整）`,
+		prompt: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，移除X枚【梦】标记，然后从任意结界内角色开始，结界内角色依次受到1点伤害，共计X/3点。（向下取整）`,
 		filter(event, player) {
 		//	return true;
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			if (player.countMark("mengxiangfengyin_yzs") < 3) return false;
 			let Barrier = game.filterPlayer((cur) => cur.name == "Reimu_yzs_Barrier_yzs", true)
 			let subBarrier = game.filterPlayer((cur) => cur.name == "Reimu_yzs_subBarrier_yzs", true)
@@ -3423,7 +3423,7 @@ const skills = {
 			return target.hasSkill("InBarrier_yzs_skill")
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			let target = event.targets[0];
 			player.removeMark("mengxiangfengyin_yzs", 3);
 			game.broadcastAll((player) => {
@@ -3959,7 +3959,7 @@ const skills = {
 					return true;
 				},
 				async content(event, trigger, player) {
-					if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+					player.yzs_addPP()
 					if (player.hujia >= 6) {
 						await player.changeHujia(-player.hujia, "lose");
 						if (player.countCards("h") < 4) {
@@ -4067,7 +4067,7 @@ const skills = {
 		marktext: "<span style=\"text-decoration: line-through;\">死</span>",
 		intro: {
 			nocount: true,
-			content: "直至你下回合开始：你体力值不可下降。你主动弃置红色牌时获得1张符卡",
+			content: "直至你下回合开始：你体力值不可下降。你主动弃置红色牌时获得1点蓄能",
 		},
 		group: ["PhoenixLegend_yzs_buff_lose", "PhoenixLegend_yzs_buff_discard"],
 		subSkill: {
@@ -4095,7 +4095,7 @@ const skills = {
 				locked: true,
 				popup: true,
 				filter(event, player) {
-					if (player.countMark("Fuka_yzs") >= get.character(player.name).Fuka) return false;
+					if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return false;
 					if (!event.cards || !event.cards.some(card => get.color(card, player) == "red")) return false;
 					game.log(1)
 					if (event.type != "discard" || event.player.isDead()) return false;
@@ -4109,7 +4109,7 @@ const skills = {
 				},
 				forced: true,
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs");
+					player.yzs_addPP();
 				}
 			},
 		},
@@ -4149,11 +4149,11 @@ const skills = {
 		nobracket: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (!player.countCards("he")) return false;
 			return true;
 		},
-		prompt: `${get.poptip("FukaSkill_yzs")}你选择：①弃1张红色牌以视为使用【决斗】，然后摸1张牌；②弃任意张黑色牌，然后恢复弃牌数向下取半数点体力`,
+		prompt: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，选择：①弃1张红色牌以视为使用【决斗】，然后摸1张牌；②弃任意张黑色牌，然后恢复弃牌数向下取半数点体力`,
 		filterCard(card) {
 			return true
 		},
@@ -4192,7 +4192,7 @@ const skills = {
 		delay: false,
 		position: "he",
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			await player.discard(event.cards, player);
 			if (event.cards.some(card => get.color(card, player) == "red")) {
 				await player.logSkill("HumanBuring_yzs_juedou")
@@ -4436,10 +4436,10 @@ const skills = {
 					player: "phaseBegin"
 				},
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") < get.character(player.name).Fuka
+					return player.countMark("yzs_PP") < player.yzs_getPPLimit()
 				},
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs", Math.min(3, get.character(player.name).Fuka - player.countMark("Fuka_yzs")));
+					player.yzs_addPP(3);
 				}
 			},
 			cards1: {
@@ -4749,7 +4749,7 @@ const skills = {
 			content(storage, player, skill) {
 				let str = storage ? "实：移去4张♠“虚弹”，然后对任意角色造成1点伤害并令其退出“狂”状态"
 					: "虚：移去4张非♠“虚弹”，然后令1名不处于“狂”状态的角色下回合摸牌数-2并进入“狂”状态";
-				str += "，然后你获得1张符卡";
+				str += "，然后你获得1点蓄能";
 				return str;
 			},
 		},
@@ -4821,7 +4821,7 @@ const skills = {
 			var card = lib.skill.VisionaryTuning_yzs_backup.card;
 			await player.loseToDiscardpile(card);
 			player.changeZhuanhuanji("VisionaryTuning_yzs");
-			if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs")
+			player.yzs_addPP();
 			if (player.storage.VisionaryTuning_yzs) {
 				event.target.addMark("VisionaryTuning_yzs_buff", 2, false);
 				event.target.addSkill("VisionaryTuning_yzs_buff");
@@ -4885,7 +4885,7 @@ const skills = {
 		locked: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			return true;
 		},
 		selectTarget: [1, 2],
@@ -4894,7 +4894,7 @@ const skills = {
 			return !target.hasSkill("hidden_yzs")
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			if (event.targets.length == 2) {
 				await event.targets[0].swapHandcards(event.targets[1]);
 			} else {
@@ -5003,12 +5003,12 @@ const skills = {
 		},
 		clickableFilter: function (player) {
 			if (!player.countCards("h")) return false;
-			if (!player.countMark("Fuka_yzs") && !lib.skill.InvisibleFullMoon_yzs.getMoons(player).length) return false;
+			if (!player.countMark("yzs_PP") && !lib.skill.InvisibleFullMoon_yzs.getMoons(player).length) return false;
 			return true;
 		},
 		clickableContent: async function (event, trigger, player) {
 			let ask = await player.chooseBool(`是否发动【隐形满月】?<br>你将全部手牌弃置或置顶，然后选择：<br>
-①获得1个“满月”；<br>②符卡：摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个`)
+①获得1个“满月”；<br>②消耗1点${get.poptip("yzs_PP")}，摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个`)
 				.forResult();
 			if (!ask.bool) return;
 			let next = player.useSkill("InvisibleFullMoon_yzs")
@@ -5020,7 +5020,7 @@ const skills = {
 			if (evt.name != "phaseUse" && evt.name != "_save") return false;
 			if (event.responded) return false;
 			if (!player.countCards("h")) return false;
-			if (!player.countMark("Fuka_yzs") && !lib.skill.InvisibleFullMoon_yzs.getMoons(player).length) return false;
+			if (!player.countMark("yzs_PP") && !lib.skill.InvisibleFullMoon_yzs.getMoons(player).length) return false;
 			return true
 		},
 		async content(event, trigger, player) {
@@ -5052,7 +5052,7 @@ const skills = {
 			game.updateRoundNumber();
 			await player.discard(discards);
 			let moons = lib.skill.InvisibleFullMoon_yzs.getMoons(player)
-			let args = [`获得1个“满月”，否则：符卡：摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个`];
+			let args = [`获得1个“满月”，否则：消耗1点${get.poptip("yzs_PP")}，摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个`];
 			if (moons?.length) {
 				for (let i = 0; i < moons.length; i++) {
 					args.push(`第${get.cnNumber(i + 1)}轮“满月”`)
@@ -5060,7 +5060,7 @@ const skills = {
 				}
 			}
 			if (moons?.length) {
-				let forced = !player.countMark("Fuka_yzs");
+				let forced = !player.countMark("yzs_PP");
 				result = await player
 					.chooseButton(args, 1, forced)
 					.set("selectButton", () => {
@@ -5079,12 +5079,12 @@ const skills = {
 						return true;
 					})
 					.set("ai", button => {
-						if (player.countMark("Fuka_yzs") && player.countCards("h") >= 4) return 0;
+						if (player.countMark("yzs_PP") && player.countCards("h") >= 4) return 0;
 						return 1;
 					})
 					.set("moons", moons)
 					.forResult();
-			} else if (player.countMark("Fuka_yzs")) {
+			} else if (player.countMark("yzs_PP")) {
 				result = { bool: false };
 			} else {
 				return;
@@ -5093,7 +5093,7 @@ const skills = {
 				await player.gain(result.links);
 				lib.skill.InvisibleFullMoon_yzs.getMoons(player)
 			} else {
-				player.removeMark("Fuka_yzs");
+				player.yzs_removePP();
 				await player.draw(num);
 				if (lib.skill.InvisibleFullMoon_yzs.getMoons(player).length < 2) {
 					discards = discards.filterInD("d")

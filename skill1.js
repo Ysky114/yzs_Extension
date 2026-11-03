@@ -100,12 +100,12 @@ const skills = {
 				sourceSkill: "bubbleQueen_yzs",
 				filter(event, player) {
 					if (_status._yzsStorm != "FinancialStorm") return false
-					return player.countMark("Fuka_yzs") < get.character(player.name).Fuka
+					return player.countMark("yzs_PP") < player.yzs_getPPLimit();
 				},
 				locked: true,
 				forced: true,
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs");
+					player.yzs_addPP();
 				},
 				"_priority": 0,
 				sub: true,
@@ -136,7 +136,7 @@ const skills = {
 				log: false,
 				stormskill: true,
 				async content(event, trigger, player) {
-					if (get.character(player.name).Fuka > player.countMark("Fuka_yzs")) player.addMark("Fuka_yzs")
+					player.yzs_addPP();
 					var list = { trick: [] };
 					for (var i = 0; i < lib.inpile.length; i++) {
 						var name = lib.inpile[i];
@@ -287,12 +287,10 @@ const skills = {
 	},
 	Mischance_Scatter_yzs: {
 		nobracket: true,
-		locked: true,
-		prompt: "弃置任意角色1张手牌，然后其投掷4（受其【财运】影响）：下回合摸牌数+2；否则弃1张手牌。",
-		locked: true,
+		prompt: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，弃置任意角色1张手牌，然后其投掷4（受其【财运】影响）：下回合摸牌数+2；否则弃1张手牌。`,
 		enable: "phaseUse",
 		filter: function (event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			return (game.hasPlayer(function (target) {
 				if (target.hasSkill("hidden_yzs")) return false
 				if (!target.countDiscardableCards(player, "he")) return false
@@ -305,7 +303,7 @@ const skills = {
 			return true
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			await player.discardPlayerCard(event.target, "he", true);
 			let num = 4;
 			if (event.target.storage.finances_yzs) num = 6;
@@ -485,16 +483,16 @@ const skills = {
 					isCard: true,
 				},
 				viewAsFilter(player) {
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				filterCard: () => false,
 				selectCard: -1,
 				log: false,
 				precontent() {
-					player.removeMark("Fuka_yzs");
+					player.yzs_removePP();
 					player.logSkill("yichuirang_yzs");
 				},
 				ai: {
@@ -689,7 +687,7 @@ const skills = {
 					await player.gain(next.links, "giveAuto", "log")
 				}
 				player.loseToDiscardpile(player.getExpansions("yichuirang_yzs"))
-				if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+			    player.yzs_addPP()
 			}
 		},
 	},
@@ -713,7 +711,7 @@ const skills = {
 			},
 			wuyongchang: {
 				hiddenCard: function (player, name) {
-					if (!player.countMark("Fuka_yzs")) return
+					if (!player.countMark("yzs_PP")) return
 					return name == 'jiu' || name == "tao" || name == "sha" || name == "shan";
 				},
 				enable: ["chooseToUse", "chooseToRespond"],
@@ -722,11 +720,11 @@ const skills = {
 					if (evt.name != "phaseUse" && evt.name != "_save") return false;
 					if (event.responded) return false;
 					if (event.yunjiwusan_yzs_wuyongchang || event.getParent().yunjiwusan_yzs_wuyongchang) return false;
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				chooseButton: {
 					dialog(event, player) {
-						let dialog = ui.create.dialog("云集雾散：调整体力上限至任意值","你每因此溢出1点体力便获得1张符卡" ,"hidden");
+						let dialog = ui.create.dialog("云集雾散：调整体力上限至任意值","你每因此溢出1点体力便获得1点蓄能" ,"hidden");
 						let choiceList = ["1", "2", "3", "4", "5"];
 						choiceList = choiceList.filter(cur => parseInt(cur) != player.maxHp);
 						for (let i = 0; i < choiceList.length; i++) {
@@ -755,14 +753,14 @@ const skills = {
 							async content(event, trigger, player) {
 								const num = lib.skill.yunjiwusan_yzs_wuyongchang_backup.num;
 								const evt = event.getParent(2);
-								player.removeMark("Fuka_yzs");
+								player.yzs_removePP();
 								if (num > player.maxHp) {
 									await player.gainMaxHp(num - player.maxHp);
 								}
 								else if (num < player.maxHp) {
 									const fuka = player.hp - num;
 									await player.loseMaxHp(player.maxHp - num);
-									player.addMark("Fuka_yzs", Math.min(fuka, get.character(player.name).Fuka - player.countMark("Fuka_yzs")));
+									player.yzs_addPP(fuka);
 								}
 								if (evt.name == "chooseToUse") {
 									evt.goto(0);
@@ -774,7 +772,7 @@ const skills = {
 					prompt(links, player) {
 						const effect = links[0],
 							str = "###云集雾散###";
-						return str + '<div class="text center">' +"你调整体力上限至任意值，然后你每因此溢出1点体力便获得1张符卡" + "</div>";
+						return str + '<div class="text center">' +"你调整体力上限至任意值，然后你每因此溢出1点体力便获得1点蓄能" + "</div>";
 					},
 				},
 				ai: {
@@ -853,7 +851,7 @@ const skills = {
 			player.yzs_UseShunfaji("yunjiwusan_yzs");
 		},
 		clickableFilter: function (player) {
-			return player.countMark("Fuka_yzs") > 0;
+			return player.countMark("yzs_PP") > 0;
 		},
 		clickableContent: async function (event, trigger, player) {
 			let choiceList = ["1", "2", "3", "4", "5"];
@@ -874,7 +872,7 @@ const skills = {
 				.set("ai", button => parseInt(button.link))
 				.forResult();
 			if (result?.links?.length) {
-				player.removeMark("Fuka_yzs");
+				player.yzs_removePP();
 				const num = parseInt(result.links[0]);
 				if (num > player.maxHp) {
 					await player.gainMaxHp(num - player.maxHp);
@@ -882,7 +880,7 @@ const skills = {
 				else if (num < player.maxHp) {
 					const fuka = player.hp - num;
 					await player.loseMaxHp(player.maxHp - num);
-					player.addMark("Fuka_yzs", Math.min(fuka, player.storage.Fuka - player.countMark("Fuka_yzs")));
+					player.yzs_addPP(fuka);
 				}
 			}
 		},
@@ -2082,14 +2080,14 @@ const skills = {
 				game.log(player, "获得" + get.translation(trigger.card) + "的装备技能");
 				player.storage.juBao_yzs_distance[0]++;
 				player.markSkill("juBao_yzs_distance");
-				if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+				player.yzs_addPP();
 				return;
 			}
 			if (get.subtype(trigger.card) == "equip4") {
 				game.log(player, "获得" + get.translation(trigger.card) + "的装备技能");
 				player.storage.juBao_yzs_distance[1]++;
 				player.markSkill("juBao_yzs_distance");
-				if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+				player.yzs_addPP();
 				return;
 			}
 			if (get.subtype(trigger.card) == "equip1") {
@@ -2100,7 +2098,7 @@ const skills = {
 			const skill = trigger.card.name + "_skill"
 			game.log(player, "获得" + get.translation(trigger.card) + "的装备技能");
 			await player.addSkill(skill)
-			if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+			player.yzs_addPP();
 		},
 	},
 	tanBao_yzs: {
@@ -2350,18 +2348,18 @@ const skills = {
 		},
 		enable: "phaseUse",
 		filter(event, player) {
-			return player.countMark("Fuka_yzs") > 0;
+			return player.countMark("yzs_PP") > 0;
 		},
 		selectTarget: function () {
 			const player = get.player()
-			return [1, player.countMark("Fuka_yzs")]
+			return [1, player.countMark("yzs_PP")]
 		},
 		multitarget: true,
 		filterTarget(card, player, target) {
 			return player.canUse({ name: "sha" }, target);
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs", event.targets.length)
+			player.yzs_removePP( event.targets.length)
 			player.logSkill("weiGuang_yzs_name")
 			await player.useCard({ name: "sha", isCard: true, storage: { weiGuang_yzs: true } }, event.targets);
 		},
@@ -2369,7 +2367,7 @@ const skills = {
 			order: 4,
 			result: {
 				target(player, target) {
-					if (player.countMark("Fuka_yzs")==1) return 0;
+					if (player.countMark("yzs_PP")==1) return 0;
 					if (get.attitude(player, target) > 0) return 2;
 					return -2;
 				},
@@ -5130,7 +5128,7 @@ const skills = {
 				locked: true,
 				enable: "phaseUse",
 				precontent: function () {
-					player.removeMark("Fuka_yzs", 1);
+					player.yzs_removePP();
 				},
 				viewAs: {
 					name: "wuzhong",
@@ -5139,7 +5137,7 @@ const skills = {
 					return 5.1 - get.value(card);
 				},
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				filterCard: true,
 				position: "h",
@@ -5154,8 +5152,7 @@ const skills = {
 				}
 			}
 		},
-		locked: true,
-		prompt2: "你可摸1张牌，然后弃牌至手牌上限并获得弃牌数张符卡",
+		prompt2: "你可摸1张牌，然后弃牌至手牌上限并获得弃牌数点蓄能",
 		trigger: {
 			global: "phaseEnd"
 		},
@@ -5175,16 +5172,16 @@ const skills = {
 		},
 		check(event, player) {
 			let num = player.needsToDiscard() + 1;
-			if (player.countMark("Fuka_yzs") >= 3) return num <= 2;
-			if (num + player.countMark("Fuka_yzs") - 3 > player.countCards("h") / 2) return false;
+			if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return num <= 2;
+			if (num + player.countMark("yzs_PP") - player.yzs_getPPLimit() > player.countCards("h") / 2) return false;
 			return true;
 		},
 		async content(event, trigger, player) {
 			await player.draw();
 			let num = player.countCards("h") - player.getHandcardLimit();
 			if (num > 0) {
-				await player.chooseToDiscard("h", num);
-				if (get.character(player.name).Fuka > player.countMark("Fuka_yzs")) player.addMark("Fuka_yzs", Math.min(num, get.character(player.name).Fuka - player.countMark("Fuka_yzs")));
+				let result=await player.chooseToDiscard("h", num,true).forResult();
+				if(result?.bool&&result?.cards?.length)player.yzs_addPP(result.cards.length);
 			}
 		}
 	},
@@ -5749,8 +5746,8 @@ const skills = {
 			if (gain) gain = (suits.length == yaoshisuits.length && suits.length > 0);
 
 			if (gain) {
-				await player.showHandcards(player, "发动了【有顶天变】,获得1张符卡");
-				if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+				await player.showHandcards(player, "发动了【有顶天变】，获得1点蓄能");
+				player.yzs_addPP()
 			}
 			if (player.countCards("h") < player.getHandcardLimit()) {
 				await player.draw(player.getHandcardLimit() - player.countCards("h"));
@@ -5801,7 +5798,6 @@ const skills = {
 			player: "phaseJudgeBegin",
 		},
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
 			let yaoshi = player.getExpansions("Wonderful_Heaven_yzs_yaoshi");
 			let yaoshisuits = [];
 			let suits = [];
@@ -5860,7 +5856,6 @@ const skills = {
 	},
 	guruojintangtao_yzs: {
 		nobracket: true,
-		locked: true,
 		logTarget: "player",
 		group: "guruojintangtao_yzs_renew",
 		subSkill: {
@@ -5887,7 +5882,7 @@ const skills = {
 		filter(event, player) {
 			if (event.guruojintangtao_yzs) return false;
 			if (!get.tag(event.card, "damage")) return false;
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (player.countMark("guruojintangtao_yzs_used") >= 3) return false;
 			if (event.player == player) return false;
 			if (event.targets.includes(player)) return false;
@@ -5899,7 +5894,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			trigger.guruojintangtao_yzs = true;
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			player.addMark("guruojintangtao_yzs_used", false)
 			if (trigger.target == player) {
 				trigger.getParent().excluded.add(player);
@@ -5955,9 +5950,8 @@ const skills = {
 	},
 	feixiangtian_yzs: {
 		nobracket: true,
-		locked: true,
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (player.getExpansions("Wonderful_Heaven_yzs_yaoshi").length) return false;
 			let suits = [];
 			for (let card of player.getCards("h")) {
@@ -5967,7 +5961,7 @@ const skills = {
 			return true
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			let cards = player.getCards("h");
 			let next = player.addToExpansion(cards, player, "give")
 			next.gaintag.add("Wonderful_Heaven_yzs_yaoshi")
@@ -6004,7 +5998,7 @@ const skills = {
 					player: "phaseBefore"
 				},
 				async content(event, trigger, player) {
-					if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs", 1);
+					player.yzs_addPP();
 					if (_status._yzsStorm == "WaterStorm") {
 						await player.yzs_changeStorm("BulletStorm");
 					} else {
@@ -6067,7 +6061,7 @@ const skills = {
 			return event.name != "phase" || game.phaseNumber == 0;
 		},
 		async content(event, trigger, player) {
-			player.addMark("Fuka_yzs", 2);
+			player.yzs_addPP(2);
 		}
 	},
 	hunliliandao_yzs: {
@@ -6092,24 +6086,23 @@ const skills = {
 				"_priority": 0,
 			}
 		},
-		locked: true,
 		logTarget: "player",
 		trigger: {
 			global: "changeHp",
 		},
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (event.player.isDying()) return false;
 			return event.player.hp == 1;
 		},
 		check(event,player) {
 			if (get.attitude(player, event.player) >= 0) return false;
-			if (player.countMark("Fuka_yzs") >= get.character(player.name).Fuka) return true;
+			if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return true;
 			let p = game.filterPlayer(cur => get.attitude(cur, event.player) > 0 && cur.countCards("h") >= 2);
 			return p.length <= 2;
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			const evt = { source: player };
 			await trigger.player.dying(evt ,true);
 			player.addMark("bachongwuzhongdu_yzs", 1)
@@ -6117,12 +6110,11 @@ const skills = {
 	},
 	Higan_Retour_yzs: {
 		nobracket: true,
-		locked: true,
 		trigger: {
 			global: "phaseEnd"
 		},
 		filter(event, player) {
-			return player.countMark("Fuka_yzs") > 0 && player.countMark("bachongwuzhongdu_yzs") > 1;
+			return player.countMark("yzs_PP") > 0 && player.countMark("bachongwuzhongdu_yzs") > 1;
 		},
 		async cost(event, trigger, player) {
 			let num = player.countMark("bachongwuzhongdu_yzs");
@@ -6162,7 +6154,7 @@ const skills = {
 			}
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			let num = player.countMark("bachongwuzhongdu_yzs") - 1;
 			let damagenum = num - (event.cost_data.maxHp - event.cost_data.hp);
 			player.clearMark("bachongwuzhongdu_yzs");
@@ -9087,9 +9079,7 @@ const skills = {
 						await player.recover(player.maxHp - player.hp);
 					}
 					await player.draw(3);
-					if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) {
-						player.addMark("Fuka_yzs", 1);
-					}
+					player.yzs_addPP()
 				}
 			},
 			storm: {
@@ -9183,7 +9173,7 @@ const skills = {
 			fuka: {
 				locked: true,
 				hiddenCard: function (player, name) {
-					if (!player.countMark("Fuka_yzs")) return
+					if (!player.countMark("yzs_PP")) return
 					return name == 'jiu' || name == "tao"
 				},
 				enable: ["chooseToUse", "chooseToRespond"],
@@ -9193,14 +9183,14 @@ const skills = {
 					if (!game.hasPlayer(function (target) {
 						return !target.hasSkill("hidden_yzs") && Math.abs(player.hp - target.hp) == 1;
 					})) return false;
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				filterTarget: function (card, player, target) {
 					return Math.abs(player.hp - target.hp) == 1 && !target.hasSkill("hidden_yzs");
 				},
 				selectTarget: 1,
 				async content(event, trigger, player) {
-					player.removeMark("Fuka_yzs");
+					player.yzs_removePP();
 					let target = event.targets[0];
 					if (player.hp < target.hp) {
 						await player.recover();
@@ -9252,7 +9242,7 @@ const skills = {
 			if (!game.hasPlayer(function (target) {
 				return !target.hasSkill("hidden_yzs") && Math.abs(player.hp - target.hp) == 1;
 			})) return false;
-			return player.countMark("Fuka_yzs") > 0;
+			return player.countMark("yzs_PP") > 0;
 		},
 		clickableContent: async function (event, trigger, player) {
 			let result = await player.chooseTarget()

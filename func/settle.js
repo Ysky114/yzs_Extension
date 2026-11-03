@@ -226,7 +226,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.poptip.add({
 		id: "FinancialStorm",
 		name: "【金融风暴】",
-		info: "召引者获得1张符卡，然后视为使用任意非伤害非延时锦囊牌。<br>场上角色回合开始时弃1张手牌。",
+		info: "召引者获得1点蓄能，然后视为使用任意非伤害非延时锦囊牌。<br>场上角色回合开始时弃1张手牌。",
 	});
 	lib.poptip.add({
 		id: "SmokeStorm",

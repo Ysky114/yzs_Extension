@@ -29,11 +29,13 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 
 	//获取蓄能上限
 	lib.element.player.yzs_getPPLimit = function () {
-		return get.character(this.name).yzs_PP || 1;
+		return typeof get.character(this.name).yzs_PP == "number" ? get.character(this.name).yzs_PP : 1;
 	};
 	//获取蓄能
 	lib.element.player.yzs_addPP = function (num = 1) {
 		const player = this;
+		if (num <= 0) return;
+		if (!Number.isFinite(num))return;
 		if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return;
 		const gain = Math.min(num, player.yzs_getPPLimit() - player.countMark("yzs_PP"));
 		player.addMark("yzs_PP",gain, false);
@@ -42,15 +44,18 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	//消耗蓄能
 	lib.element.player.yzs_removePP = function (num = 1) {
 		const player = this;
+		if (num <= 0) return;
+		if (!Number.isFinite(num)) return;
 		if (player.countMark("yzs_PP") <=0) return;
 		const lose = Math.min(num, player.countMark("yzs_PP"));
 		player.removeMark("yzs_PP", lose, false);
 		game.log(player, "消耗了", lose, "点蓄能")
 	};
 	//获取符卡上限
-	lib.element.player.getFukaLimit = function () {
+	/*lib.element.player.getFukaLimit = function () {
 		return get.character(this.name).Fuka || 1;
 	};
+	*/
 	//-----------吟唱------------//
 	//本机制原出自扩展《恒宇苍穹》(扩展作者：苍宇)，由“终日羽禁”完成，“白银山幽灵”修复bug，本扩展仅作搬运和部分修改
 	/*

@@ -1,3 +1,13 @@
+/* 选将按钮上的至臻品质标签 */
+.button.character > .showintro[data-nature="prestigem"] {
+    left: 6px;
+    bottom: 6px;
+    font-family: yuanli;
+    font-size: 16px;
+    color: #ffe4db;
+    text-shadow: 0 0 2px #bd1616, 0 0 5px #c81414, 0 0 8px #c81414;
+}
+
 /*瞬发技按钮抄自《萌将坛》*/
 .player > .yzs_Shunfaji {
     display: block;

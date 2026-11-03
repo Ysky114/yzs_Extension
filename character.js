@@ -153,7 +153,7 @@ const characters = {
 		skills: ["liuwangnvshiqu_yzs", "Gungnell_yzs", "VampireKiss_yzs"],
 		names: "蕾米莉亚",
 		img: "extension/一中杀/image/Remilia_Scarlet_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	chenxu_yzs: {
@@ -238,7 +238,7 @@ const characters = {
 		skills: ["yicunfashi_yzs", "bianda_yzs", "dapanxiaopan_yzs", "jieyicunfashi_yzs"],
 		names: "少名针妙丸",
 		img: "extension/一中杀/image/SukunaShinmyoumaru_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 		BGM: "輝く針の小人族　～ Little Princess",
 	},
 
@@ -249,7 +249,7 @@ const characters = {
 		skills: ["perfectArithmetic_yzs", "perfectFreeze_yzs"],
 		names: "琪露诺",
 		img: "extension/一中杀/image/Cirno_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	Patchouli_Knowledge_yzs: {
@@ -259,7 +259,7 @@ const characters = {
 		skills: ["steadyLibrary_yzs", "wiseStone_yzs", "silentSelene_yzs"],
 		names: "帕秋莉",
 		img: "extension/一中杀/image/Patchouli_Knowledge_yzs.png",
-		Fuka: 2,
+		yzs_PP: 2,
 	},
 
 	Yorigami_twins_yzs: {
@@ -269,7 +269,7 @@ const characters = {
 		skills: ["bubbleQueen_yzs", "finances_yzs", "Mischance_Scatter_yzs"],
 		names: "女苑&紫苑",
 		img: "extension/一中杀/image/Yorigami_twins_yzs.png",
-		Fuka: 4,
+		yzs_PP: 4,
 		BGM: "今宵は飄逸なエゴイスト",
 	},
 
@@ -281,7 +281,7 @@ const characters = {
 		skills: ["mengmengjiugui_yzs", "yichuirang_yzs", "yunjiwusan_yzs"],
 		names: "伊吹萃香",
 		img: "extension/一中杀/image/Ibuki_Suika_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	Zbro_yzs: {
@@ -310,7 +310,7 @@ const characters = {
 		skills: ["juBao_yzs", "tanBao_yzs", "baoTa_yzs", "weiGuang_yzs"],
 		names: "娜兹玲&寅丸星",
 		img: "extension/一中杀/image/RatTiger_yzs.png",
-		Fuka: 4,
+		yzs_PP: 4,
 	},
 
 	Floris_yzs: {
@@ -379,7 +379,7 @@ const characters = {
 		skills: ["MasterSpark_yzs", "StardustReverie_yzs", "IllusionStar_yzs"],
 		names: "魔理沙",
 		img: "extension/一中杀/image/Marisa_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 		BGM: "神々が恋した幻想郷",
 	},
 
@@ -390,7 +390,7 @@ const characters = {
 		skills: ["Wonderful_Heaven_yzs", "tiandikaipi_yzs", "guruojintangtao_yzs", "feixiangtian_yzs"],
 		names: "比那名居天子",
 		img: "extension/一中杀/image/Tenshi_yzs.png",
-		Fuka: 4,
+		yzs_PP: 4,
 		BGM: "東方緋想天 (Arrange Version) _ あきやまうに",
 	},
 
@@ -401,7 +401,7 @@ const characters = {
 		skills: ["bachongwuzhongdu_yzs", "hunliliandao_yzs", "Higan_Retour_yzs"],
 		names: "小野塚小町",
 		img: "extension/一中杀/image/Onozuka_Komachi_yzs.png",
-		Fuka: 5,
+		yzs_PP: 5,
 	},
 
 	NatsukiSubaru_yzs: {
@@ -493,7 +493,7 @@ const characters = {
 		skills: ["wangling_yzs", "fanhundie_yzs", "yousi_yzs"],
 		names: "西行寺幽幽子",
 		img: "extension/一中杀/image/Yuyuko_yzs.png",
-		Fuka: 2,
+		yzs_PP: 2,
 		BGM: "メグルユメ",
 	},
 
@@ -555,7 +555,8 @@ const characters = {
 	Patriot_yzs: {
 		sex: "male",
 		group: "qun",
-		hp: 4,
+		hp: 3,
+		maxHp:4,
 		skills: ["buxijinjun_yzs", "huimiezitai_yzs", "jiandun_yzs"],
 		names: "博卓卡斯替",
 		img: "extension/一中杀/image/Patriot_yzs.png",
@@ -812,7 +813,7 @@ const characters = {
 		skills: ["guangyousheguainiao_yzs", "liugenqingjingzhan_yzs"],
 		names: "魂魄妖梦",
 		img: "extension/一中杀/image/Youmu_yzs.png",
-		Fuka: 6,
+		yzs_PP: 6,
 		BGM: "メグルユメ",
 		isUnseen:true,
 	},
@@ -911,7 +912,7 @@ const characters = {
 		skills: ["danmubianhua_yzs", "niaoshouxihua_yzs", "manyuefuwu_yzs"],
 		names: "二岩猯藏",
 		img: "extension/一中杀/image/Mamizou_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	AomanSzy_yzs: {
@@ -1077,7 +1078,7 @@ const characters = {
 		skills: ["dajiejie_yzs", "erchongjiejie_yzs", "yinyangyu_yzs", "mengxiangfengyin_yzs"],
 		names: "博丽灵梦",
 		img: "extension/一中杀/image/Reimu_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 		BGM: "神々が恋した幻想郷", 
 		isUnseen: true,
 	},
@@ -1119,7 +1120,7 @@ const characters = {
 		skills: ["PhoenixLegend_yzs", "HumanBuring_yzs"],
 		names: "藤原妹红",
 		img: "extension/一中杀/image/Mokou_yzs.png",
-		Fuka: 1,
+		yzs_PP: 1,
 		BGM: "泡沫、哀のまほろば", 
 	},
 
@@ -1139,7 +1140,7 @@ const characters = {
 		skills: ["DisorderEye_yzs", "VisionaryTuning_yzs", "LunaticRedEyes_yzs", "InvisibleFullMoon_yzs"],
 		names: "铃仙",
 		img: "extension/一中杀/image/Reisen_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 		BGM: "泡沫、哀のまほろば",
 	},
 
@@ -1434,7 +1435,7 @@ const characters = {
 		skills: ["TheWorld_yzs", "KillingDoll_yzs"],
 		names: "十六夜咲夜",
 		img: "extension/一中杀/image/Sakuya_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	ZeninMaki_yzs: {
@@ -1446,6 +1447,7 @@ const characters = {
 		names: "禅院真希",
 		img: "extension/一中杀/image/ZeninMaki_yzs.png",
 		BGM: "AIZO",
+		yzs_PP:1,
 	},
 
 	ZeninNaoya_yzs: {
@@ -1532,6 +1534,7 @@ const characters = {
 		img: "extension/一中杀/image/FushiguroToji_yzs.png",
 		dieAudios: ["ext:一中杀/audio/die/FushiguroToji_yzs.mp3"],
 		BGM: "AIZO",
+		yzs_PP:1,
 	},
 
 	Guanjun_yzs: {
@@ -1694,7 +1697,7 @@ const characters = {
 		skills: ["sichong_yzs", "Laevatein_yzs","pohuai_yzs"],
 		names: "芙兰朵露",
 		img: "extension/一中杀/image/Flandre_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 	},
 
 	FushiguroMegumi_yzs: {
@@ -1774,7 +1777,7 @@ const characters = {
 		skills: ["yzs_halfGhost", "yzs_zhanwang"],
 		names: "魂魄妖梦",
 		img: "extension/一中杀/image/Youmu_yzs.png",
-		Fuka: 4,
+		yzs_PP: 4,
 		BGM: "メグルユメ",
 	},
 
@@ -1785,7 +1788,7 @@ const characters = {
 		skills: ["yzs_bolijiejie", "yzs_leyuan", "yzs_yinyangyu", "yzs_mengxiangfengyin"],
 		names: "博丽灵梦",
 		img: "extension/一中杀/image/Reimu_yzs.png",
-		Fuka: 3,
+		yzs_PP: 3,
 		BGM: "神々が恋した幻想郷",
 	},
 
@@ -1862,6 +1865,17 @@ const characters = {
 		dieAudios: ["ext:一中杀/audio/die/yzs_Ishigoriryu.mp3"],
 		BGM: "AIZO",
 		yzs_PP: 4,
+	},
+
+	yzs_Kenjaku: {
+		sex: "male",
+		group: "qun",
+		hp: 3,
+		skills: ["yzs_huannaoshushi", "yzs_yumenjiang"],
+		names: "羂索",
+		img: "extension/一中杀/image/yzs_Kenjaku.png",
+		BGM: "AIZO",
+		hasHiddenSkill: true,
 	},
 };
 
@@ -2038,7 +2052,8 @@ const characterTitles = {
 	yzs_ItadoriYuji: `吞下诅咒的少年`,
 	yzs_ItadoriSukuna:`史上最强咒术师`,
 	yzs_Mahito: `真正的诅咒`,
-	yzs_Ishigoriryu:`飞机头大炮`,
+	yzs_Ishigoriryu: `飞机头大炮`,
+	yzs_Kenjaku:`千年操盘手`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2189,6 +2204,7 @@ const characterIntros = {
 	yzs_ItadoriSukuna:`两面宿傩，日本漫画《咒术回战》及其衍生作品中的角色。千年前的诅咒之王，附身在虎杖悠仁的体内。本性好自由，不喜受任何人束缚，行动全凭心意，是真正的自由主义者`,
 	yzs_Mahito: `真人整体形象是一名约二十岁的青年男子，身形高挑，常着黑袍，蓝色中长发、异色瞳（左眼蓝色，右眼黄色），脸上和身上布满黑色缝合线—其身体由不同人类的身体部位缝合而成，因此受伤流出的是与人类一样的红色血液，而非漏瑚等咒灵的紫色血液。他性格天真残忍，视人类为实验品，以扭曲灵魂为乐，兼具孩子气与冷酷，善伪装，对同伴重情义，把战斗当作游戏。真人作为特级咒灵，初登场于幼鱼与逆罚篇，利用吉野顺平实验术式“无为转变”，诱杀七海建人未果，后教唆顺平复仇，又将其粗暴改造致死，也因此发现虎杖悠仁能够攻击自己的灵魂。京都交流会篇，他趁机偷走宿傩手指与咒胎九相图。宵祭时，他击杀机械丸本体与幸吉。涩谷事变中，他释放改造人袭击民众，参与围攻五条悟，后与虎杖、七海、钉崎等人激战，重创钉崎、杀死七海，最终被虎杖与东堂葵联手用黑闪击败。濒死之际，真人被羂索吸收，术式被夺走而彻底消失。死后，他在灵魂轮回通道先后见到宿傩与多年后的虎杖，试图对抗时被瞬间击败，最终孤独留在虚无之中。真人是纯粹之恶的化身，以残忍反衬主角对生命的珍视，推动虎杖成长，揭露人咒对立，是探讨人性恶意的重要载体`,
 	yzs_Ishigoriryu: `石流龙是漫画《咒术回战》及其衍生作品中的角色。作为仙台结界四天王之一，拥有“泳者”中最强的咒力输出能力。其为400年前的古代术师，以飞机头形象示人，酷爱甜点，曾活跃于陆奥地区，后通过受肉复活参与现代“死灭回游”争夺战 [1]。作为擅长火力压制的战斗狂，其生得术式「咒力放出」能将头发化为炮筒发射极强的「冰沙冲击波」，并掌握领域展开实现必中攻击。在仙台结界与乌鹭亨子、杜鲁夫·拉克达瓦拉、黑沐死形成四方制衡，因乙骨忧太介入打破平衡后展开混战。最终因乙骨忧太复制乌鹭亨子的空间操控术式逆转石流龙的「冰沙冲击波」攻击而导致石流龙落败，后与乙骨达成分数转让协议。感知到宿傩降临主动挑战，未及发动术式即被斩杀。其毕生执着于战斗，在与诅咒之王的对决中迎来终局。`,
+	yzs_Kenjaku: ``,
 
 };
 const characterReplaces = {
@@ -2215,7 +2231,7 @@ const characterSort = {
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
 	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs", "Makora_yzs",
-		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji", "yzs_ItadoriSukuna", "yzs_Mahito","yzs_Ishigoriryu"],
+		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji", "yzs_ItadoriSukuna", "yzs_Mahito", "yzs_Ishigoriryu","yzs_Kenjaku"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

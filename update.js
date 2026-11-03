@@ -1,6 +1,46 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 import { checkVersion, createProgress } from "../../noname/library/update.js";
 
+const REPO = "https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main";
+
+async function fetchUpdateManifest() {
+	const sources = ["https://proxy.aestarin.com/", "", "https://gh-proxy.com/", "https://hk.gh-proxy.com/", "https://tvv.tw/"];
+	const preferred = sources[lib.config.extension_一中杀_update_source] ?? "";
+	const controllers = [];
+
+	async function request(source) {
+		const controller = new AbortController();
+		controllers.push(controller);
+		const timeout = setTimeout(() => controller.abort(), 8000);
+		try {
+			const response = await fetch(`${source}${REPO}/manifest.json`, { cache: "no-store", signal: controller.signal });
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			const manifest = await response.json();
+			if (typeof manifest?.version !== "string" || !manifest.files || typeof manifest.files !== "object" || Array.isArray(manifest.files)) {
+				throw new Error("更新清单格式不正确");
+			}
+			return { source, manifest };
+		} finally {
+			clearTimeout(timeout);
+		}
+	}
+
+	// 首选源独享前 400 毫秒；若提前失败，其他源立即加入竞速。
+	const first = request(preferred);
+	let headStartTimer;
+	try {
+		const headStart = new Promise(resolve => { headStartTimer = setTimeout(resolve, 400); });
+		const earlyResult = await Promise.race([first.catch(() => null), headStart]);
+		if (earlyResult) return earlyResult;
+
+		const backups = sources.filter(source => source !== preferred).map(request);
+		return await Promise.any([first, ...backups]);
+	} finally {
+		clearTimeout(headStartTimer);
+		for (const controller of controllers) controller.abort();
+	}
+}
+
 // ============ 提取出的核心更新逻辑 ============
 async function performUpdate(isManual, localVersion) {
 	// 网络状态检查（手动才弹窗）
@@ -15,30 +55,17 @@ async function performUpdate(isManual, localVersion) {
 	// 自动更新时，若本次会话已检查过则跳过（此时外部应已 return）
 	if (!isManual && sessionStorage.yzs_check) return;
 
-	// 获取清单
-	const pList = ["https://proxy.aestarin.com/", "", "https://gh-proxy.com/", "https://hk.gh-proxy.com/", "https://tvv.tw/"];
-	let p = pList[lib.config.extension_一中杀_update_source] || "";
-	let m;
-	let success = false;
-	for (const u of [p, ...pList.filter(x => x !== p)]) {
-		try {
-			const r = await fetch(`${u}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/manifest.json`);
-			if (r.ok) {
-				m = JSON.parse(await r.text());
-				p = u;
-				console.log(`使用${u || '默认'}镜像获取清单成功`);
-				success = true;
-				break;
-			}
-		} catch (e) {
-			console.warn(`镜像 ${u} 请求异常:`, e);
-		}
-	}
-	if (!success) {
+	let picked;
+	try {
+		picked = await fetchUpdateManifest();
+	} catch (e) {
+		console.warn("所有更新源均未能获取清单", e);
 		const msg = '清单文件获取失败，请检查网络连接';
 		if (isManual) alert(msg);
 		throw new Error(msg);
 	}
+	const { source, manifest: m } = picked;
+	console.log(`使用${source || '直连'}源获取清单成功`);
 
 	// 先比较版本，再检查哈希，避免本地开发版被仓库旧版覆盖。
 	// checkVersion 按数字分段比较（0.98.11 > 0.98.6），相同版本仍允许修复文件。
@@ -127,7 +154,7 @@ async function performUpdate(isManual, localVersion) {
 			prog.setProgressValue(i + 1);
 			prog.setFileName(`正在下载：${f}`);
 
-			const fileUrl = `${p}https://raw.githubusercontent.com/Ysky114/yzs_Extension/refs/heads/main/${f}`;
+			const fileUrl = `${source}${REPO}/${f}`;
 			const r = await downloadFileWithRetry(fileUrl);
 			const data = await r.arrayBuffer();
 			const fullPath = `extension/一中杀/${f}`;

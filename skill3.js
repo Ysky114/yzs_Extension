@@ -2725,10 +2725,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					player.addMark("guangyousheguainiao_yzs_fuka", 1, false)
-					let num = get.character(player.name).Fuka - player.countMark("Fuka_yzs");
-					if (num <= 0) return;
-					num = Math.min(num, 2);
-					player.addMark("Fuka_yzs", num)
+					player.yzs_addPP(2)
 				}
 			},
 			renew: {
@@ -2818,7 +2815,7 @@ const skills = {
 							player.addGaintag(cards, "guangyousheguainiao_yzs_banling");
 						}
 					}
-					if (x >= 4 && player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs")
+					if (x >= 4 && player.countMark("yzs_PP") < player.yzs_getPPLimit()) player.yzs_addPP()
 					youmu = player.storage.guangyousheguainiao_yzs_zone == "guangyousheguainiao_yzs_youmu" ? player.getCards("h") : player.getExpansions("guangyousheguainiao_yzs_youmu");
 					banling = player.storage.guangyousheguainiao_yzs_zone == "guangyousheguainiao_yzs_banling" ? player.getCards("h") : player.getExpansions("guangyousheguainiao_yzs_banling");
 					const y = player.countMark("guangyousheguainiao_yzs_ling");
@@ -3048,7 +3045,7 @@ const skills = {
 			player.yzs_UseShunfaji("liugenqingjingzhan_yzs");
 		},
 		clickableFilter: function (player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (!player.storage.liugenqingjingzhan_yzs_record || get.itemtype(player.storage.liugenqingjingzhan_yzs_record) !== "card") return true;
 			return player.hasUseTarget(player.storage.liugenqingjingzhan_yzs_record, true);
 		},
@@ -3077,7 +3074,7 @@ const skills = {
 				})
 				.forResult();
 			if (!result2.bool) return;
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			if (!result2.links.length) {
 				await player.draw();
 			} else if (result2.links[0].storage.liugenqingjingzhan_yzs) {
@@ -3165,7 +3162,7 @@ const skills = {
 			let evt = event.getParent();
 			if (evt.name != "phaseUse" && evt.name != "_save") return false;
 			if (event.responded) return false;
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (!player.storage.liugenqingjingzhan_yzs_record || get.itemtype(player.storage.liugenqingjingzhan_yzs_record) !== "card") return true;
 			return event.filterCard(player.storage.liugenqingjingzhan_yzs_record, player, event) || player.hasUseTarget(player.storage.liugenqingjingzhan_yzs_record, true);
 		},
@@ -3202,7 +3199,7 @@ const skills = {
 					filterCard: () => false,
 					selectCard: -1,
 					async content(event, trigger, player) {
-						player.removeMark("Fuka_yzs");
+						player.yzs_removePP();
 						await player.draw();
 						const evt = event.getParent(2);
 						if (evt.name == "chooseToUse") {
@@ -3222,7 +3219,7 @@ const skills = {
 						number: number,
 					},
 					async precontent(event, trigger, player) {
-						player.removeMark("Fuka_yzs");
+						player.yzs_removePP();
 						const evt = event.getParent();
 						if (evt.name == "chooseToUse") {
 							evt.goto(0);
@@ -3236,7 +3233,7 @@ const skills = {
 					selectCard: -1,
 					choice: links[0],
 					async content(event, trigger, player) {
-						player.removeMark("Fuka_yzs");
+						player.yzs_removePP();
 						const index = lib.skill.liugenqingjingzhan_yzs_backup.choice.storage.guangyousheguainiao_yzs_name;
 						const name1 = player.storage.guangyousheguainiao_yzs_name[index]
 						const name2 = player.storage.guangyousheguainiao_yzs_name2[name1]
@@ -5794,10 +5791,10 @@ const skills = {
 			global: "yzs_throwEnd"
 		},
 		filter(event, player) {
-			return event.number == 6 && event.player != player && player.countMark("Fuka_yzs") < get.character(player.name).Fuka;
+			return event.number == 6 && event.player != player && player.countMark("yzs_PP") < player.yzs_getPPLimit();
 		},
 		async content(event, trigger, player) {
-			player.addMark("Fuka_yzs");
+			player.yzs_addPP();
 		}
 	},
 	SmokeStorm_skill: {
@@ -5969,7 +5966,7 @@ const skills = {
 			player.yzs_UseShunfaji("niaoshouxihua_yzs");
 		},
 		clickableFilter: function (player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (player.countCards("h")) return game.hasPlayer(target => !target.hasSkill("hidden_yzs") && player != target)
 			else {
 				return game.hasPlayer(target => !target.hasSkill("hidden_yzs") && target.countCards("h") && player != target)
@@ -5994,7 +5991,7 @@ const skills = {
 		},
 		enable: ["chooseToUse", "chooseToRespond"],
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			let evt = event.getParent();
 			if (evt.name != "phaseUse" && evt.name != "_save") return false;
 			if (event.responded) return false;
@@ -6011,7 +6008,7 @@ const skills = {
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			const target = event.target
 			let next;
 			let dialog = [];
@@ -6193,7 +6190,7 @@ const skills = {
 			player.yzs_UseShunfaji("niaoshouxihua_yzs");
 		},
 		clickableFilter: function (player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			if (player.countCards("h")) return game.hasPlayer(target => !target.hasSkill("hidden_yzs") && !target.hasSkill("manyuefuwu_yzs_effect"))
 			else {
 				return game.hasPlayer(target => !target.hasSkill("hidden_yzs") && !target.hasSkill("manyuefuwu_yzs_effect") && target.countCards("h"))
@@ -6218,7 +6215,7 @@ const skills = {
 		},
 		enable: ["chooseToUse", "chooseToRespond"],
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			let evt = event.getParent();
 			if (evt.name != "phaseUse" && evt.name != "_save") return false;
 			if (event.responded) return false;
@@ -6235,7 +6232,7 @@ const skills = {
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			event.target.addSkill("manyuefuwu_yzs_effect")
 			const evt = event.getParent(2);
 			evt.goto(0);

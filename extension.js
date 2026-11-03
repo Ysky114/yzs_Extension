@@ -14,7 +14,7 @@ import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.98.9";
+const EXTENSION_VERSION = "0.99";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -527,10 +527,19 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			})();
 			// 导入角色
 			game.import('character', function () {
+				const banRarities = ["rare", "epic", "legend", "prestige"];
+				const characterFilter = {};
+				for (const name of Object.keys(characters)) {
+					characterFilter[name] = () => {
+						const threshold = banRarities.indexOf(lib.config.extension_一中杀_yzs_ban_rarity);
+						return threshold < 0 || banRarities.indexOf(game.getRarity(name)) < threshold;
+					};
+				}
 				var YZS = {
 					name: 'SCHyzs',
 					connect: true,
 					character: { ...characters },
+					characterFilter,
 					characterIntro: { ...characterIntros },
 					characterSubstitute: { ...characterSubstitutes },
 					characterTitle: { ...characterTitles },
@@ -580,36 +589,61 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			lib.init.js(path, "card");
 			//武将评级
 			lib.arenaReady.push(function () {
+				//至臻：在此填写武将 ID。与其他名单重复时优先显示至臻。
+				const pj_prestige = ["NatsukiSubaru_yzs", "DarkKnight_yzs", "yzs_Elysia", "jealous_witch_yzs", "Qianmian_Limu_yzs",
+					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"];
 				//传说 SSS
-				var pj_sss = [
-					"NatsukiSubaru_yzs", "DarkKnight_yzs", "yzs_Elysia", "jealous_witch_yzs", "Qianmian_Limu_yzs",
-					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"
+				var pj_sss = ["HuangJOJO_yzs", "WZZS_lilixin_yzs", "Zbro_yzs", "OnionMan_yzs", "Noir_yzs", "WangQian_yzs", "Lazy_twins_yzs", "Cayuu_yzs", 
+					"LilyCommie_yzs", "LawfulXu_yzs", "toothFairy_yzs", "Halo_yzs", "LightCB_yzs", "FushiguroToji_yzs", "AomanSzy_yzs", "Yan_yzs", "KinMiho_yzs",
+					"FengCthulhu_yzs",
 				];
 				//史诗 SS
 				var pj_ss = [
-					"HuangJOJO_yzs", "WZZS_lilixin_yzs", "Zbro_yzs", "OnionMan_yzs", "Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs",
-					"Seele_Vollerei_yzs", "TimeThief_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Ren_yzs", "Yan_yzs", "BaiLu_yzs", "HaiWeier_yzs", "Rafau_yzs",
-					"GunTwins_yzs", "WangQian_yzs", "Cana_yzs", "Lazy_twins_yzs", "AngryFeng_yzs", "Zhonghuang_yzs", "AdmiredWitch_yzs","yzs_Youmu",
-					"DimensionWitch_yzs", "LegolaShuang_yzs", "Cayuu_yzs", "AomanSzy_yzs", "LiTong_yzs", "FengCthulhu_yzs", "VanXiongYong_yzs", "LilyCommie_yzs",
-					"KinMiho_yzs", "Guanjun_yzs", "LawfulXu_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
-					"Mokou_yzs", "Reisen_yzs", "toothFairy_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Stark_yzs", "Linie_yzs","Halo_yzs",
-					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "FushiguroToji_yzs", "yzs_JoGo", "SCP079_yzs", "LightCB_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng",
-					"yzs_Reimu","yzs_ThreeBirds"
+					 "Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Floris_yzs",
+					"Seele_Vollerei_yzs", "TimeThief_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Ren_yzs",  "BaiLu_yzs", "HaiWeier_yzs", "Rafau_yzs",
+					"GunTwins_yzs", "Cana_yzs", "AngryFeng_yzs", "Zhonghuang_yzs", "AdmiredWitch_yzs", "yzs_Youmu", "cunhe_yzs", "Patriot_yzs", 
+					"DimensionWitch_yzs", "LegolaShuang_yzs",  "LiTong_yzs", "VanXiongYong_yzs", "Tanya_yzs",
+					 "Guanjun_yzs",  "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
+					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
+					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs", 
+					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs",
 				];
 				//精品 S
 				var pj_s = [
-					"shenfu_Limu_yzs", "changzhang_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
-					"JiLiangJiTao_yzs", "Patriot_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "Frisk_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs",
-					"Tanya_yzs", "WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs", "chenxu_yzs", "Unbelieve_xiangzi_yzs", "weaponmaster_yzs", "ChainsawCock_yzs",
-					"cunhe_yzs", "tangjiheChao_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
+					"shenfu_Limu_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
+					"JiLiangJiTao_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs", "Stark_yzs",
+					 "WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs",  "Unbelieve_xiangzi_yzs", "weaponmaster_yzs", "ChainsawCock_yzs",
+					 "tangjiheChao_yzs",  "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
-					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", "APPLe_yzs",
-					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Aura_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
-					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito","yzs_Ishigoriryu"
+					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", 
+					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Aura_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
+					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",
+					"yzs_Kenjaku"
 				];
 				//平凡
-				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", "lianjinzhencai_yzs", "Remilia_Scarlet_yzs", "TimeGuard_yzs",
-					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs"];
+				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", 
+					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs", "APPLe_yzs", "changzhang_yzs",
+					"chenxu_yzs", "lianjinzhencai_yzs", "Remilia_Scarlet_yzs", "TimeGuard_yzs",];
+
+				lib.rank.rarity.prestige ??= [];
+				lib.rank.rarity.prestige.addArray(pj_prestige);
+				lib.translate.prestige = "至臻";
+				const originalGetRarity = game.getRarity;
+				game.getRarity = function (name) {
+					if (lib.rank.rarity.prestige.includes(name)) return "prestige";
+					return originalGetRarity.apply(this, arguments);
+				};
+				const originalCreateRarity = ui.create.rarity;
+				ui.create.rarity = function (button) {
+					if (game.getRarity(button.link) !== "prestige") {
+						return originalCreateRarity.apply(this, arguments);
+					}
+					if (!lib.config.show_rarity) return;
+					const intro = button.node.intro;
+					intro.classList.add("showintro");
+					intro.dataset.nature = "prestigem";
+					intro.textContent = get.translation("prestige");
+				};
 
 				for (var i = 0; i < pj_sss.length; i++) {
 					lib.rank.rarity.legend.push(pj_sss[i]);
@@ -637,7 +671,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"yzs_QianWitch",
 						"yzs_ItadoriYuji",
 						"yzs_Mahito",
-						"yzs_Ishigoriryu"
+						"yzs_Ishigoriryu",
+						"yzs_Kenjaku",
 					]
 				},
 				{
@@ -668,6 +703,18 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		},
 		help: {},
 		config: {
+			yzs_ban_rarity: {
+				name: "一键禁用",
+				intro: "生成选将候选时，禁用所选品质及以上的《一中杀》武将。",
+				init: "off",
+				item: {
+					off: "关闭",
+					rare: "精品及以上",
+					epic: "史诗及以上",
+					legend: "传说及以上",
+					prestige: "仅至臻",
+				},
+			},
 			update_source: {
 				name: `<font color="#9c27b0">更新镜像源`,
 				init: "0",

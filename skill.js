@@ -2237,7 +2237,7 @@ const skills = {
 					return event.name != 'phase' || game.phaseNumber == 0;
 				},
 				async content(event, trigger, player) {
-					player.addMark("zhujiu_yzs", 3);
+					player.addMark("zhujiu_yzs");
 				},
 				sub: true,
 				sourceSkill: "zhujiu_yzs",
@@ -5383,7 +5383,7 @@ const skills = {
 		locked: true,
 		charlotte: true,
 		unique: true,
-		group: ["liuwangnvshiqu_yzs_recover"],
+		group: ["liuwangnvshiqu_yzs_recover","liuwangnvshiqu_yzs_pp"],
 		trigger: { player: "phaseUseBegin" },
 		async cost(event, trigger, player) {
 			const list = [1, 2, 3, 4, 5, "cancel2"]
@@ -5395,7 +5395,7 @@ const skills = {
 					return 0;
 				})
 				.set("prompt", "六王女逝曲")
-				.set("prompt2", "失去1~5点体力，摸等量张牌并获得等量张符卡")
+				.set("prompt2", "失去1~5点体力，摸等量张牌并获得等量点蓄能")
 				.forResult();
 			if (result.control == false) return false;
 			event.result = {
@@ -5407,8 +5407,8 @@ const skills = {
 			const num = event.cost_data;
 			await player.loseHp(num);
 			await player.draw(num);
-			const addnum = Math.min(num, get.character(player.name).Fuka - player.countMark("Fuka_yzs"));
-			if (addnum) player.addMark("Fuka_yzs", addnum);
+			const addnum = Math.min(num, player.yzs_getPPLimit() - player.countMark("yzs_PP"));
+			if (addnum) player.yzs_addPP(addnum);
 			if (num > 3) player.addTempSkill("jiashang_yzs", "phaseUseAfter")
 		},
 		subSkill: {
@@ -5428,7 +5428,22 @@ const skills = {
 				},
 				"_priority": 0,
 				sub: true,
-			}
+			},
+			pp: {
+				priority:13,
+				trigger: {
+					player: ["Gungnell_yzsBegin1","VampireKiss_yzsBegin1"]
+				},
+				filter(event) {
+					return true
+				},
+				charlotte: true,
+				forced: true,
+				async content(event, trigger, player) {
+					let results = await player.yzs_throw(5).forResult();
+					if (results?.bool && player.countMark("yzs_PP") < player.yzs_getPPLimit()) player.yzs_addPP()
+				},
+			},
 		}
 	},
 	"jiashang_yzs": {
@@ -5595,7 +5610,7 @@ const skills = {
 		line: false,
 		enable: "phaseUse",
 		filter: function (event, player) {
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			return (game.hasPlayer(function (target) {
 				return player.canUse({ name: "sha" }, target, false)
 			}))
@@ -5609,9 +5624,8 @@ const skills = {
 			return player.canUse({ name: "sha" }, target, false)
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
-			let results = await player.yzs_throw(5).forResult();
-			if (results.bool && player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs")
+			player.yzs_removePP();
+			event.trigger("Gungnell_yzsBegin1")
 			const target = event.target;
 			let next = player.useCard({ name: "sha", isCard: true, storage: { Gungnell_yzs: true } }, target);
 			if (player.storage.Gungnell_yzs[1] < 1) {
@@ -5656,7 +5670,7 @@ const skills = {
 		locked: true,
 		enable: "phaseUse",
 		filter: function (event, player) {
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			return (game.hasPlayer(function (target) {
 				if (target.hasSkill("hidden_yzs")) return false
 				return player.countCards("h") > target.countCards("h");
@@ -5667,9 +5681,8 @@ const skills = {
 			return player.countCards("h") > target.countCards("h");
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
-			let results = await player.yzs_throw(5).forResult();
-			if (results.bool && player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs")
+			player.yzs_removePP();
+			event.trigger("VampireKiss_yzsBegin1")
 			const target = event.target;
 			await player.swapHandcards(target);
 			const bool = await player
@@ -6239,6 +6252,40 @@ const skills = {
 	"yotouXi_yzs": {
 		nobracket: true,
 		group: ["yotouXi_yzs_renew", "yotouXi_yzs_discard", "yotouXi_yzs_adddamage", "yotouXi_yzs_blocker", "yotouXi_yzs_record"],
+		init: function (player, skill) {
+			if (!player.storage.yotou_temp) {
+				player.storage.yotou_temp = {
+					range: 0,
+					usable: 0,
+					adddamage: 0,
+					shanreq: 0,
+					sing: 0,
+				}
+				player.markSkill("yotou_temp");
+			}
+			if (!player.storage.yotou_ever) {
+				player.storage.yotou_ever = {
+					range: 0,
+					usable: 0,
+					adddamage: 0,
+					shanreq: 0,
+					sing: 0,
+				}
+				player.markSkill("yotou_ever");
+			}
+			if (!player.storage.yotouXi_yzs_used) {
+				player.storage.yotouXi_yzs_used = 0;
+				player.markSkill("yotouXi_yzs_used");
+			}
+			if (!player.storage.yotouXi_yzs) {
+				player.storage.yotouXi_yzs = 1;
+				player.markSkill("yotouXi_yzs");
+			}
+			if (!player.storage.yotouXi_yzs_gain) {
+				player.storage.yotouXi_yzs_gain = 0;
+				player.markSkill("yotouXi_yzs_gain");
+			}
+		},
 		mod: {
 			canBeGained(card, source, player) {
 				if (source == player) return;
@@ -6279,40 +6326,6 @@ const skills = {
 		},
 		subSkill: {
 			renew: {
-				init: function (player, skill) {
-					if (!player.storage.yotou_temp) {
-						player.storage.yotou_temp = {
-							range: 0,
-							usable: 0,
-							adddamage: 0,
-							shanreq: 0,
-							sing: 0,
-						}
-						player.markSkill("yotou_temp");
-					}
-					if (!player.storage.yotou_ever) {
-						player.storage.yotou_ever = {
-							range: 0,
-							usable: 0,
-							adddamage: 0,
-							shanreq: 0,
-							sing: 0,
-						}
-						player.markSkill("yotou_ever");
-					}
-					if (!player.storage.yotouXi_yzs_used) {
-						player.storage.yotouXi_yzs_used = 0;
-						player.markSkill("yotouXi_yzs_used");
-					}
-					if (!player.storage.yotouXi_yzs) {
-						player.storage.yotouXi_yzs = 1;
-						player.markSkill("yotouXi_yzs");
-					}
-					if (!player.storage.yotouXi_yzs_gain) {
-						player.storage.yotouXi_yzs_gain = 0;
-						player.markSkill("yotouXi_yzs_gain");
-					}
-				},
 				trigger: {
 					player: "phaseBegin",
 				},
@@ -8658,9 +8671,6 @@ const skills = {
 					if (!target) return false;
 					if (target.countCards("hej") == 0) return false;
 					if (event.name == "gain" && event.player == player) return false;
-					let evt = event.getl(player);
-					if (!evt || !evt.cards2 || !evt.cards2.length) return false;
-					if (event.getParent() && event.getParent().card && get.subtype(event.getParent().card) == "equip1") return true;
 					if (name == "compare") {
 						if (player == event.player) {
 							if (event.iwhile > 0) {
@@ -8669,11 +8679,16 @@ const skills = {
 							return get.subtype(event.card1) == "equip1";
 						}
 						return get.subtype(event.card2) == "equip1";
+					} else {
+						let evt = event.getl(player);
+						if (!evt || !evt.cards2 || !evt.cards2.length) return false;
+						if (event.getParent() && event.getParent().card && get.subtype(event.getParent().card) == "equip1") return true;
+						let ds = evt.cards2.filter(function (card) {
+							return get.subtype(card) === "equip1";
+						});
+						if (ds.length) return true;
+						return false;
 					}
-					let ds = evt.cards2.filter(function (card) {
-						return get.subtype(card) === "equip1";
-					});
-					if (ds.length) return true;
 					return false;
 				},
 				check(event, player) {
@@ -8835,7 +8850,7 @@ const skills = {
 			return game.hasPlayer(current => current !== player) && (event.name != "phase" || game.phaseNumber == 0);
 		},
 		async content(event, trigger, player) {
-			player.addMark("Fuka_yzs", 1);
+			player.yzs_addPP();
 		},
 		subSkill: {
 			gain: {
@@ -8846,12 +8861,12 @@ const skills = {
 					player: "phaseDiscardBegin",
 				},
 				filter(event, player) {
-					if (player.countMark("Fuka_yzs") >= get.character(player.name).Fuka) return false;
+					if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return false;
 					return player.countCards("h") < player.getHandcardLimit();
 				},
 				async content(event, trigger, player) {
-					const num = Math.min(player.getHandcardLimit() - player.countCards("h"), get.character(player.name).Fuka - player.countMark("Fuka_yzs"))
-					if (num > 0) player.addMark("Fuka_yzs", num);
+					const num = Math.min(player.getHandcardLimit() - player.countCards("h"), player.yzs_getPPLimit() - player.countMark("yzs_PP"))
+					if (num > 0) player.yzs_addPP(num);
 				}
 			},
 			bianda: {
@@ -8917,10 +8932,9 @@ const skills = {
 	},
 	"bianda_yzs": {
 		nobracket: true,
-		locked: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			return (game.hasPlayer(function (target) {
 				return !target.hasSkill("bianda_yzs_buff")
 			}))
@@ -8929,7 +8943,7 @@ const skills = {
 			return !target.hasSkill("bianda_yzs_buff")
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			await player.loseHp();
 			await event.target.changeHujia(2);
 			await event.target.addSkill("bianda_yzs_buff");
@@ -9091,7 +9105,7 @@ const skills = {
 		marktext: "☯",
 		intro: {
 			content(storage, player, skill) {
-				const str = storage ? "符卡：转换技：场上角色受到伤害时：你可摸2张牌，令伤害-1" : "符卡：转换技：场上角色受到伤害时：你可失去1点体力，令伤害 + 1";
+				const str = storage ? `转换技：场上角色受到伤害时：你可消耗1点${get.poptip("yzs_PP")}，摸2张牌，令伤害-1` : `转换技：场上角色受到伤害时：你可消耗1点${get.poptip("yzs_PP")}，失去1点体力，令伤害 + 1`;
 				return str;
 			},
 		},
@@ -9100,12 +9114,12 @@ const skills = {
 		},
 		filter(event, player) {
 			if (event.player.hasSkill("hidden_yzs")) return false;
-			if (player.countMark("Fuka_yzs") < 1) return false;
+			if (player.countMark("yzs_PP") < 1) return false;
 			if (!player.storage.dapanxiaopan_yzs) return player.hp > 1;
 			return true
 		},
 		check(event, player) {
-			if (player.countMark("Fuka_yzs") == 1 && !(player.hp < 2 && player.storage.dapanxiaopan_yzs)) return false;
+			if (player.countMark("yzs_PP") == 1 && !(player.hp < 2 && player.storage.dapanxiaopan_yzs)) return false;
 			if (!player.storage.dapanxiaopan_yzs) {
 				return player.hp > 2 && get.attitude(player, event.player) < 0;
 			} else {
@@ -9113,7 +9127,7 @@ const skills = {
 			}
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			player.changeZhuanhuanji("dapanxiaopan_yzs");
 			if (player.storage.dapanxiaopan_yzs) {
 				await player.loseHp();
@@ -9238,7 +9252,7 @@ const skills = {
 					return false;
 				},
 				async content(event, trigger, player) {
-					if (player.countMark("Fuka_yzs") < get.character(player.name).Fuka) player.addMark("Fuka_yzs");
+					if (player.countMark("yzs_PP") < player.yzs_getPPLimit()) player.yzs_addPP();
 				},
 			},
 			baka: {
@@ -9248,15 +9262,15 @@ const skills = {
 					target: "compareCardShowBefore",
 				},
 				filter(event, player) {
-					return (player.countMark("Fuka_yzs") > 0);
+					return (player.countMark("yzs_PP") > 0);
 				},
-				prompt: "符卡：你的拼点牌亮出前，你可令之点数视为“9”。然后若胜负结果因此改变，你摸1张牌",
+				prompt: "你的拼点牌亮出前，你可消耗1点蓄能，令之点数视为“9”。然后若胜负结果因此改变，你摸1张牌",
 				check(event, player) {
-					if (player.countCards("h")<4&&player.countMark("Fuka_yzs") > 1 && event[event.player == player ? "card1" : "card2"].number < 9) return true;
+					if (player.countCards("h") < 4 && player.countMark("yzs_PP") > 1 && event[event.player == player ? "card1" : "card2"].number < 9) return true;
 					return false;
 				},
 				async content(event, trigger, player) {
-					player.removeMark("Fuka_yzs");
+					player.yzs_removePP();
 					trigger.cirno = "tie";
 					if (get.number(trigger.card1) > get.number(trigger.card2)) trigger.cirno = "win";
 					if (get.number(trigger.card1) < get.number(trigger.card2)) trigger.cirno = "lose";
@@ -9351,7 +9365,6 @@ const skills = {
 		nobracket: true,
 		zhuanhuanji: true,
 		audio: "ext:一中杀/audio/skill:2",
-		locked: true,
 		enable: "phaseUse",
 		init: function (player) {
 			if (!player.storage.perfectFreeze_yzs) {
@@ -9360,7 +9373,7 @@ const skills = {
 			}
 		},
 		filter(event, player) {
-			if (player.hasSkill("perfectFreeze_yzs_used") && !player.countMark("Fuka_yzs")) return false;
+			if (player.hasSkill("perfectFreeze_yzs_used") && !player.countMark("yzs_PP")) return false;
 			if (!game.hasPlayer(function (target) {
 				if (target.hasSkill("hidden_yzs")) return false;
 				return player.canCompare(target) && target != player
@@ -9373,7 +9386,7 @@ const skills = {
 			return player.canCompare(current);
 		},
 		async content(event, trigger, player) {
-			if (player.hasSkill("perfectFreeze_yzs_used")) player.removeMark("Fuka_yzs");
+			if (player.hasSkill("perfectFreeze_yzs_used")) player.yzs_removePP();
 			else player.addTempSkill("perfectFreeze_yzs_used", "phaseUseAfter");
 			const result = await player.chooseToCompare(event.target).forResult();
 			if (result.tie) { return }
@@ -9970,10 +9983,10 @@ const skills = {
 		forced: true,
 		group: ["steadyLibrary_yzs_gain", "steadyLibrary_yzs_damage"],
 		trigger: { player: "phaseBegin" },
-		filter(event, player) { return player.countMark("Fuka_yzs") < get.character(player.name).Fuka },
+		filter(event, player) { return player.countMark("yzs_PP") < player.yzs_getPPLimit() },
 		async content(event, trigger, player) {
-			const addnum = get.character(player.name).Fuka - player.countMark("Fuka_yzs");
-			if (addnum) player.addMark("Fuka_yzs", addnum);
+			const addnum = player.yzs_getPPLimit() - player.countMark("yzs_PP");
+			if (addnum) player.yzs_addPP(addnum);
 		},
 		subSkill: {
 			gain: {
@@ -9984,12 +9997,12 @@ const skills = {
 				sourceSkill: "steadyLibrary_yzs",
 				filter(event, player) {
 					if (_status._yzsStorm != "WaterStorm") return false
-					return player.countMark("Fuka_yzs") < get.character(player.name).Fuka
+					return player.countMark("yzs_PP") < player.yzs_getPPLimit()
 				},
 				locked: true,
 				forced: true,
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs");
+					player.yzs_addPP();
 				},
 				"_priority": 0,
 				sub: true,
@@ -10022,6 +10035,7 @@ const skills = {
 	},
 	"wiseStone_yzs": {
 		nobracket: true,
+		locked:true,
 		group: ["wiseStone_yzs_wushuang", "wiseStone_yzs_sha", "wiseStone_yzs_lose", "wiseStone_yzs_lose2", "wiseStone_yzs_gain","wiseStone_yzs_use"],
 		subSkill: {
 			Dbuff2: {
@@ -10312,10 +10326,10 @@ const skills = {
 				else return "共有" + get.cnNumber(cards.length) + "张【藏书】";
 			},
 		},
-		filter(event, player) { return player.countMark("Fuka_yzs") > 0 },
+		filter(event, player) { return player.countMark("yzs_PP") > 0 },
 		enable: "phaseUse",
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			await player.draw(3);
 		},
 		ai: {
@@ -10332,7 +10346,6 @@ const skills = {
 	},
 	"silentSelene_yzs": {
 		nobracket: true,
-		locked: true,
 		audio: "ext:一中杀/audio/skill:1",
 		"prompt2": "你可将1张【藏书】展示并给予对方，然后无效之。",
 		trigger: {
@@ -10369,13 +10382,13 @@ const skills = {
 			};
 		},
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs") || !player.countExpansions("wiseStone_yzs")) return false;
+			if (!player.countMark("yzs_PP") || !player.countExpansions("wiseStone_yzs")) return false;
 			if (player == event.source && !event.player) return false;
 			if (player == event.player && !event.source) return false;
 			return true;
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			const target = player == trigger.player ? trigger.source : trigger.player;
 			await player.showCards("【沉静的月神】展示牌",event.cost_data)
 			await player.give(event.cost_data, target);

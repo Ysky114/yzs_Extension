@@ -20,7 +20,7 @@ const dynamicTranslates = {
 		if (player.countMark("yzs_jianshi")) str += `<span style="opacity:0.5">`;
 		str += `监视`;
 		if (player.countMark("yzs_jianshi")) str += `</span>`;
-		str += `】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`
+		str += `】的首句描述。均删除后，失去本技能并获得${get.poptip("yzs_zhongmo")}。`
 		return str;
 	},
 	yzs_chengjie(player) {
@@ -28,16 +28,16 @@ const dynamicTranslates = {
 		return `锁定技：回合内，你不可使用【杀】。<br>你造成或受到伤害后，可对对方使用1张【杀】，此牌伤害+1。`;
 	},
 	yzs_shenpan(player) {
-		if (player.countMark("yzs_shenpan")) return `锁定技：你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`
-		return `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`;
+		if (player.countMark("yzs_shenpan")) return `锁定技：你指定或成为锦囊牌的目标后，可与对方拼点，若你胜则摸1张牌。`
+		return `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，若你胜则摸1张牌。`;
 	},
 	yzs_jianshi(player) {
 		if (player.countMark("yzs_jianshi")) return `锁定技：场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`
 		return `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备牌以与其各摸1张牌。`;
 	},
 	yzs_halfGhost(player) {
-		let str = `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1张符卡并交换手牌与“半灵”牌。<br>
-	符卡：你摸1张牌并交换手牌与“半灵”牌。<br>转换技：`;
+		let str = `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1点${get.poptip("yzs_PP")}并交换手牌与“半灵”牌。<br>
+	出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸1张牌并交换手牌与“半灵”牌。<br>转换技：`;
 		if (player.storage.yzs_halfGhost) {
 			str +=`每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，人：摸2张牌；<font color="#ffac27">灵：执行仅有出牌阶段的额外回合。</font>`
 		} else {
@@ -131,7 +131,7 @@ const dynamicTranslates = {
 	sichong_yzs(player) {
 		let x = player.getStorage("sichong_yzs").length || "X";
 		if (typeof x == "number") x = `<font color="#f85538">${x}</font>`
-		return `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1张${get.poptip("Fuka_yzs")}、恢复体力至${x}点并摸${x}张牌。<br>（${x}为清空记录数）`
+		return `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1点${get.poptip("yzs_PP")}、恢复体力至${x}点并摸${x}张牌。<br>（${x}为清空记录数）`
 	}, 
 	jianzhi_yzs(player) {
 		let str = `【技能】：转换技：`;
@@ -339,26 +339,26 @@ const dynamicTranslates = {
 		if (player.storage.VisionaryTuning_yzs) return `转换技（回合开始时重置）：出牌阶段：<br>
 虚：移去4张非♠“虚弹”，然后令1名不处于“狂”状态的角色下回合摸牌数-2并进入“狂”状态；<br>
 <font color="#cac7ff">实：移去4张♠“虚弹”，然后对任意角色造成1点伤害并令其退出“狂”状态。<br></font>
-<font color="#cac7ff">无论如何你获得1张${get.poptip("Fuka_yzs")}。</font>`
+<font color="#cac7ff">无论如何你获得1点${get.poptip("yzs_PP")}。</font>`
 		return `转换技（回合开始时重置）：出牌阶段：<br>
 <font color="#cac7ff">虚：移去4张非♠“虚弹”，然后令1名不处于“狂”状态的角色下回合摸牌数-2并进入“狂”状态；<br></font>
 实：移去4张♠“虚弹”，然后对任意角色造成1点伤害并令其退出“狂”状态。<br>
-<font color="#cac7ff">无论如何你获得1张${get.poptip("Fuka_yzs")}。</font>`
+<font color="#cac7ff">无论如何你获得1点${get.poptip("yzs_PP")}。</font>`
 	},
 	yinyangyu_yzs(player) {
-		if (player.hasSkill("InBarrier_yzs_skill")) return `符卡：<font color="#9b9b9b">你摸[0]张牌，然后观看并与[0]名其他角色交换[0]张手牌，无论如何</font>你本回合出【杀】数+[1]并获得[1]枚【梦】标记，然后可令“结界”或“子结界”顺或逆时针移动[1]个座次。`;
-		return `符卡：你摸[1]张牌，然后观看并与[1]名其他角色交换[1]张手牌<font color="#9b9b9b">，无论如何你本回合出【杀】数+[0]并获得[0]枚【梦】标记，
+		if (player.hasSkill("InBarrier_yzs_skill")) return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，<font color="#9b9b9b">摸[0]张牌，然后观看并与[0]名其他角色交换[0]张手牌，无论如何</font>你本回合出【杀】数+[1]并获得[1]枚【梦】标记，然后可令“结界”或“子结界”顺或逆时针移动[1]个座次。`;
+		return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸[1]张牌，然后观看并与[1]名其他角色交换[1]张手牌<font color="#9b9b9b">，无论如何你本回合出【杀】数+[0]并获得[0]枚【梦】标记，
 	然后可令“结界”或“子结界”顺或逆时针移动[0]个座次</font>。`;
 	},
 	erchongjiejie_yzs(player) {
-		if (player.hasSkill("InBarrier_yzs_skill")) return `${get.poptip("FukaSkill_yzs")}：若场上无“${get.poptip("subBarrier_yzs")}”，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。
-		<br><font color="#9b9b9b">“子结界”死亡时你获得[0]张符卡。</font><br><small>结界内：你摸牌数+2，你不可被其他角色指定</small>`;
-		return `${get.poptip("FukaSkill_yzs")}：若场上无“${get.poptip("subBarrier_yzs")}”，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。
-	<br>“子结界”死亡时你获得[1]张${get.poptip("Fuka_yzs")}。`
+		if (player.hasSkill("InBarrier_yzs_skill")) return `出牌阶段，若场上无“${get.poptip("subBarrier_yzs")}”，你可消耗1点${get.poptip("yzs_PP")}，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。
+		<br><font color="#9b9b9b">“子结界”死亡时你获得[0]点蓄能。</font><br><small>结界内：你摸牌数+2，你不可被其他角色指定</small>`;
+		return `出牌阶段，若场上无“${get.poptip("subBarrier_yzs")}”，你可消耗1点${get.poptip("yzs_PP")}，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。
+	<br>“子结界”死亡时你获得[1]点蓄能。`
 	},
 	dajiejie_yzs(player) {
-		if (player.hasSkill("InBarrier_yzs_skill")) return `锁定技：<font color="#9b9b9b">回合开始时你获得[0]张符卡。</font>你使用或打出红色牌时获得[1]张${get.poptip("Fuka_yzs")}。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`;
-		return `锁定技：回合开始时你获得[1]张${get.poptip("Fuka_yzs")}。<font color="#9b9b9b">你使用或打出红色牌时获得[0]张符卡。</font>游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`;
+		if (player.hasSkill("InBarrier_yzs_skill")) return `锁定技：<font color="#9b9b9b">回合开始时你获得[0]点${get.poptip("yzs_PP")}。</font>你使用或打出红色牌时获得[1]点蓄能。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`;
+		return `锁定技：回合开始时你获得[1]点${get.poptip("yzs_PP")}。<font color="#9b9b9b">你使用或打出红色牌时获得[0]点蓄能。</font>游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`;
 	},
 	sanbubisha_yzs(player) {
 		return `锁定技：每局游戏限${player.countMark("sanbubisha_yzs")}/3次：需要时，你可视为使用【酒】（有次数限制）。<br>
@@ -460,15 +460,15 @@ const dynamicTranslates = {
 	},
 	guangyousheguainiao_yzs(player) {
 		if (!player.storage.guangyousheguainiao_yzs_name || !player.storage.guangyousheguainiao_yzs_name.length) return lib.translate["guangyousheguainiao_yzs"];
-		return `锁定技：出牌阶段开始时你获得2张符卡。<br>回合开始时，你摸${player.countMark("guangyousheguainiao_yzs_fuka")}张牌。<br>
+		return `锁定技：出牌阶段开始时你获得2点${get.poptip("yzs_PP")}。<br>回合开始时，你摸${player.countMark("guangyousheguainiao_yzs_fuka")}张牌。<br>
     你有额外手牌区，称为<font color="#ffac27">“半灵”</font>(初始4张牌)，原本的手牌区称为<font color="#1fffc0">“妖梦”</font>。你的回合内和出牌阶段内你启用<font color="#1fffc0">妖梦</font>，否则启用<font color="#ffac27">半灵</font>。<br>
-    每名角色的出牌阶段结束时，你移动<font color="#1fffc0">妖梦</font>${player.countMark("guangyousheguainiao_yzs_record")}张牌至<font color="#ffac27">半灵</font>，若X≥4则你获得1张符卡，（X为你本阶段使用或重铸锦囊牌数）
+    每名角色的出牌阶段结束时，你移动<font color="#1fffc0">妖梦</font>${player.countMark("guangyousheguainiao_yzs_record")}张牌至<font color="#ffac27">半灵</font>，若X≥4则你获得1点蓄能，（X为你本阶段使用或重铸锦囊牌数）
 	然后若<font color="#ffac27">半灵</font>比<font color="#1fffc0">妖梦</font>恰多${player.countMark("guangyousheguainiao_yzs_ling")}张牌，交换<font color="#1fffc0">妖梦</font>与<font color="#ffac27">半灵</font>的牌并获得1枚${get.poptip("guangyousheguainiao_yzs_ling")}标记。（Y为本自轮次获得【灵】标记数）<br>
     <font color="#1fffc0">妖梦</font>牌数＜/≥<font color="#ffac27">半灵</font>时，你可将<font color="#1fffc0">妖梦</font>与<font color="#ffac27">半灵</font>各一张同花色牌当做【${get.translation(player.storage.guangyousheguainiao_yzs_name[0])}】/【${get.translation(player.storage.guangyousheguainiao_yzs_name[1])}】使用或重铸。`
 	},
 	liugenqingjingzhan_yzs(player) {
 		const name = player.storage.liugenqingjingzhan_yzs_record ? `【${get.translation(player.storage.liugenqingjingzhan_yzs_record.name)}】` : `上一记录牌`;
-		return `锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>符卡：无咏唱：你选择：①视为${name}或摸1张牌；<br>
+		return `锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>无咏唱：你消耗1点${get.poptip("yzs_PP")}，选择：①视为${name}或摸1张牌；<br>
 ②将${get.poptip("guangyousheguainiao_yzs")}中一个牌名改为另一个，若二者因此相同，将1张牌当做被改变的牌使用或重铸；若否，摸或弃2张牌。`
 	},
 	yongyi_yzs(player) {
@@ -551,7 +551,7 @@ const dynamicTranslates = {
 	},
 	qiuwen_yzs(player) {
 		const storage = player.storage.qiuwen_yzs;
-		if (!storage || !storage.length) return `每回合每种牌名限1次：你可将手牌当做<span class="bluetext">【闪】</span>或<span class="bluetext">【无中生有】</span>使用或打出，并可令本技能本回合失效以摸3张牌并弃半数取下张手牌。`;
+		if (!storage || !storage.length) return `每回合每种牌名限1次：你可将手牌当做<span class="bluetext">【闪】</span>或<span class="bluetext">【无中生有】</span>使用，并可令本技能本回合失效以摸3张牌并弃半数取下张手牌。`;
 		let str = `每回合每种牌名限1次：你可将手牌当做`;
 		for (let i = 0; i < storage.length;i++) {
 			str += `<span class="bluetext">`;
@@ -689,13 +689,13 @@ const dynamicTranslates = {
 		return `转换技：回合开始时：阴：你摸2张牌，然后将1张手牌置底或暗置于人物牌上称为【愿】；<span class="bluetext"><br>阳：你摸1张牌，然后将2张手牌置底。</span>`
 	},
 	dapanxiaopan_yzs(player) {
-		let str = `${get.poptip("FukaSkill_yzs")}：转换技：场上角色受到伤害时：`;
+		let str = `转换技：场上角色受到伤害时：你可消耗1点${get.poptip("yzs_PP")}，场上角色受到伤害时：`;
 		if (!player.storage.dapanxiaopan_yzs) str += `<span class="bluetext">①：失去1点体力，令伤害+1；</span>②摸2张牌，令伤害-1。`
 		else str += `①：失去1点体力，令伤害+1；<span class="bluetext">②摸2张牌，令伤害-1。</span>`
 		return str;
 	},
 	perfectFreeze_yzs(player) {
-		let str = `锁定技：出牌阶段限1次或符卡：你与1名其他角色拼点，胜者将牌堆顶牌明置于人物牌旁称为${get.poptip("perfectFreeze_yzs_buff")}，然后发动转换技：`;
+		let str = `（出牌阶段首次发动不消耗蓄能）<br>出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，与1名其他角色拼点，胜者将牌堆顶牌明置于人物牌旁称为${get.poptip("perfectFreeze_yzs_buff")}，然后发动转换技：`;
 		if (!player.storage.perfectFreeze_yzs) str += `<span class="bluetext">①摸1张牌；</span>②弃1张牌。`
 		else str += `①摸1张牌；<span class="bluetext">②弃1张牌。</span>`
 		str += `（所有角色共享此转换技状态）`;
@@ -727,13 +727,13 @@ const dynamicTranslates = {
     },
 	Gungnell_yzs(player) {
 		let skill = player.storage.Gungnell_yzs || [];
-		if (!skill.length) return `${get.poptip("Fuka_yzs")}：你视为使用无距离限制的伤害为-1，需-1张【闪】响应的普通【杀】，然后令本自轮次上述1个数字+1。`
+		if (!skill.length) return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，视为使用无距离限制的伤害为-1，需-1张【闪】响应的普通【杀】，然后令本自轮次上述1个数字+1。`
         let num = skill ? skill - 1 : 0
-		let str = `${get.poptip("Fuka_yzs")}：你视为使用无距离限制的伤害为`
+		let str = `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，视为使用无距离限制的伤害为`
 		str += '<span class="bluetext">' + skill[0] + "</span>"
 		str += "，需";
 		str += '<span class="bluetext">' + skill[1] + "</span>";
-		str +="张【闪】响应的普通【杀】，然后令本自轮次上述1个数字+1。"
+		str +="张【闪】响应的普通【杀】，然后令本自轮上述1个数字+1。"
         return str
 	},
 	qianmian_yzs(player) {
@@ -763,7 +763,7 @@ const dynamicTranslates = {
 		let str = `转换技：场上角色进入濒死时，若其体力值为唯一最低，你可：`;
 		if (!player.storage.fanhundie_yzs) str += `<span class="bluetext">①令其恢复1点体力</span>②对其造成1点伤害。`
 		else str += `①令其恢复1点体力<span class="bluetext">②对其造成1点伤害。</span>`;
-		str += `${get.poptip("FukaSkill_yzs")}： ${get.poptip("wuyongchang_yzs")}：你与1名与你体力值之差等于1的角色交换体力值。`;
+		str += `${get.poptip("wuyongchang_yzs")}：你可消耗1点${get.poptip("yzs_PP")}，与1名与你体力值之差等于1的角色交换体力值。`;
 		return str;
 	},
 	speedup_yzs(player) {

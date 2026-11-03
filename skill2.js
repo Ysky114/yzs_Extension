@@ -5662,7 +5662,7 @@ const skills = {
 			list.removeArray(player.getStorage("qiuwen_yzs_used"));
 			return list.includes(name) && player.countCards("h");
 		},
-		enable: ["chooseToUse", "chooseToRespond"],
+		enable: ["chooseToUse"],
 		locked: false,
 		filter(event, player) {
 			if (event.responded || event.qiuwen_yzs) return false;
@@ -7996,6 +7996,7 @@ const skills = {
 				trigger: {
 					player: ["useCard", "respond"],
 				},
+				audio: "ext:一中杀/audio/skill:5",
 				filter(event, player) {
 					return _status.currentPhase && get.type(event.card) == 'basic';
 				},

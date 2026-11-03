@@ -1391,7 +1391,7 @@ const skills = {
 				damage += evt.num;
 			});
 			let i = 0;
-			while (i < damage) {
+			while (i < damage&&trigger.player.isIn()) {
 				const result = await player
 					.chooseToUse(
 						`循声：对 ${get.translation(trigger.player)} 使用1张牌(${i}/${damage})`,
@@ -8155,10 +8155,10 @@ const skills = {
 			fuka: {
 				enable: "phaseUse",
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") && player.countCards("h") != player.getHandcardLimit()
+					return player.countMark("yzs_PP") && player.countCards("h") != player.getHandcardLimit()
 				},
 				async content(event, trigger, player) {
-					player.removeMark("Fuka_yzs")
+					player.yzs_removePP()
 					if (player.countCards("h") == player.getHandcardLimit()) return;
 					if (player.countCards("h") > player.getHandcardLimit()) {
 						await player.chooseToDiscard(player.countCards("h") - player.getHandcardLimit(), true);
@@ -8328,10 +8328,10 @@ const skills = {
 					player: "phaseBegin"
 				},
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") < get.character(player.name).Fuka
+					return player.countMark("yzs_PP") < player.yzs_getPPLimit()
 				},
 				async content(event, trigger, player) {
-					player.addMark("Fuka_yzs");
+					player.yzs_addPP();
 				}
 			},
 			jieshu: {
@@ -8363,10 +8363,10 @@ const skills = {
 		nobracket: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			return player.countMark("Fuka_yzs");
+			return player.countMark("yzs_PP");
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			if (typeof _status._yzsStorm == "string") {
 				await player.yzs_cancelStorm();
 				await player.draw(2)

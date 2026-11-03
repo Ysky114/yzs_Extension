@@ -13,7 +13,7 @@ const skills = {
 		charlotte: true,
 		locked: true,
 		mark: true,
-		marktext: "蓄",
+		markimage: 'extension/一中杀/image/Fuka_yzs.png',
 		intro: {
 			name: "蓄能",
 			content: function (storage, player) {
@@ -107,14 +107,14 @@ const skills = {
 		nobracket: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			return !game.hasPlayer(target => target.hasSkill("yzs_bolijiejie_buff")) && player.countMark("Fuka_yzs") > 0;
+			return !game.hasPlayer(target => target.hasSkill("yzs_bolijiejie_buff")) && player.countMark("yzs_PP") > 0;
 		},
 		filterTarget(card, player, target) {
 			return !target.hasSkill("hidden_yzs");
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			event.target.addTip("yzs_bolijiejie_buff", "结界内", false);
 			event.target.addSkill("yzs_bolijiejie_buff");
 			lib.skill.yzs_bolijiejie.settle(player);
@@ -191,7 +191,7 @@ const skills = {
 			player: ["phaseBegin", "useCard", "respond"]
 		},
 		filter(event, player) {
-			if (player.countMark("Fuka_yzs") >= player.getFukaLimit()) return false;
+			if (player.countMark("yzs_PP") >= player.yzs_getPPLimit()) return false;
 			if (event.name == "phase") return true;
 			else if (event.name == "useCard" || event.name == "respond") {
 				return get.color(event.card, player) == "red"
@@ -199,7 +199,7 @@ const skills = {
 			return false;
 		},
 		async content(event, trigger, player) {
-			player.addMark("Fuka_yzs");
+			player.yzs_addPP();
 		}
 	},
 	yzs_yinyangyu: {
@@ -219,15 +219,15 @@ const skills = {
 		nobracket: true,
 		enable: "phaseUse",
 		filter(event, player) {
-			return player.countMark("Fuka_yzs") > 0;
+			return player.countMark("yzs_PP") > 0;
 		},
 		manualConfirm: true,
 		prompt(event, player) {
-			if (player.hasSkill("yzs_bolijiejie_buff")) return `${get.poptip("FukaSkill_yzs")}：若你为“结界”内角色，你本回合出【杀】数+1并获得1枚【梦】标记，然后你可令1名角色加入或离开“结界”内`;
-			return `${get.poptip("FukaSkill_yzs")}：若你为“结界”外角色，你摸1张牌并指定1名其他角色，你观看其手牌并可与其交换1张手牌`;
+			if (player.hasSkill("yzs_bolijiejie_buff")) return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，若你为“结界”内角色，你本回合出【杀】数+1并获得1枚【梦】标记，然后你可令1名角色加入或离开“结界”内`;
+			return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，若你为“结界”外角色，你摸1张牌并指定1名其他角色，你观看其手牌并可与其交换1张手牌`;
 		},
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			game.trySkillAudio("bagua_skill");
 			player.playEffectOL(lib.skill.yinyangyu_yzs.Effect);
 			if (player.hasSkill("yzs_bolijiejie_buff")) {
@@ -376,14 +376,14 @@ const skills = {
 		},
 		enable: "phaseUse",
 		filter(event, player) {
-			return game.hasPlayer(target => target.hasSkill("yzs_bolijiejie_buff")) && player.countMark("Fuka_yzs") > 0 && player.countMark("yzs_mengxiangfengyin") >= 3;
+			return game.hasPlayer(target => target.hasSkill("yzs_bolijiejie_buff")) && player.countMark("yzs_PP") > 0 && player.countMark("yzs_mengxiangfengyin") >= 3;
 		},
 		filterTarget(card, player, target) {
 			return !target.hasSkill("hidden_yzs");
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			const result = await player
 				.chooseNumbers('梦想封印', [{ prompt: '请选择你要造成伤害的次数', min: 1, max: Math.floor(player.countMark("yzs_mengxiangfengyin") / 3) }], true)
 				.set('processAI', () => {
@@ -513,7 +513,7 @@ const skills = {
 			let target = event.player == player ? event.target : event.player;
 			return `是否与 ` + get.translation(target) + ` 拼点？`;
 		},
-		prompt2: "胜者摸1张牌",
+		prompt2: "若你胜则摸1张牌",
 		async content(event, trigger, player) {
 			let target = trigger.player == player ? trigger.target : trigger.player;
 			let result = await player.chooseToCompare(target).forResult();
@@ -522,7 +522,7 @@ const skills = {
 			if (result.bool) players.reverse();
 			const winner = players[1];
 			const loser = players[0]
-			await winner.draw();
+			if(winner==player)await winner.draw();
 		},
 	},
 	yzs_jianshi: {
@@ -578,7 +578,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			let result = await player.chooseButton([
-				`每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}`,
+				`每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，失去本技能并获得${get.poptip("yzs_zhongmo")}`,
 				[
 					[
 						["yzs_chengjie", lib.translate["yzs_chengjie_info"]],
@@ -602,7 +602,7 @@ const skills = {
 				let skill = result.links[0];
 				player.addMark(skill, 1, false);
 				if (player.countMark("yzs_chengjie") && player.countMark("yzs_shenpan") && player.countMark("yzs_jianshi")) {
-					await player.recoverTo(player.maxHp)
+				//	await player.recoverTo(player.maxHp)
 					player.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
 					game.broadcastAll(function (current) {
 						_status.tempMusic = `ext:一中杀/audio/Second.mp3`;
@@ -700,16 +700,12 @@ const skills = {
 			player: "damageBegin4"
 		},
 		filter(event, player) {
-			return event.num > 0;
+			return event.num >=player.hp;
 		},
 		async content(event, trigger, player) {
-			if (player.isDamaged()) {
-				trigger.cancel();
-				await player.loseMaxHp();
-				await player.draw(2);
-			} else {
-				trigger.num++;
-			}
+			trigger.cancel();
+			await player.loseMaxHp();
+			await player.draw(2);
 		}
 	},
 	//五条悟
@@ -3356,6 +3352,316 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		ai: {
 			order: 8,
+		},
+	},
+	//羂索
+	yzs_huannaoshushi: {
+		nobracket: true,
+		hiddenSkill: true,
+		derivation: "yzs_zhoulingcaoshu",
+		trigger: {
+			player:"phaseJieshuBegin"
+		},
+		prompt: "选择一名未以本技能选择过的已死亡角色：替换换脑所得技能、调整体力至1点并重新隐匿",
+		group: ["yzs_huannaoshushi_first", "yzs_huannaoshushi_reveal"],
+		getTargets(player) {
+			return game.dead.filter(target => target != player && !player.getStorage("yzs_huannaoshushi_used").includes(target.playerid));
+		},
+		filter(event, player) {
+			return lib.skill.yzs_huannaoshushi.getTargets(player).length > 0;
+		},
+		filterTarget(card, player, target) {
+			return lib.skill.yzs_huannaoshushi.getTargets(player).includes(target);
+		},
+		ai2(target) {
+			return get.rank(target.name1 || target.name, true);
+		},
+		async cost(event, trigger, player) {
+			event.result = await player.chooseTarget(false, `选择一名未以本技能选择过的已死亡角色：替换换脑所得技能、调整体力至1点并重新隐匿`, (card, player, target) => {
+				return lib.skill.yzs_huannaoshushi.getTargets(player).includes(target);
+			})
+				.set("deadTarget", true)
+				.forResult();
+		},
+		async content(event, trigger, player) {
+			const target = event.targets[0];
+			if (!lib.skill.yzs_huannaoshushi.getTargets(player).includes(target)) return;
+			const names = [target.name1 || target.name, target.name2].filter(name => name && lib.character[name]);
+			const gained = [...new Set(names.flatMap(name => get.character(name).skills))]
+				.filter(skill => lib.skill[skill] && !["yzs_huannaoshushi", "yzs_yumenjiang"].includes(skill));
+			game.broadcastAll(function (player, id) {
+				player.storage.yzs_huannaoshushi_used ??= [];
+				player.storage.yzs_huannaoshushi_used.add(id);
+			}, player, target.playerid);
+			// 专属来源只管理换脑所得技能，保留原有技能及其他来源的技能。
+			await player.removeAdditionalSkills("yzs_huannaoshushi");
+			await player.addAdditionalSkills("yzs_huannaoshushi", gained);
+			player.maxHp = target.maxHp;
+			player.update();
+			if (player.hp > 1) {
+				await player.loseHp(player.hp - 1);
+			} else if (player.hp < 1) {
+				await player.recoverTo(1);
+			}
+			if (!player.isIn()) return;
+			game.broadcastAll(function (player, name, image) {
+				const gained = player.additionalSkills.yzs_huannaoshushi || [];
+				const innate = ["yzs_huannaoshushi", "yzs_yumenjiang"].filter(skill => player.hasSkill(skill));
+				player.hiddenSkills.addArray(innate.concat(gained));
+				player.skills.removeArray(innate);
+				player.additionalSkills["hidden:yzs_huannaoshushi"] = gained;
+				delete player.additionalSkills.yzs_huannaoshushi;
+				player.storage.yzs_huannaoshushi_hidden = true;
+				player.storage.rawHp = player.hp;
+				player.storage.rawMaxHp = player.maxHp;
+				player.hp = 1;
+				player.maxHp = 1;
+				player.name = "unknown";
+				player.classList.add("unseen", "unseen_show");
+				player.skin ??= {};
+				player.skin.name = name;
+				if (image) player.node.avatar.style.backgroundImage = image;
+				else player.node.avatar.setBackground(name, "character");
+				player.addSkill("g_hidden_ai");
+				player.update();
+			}, player, names[0], target.node.avatar.style.backgroundImage);
+		},
+		subSkill: {
+			first: {
+				hiddenSkill: true,
+				forced: true,
+				popup: false,
+				priority: 100,
+				trigger: { player: "showCharacterAfter" },
+				filter(event, player) {
+					return !player.storage.yzs_huannaoshushi_entered;
+				},
+				async content(event, trigger, player) {
+					game.broadcastAll(player => { player.storage.yzs_huannaoshushi_entered = true; }, player);
+					await player.addAdditionalSkills("yzs_huannaoshushi", "yzs_zhoulingcaoshu");
+				},
+			},
+			reveal: {
+				hiddenSkill: true,
+				forced: true,
+				popup: false,
+				firstDo: true,
+				trigger: { player: "showCharacterBegin" },
+				filter(event, player) {
+					return player.storage.yzs_huannaoshushi_hidden;
+				},
+				async content(event, trigger, player) {
+					game.broadcastAll(function (player) {
+						const gained = player.additionalSkills["hidden:yzs_huannaoshushi"] || [];
+						player.hiddenSkills.removeArray(gained);
+						player.additionalSkills.yzs_huannaoshushi = gained;
+						delete player.additionalSkills["hidden:yzs_huannaoshushi"];
+						delete player.storage.yzs_huannaoshushi_hidden;
+						player.addSkillTrigger(gained, false, true);
+					}, player);
+				},
+			},
+		},
+		ai: { order: 1, result: { player: 1 } },
+	},
+	yzs_yumenjiang: {
+		nobracket: true,
+		hiddenSkill: true,
+		trigger: { player: "showCharacterAfter" },
+		forced: true,
+		filter(event, player) {
+			return _status.currentPhase && _status.currentPhase.isIn();
+		},
+		async content(event, trigger, player) {
+			const target = _status.currentPhase;
+			if (target == player) {
+				await player.draw(2);
+				return;
+			}
+			const result = await player.chooseBool(`狱门疆：是否失去本技能，结束当前角色(${get.translation(_status.currentPhase)})的回合并将其调离至全场下一轮结束？`)
+				.set("choice", get.attitude(player, target) < 0)
+				.set("ai", () => get.event().choice).forResult();
+			if (!result.bool || !target.isIn()) return;
+			var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang.mp3";
+			game.broadcastAll(function (damageAudioInfo) {
+				if (lib.config.background_audio) {
+					game.playAudio(damageAudioInfo);
+				}
+			}, damageAudioInfo);
+			player.$fullscreenpop("狱门疆  开门","fire")
+			await new Promise(r => setTimeout(r, 2000))
+			if (target.hasSkill("yzs_wuxiaxian")) {
+				player.chat("哟，悟！")
+				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang1.mp3";
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, damageAudioInfo);
+				await new Promise(r => setTimeout(r, 2000))
+				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang2.mp3";
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, damageAudioInfo);
+				await new Promise(r => setTimeout(r, 13000))
+
+				player.$damage()
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, "effect/damage2.mp3");
+				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang3.mp3";
+				game.broadcastAll(function (damageAudioInfo) {
+					if (lib.config.background_audio) {
+						game.playAudio(damageAudioInfo);
+					}
+				}, damageAudioInfo);
+			}
+			await player.removeSkills("yzs_yumenjiang");
+			// 当前为第 N 轮：第 N+2 轮开始即为全场下一轮结束。
+			game.broadcastAll(function (target, round) {
+				target.storage.yzs_yumenjiang_release = round;
+				target.out("yzs_yumenjiang_seal");
+			}, target, game.roundNumber + 2);
+			target.addSkill("yzs_yumenjiang_seal");
+			const phaseUse = trigger.getParent("phaseUse", true);
+			if (phaseUse) phaseUse.skipped = true;
+			const phase = trigger.getParent("phase", true);
+			if (phase) {
+				game.log(target, "结束了回合");
+				phase.finish();
+				phase.untrigger(true);
+			}
+		},
+		subSkill: {
+			seal: {
+				charlotte: true,
+				forceOut: true,
+				forceDie: true,
+				forced: true,
+				popup: false,
+				firstDo: true,
+				priority: 100,
+				trigger: { global: "roundStart" },
+				filter(event, player) {
+					return game.roundNumber >= player.storage.yzs_yumenjiang_release;
+				},
+				async content(event, trigger, player) {
+					player.removeSkill("yzs_yumenjiang_seal");
+				},
+				onremove(player) {
+					game.broadcastAll(function (player) {
+						delete player.storage.yzs_yumenjiang_release;
+						player.in("yzs_yumenjiang_seal");
+					}, player);
+				},
+			},
+		},
+	},
+	yzs_zhoulingcaoshu: {
+		nobracket: true,
+		enable: ["chooseToUse"],
+		group: ["yzs_zhoulingcaoshu_collect", "yzs_zhoulingcaoshu_use"],
+		hasUsed(player) {
+			// 使用与打出共用本回合计数；stat 会随联机选牌状态同步。
+			return (player.getStat("skill").yzs_zhoulingcaoshu_backup || 0) > 0;
+		},
+		filter(event, player) {
+			return !event.responded && !lib.skill.yzs_zhoulingcaoshu.hasUsed(player) && ["wuxie", "shan"].some(name => event.filterCard({ name, isCard: true }, player, event));
+		},
+		hiddenCard(player, name) {
+			return ["wuxie", "shan"].includes(name) && !lib.skill.yzs_zhoulingcaoshu.hasUsed(player);
+		},
+		chooseButton: {
+			dialog() {
+				return ui.create.dialog("咒灵操术", [[["锦囊", "", "wuxie"], ["基本", "", "shan"]], "vcard"], "hidden");
+			},
+			filter(button, player) {
+				const evt = get.event().getParent();
+				return evt.filterCard({ name: button.link[2], isCard: true }, player, evt);
+			},
+			check() { return 1; },
+			backup(links) {
+				return {
+					audio: "ext:一中杀/audio/skill:1",
+					filterCard: () => false,
+					selectCard: -1,
+					viewAs: { name: links[0][2], isCard: true },
+					async precontent(event, trigger, player) {
+						if (lib.skill.yzs_zhoulingcaoshu.hasUsed(player)) event.result.cancel = true;
+					},
+				};
+			},
+			prompt(links) { return "视为使用或打出" + get.translation(links[0][2]); },
+		},
+		getRespondedCards(event) {
+			if (!event.respondTo) return [];
+			const [source, card] = event.respondTo;
+			const matches = evt => evt.name == "useCard" && evt.player == source && evt.card == card;
+			const original = event.getParent(matches, true) || game.getGlobalHistory("useCard", matches).slice(-1)[0];
+			// 响应事件的 cards 是响应牌；应取被响应那次用牌事件的底牌。
+			const cards = original ? original.cards : (card.cards || (get.itemtype(card) == "card" ? [card] : []));
+			return (cards || []).filter(card => ["o", "d"].includes(get.position(card, true)));
+		},
+		marktext: "咒",
+		intro: {
+			markcount: "expansion",
+			mark(dialog, storage, player) {
+				const cards = player.getExpansions("yzs_zhoulingcaoshu");
+				if (player.isUnderControl(true)) dialog.addAuto(cards);
+				else return "共有" + get.cnNumber(cards.length) + "张扣置牌";
+			},
+		},
+		onremove(player) {
+			const cards = player.getExpansions("yzs_zhoulingcaoshu");
+			if (cards.length) player.loseToDiscardpile(cards);
+		},
+		subSkill: {
+			collect: {
+				trigger: { player: ["useCardAfter", "respondAfter"] },
+				forced: true,
+				filter(event) { return lib.skill.yzs_zhoulingcaoshu.getRespondedCards(event).length > 0; },
+				async content(event, trigger, player) {
+					const cards = lib.skill.yzs_zhoulingcaoshu.getRespondedCards(trigger);
+					if (cards.length) {
+						const next = player.addToExpansion(cards, "gain2", false);
+						next.gaintag.add("yzs_zhoulingcaoshu");
+						await next;
+					}
+				},
+			},
+			use: {
+				enable: ["chooseToUse", "chooseToRespond"],
+				hiddenCard(player, name) { return player.getExpansions("yzs_zhoulingcaoshu").some(card => get.name(card) == name); },
+				filter(event, player) {
+					return !event.responded && player.getExpansions("yzs_zhoulingcaoshu").some(card => event.filterCard(card, player, event));
+				},
+				chooseButton: {
+					dialog(event, player) { return ui.create.dialog("咒灵操术：使用扣置牌", player.getExpansions("yzs_zhoulingcaoshu"), "hidden"); },
+					filter(button, player) {
+						const evt = get.event().getParent();
+						return evt.filterCard(button.link, player, evt);
+					},
+					check(button) { return get.event().getParent().type == "phase" ? get.player().getUseValue(button.link) : 1; },
+					backup(links) {
+						return {
+							audio: "ext:一中杀/audio/skill:1",
+							card: links[0], viewAs: links[0], position: "x", selectCard: -1,
+							filterCard(card) { return card === lib.skill.yzs_zhoulingcaoshu_use_backup.card; },
+						};
+					},
+					prompt(links) { return "使用或打出" + get.translation(links[0]); },
+				},
+				ai: { order: 8, respondSha: true, respondShan: true, result: { player: 1 } },
+			},
+		},
+		ai: {
+			respondShan: true,
+			skillTagFilter(player) { return !lib.skill.yzs_zhoulingcaoshu.hasUsed(player); },
+			result: { player: 1 },
 		},
 	},
 }

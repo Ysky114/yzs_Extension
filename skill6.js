@@ -180,6 +180,7 @@ const skills = {
 							let respondTo = trigger.respondTo[1];
 				//			game.log(card, respondTo, card == respondTo);
 							if (!targets.includes(player) || respondTo.name == "wuxie") player.addTempSkill("eling_yzs_ban")
+							game.log(player,"的【恶伶】失效了")
 						}
 					}
 
@@ -5221,7 +5222,7 @@ const skills = {
 				player.markSkill("sichong_yzs");
 				player.unmarkSkill("sichong_yzs");
 				if (x <= 0) return;
-				player.addMark("Fuka_yzs");
+				player.yzs_addPP();
 				await player.recoverTo(x);
 				await player.draw(x);
 			}
@@ -5326,7 +5327,7 @@ const skills = {
 	pohuai_yzs: {
 		enable: "phaseUse",
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			return game.hasPlayer(function (target) {
 				return lib.skill.pohuai_yzs.filterTarget(null, player, target)
 			})
@@ -5336,7 +5337,7 @@ const skills = {
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
-			player.removeMark("Fuka_yzs")
+			player.yzs_removePP()
 			if (event.target.countDiscardableCards(player, "hej") < 2) {
 				await event.target.damage();
 				await event.target.draw(2);
@@ -8310,10 +8311,10 @@ const skills = {
 			fuka: {
 				enable: "phaseUse",
 				filter(event, player) {
-					return player.countMark("Fuka_yzs") > 0;
+					return player.countMark("yzs_PP") > 0;
 				},
 				async content(event, trigger, player) {
-					player.removeMark("Fuka_yzs");
+					player.yzs_removePP();
 					await player.draw();
 					let cards = player.getExpansions("yzs_halfGhost");
 					let handcards = player.getCards("h");
@@ -8345,7 +8346,7 @@ const skills = {
 					player:["phaseBegin","phaseEnd"]
 				},
 				async content(event, trigger, player) {
-					if (player.countMark("Fuka_yzs")<player.getFukaLimit())player.addMark("Fuka_yzs");
+					player.yzs_addPP()
 					let cards = player.getExpansions("yzs_halfGhost");
 					let handcards = player.getCards("h");
 					let next = player.addToExpansion(handcards, player, "giveAuto")
@@ -8433,7 +8434,7 @@ const skills = {
 				},
 				filter(event, player) {
 					if (!event.yzs_zhanwang) return false;
-					if (!player.countMark("Fuka_yzs")) return false;
+					if (!player.countMark("yzs_PP")) return false;
 					if (!player.countExpansions("yzs_halfGhost")) return false;
 					const name = event.card.name;
 					if (get.type(name) != "trick" && get.type(name) != "basic") {
@@ -8450,7 +8451,7 @@ const skills = {
 					event.result = {bool:false}
 					const cards = player.getExpansions("yzs_halfGhost")
 					let result = await player.chooseButtonTarget()
-						.set("createDialog", [`符卡：将1张“半灵”牌当做 ${get.translation(trigger.card.name)} 使用`, cards])
+						.set("createDialog", [`你可消耗1点${get.poptip("yzs_PP")}，将1张“半灵”牌当做 ${get.translation(trigger.card.name)} 使用`, cards])
 						.set("selectButton", 1)
 						.set("filterButton", function (button) {
 							return true;
@@ -8482,7 +8483,7 @@ const skills = {
 					}
 				},
 				async content(event, trigger, player) {
-					player.removeMark("Fuka_yzs");
+					player.yzs_removePP();
 					const name = trigger.card.name;
 					const words = ["狱神剑「业风神闪斩」", "畜趣剑「无为无策之冥罚」", "人符「现世斩」", "人鬼「未来永劫斩」", "断命剑「冥想斩」",
 						"断迷剑「迷津慈航斩」", "符之二「心眼迷想斩」", "符之三「业风神闪斩」", "奥义「西行春风斩」", "空观剑「六根清净斩」", "转生剑「圆心流转斩」",
@@ -8535,13 +8536,13 @@ const skills = {
 			},
 		},
 		hiddenCard(player, name) {
-			if (!player.countMark("Fuka_yzs")) return false;
+			if (!player.countMark("yzs_PP")) return false;
 			var list = ["wuxie"];
 			return list.includes(name) && player.countCards("h");
 		},
 		enable: ["chooseToUse"],
 		filter(event, player) {
-			if (!player.countMark("Fuka_yzs")) return;
+			if (!player.countMark("yzs_PP")) return;
 			if (event.responded) return false;
 			var list = ["wuxie"];
 			if (!list.length) {
@@ -8570,14 +8571,14 @@ const skills = {
 			},
 		},
 		async precontent(event, trigger, player) {
-			player.removeMark("Fuka_yzs");
+			player.yzs_removePP();
 			const words = ["幽鬼剑「妖童饿鬼之断食」", "饿鬼剑「饿鬼道草纸」", "饿王剑「饿鬼十王的报应」", "狱界剑「二百由旬之一闪」", "狱炎剑「业风闪影阵」",
 				"修罗剑「现世妄执」", "人界剑「悟入幻想」", "人世剑「大悟显晦」", "人神剑「俗谛常住」", "天上剑「天人之五衰」", "天界剑「七魄忌讳」",
 				"天神剑「三魂七魄」", "六道剑「一念无量劫」", "魂符「幽明的苦轮」", "魂魄「幽明求闻持聪明之法」","符之一「二重的苦轮」"].randomGet();
 			player.popup(words);
 		},
 		prompt(links, player) {
-			return `符卡：你可将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可：符卡：将1张“半灵”牌当做此牌使用`;
+			return `你可消耗1点${get.poptip("yzs_PP")}以将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可消耗1点${get.poptip("yzs_PP")}，将1张“半灵”牌当做此牌使用`;
 		},
 		mod: {
 			aiValue(player, card, num) {

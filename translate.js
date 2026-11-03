@@ -206,7 +206,8 @@ const translates = {
 	yzs_ItadoriYuji: `虎杖悠仁`,
 	yzs_ItadoriSukuna:`宿傩(虎杖悠仁)`,
 	yzs_Mahito: `真人`,
-	yzs_Ishigoriryu:`石流龙`,
+	yzs_Ishigoriryu: `石流龙`,
+	yzs_Kenjaku:`羂索`,
 
     // 技能台词
 
@@ -265,7 +266,7 @@ const translates = {
 	zhengli_yzs: "争利",
 	zhengli_yzs_info: "你使用【顺手牵羊】无距离限制。【顺手牵羊】对你无效。出牌阶段限1次：你弃任意张牌，然后视为使用等量-1张【顺手牵羊】。",
 	zhujiu_yzs: "祝酒",
-	zhujiu_yzs_info: "你的手牌上限固定为4。游戏 / 回合开始时你获得3/1枚【祝酒】标记，上限为3。场上角色出牌阶段开始时或濒死时，你可移除1枚【祝酒】标记以令其视为使用【酒】。",
+	zhujiu_yzs_info: "你的手牌上限固定为4。游戏和回合开始时你获得1枚【祝酒】标记，上限为3。场上角色出牌阶段开始时或濒死时，你可移除1枚【祝酒】标记以令其视为使用【酒】。",
 
 	yangzhu_yzs: "养猪",
 	yangzhu_yzs_info: "锁定技：回合结束时若你未受伤，你可失去1点体力并摸3张牌。<br>场上角色受到伤害时，你可扣除1点体力上限然后无效之。<br>你的已损体力值变动后，你可弃置场上1张牌。",
@@ -355,13 +356,13 @@ const translates = {
 	DreamTwins_yzs_awaken: "崎梦双星觉醒",
 
 	liuwangnvshiqu_yzs: "六王女逝曲",
-	liuwangnvshiqu_yzs_info: `锁定技：出牌阶段开始时，你可失去1~5点体力，然后摸等量张牌并获得等量张 ${get.poptip("Fuka_yzs")}。若失去体力≥4点，本阶段你使用【杀】造成伤害+1。<br>
-    你的【杀】造成非零伤害时你恢复1点体力。<br>你使用符卡时， ${get.poptip("throw_yzs")}5：你获得1张符卡。`,
+	liuwangnvshiqu_yzs_info: `锁定技：出牌阶段开始时，你可失去1~5点体力，然后摸等量张牌并获得等量点${get.poptip("yzs_PP")}。若失去体力≥4点，本阶段你使用【杀】造成伤害+1。<br>
+    你的【杀】造成非零伤害时你恢复1点体力。<br>你发动${get.poptip("Gungnell_yzs")}和${get.poptip("VampireKiss_yzs")}时， ${get.poptip("throw_yzs")}5：你获得1点蓄能。`,
 	jiashang_yzs:"加伤",
 	Gungnell_yzs: "冈戈尼尔",
-	Gungnell_yzs_info: `${get.poptip("FukaSkill_yzs")}：你视为使用无距离限制的伤害为<span class="bluetext">-1</span>，需<span class="bluetext">-1</span>张【闪】响应的普通【杀】，然后令本自轮次上述1个数字+1。`,
+	Gungnell_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，视为使用无距离限制的伤害为<span class="bluetext">-1</span>，需<span class="bluetext">-1</span>张【闪】响应的普通【杀】，然后令本自轮上述1个数字+1。`,
 	VampireKiss_yzs: "吸血鬼之吻",
-	VampireKiss_yzs_info: `符卡：与1名手牌数小于你的角色交换手牌，然后你可令其失去1点体力并令你恢复1点体力。`,
+	VampireKiss_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，与1名手牌数小于你的角色交换手牌，然后你可令其失去1点体力并令你恢复1点体力。`,
 
 	angryXU_yzs: "怒鲛",
 	angryXU_yzs_info: `锁定技：你的【杀】视为${get.poptip("spear_yzs")}。你不可成为【过河拆桥】的目标。你可将黑色手牌当做【过河拆桥】使用。`,
@@ -448,23 +449,23 @@ const translates = {
 	shengguozuzhou_yzs_skill: "圣国诅咒",
 
 	yicunfashi_yzs: "一寸法师",
-	yicunfashi_yzs_info: `锁定技：游戏开始时你获得1张符卡。弃牌阶段开始时，若你手牌数＜手牌上限，你获得等于二者差值张${get.poptip("Fuka_yzs")}。<br>
+	yicunfashi_yzs_info: `锁定技：游戏开始时你获得1点${get.poptip("yzs_PP")}。弃牌阶段开始时，若你手牌数＜手牌上限，你获得二者差值点蓄能。<br>
     回合开始时若你处于【巨型】状态，退出之，然后：你恢复1点体力、摸3张牌、失去全部护甲、手牌上限+3。`,
 	bianda_yzs: "给我变大吧！",
-	bianda_yzs_info: `${get.poptip("FukaSkill_yzs")}：失去1点体力，然后令任意角色获得2点护甲并进入${get.poptip("bianda_yzs_buff")}状态直至其进入濒死状态。`,
+	bianda_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，失去1点体力，然后令任意角色获得2点护甲并进入${get.poptip("bianda_yzs_buff")}状态直至其进入濒死状态。`,
 	bianda_yzs_buff: "巨型",
 	bianda_yzs_buff_info:`不可使用手牌中的【闪】；摸牌数和进攻距离-1；退出本状态时展示全部手牌并弃置其中的【闪】。`,
 	dapanxiaopan_yzs: "大判小判",
-	dapanxiaopan_yzs_info:`符卡：转换技：场上角色受到伤害时：<span class="bluetext">①：失去1点体力，令伤害+1；</span>②摸2张牌，令伤害-1。`,
+	dapanxiaopan_yzs_info: `转换技：场上角色受到伤害时：你可消耗1点${get.poptip("yzs_PP")}，<span class="bluetext">①：失去1点体力，令伤害+1；</span>②摸2张牌，令伤害-1。`,
 	jieyicunfashi_yzs: "界一寸法师",
-	jieyicunfashi_yzs_info: `觉醒技：你手牌上限增加至≥15后觉醒：你对【巨型】角色使用【杀】无次数和距离限制、其他角色不可退出【巨型】。`,
+	jieyicunfashi_yzs_info: `觉醒技：你手牌上限增加至≥15后觉醒：你对【${get.poptip("bianda_yzs_buff")}角色使用【杀】无次数和距离限制、其他角色不可退出【巨型】。`,
 	jieyicunfashi_yzs_awaken: "界一寸法师",
 
 	perfectArithmetic_yzs: "完美算术",
-	perfectArithmetic_yzs_info: `锁定技：拼点获胜后你获得1张${get.poptip("Fuka_yzs")}。你指定或成为【杀】的目标后，可摸1张牌并与对方拼点：若你胜，你令之无效或不可响应；若否，你摸2张牌，然后给予对方其中一张。<br>
-    ${get.poptip("FukaSkill_yzs")}：你的拼点牌亮出前，你可令之点数视为“9”。然后若胜负结果因此改变，你摸1张牌。`,
+	perfectArithmetic_yzs_info: `锁定技：拼点获胜后你获得1点${get.poptip("yzs_PP")}。你指定或成为【杀】的目标后，可摸1张牌并与对方拼点：若你胜，你令之无效或不可响应；若否，你摸2张牌，然后给予对方其中一张。<br>
+    你的拼点牌亮出前，你可消耗1点蓄能，令之点数视为“9”。然后若胜负结果因此改变，你摸1张牌。`,
 	perfectFreeze_yzs: "完美冻结",
-	perfectFreeze_yzs_info: `锁定技：出牌阶段限1次或符卡：你与1名其他角色拼点，胜者将牌堆顶牌明置于人物牌旁称为${get.poptip("perfectFreeze_yzs_buff")}，然后发动转换技：<span class="bluetext">①摸1张牌；</span>②弃1张牌。（所有角色共享此转换技状态）`,
+	perfectFreeze_yzs_info: `（出牌阶段首次发动不消耗蓄能）<br>出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，与1名其他角色拼点，胜者将牌堆顶牌明置于人物牌旁称为${get.poptip("perfectFreeze_yzs_buff")}，然后发动转换技：<span class="bluetext">①摸1张牌；</span>②弃1张牌。（所有角色共享此转换技状态）`,
 	perfectFreeze_yzs_used: "完美冻结",
 	perfectFreeze_yzs_buff: "冰晶",
 	perfectFreeze_yzs_buff_info:`场上角色准备阶段开始时其获得其全部【冰晶】。然后若≥2张则其结束回合（若其为你则改为恢复1点体力）。`,
@@ -495,28 +496,28 @@ const translates = {
 	WindStorm_skill_g_info:`每回合限1次：出牌阶段，你可将全部手牌置入弃牌堆，然后摸等量张牌，期间不触发时机`,
 
 	steadyLibrary_yzs: "不动图书馆",
-	steadyLibrary_yzs_info: `锁定技：回合开始时你补充全部${get.poptip("Fuka_yzs")}。回合结束时若为${get.poptip("WaterStorm_skill")}，你获得1张符卡。你造成的双属性伤害+1。`,
+	steadyLibrary_yzs_info: `锁定技：回合开始时你补充全部${get.poptip("yzs_PP")}。回合结束时若为${get.poptip("WaterStorm_skill")}，你获得1点蓄能。你造成的双属性伤害+1。`,
 	wiseStone_yzs: "贤者之石",
-	wiseStone_yzs_info: `锁定技：若你无${get.poptip("book_yzs")}，你摸3张牌扣置为【藏书】。<br>${get.poptip("Fuka_yzs")}：你摸3张牌。<br>你使用【杀】指定目标后可展示并给予目标1张【藏书】。`,
+	wiseStone_yzs_info: `锁定技：你失去最后的${get.poptip("book_yzs")}后，摸3张牌扣置为【藏书】。<br>出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸3张牌。<br>你使用【杀】指定目标后可展示并给予目标1张【藏书】。`,
 	wiseStone_yzs_effect: "对应效果",
 	wiseStone_yzs_effect_info: `♥：${get.poptip("FireStorm")}：场上下张【杀】需2张【闪】响应<br>♦：${get.poptip("WindStorm")}<br>场上下张【杀】无次数限制<br>♠：${get.poptip("ThunderStorm")}：获得【藏书】的角色依次弃2张牌<br>♣：${get.poptip("WaterStorm")}：令任意角色恢复1点体力。`,
 	book_yzs: "【藏书】",
 	book_yzs_info: `你可使用锦囊【藏书】<br>失去【藏书】时转换至对应风暴<br>失去最后的【藏书】时刷新出【杀】数<br>给出【藏书】后发动${get.poptip("wiseStone_yzs_effect")}`,
 	silentSelene_yzs: "沉静的月神",
-	silentSelene_yzs_info: `${get.poptip("Fuka_yzs")}：你造成或受到伤害时，将1张【藏书】展示并给予对方，然后无效之。`,
+	silentSelene_yzs_info: `你造成或受到伤害时，你可消耗1点${get.poptip("yzs_PP")}，将1张【藏书】展示并给予对方，然后无效之。`,
 
 	bubbleQueen_yzs: "泡沫女王",
-	bubbleQueen_yzs_info: `锁定技：你可召引${get.poptip("FinancialStorm")}。<br>回合结束时若当前为【金融风暴】，你获得1张${get.poptip("Fuka_yzs")}。<br>
+	bubbleQueen_yzs_info: `锁定技：你可召引${get.poptip("FinancialStorm")}。<br>回合结束时若当前为【金融风暴】，你获得1点${get.poptip("yzs_PP")}。<br>
     出牌阶段限1次：你令1名其他角色获得${get.poptip("finances_yzs")}至其出牌阶段结束，然后你可将其中的“-”改为“+”。`,
 	FinancialStorm_skill: "金融风暴",
 	FinancialStorm_skill_info: `场上角色回合开始时弃1张手牌。`,
-	FinancialStorm_instant_info: `金融风暴：召引者获得1张${get.poptip("Fuka_yzs")}，然后视为使用任意非伤害非延时锦囊牌`,
+	FinancialStorm_instant_info: `金融风暴：召引者获得1点${get.poptip("yzs_PP")}，然后视为使用任意非伤害非延时锦囊牌`,
 	finances_yzs: "财运",
 	finances_yzs_info: `本技能和${get.poptip("Mischance_Scatter_yzs")}投掷要求-2。<br>
 	准备阶段，若你手牌数＜体力值，${get.poptip("throw_yzs")}4：摸2张牌；否则失去1点体力。<br>
 	结束阶段，你投掷4：视为使用任意非伤害非延时锦囊牌，或制作1枚${get.poptip("Totem_yzs")}。`,
 	Mischance_Scatter_yzs: "厄运播撒",
-	Mischance_Scatter_yzs_info: `锁定技：符卡：你弃置任意角色1张牌，然后其投掷4：下回合摸牌数+2；否则弃1张手牌。`,
+	Mischance_Scatter_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，弃置任意角色1张牌，然后其投掷4：下回合摸牌数+2；否则弃1张手牌。`,
 	Mischance_Scatter_yzs_throw_buff: "厄运播撒",
 
 	mengmengjiugui_yzs: "濛濛酒鬼",
@@ -525,12 +526,12 @@ const translates = {
     回合内若你未醉酒，你不可使用【杀】。`,
 	mengmengjiugui_yzs_buff:"濛濛酒鬼",
 	yichuirang_yzs: "伊吹瓤",
-	yichuirang_yzs_info: `锁定技：你使用或打出牌时摸1张牌并扣置自己1张手牌，扣置牌达4张时获得其中1张并移去剩余，然后获得1张${get.poptip("Fuka_yzs")}。回合开始时或结束时，你可获得依此法扣置的牌。<br>
-    ${get.poptip("FukaSkill_yzs")}：你需要时，视为使用【酒】。`,
+	yichuirang_yzs_info: `锁定技：你使用或打出牌时摸1张牌并扣置自己1张手牌，扣置牌达4张时获得其中1张并移去剩余，然后获得1点${get.poptip("yzs_PP")}。回合开始时或结束时，你可获得依此法扣置的牌。<br>
+    需要时，你可消耗1点${get.poptip("yzs_PP")}，视为使用【酒】。`,
 	yunjiwusan_yzs: "云集雾散",
 	yunjiwusan_yzs_wuyongchang_backup:`云集雾散`,
 	yunjiwusan_yzs_info:`锁定技：你体力上限至多为5。你使用红色牌时增加或减少1点体力上限。<br>
-    符卡：${get.poptip("wuyongchang_yzs")}：你调整体力上限至任意值，然后你每因此溢出1点体力便获得1张符卡。 `,
+    ${get.poptip("wuyongchang_yzs")}：你可消耗1点${get.poptip("yzs_PP")}，调整体力上限至任意值，然后你每因此溢出1点体力便获得1点${get.poptip("yzs_PP")}。 `,
 
 	pinfanshijie_yzs: "频凡世界",
 	pinfanshijie_yzs_info:`你恢复体力时摸1张牌。出牌阶段若你体力值＞体力下限，你可失去1点体力并摸2张牌。`,
@@ -552,10 +553,10 @@ const translates = {
 	candyJar_yzs: "太妃糖罐中",
 	candyJar_yzs_info: `获得本项时你弃任意张手牌并摸等量张牌。你造成伤害时，可获得${get.poptip("toothCollector_yzs")}或${get.poptip("fairyDance_yzs")}或弃置受伤角色1张手牌。失去本项时你摸2张牌或令任意名角色依次摸1张牌。`,
 	fairyDance_yzs: "精灵圆舞曲",
-	fairyDance_yzs_info: `获得本项时你恢复1点体力或分配1次零伤害。你将“5”改为“3”。你移去【乳牙】时可获得其中1种花色的牌，并可将1张【牙仙精灵】移出游戏并刷新出【杀】数。失去本项时你可获得任意张【牙仙精灵】。`,
+	fairyDance_yzs_info: `获得本项时你恢复1点体力或分配1次零伤害。你将${get.poptip("toothCollector_yzs")}中的“5”改为“3”。你移去【乳牙】时可获得其中1种花色的牌，并可将1张【牙仙精灵】移出游戏并刷新出【杀】数。失去本项时你可获得任意张【牙仙精灵】。`,
 
 	juBao_yzs: "聚宝",
-	juBao_yzs_info: `锁定技：你使用装备牌效果改为将之置入弃牌堆，然后获得装备技能和1张${get.poptip("Fuka_yzs")}。`,
+	juBao_yzs_info: `锁定技：你使用装备牌效果改为将之置入弃牌堆，然后获得装备技能和1点${get.poptip("yzs_PP")}。`,
 	tanBao_yzs: "探宝",
 	tanBao_yzs_BusyRod:"棒符「忙碌探宝棒」",
 	tanBao_yzs_info:`出牌阶段限1次：你依次展示牌堆顶牌至展示装备牌，然后你获得之或继续展示并获得下一张装备牌。`,
@@ -565,7 +566,7 @@ const translates = {
 	weiGuang_yzs: "威光",
 	weiGuang_yzs_name:"光符「正义之威光」",
 	weiGuang_yzs_info:`锁定技：你造成负数伤害时改为令目标恢复等量体力。你的多目标【杀】指定目标后可减少任意个目标，每减少1个便对另一目标伤害±1（不可叠加）。
-	（X为任意值）${get.poptip("FukaSkill_yzs")}（X）：你视为使用目标数为X的伤害-1的普通【杀】。`,
+	出牌阶段，你可消耗任意点${get.poptip("yzs_PP")}，视为使用等量目标数的伤害-1的普通【杀】。`,
 
 	tuiyidele_yzs: "退役得了",
 	tuiyidele_yzs_info: `锁定技：你的摸、弃牌阶段改为发动${get.poptip("breaktime_yzs")}。其他角色回合开始时/弃牌阶段结束时，若其手牌数＝你，你可令其判定/结束阶段改为发动【休息时间】。`,
@@ -654,8 +655,8 @@ const translates = {
 	MasterSpark_yzs_info: `你可将包含【杀】在内的任意张手牌当做任意【杀】使用，此【杀】根据转化底牌中包含花色获得对应效果：<br>
 	♠无次数限制；♣无距离限制； ♦不可响应；♥伤害+1。`,
 	StardustReverie_yzs: "星尘幻想",
-	StardustReverie_yzs_info: `锁定技：有四种花色的牌进入弃牌堆的回合结束时，你可摸1张牌，然后弃牌至手牌上限并获得弃牌数张${get.poptip("Fuka_yzs")}。
-    ${get.poptip("FukaSkill_yzs")}：你将任意手牌当做【无中生有】使用。`,
+	StardustReverie_yzs_info: `有四种花色的牌进入弃牌堆的回合结束时，你可摸1张牌，然后弃牌至手牌上限并获得弃牌数点${get.poptip("yzs_PP")}。
+    出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，将任意手牌当做【无中生有】使用。`,
 	IllusionStar_yzs: "幻象之星",
 	IllusionStar_yzs_info: `你成为其他角色的实体牌的目标时可展示全部手牌，若其中无此牌花色，你获得并无效此牌。 `,
 
@@ -664,27 +665,27 @@ const translates = {
     你受到非零伤害时可移去1张【要石】以无效之，然后你展示并将手牌中与此【要石】同花色的牌全部弃置或置顶。<br>
     你手牌上限为4，你手牌数大于4时弃至4。你摸牌数+2。你手牌不可被其他角色弃置或获取。回合内你无视其他角色的伤害。<br>
     你主动弃置手牌时改为将之依次正面向上叠置于人物牌旁，称为【天界】。你于摸牌阶段外摸牌时可改为从【天界】底摸。<br>
-    你可将任意手牌当做火【杀】使用。回合开始或结束时，若你手牌花色与【要石】均相同，你展示之并获得1张${get.poptip("Fuka_yzs")}。无论如何你摸牌至手牌上限。`,
+    你可将任意手牌当做火【杀】使用。回合开始或结束时，若你手牌花色与【要石】均相同，你展示之并获得1点${get.poptip("yzs_PP")}。无论如何你摸牌至手牌上限。`,
 	Wonderful_Heaven_yzs_yaoshi_name:"要石「天空之灵石」",
 	tiandikaipi_yzs: "天地开辟",
 	tiandikaipi_yzs_name:"天符「天道是非之剑」",
-	tiandikaipi_yzs_info: `锁定技：判定阶段，若你有${get.poptip("Fuka_yzs")}且手牌花色与【要石】均相同，你可弃X张与【要石】同花色的异花色手牌，然后视为使用X-1张火【杀】（X为【要石】数）。<br>
+	tiandikaipi_yzs_info: `锁定技：判定阶段，若你手牌花色与【要石】均相同，你可弃X张与【要石】同花色的异花色手牌，然后视为使用X-1张火【杀】（X为【要石】数）。<br>
     出牌阶段限2次：置顶1张【天界】牌，然后摸至多4张牌`,
 	guruojintangtao_yzs: "固若金汤桃",
-	guruojintangtao_yzs_info: `${get.poptip("FukaSkill_yzs")}：每自轮限3次：场上角色成为伤害牌的目标时，将之目标改为你；若该角色为你，改为无效之。
+	guruojintangtao_yzs_info: `每自轮限3次：场上角色成为伤害牌的目标时，你可消耗1点${get.poptip("yzs_PP")}，将之目标改为你；若该角色为你，改为无效之。
 	无论如何，将【天界】顶牌置顶或与1张【要石】替换。`,
 	feixiangtian_yzs: "众生绯想天",
-	feixiangtian_yzs_info: `符卡：若你无【要石】，将全部手牌明置为【要石】，然后摸牌至手牌上限。`,
+	feixiangtian_yzs_info: `出牌阶段若你无【要石】，你可消耗1点${get.poptip("yzs_PP")}，将全部手牌明置为【要石】，然后摸牌至手牌上限。`,
 
 	bachongwuzhongdu_yzs: "八重雾中渡",
-	bachongwuzhongdu_yzs_info: `锁定技：游戏开始时你获得2张${get.poptip("Fuka_yzs")}。
-	回合开始前你获得1张符卡，然后若当前为${get.poptip("WaterStorm")}，转换至${get.poptip("BulletStorm")}；若否，转换至【水风暴】。
+	bachongwuzhongdu_yzs_info: `锁定技：游戏开始时你获得2点${get.poptip("yzs_PP")}。
+	回合开始前你获得1点${get.poptip("yzs_PP")}，然后若当前为${get.poptip("WaterStorm")}，转换至${get.poptip("BulletStorm")}；若否，转换至【水风暴】。
     受到伤害或恢复体力时你获得1枚【死】标记（上限为3），然后令伤害来源弃1张牌并恢复1点体力。若其弃置黑色牌，你获得1枚【死】标记。
     出牌阶段限1次：你移除3枚【死】标记并召引【水风暴】`,
 	hunliliandao_yzs: "魂离镰刀",
-	hunliliandao_yzs_info: `${get.poptip("FukaSkill_yzs")}：场上角色体力值变动至1时，你令其进入濒死状态，然后你无视上限获得1枚【死】标记。若其因此死亡，你制作1枚${get.poptip("Totem_yzs")}。`,
+	hunliliandao_yzs_info: `场上角色体力值变动至1时，你可消耗1点${get.poptip("yzs_PP")}，令其进入濒死状态，然后你无视上限获得1枚【死】标记。若其因此死亡，你制作1枚${get.poptip("Totem_yzs")}。`,
 	Higan_Retour_yzs: "彼岸归航",
-	Higan_Retour_yzs_info: `符卡：场上角色回合结束时，移去全部【死】标记并令任意角色恢复等量-1点体力。然后若其本次恢复体力溢出，你对其造成等于溢出量点伤害。`,
+	Higan_Retour_yzs_info: `场上角色回合结束时，你可消耗1点${get.poptip("yzs_PP")}，移去全部【死】标记并令任意角色恢复等量-1点体力。然后若其本次恢复体力溢出，你对其造成等于溢出量点伤害。`,
 
 	nuoruo_yzs: "懦弱",
 	nuoruo_yzs_info:`你受到伤害时，你与伤害来源各摸伤害量张牌。`,
@@ -762,10 +763,10 @@ const translates = {
 
 	wangling_yzs:"亡灵",
 	wangling_yzs_info: `锁定技：你仅可因自己技能或${get.poptip("WaterStorm")}恢复体力。你每累计受到4点伤害后，若未处于濒死，进入濒死状态。<br>
-    你脱离濒死时恢复全部体力、摸3张牌，并获得1张${get.poptip("Fuka_yzs")}。`,
+    你脱离濒死时恢复全部体力、摸3张牌，并获得1点${get.poptip("yzs_PP")}。`,
 	fanhundie_yzs: "反魂蝶",
 	fanhundie_yzs_info: `转换技：场上角色进入濒死时，若其体力值为唯一最低，你可：<span class="bluetext">①令其恢复1点体力</span> ②对其造成1点伤害。<br>
-    ${get.poptip("FukaSkill_yzs")}： ${get.poptip("wuyongchang_yzs")}：你与1名与你体力值之差等于1的角色交换体力值。`,
+     ${get.poptip("wuyongchang_yzs")}：你可消耗1点${get.poptip("yzs_PP")}，与1名与你体力值之差等于1的角色交换体力值。`,
 	yousi_yzs: "诱死",
 	yousi_yzs_info: `出牌阶段限1次：你与1名其他角色拼点，若你的拼点牌为红/黑色，胜者恢复/失去1点体力。`,
 
@@ -929,7 +930,7 @@ const translates = {
 	ErWangLock_yzs_info:`限定技：回合开始时，你可删去<span class="bluetext">蓝字部分</span>并令你的出【杀】数+3-X至你的下回合开始。(X为处于【里】的其他角色数)<br>你杀死其他角色后刷新本技能。`,
 
 	qiuwen_yzs:"求闻",
-	qiuwen_yzs_info:`每回合每种牌名限1次：你可将手牌当做<span class="bluetext">【闪】</span>或<span class="bluetext">【无中生有】</span>使用或打出，并可令本技能本回合失效以摸3张牌并弃半数取下张手牌。`,
+	qiuwen_yzs_info:`每回合每种牌名限1次：你可将手牌当做<span class="bluetext">【闪】</span>或<span class="bluetext">【无中生有】</span>使用，并可令本技能本回合失效以摸3张牌并弃半数取下张手牌。`,
 	zhuanshi_yzs:"转世",
 	zhuanshi_yzs_info: `${get.poptip("eternalSkill_yzs")}：你因【求闻】弃置牌时，记录其点数，并将其中即时牌的牌名加入【求闻】。<br>
     每回合结束时，若你此世记录总点数达30，你死亡，因此死亡前可分配全部手牌至其他角色。<br>你被击杀无击杀奖惩。<br>
@@ -1102,9 +1103,9 @@ const translates = {
 	yongyi_yzs_info: `转换技：需要时，你可视为使用或打出：①普通【杀】 ②【闪】。 `,
 
 	guangyousheguainiao_yzs: `广有射怪鸟`,
-	guangyousheguainiao_yzs_info: `锁定技：出牌阶段开始时你获得2张${get.poptip("Fuka_yzs")}。<br>回合开始时，你摸你上一自轮次出牌阶段数张牌。<br>
+	guangyousheguainiao_yzs_info: `锁定技：出牌阶段开始时你获得2点${get.poptip("yzs_PP")}。<br>回合开始时，你摸你上一自轮次出牌阶段数张牌。<br>
     你有额外手牌区，称为<font color="#ffac27">“半灵”</font>(初始4张牌)，原本的手牌区称为<font color="#1fffc0">“妖梦”</font>。你的回合内和出牌阶段内你启用<font color="#1fffc0">妖梦</font>，否则启用<font color="#ffac27">半灵</font>。<br>
-    每名角色的出牌阶段结束时，你移动<font color="#1fffc0">妖梦</font>X张牌至<font color="#ffac27">半灵</font>，若X≥4则你获得1张符卡，（X为你本阶段使用或重铸锦囊牌数）
+    每名角色的出牌阶段结束时，你移动<font color="#1fffc0">妖梦</font>X张牌至<font color="#ffac27">半灵</font>，若X≥4则你获得1点${get.poptip("yzs_PP")}，（X为你本阶段使用或重铸锦囊牌数）
 	然后若<font color="#ffac27">半灵</font>比<font color="#1fffc0">妖梦</font>恰多Y张牌，交换<font color="#1fffc0">妖梦</font>与<font color="#ffac27">半灵</font>的牌并获得1枚${get.poptip("guangyousheguainiao_yzs_ling")}标记。（Y为本自轮次获得【灵】标记数）<br>
     <font color="#1fffc0">妖梦</font>牌数＜/≥<font color="#ffac27">半灵</font>时，你可将<font color="#1fffc0">妖梦</font>与<font color="#ffac27">半灵</font>各一张同花色牌当做【无中生有】/【铁索连环】使用或重铸。`,
 	guangyousheguainiao_yzs_youmu: `<font color="#1fffc0">妖梦</font>`,
@@ -1114,7 +1115,7 @@ const translates = {
 	guangyousheguainiao_yzs_ling_info:`拥有2枚时，你全部移除之并进行出牌阶段`,
 	liugenqingjingzhan_yzs: `六根清净斩`,
 	liugenqingjingzhan_yzs_backup:`六根清净斩`,
-	liugenqingjingzhan_yzs_info: `锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>${get.poptip("FukaSkill_yzs")}：${get.poptip("wuyongchang_yzs")}：你选择：①视为使用上一记录牌或摸1张牌；<br>
+	liugenqingjingzhan_yzs_info: `锁定技：你使用或重铸即时非伤害锦囊牌时，记录之。<br>${get.poptip("wuyongchang_yzs")}：你消耗1点${get.poptip("yzs_PP")}，选择：①视为使用上一记录牌或摸1张牌；<br>
 ②将${get.poptip("guangyousheguainiao_yzs")}中一个牌名改为另一个，若二者因此相同，将1张牌当做被改变的牌使用或重铸；若否，摸或弃2张牌。`,
 
 	shane_yzs: `善恶`,
@@ -1185,7 +1186,7 @@ const translates = {
     你使用或打出牌时，若横置角色数：&lt/&gt2，你可横/重置1名角色；=2，你可横或重置1名角色。然后若横置角色数≠2，因此横/重置者摸/弃1张牌。`,
 
 	danmubianhua_yzs: `弹幕变化`,
-	danmubianhua_yzs_info: `锁定技：其他角色投掷结果为6时你获得1张${get.poptip("Fuka_yzs")}。<br>弃牌阶段，你可改为展示并弃置手牌中任意一种花色的牌。<br>
+	danmubianhua_yzs_info: `锁定技：其他角色投掷结果为6时你获得1点${get.poptip("yzs_PP")}。<br>弃牌阶段，你可改为展示并弃置手牌中任意一种花色的牌。<br>
     你可召引${get.poptip("SmokeStorm")}。回合开始时，若当前为【烟风暴】，你可终止之并摸4张牌。<br>
     你的上家回合结束后，若你已死亡：${get.poptip("throw_yzs")}6：你于原座次重新加入游戏。`,
 	SmokeStorm_skill: "烟风暴",
@@ -1193,14 +1194,14 @@ const translates = {
 	SmokeStorm_skill_instant_buff:`烟风暴`,
 	SmokeStorm_instant_info: `烟风暴：召引者可令任意角色下次投掷结果为6`,
 	niaoshouxihua_yzs: `鸟兽戏画`,
-	niaoshouxihua_yzs_info: `${get.poptip("FukaSkill_yzs")}：${get.poptip("wuyongchang_yzs")}：你观看1名其他角色的手牌，
+	niaoshouxihua_yzs_info: `${get.poptip("wuyongchang_yzs")}：你消耗1点${get.poptip("yzs_PP")}，观看1名其他角色的手牌，
 	然后展示并扣置你与其共计至多3张同花色牌至本阶段结束，然后你获得等量枚${get.poptip("niaoshouxihua_yzs_zhashu")}标记，上限为5。<br>`,
 	niaoshouxihua_yzs_zhashu: `诈术`,
 	niaoshouxihua_yzs_zhashu_info:`场上角色投掷后，你可移除任意枚本标记（无论你是否在场），然后令投掷结果±等量`,
 	manyuefuwu_yzs: `满月腹舞`,
 	manyuefuwu_yzs_info: `锁定技：出牌阶段限1次：${get.poptip("throw_yzs")}6：制作1枚${get.poptip("Totem_yzs")}。<br>
     出牌阶段限1次：投掷6：令1名其他角色执行出牌阶段。<br>
-    ${get.poptip("FukaSkill_yzs")}：${get.poptip("wuyongchang_yzs")}：令任意角色下次投掷要求-2。`,
+    ${get.poptip("wuyongchang_yzs")}：你消耗1点${get.poptip("yzs_PP")}，令任意角色下次投掷要求-2。`,
 
 	jisu_yzs: `寄宿`,
 	jisu_yzs_info: `锁定技：无${get.poptip("aoman_yzs")}的角色出牌阶段开始时，你可观看其手牌，若其手牌不满四种花色，你可给予其不同花色的手牌。
@@ -1326,15 +1327,15 @@ const translates = {
 	guiqikuanglan_yzs_info: `觉醒技：你累计使用8张【酒】或【杀】后觉醒：你使用【酒】的次数上限+1。`,
 
 	dajiejie_yzs: `大结界`,
-	dajiejie_yzs_info: `锁定技：回合开始时你获得[1]张${get.poptip("Fuka_yzs")}。你使用或打出红色牌时获得[0]张符卡。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`,
+	dajiejie_yzs_info: `锁定技：回合开始时你获得[1]点${get.poptip("yzs_PP")}。你使用或打出红色牌时获得[0]点蓄能。游戏开始时你召唤“${get.poptip("Barrier_yzs")}”至任意座次。`,
 	erchongjiejie_yzs: `二重结界`,
-	erchongjiejie_yzs_info: `${get.poptip("FukaSkill_yzs")}：若场上无“${get.poptip("subBarrier_yzs")}”，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。<br>
-	“子结界”死亡时你获得[1]张${get.poptip("Fuka_yzs")}。`,
+	erchongjiejie_yzs_info: `出牌阶段，若场上无“${get.poptip("subBarrier_yzs")}”，你可消耗1点${get.poptip("yzs_PP")}，召唤“子结界”至任意座次，然后你选择其朝向（顺或逆时针），该朝向上直至“结界”路径内称为“${get.poptip("InBarrier_yzs")}”。<br>
+	“子结界”死亡时你获得[1]点蓄能。`,
 	yinyangyu_yzs: `阴阳玉`,
-	yinyangyu_yzs_info: `符卡：你摸[1]张牌，然后观看并与[1]名其他角色交换[1]张手牌，无论如何你本回合出【杀】数+[0]并获得[0]枚【梦】标记，
+	yinyangyu_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸[1]张牌，然后观看并与[1]名其他角色交换[1]张手牌，无论如何你本回合出【杀】数+[0]并获得[0]枚【梦】标记，
 	然后可令“结界”或“子结界”顺或逆时针移动[0]个座次。`,
 	mengxiangfengyin_yzs: `梦想封印`,
-	mengxiangfengyin_yzs_info: `符卡：移除X枚【梦】标记，然后从任意结界内角色开始，结界内角色依次受到1点伤害，共计X/3点。（向下取整）`,
+	mengxiangfengyin_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，移除X枚【梦】标记，然后从任意结界内角色开始，结界内角色依次受到1点伤害，共计X/3点。（向下取整）`,
 
 	Reimu_yzs_Barrier_yzs_skill: `大结界`,
 	Reimu_yzs_Barrier_yzs_skill_info: `锁定技：你无回合、区域。<br>路径经过你的距离计算均改为无限。`,
@@ -1352,11 +1353,11 @@ const translates = {
 	PhoenixLegend_yzs: `不死鸟传说`,
 	PhoenixLegend_yzs_info: `锁定技：游戏开始时你获得3点护甲。你无弃牌阶段。<br>其他角色受到伤害时，你可无效之然后受到伤害来源造成的等量伤害。
 	<br>你可将黑色牌当做【无懈可击】或【闪】使用或打出。<br>回合结束时你失去体力至1点，然后获得等量护甲。<br>
-	回合开始时，你获得1张${get.poptip("Fuka_yzs")}，然后若你护甲值≥6，你失去全部护甲、摸牌至手牌数为4，然后获得下列效果至你下回合开始：<br>
-	“你体力值不可下降。你主动弃置红色牌时获得1张符卡。”`,
+	回合开始时，你获得1点${get.poptip("yzs_PP")}，然后若你护甲值≥6，你失去全部护甲、摸牌至手牌数为4，然后获得下列效果至你下回合开始：<br>
+	“你体力值不可下降。你主动弃置红色牌时获得1点蓄能。”`,
 	PhoenixLegend_yzs_buff:`不死鸟传说`,
 	HumanBuring_yzs: `人体自燃`,
-	HumanBuring_yzs_info: `${get.poptip("FukaSkill_yzs")}：你选择：①弃1张红色牌以视为使用【决斗】，然后摸1张牌；②弃任意张黑色牌，然后恢复弃牌数向下取半数点体力。`,
+	HumanBuring_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，选择：①弃1张红色牌以视为使用【决斗】，然后摸1张牌；②弃任意张黑色牌，然后恢复弃牌数向下取半数点体力。`,
 
 	DreamCatcher_yzs: `捕梦网`,
 	DreamCatcher_yzs_info: `锁定技：场上角色弃牌阶段弃牌后，其可交换手牌与弃置的牌，则本阶段结束时其执行额外出牌阶段，本回合结束时你执行一个仅有出牌阶段的回合。`,
@@ -1364,7 +1365,7 @@ const translates = {
 	DreamInMe_yzs_info: `锁定技：你使用牌被无效后，你可视为使用任意单体即时牌，因此使用伤害牌或${get.poptip("mengliaoshibian_yzs")}后本阶段本技能失效。<br>出牌阶段开始时你视为使用${get.poptip("mengliaoshibian_yzs")}。`,
 
 	DisorderEye_yzs: `狂气之瞳`,
-	DisorderEye_yzs_info: `锁定技：回合开始时你获得3张${get.poptip("Fuka_yzs")}。<br>
+	DisorderEye_yzs_info: `锁定技：回合开始时你获得3点${get.poptip("yzs_PP")}。<br>
     你的非基本牌视为【杀】，你的【杀】效果改为：
 	<small>“你可将目标角色1张牌扣置为“虚弹”（超过5张时移去至5张），无论如何你可给予目标角色1张“虚弹”并摸1张牌。”</small><br>
     你的出牌阶段结束时，场上角色依次调整手牌数至其本阶段开始时值。`,
@@ -1375,13 +1376,13 @@ const translates = {
 	VisionaryTuning_yzs_info: `转换技（回合开始时重置）：出牌阶段：<br>
 虚：移去4张非♠“虚弹”，然后令1名不处于“狂”状态的角色下回合摸牌数-2并进入“狂”状态；<br>
 实：移去4张♠“虚弹”，然后对任意角色造成1点伤害并令其退出“狂”状态。<br>
-无论如何你获得1张${get.poptip("Fuka_yzs")}。`,
+无论如何你获得1点${get.poptip("yzs_PP")}。`,
 	LunaticRedEyes_yzs: `幻胧月睨`,
-	LunaticRedEyes_yzs_info: `${get.poptip("FukaSkill_yzs")}：选择1项：<br>虚：令任意2名角色交换手牌；<br>
+	LunaticRedEyes_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，选择1项：<br>虚：令任意2名角色交换手牌；<br>
 实：令任意角色摸4张牌，然后你本回合对其使用【杀】无次数和距离限制。`,
 	InvisibleFullMoon_yzs: `隐形满月`,
 	InvisibleFullMoon_yzs_info: `${get.poptip("wuyongchang_yzs")}：你将全部手牌弃置或置顶，然后选择：<br>
-①获得1个“满月”；<br>②符卡：摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个。`,
+①获得1个“满月”；<br>②消耗1点${get.poptip("yzs_PP")}，摸等量张牌，然后可将所弃置牌中任意张叠置为1个“满月”，至多2个。`,
 
 	xuanhujishi_yzs: `悬壶济世`,
 	_xuanhujishi_yzs_zhulu:`珠露`,
@@ -1534,7 +1535,7 @@ const translates = {
 	Deeagorze_yzs: `纵金`,
 	Deeagorze_yzs_info: `锁定技：场上角色脱离<font color="#f9be4d">“黄金化”</font>后，你可对其以外的1名角色发动<font color="#f9be4d">${get.poptip("dianjin_yzs")}</font>。<br>
     每回合每种牌名限1次：你可将<font color="#f9be4d">【无中生有】</font>当做任意即时牌使用，此牌不可指定未<font color="#f9be4d">“黄金化”</font>的角色为目标。<br>
-	游戏开始时，你可发动<font color="#f9be4d">【点金】</font>`,
+	游戏开始时，你可发动<font color="#f9be4d">【点金】</font>。`,
 
 	chaodaoti_yzs: `超导体`,
 	chaodaoti_yzs_info: `锁定技：你因受到雷电伤害而体力减少时，改为恢复等量点体力并摸场上“超导”角色数张牌。<br>
@@ -1728,10 +1729,10 @@ const translates = {
 
 	TheWorld_yzs: `世界`,
 	TheWorld_yzs_info: `锁定技：出牌阶段结束时，若你手牌数=手牌上限，你结束本回合并减少1点手牌上限（可为负值），然后执行额外回合。<br>
-    出牌阶段你使用的【杀】改为于你下一结束阶段结算。<br>${get.poptip("FukaSkill_yzs")}：你调整手牌数至手牌上限，然后若你因此摸/弃牌，你减少/增加1点手牌上限。`,
+    出牌阶段你使用的【杀】改为于你下一结束阶段结算。<br>出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，调整手牌数至手牌上限，然后若你因此摸/弃牌，你减少/增加1点手牌上限。`,
 	KillingDoll_yzs: `杀人玩偶`,
-	KillingDoll_yzs_info: `锁定技：回合开始时你获得1张${get.poptip("Fuka_yzs")}。<br>结束阶段开始时，你调整手牌上限至体力值。<br>
-    ${get.poptip("FukaSkill_yzs")}：若当前有风暴，终止之并摸2张牌；若否，转换至${get.poptip("WaterStorm")}或${get.poptip("WindStorm")}。`,
+	KillingDoll_yzs_info: `锁定技：回合开始时你获得1点${get.poptip("yzs_PP")}。<br>结束阶段开始时，你调整手牌上限至体力值。<br>
+    出牌阶段，你可消耗1点蓄能，若当前有风暴，终止之并摸2张牌；若否，转换至${get.poptip("WaterStorm")}或${get.poptip("WindStorm")}。`,
 
 	shuangzizhoufu_yzs: `双子咒缚`,
 	shuangzizhoufu_yzs_info: `锁定技：你受到非致命伤害时无视护甲。<br>你恢复体力后，若你护甲值<体力上限，你获得1点护甲。<br>
@@ -1920,12 +1921,12 @@ const translates = {
     你移去【禁令】或【序】后，若本回合移去数之和为3的倍数，你对当前回合角色造成1点伤害并恢复1点体力，然后刷新限定技。`,
 
 	sichong_yzs: `四重`,
-	sichong_yzs_info: `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1张${get.poptip("Fuka_yzs")}、恢复体力至X点并摸X张牌。<br>（X为清空记录数）`,
+	sichong_yzs_info: `锁定技：你指定或成为有花色的【杀】的目标时，记录此牌花色，若已记录过则清空记录，然后你获得1点${get.poptip("yzs_PP")}、恢复体力至X点并摸X张牌。<br>（X为清空记录数）`,
 	Laevatein_yzs: `莱瓦汀`,
 	visible_Laevatein_yzs:`莱瓦汀`,
 	Laevatein_yzs_info: `你因弃牌阶段或${get.poptip("pohuai_yzs")}而弃置任意角色的【杀】后，获得并明置之，你视这些【杀】为无次数距离限制的火【杀】。`,
 	pohuai_yzs: `破坏`,
-	pohuai_yzs_info: `${get.poptip("FukaSkill_yzs")}：你指定1名角色，弃置其区域内2张牌，若牌不足则改为对其造成1点伤害并令其摸2张牌。`,
+	pohuai_yzs_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，指定1名角色，弃置其区域内2张牌，若牌不足则改为对其造成1点伤害并令其摸2张牌。`,
 
 	shizhongying_yzs: `十种影`,
 	shizhongying_yzs_info: `锁定技：你使用非转化的即时牌结算后，可重铸1张手牌，若之点数为数字且你未记录过，你记录之，
@@ -2012,33 +2013,33 @@ const translates = {
     觉醒技：你因此累计造成3点伤害后觉醒：红色数字改为3，你增加1点体力上限，然后恢复1点体力。`,
 
 	yzs_halfGhost: `半灵`,
-	yzs_halfGhost_info: `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1张符卡并交换手牌与“半灵”牌。<br>
-	符卡：你摸1张牌并交换手牌与“半灵”牌。
+	yzs_halfGhost_info: `锁定技：游戏开始时，你摸4张牌并扣置4张手牌，称为“半灵”牌。回合开始和结束时，你获得1点${get.poptip("yzs_PP")}并交换手牌与“半灵”牌。<br>
+	出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，摸1张牌并交换手牌与“半灵”牌。
 <br>转换技：每名角色的额定回合结束时，若你手牌数与“半灵”牌数相等，<font color="#1fffc0">人：摸2张牌；</font>灵：执行仅有出牌阶段的额外回合。`,
 	yzs_zhanwang: `斩妄`,
-	yzs_zhanwang_info: `符卡：你可将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可：符卡：将1张“半灵”牌当做此牌使用。`,
+	yzs_zhanwang_info: `你可消耗1点${get.poptip("yzs_PP")}以将手牌当做【无懈可击】使用，抵消的牌结算结束后，若为单目标即时牌，你可消耗1点${get.poptip("yzs_PP")}，将1张“半灵”牌当做此牌使用。`,
 
 	yzs_bolijiejie: `博丽结界`,
-	yzs_bolijiejie_info: `${get.poptip("FukaSkill_yzs")}：若无角色处于“结界”内，你可指定1名角色并调整护甲值至1。你有护甲期间，这些角色处于“结界”内，其余角色处于“结界”外。`,
+	yzs_bolijiejie_info: `出牌阶段，若无角色处于“结界”内，你可消耗1点${get.poptip("yzs_PP")}，指定1名角色并调整护甲值至1。你有护甲期间，这些角色处于“结界”内，其余角色处于“结界”外。`,
 	yzs_leyuan: `乐园`,
-	yzs_leyuan_info: `锁定技：你回合开始时或使用或打出红色牌时获得1张符卡。<br>
+	yzs_leyuan_info: `锁定技：你回合开始时或使用或打出红色牌时获得1点${get.poptip("yzs_PP")}。<br>
 “结界”内角色摸牌数和手牌上限+1，若为你则再+1。“结界”内角色受到致命伤害时，你无效之并失去等量点护甲。除你以外，“结界”内与外角色之间计算距离为无限。`,
 	yzs_yinyangyu: `阴阳玉`,
-	yzs_yinyangyu_info: `${get.poptip("FukaSkill_yzs")}：若你为“结界”外角色，你摸1张牌并指定1名其他角色，你观看其手牌并可与其交换1张手牌；
+	yzs_yinyangyu_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，若你为“结界”外角色，你摸1张牌并指定1名其他角色，你观看其手牌并可与其交换1张手牌；
 若你为“结界”内角色，你本回合出【杀】数+1并获得1枚【梦】标记，然后你可令1名角色加入或离开“结界”内。`,
 	yzs_mengxiangfengyin: `梦想封印`,
-	yzs_mengxiangfengyin_info: `${get.poptip("FukaSkill_yzs")}：你指定1名“结界”内角色并移除3X枚【梦】标记，然后对其造成X次1点伤害。`,
+	yzs_mengxiangfengyin_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，指定1名“结界”内角色并移除3X枚【梦】标记，然后对其造成X次1点伤害。`,
 
 	yzs_chengjie: `惩戒`,
 	yzs_chengjie_info: `锁定技：回合内，你不可使用【杀】。<br>你造成或受到伤害后，可对对方使用1张【杀】，此牌伤害+1。`,
 	yzs_shenpan: `审判`,
-	yzs_shenpan_info: `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，胜者摸1张牌。`,
+	yzs_shenpan_info: `锁定技：回合内，你不可使用锦囊牌。<br>你指定或成为锦囊牌的目标后，可与对方拼点，若你胜则摸1张牌。`,
 	yzs_jianshi: `监视`,
 	yzs_jianshi_info: `锁定技：回合内，你不可使用装备牌。<br>场上角色使用装备牌后，你可弃置1张装备以与其各摸1张牌。`,
 	yzs_ezhao: `厄兆`,
-	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，恢复全部体力，然后失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
+	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
 	yzs_zhongmo: `终末`,
-	yzs_zhongmo_info: `锁定技：你受到非零伤害时，若你未受伤，此伤害+1，否则改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，失去【惩戒/审判/监视】其中一个技能。`,
+	yzs_zhongmo_info: `锁定技：你受到伤害时，若此伤害≥你体力值，改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，失去【惩戒/审判/监视】其中一个技能。`,
 
 	yzs_SixEyes: `六眼`,
 	yzs_SixEyes_info: `锁定技：每公轮开始时，你可获得2点${get.poptip("yzs_PP")}并摸牌至体力上限，然后失去1点体力`,
@@ -2093,6 +2094,15 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_GraniteBlast_info: `你可消耗1点${get.poptip("yzs_PP")}，视为使用或打出普通【杀】，你可额外消耗1点蓄能以令此【杀】无次数距离限制并改为雷【杀】。`,
 	yzs_yinzhan: `饮战`,
 	yzs_yinzhan_info: `出牌阶段限1次：你可视为使用【决斗】。生效前，目标与你依次可令对方摸1张牌以令此牌伤害+1，然后目标体力值和手牌数每有一项≥你，你获得1点${get.poptip("yzs_PP")}并摸1张牌。`,
+
+	yzs_huannaoshushi: `换脑术式`,
+	yzs_huannaoshushi_info: `隐匿技：你首次登场时，获得${get.poptip("yzs_zhoulingcaoshu")}。<br>
+	每名角色限1次：结束阶段，你可选择1名已死亡的角色，你用其角色牌上的技能替换你因本技能获得的技能，调整体力上限至与其相同，然后调整体力至1点并隐匿。`,
+	yzs_yumenjiang: `狱门疆`,
+	yzs_yumenjiang_info: `隐匿技：你登场时，若于自己回合内，你摸2张牌；否则你可失去本技能以令当前回合角色结束回合并调离至其下一轮结束。`,
+
+	yzs_zhoulingcaoshu: `咒灵操术`,
+	yzs_zhoulingcaoshu_info:`每回合限1次：需要时，你可视为使用【无懈可击】或【闪】。你响应牌后，将之扣置于角色牌上，你可如手牌般使用或打出因此扣置的牌。`,
 };
 
 export default translates;
