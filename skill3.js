@@ -1562,20 +1562,10 @@ const skills = {
 			},
 			select: [1, Infinity],
 			filter: function (button, player) {
-				if (!ui.selected.buttons.length) {
-					return true
-				} else {
-					let suits = [];
-					for (let card of ui.selected.buttons) {
-						if (!suits.includes(card.suit)) {
-							suits.push(card.suit);
-						}
-					}
-					return !suits.includes(button.link.suit)
-				}
+				return !ui.selected.buttons.some(selected => selected.link.suit === button.link.suit);
 			},
 			check(button) {
-				return get.value(button)
+				return get.value(button.link);
 			},
 			backup(links, player) {
 				return {
@@ -1637,7 +1627,10 @@ const skills = {
 					},
 				}
 			},
-			prompt: "你获得任意张花色各异的【爱意】，然后复制1名其他角色角色牌上的通常技至你下一回合结束<br>若获得4张，再对其造成其体力值点伤害",
+			prompt(links) {
+				const prompt = "选择一名没有【爱慕】的角色，获得所选【爱意】并复制其武将牌上的通常技至你的下一回合结束";
+				return links.length >= 4 ? prompt + "，然后对其造成等同于其体力值的伤害" : prompt;
+			},
 		},
 		ai: {
 			order: 8,

@@ -2805,7 +2805,8 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				}
 				let cards = result.links.filter(card => cardsx.includes(card));
 				let name = result.links.filter(card => !cardsx.includes(card))[0][2];
-				await player.useCard(cards, {name}, target);
+				// 来源记录在本次视为使用的装备上，避免底牌离开装备区后仍保留标记。
+				await player.useCard(cards, { name, storage: { yzs_wuweizhuanbian: true } }, target);
 			}
 		}
 	},
@@ -2822,20 +2823,12 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		selectTarget: 1,
 		async content(event, trigger, player) {
+			// 弃置后虚拟装备可能被移除，提前保存带有来源标记的装备区牌。
+			const transformedCards = event.target.getCards("e").filter(card => card[card.cardSymbol]?.storage?.yzs_wuweizhuanbian);
 			let result = await player.discardPlayerCard(event.target, "e", 1, true).forResult();
-			if (result?.bool && result.cards?.length) {
-				if (result.cards.some((card) => {
-					if (card[card.cardSymbol]?.cards) {
-					//	game.log(card[card.cardSymbol]?.cards)
-						return card[card.cardSymbol].cards.some(c=>get.type(c,false)=="equip")
-					}
-					return get.type(card,false)=="equip"
-				})) {
-					player.tempBanSkill("yzs_suhun", { player: "phaseUseAfter" });
-				}
-			} else {
+			if (!result?.bool || !result.cards?.length) return;
+			if (result.cards.some(card => !transformedCards.includes(card))) {
 				player.tempBanSkill("yzs_suhun", { player: "phaseUseAfter" });
-				return;
 			}
 			result = await player
 				.chooseButton([`令 ${get.translation(event.target)} 恢复或失去1点体力`, [[["recover", "回血"], ["loseHp", "扣血"]], "tdnodes"]])
@@ -3490,7 +3483,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			}, damageAudioInfo);
 			player.$fullscreenpop("狱门疆  开门","fire")
 			await new Promise(r => setTimeout(r, 2000))
-			if (target.hasSkill("yzs_wuxiaxian")) {
+			if (get.translation(target).includes("五条悟")) {
 				player.chat("哟，悟！")
 				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang1.mp3";
 				game.broadcastAll(function (damageAudioInfo) {

@@ -1485,6 +1485,9 @@ const skills = {
 		intro: {
 			name: "平凡",
 			nocount: true,
+			mark(dialog, _, player) {
+				return `下一回合开始时获得${get.poptip("normal_life_yzs")}`
+			},
 		},
 		async content(event, trigger, player) {
 			player.removeSkill("BitetheDust_yzs");

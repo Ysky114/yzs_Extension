@@ -9061,6 +9061,7 @@ const skills = {
 					if (evt.name == "fanhundie_yzs_fuka") return false;
 					if (evt.name == "WaterStorm_skill_instant_buff") return false;
 					if (evt.name == "WaterStorm_skill") return false;
+					if (evt.name == "yousi_yzs_result") return false;
 					return true;
 				},
 				async content(event, trigger, player) {

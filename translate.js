@@ -2080,7 +2080,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_wuweizhuanbian: `无为转变`,
 	yzs_wuweizhuanbian_info: `你使用基本牌对目标角色生效后，可观看并将其1张手牌当做任意装备牌对其使用。`,
 	yzs_suhun: `塑魂`,
-	yzs_suhun_info: `出牌阶段，你可弃置任意角色装备区内1张牌，然后令其恢复或失去1点体力。若弃置的为装备牌，本技能本阶段失效。`,
+	yzs_suhun_info: `出牌阶段，你可弃置任意角色装备区内1张牌，然后令其恢复或失去1点体力。若弃置的不为因${get.poptip("yzs_wuweizhuanbian")}而装备的牌，本技能本阶段失效。`,
 	yzs_tuisheng: `蜕生`,
 	yzs_tuisheng_info: `锁定技：你恢复体力时，若你体力上限<8，可改为增加1点体力上限。你体力上限首次增加至6/8时，获得${get.poptip("yzs_zibiyuandunguo")}/${get.poptip("yzs_bianshajilingti")}。`,
 	yzs_zibiyuandunguo: `自闭圆顿裹`,
