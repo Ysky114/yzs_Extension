@@ -839,10 +839,10 @@ const translates = {
 
 	buxijinjun_yzs: "不息进军",
 	buxijinjun_yzs_info: `锁定技：游戏开始时，你将牌堆顶4张牌明置于人物牌旁，称为【源晶】。<br>
-	你进入濒死时，可恢复体力至下限，并将牌堆顶恢复量张牌加入【源晶】，然后令【坚盾】本回合失效。<br>
+	你进入濒死时，可恢复体力至下限，并将牌堆顶恢复量张牌加入【源晶】，然后令${get.poptip("jiandun_yzs")}本回合失效。<br>
     出牌阶段结束时，若你有同点数的【源晶】，你死亡。`,
 	huimiezitai_yzs: "毁灭姿态",
-	huimiezitai_yzs_info: `锁定技：你造成或受到非零伤害时亮出牌堆顶2张牌，获得其中与【源晶】点数不同的牌，然后令伤害+X(剩余牌数)<br>
+	huimiezitai_yzs_info: `锁定技：每回合各限1次：你造成或受到非零伤害时亮出牌堆顶2张牌，获得其中与【源晶】点数不同的牌，然后令伤害+X(剩余牌数)<br>
     出牌阶段限1次：你用任意张手牌替换等量张【源晶】。`,
 	jiandun_yzs: "坚盾",
 	jiandun_yzs_info: `其他角色受到伤害时，若伤害来源不为你，你可弃置1张【杀】，然后无效之并受到伤害来源造成的等量点伤害。`,
@@ -1134,10 +1134,10 @@ const translates = {
 	Quirk_yzs: `怪癖`,
 	Quirk_yzs_info: `你不可成为其他角色的锦囊牌或【桃】的目标。`,
 	Absurd_yzs: `荒诞`,
-	Absurd_yzs_info: `你不因此使用非延时锦囊牌后，你视为使用你不因此使用的上张非延时锦囊牌。`,
+	Absurd_yzs_info: `你使用的非延时锦囊牌额外结算1次。`,
 
 	chaoren_yzs: `超人`,
-	chaoren_yzs_info: `锁定技：回合开始时，你投掷3枚骰子，然后将投掷结果从高至低依次填入你以下数值：（无对应结果的项数值不变，至少为1）<br>
+	chaoren_yzs_info: `锁定技：回合开始时，你投掷2枚骰子，然后将投掷结果从高至低依次填入你以下数值：（无对应结果的项数值不变，至少为1）<br>
 	<small>手牌上限、摸牌数</small>`,
 	chaoren_yzs_name1: "超人「圣白莲」",
 	chaoren_yzs_name2:"大魔法「魔神复诵」",
@@ -2042,11 +2042,12 @@ const translates = {
 	yzs_zhongmo_info: `锁定技：你受到伤害时，若此伤害≥你体力值，改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，失去【惩戒/审判/监视】其中一个技能。`,
 
 	yzs_SixEyes: `六眼`,
-	yzs_SixEyes_info: `锁定技：每公轮开始时，你可获得2点${get.poptip("yzs_PP")}并摸牌至体力上限，然后失去1点体力`,
+	yzs_SixEyes_info: `锁定技：每公轮开始时，你可摸体力上限张牌，然后失去1点体力`,
 	yzs_wuxiaxian: `无下限`,
 	yzs_wuxiaxian_info: `若你未装备防具，你视为装备${get.poptip("yzs_wuxiaxian_wuxian")}。你使用牌时，获得1点${get.poptip("yzs_PP")}。`,
 	yzs_canghe: `苍/赫`,
-	yzs_canghe_info: `转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>顺转：【苍】，并令本技能本回合失效；反转：【赫】。<br>
+	yzs_canghe_backup:`苍/赫`,
+	yzs_canghe_info: `转换技：每回合开始时重置本技能。出牌阶段，你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>顺转：【苍】，并令本技能本回合失效；反转：【赫】。<br>
 你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`,
 	yzs_xushici: `虚式·茈`,
 	yzs_xushici_info: `出牌阶段，你可弃置点数为X的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}各1张并可指定1名其他角色，然后对指定的角色造成X点伤害，未指定则对所有角色造成X点伤害。`,

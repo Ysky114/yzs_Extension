@@ -287,6 +287,15 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		return this.storage.yzs_countDowns.filter(func);
 	};
 
+	// 联机聊天发送者由实际连接确定，避免旧界面携带召唤物或其他座位编号而串号。
+	if (!lib.message.server.chat._yzsChatSenderFixed) {
+		const originalChat = lib.message.server.chat;
+		lib.message.server.chat = function (id, ...args) {
+			return originalChat.call(this, this.id, ...args);
+		};
+		lib.message.server.chat._yzsChatSenderFixed = true;
+	}
+	// 联机瞬发接口
     Object.assign(lib.message.server, {
         yzs_shunfaji(name) {
             if (lib.node.observing.includes(this)) {
@@ -299,57 +308,59 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
        }
 	});
 	Object.assign(game, {
+		// 移除被操控的召唤物前将连接交还本体（允许本体已死），保留其后续结算接收者。
+		yzs_restoreSummonControl(target) {
+			if (_status.over) return;
+			const source = target._source;
+			if (!source || !game.players.concat(game.dead).includes(source)) return;
+			if (target !== game.me && !target.isOnline2()) return;
+			if (_status.connectMode) game.yzs_swapPlayerOL(target, source);
+			else if (target === game.me) game.swapPlayerAuto(source);
+		},
 		yzs_swapPlayerOL(player, target) {
-			if (!_status.connectMode || player == target || !player || !target) return;
+			if (_status.over || game.online || !_status.connectMode || player == target || !player || !target) return;
 
 			const [playerid, targetid] = [player.playerid, target.playerid];
+			// 昵称跟随连接；nameol 只是截断后的显示文本，不能作为聊天昵称的数据源。
+			// 在交换 ws 之前取得主机上的完整快照，所有客机都应用同一份值。
+			const controllerInfo = current => {
+				const nickname = current.ws?.nickname ?? (current === game.me ? get.connectNickname() : current.nickname) ?? "";
+				const isAuto = !!current.isAuto || (current === game.me && !!_status.auto);
+				return { nickname, isAuto, offline: !!current.ws?.closed };
+			};
+			const playerInfo = controllerInfo(player);
+			const targetInfo = controllerInfo(target);
 			[target.ws, player.ws] = [player.ws, target.ws];
 
 			lib.wsOL[targetid] = player.ws?.ws;
 			lib.wsOL[playerid] = target.ws?.ws;
 
-			for (const key in lib.hook) {
-				const hasPlayer = key.startsWith(playerid);
-				const hasTarget = key.startsWith(targetid);
-				if (hasPlayer || hasTarget) {
-					const newKey = key.replace(new RegExp(`^${hasPlayer ? playerid : targetid}`), hasPlayer ? targetid : playerid);
-					lib.hook[newKey] = lib.hook[key];
-					delete lib.hook[key];
-				};
-			};
+			// 先取快照再交换，防止双方同名触发器相互覆盖，导致死亡清理或控制技能丢失。
+			const hooks = Object.entries(lib.hook).filter(([key]) => key.startsWith(playerid + "_") || key.startsWith(targetid + "_"));
+			for (const [key] of hooks) delete lib.hook[key];
+			for (const [key, value] of hooks) {
+				const fromPlayer = key.startsWith(playerid + "_");
+				lib.hook[(fromPlayer ? targetid : playerid) + key.slice((fromPlayer ? playerid : targetid).length)] = value;
+			}
 
-			game.broadcastAll((player, target, playerid, targetid) => {
-				const handleBroadcast = () => {
-					if ([player, target].includes(game.me)) {
-						const source = game.me == target ? player : target;
-						const sourceid = game.me == target ? playerid : targetid;
-
-						game.swapPlayerAuto(source);
-						game.onlineID = game.wsid = sourceid;
-
-						if (_status.auto) {
-							ui.click.auto('forced');
-						};
-						if (player.isAuto) {
-							player.isAuto = false;
-						};
-					};
-				};
-
-				const swapCoreData = () => {
-					[target.nickname, player.nickname] = [player.nickname, target.nickname];
-					const [playerNickname, targetNickname] = [player.node.nameol.innerHTML, target.node.nameol.innerHTML];
-
-					player.setNickname(targetNickname);
-					target.setNickname(playerNickname);
-
-					[player.playerid, target.playerid] = [targetid, playerid];
-					lib.playerOL[targetid] = player;
-					lib.playerOL[playerid] = target;
-				};
-				handleBroadcast();
-				swapCoreData();
-			}, player, target, playerid, targetid);
+			game.broadcastAll((player, target, playerid, targetid, playerInfo, targetInfo) => {
+				const controlled = game.me === player ? target : game.me === target ? player : null;
+				// 先更新映射和昵称，再触发切视角/取消托管的回调及其可能发送的聊天消息。
+				[player.playerid, target.playerid] = [targetid, playerid];
+				lib.playerOL[targetid] = player;
+				lib.playerOL[playerid] = target;
+				for (const [current, info] of [[player, targetInfo], [target, playerInfo]]) {
+					current.nickname = info.nickname;
+					current.isAuto = info.isAuto;
+					current.setNickname(info.nickname + (info.offline ? " - 离线" : info.isAuto ? " - 托管" : ""));
+				}
+				if (!_status.over && controlled && !game.observe) {
+					// onlineID 必须指向本人连接当前操控的座位；房间 wsid 不随座位改变。
+					if (game.online) game.onlineID = controlled.playerid;
+					game.swapPlayerAuto(controlled);
+					if (_status.auto) ui.click.auto('forced');
+				}
+			}, player, target, playerid, targetid, playerInfo, targetInfo);
 		}
 	});
 
@@ -2139,6 +2150,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		config.isSub ??= true;
 		config.noDieAfter ??= false;
 		config.noDieAfter2 ??= true;
+		config.noIdentity ??= false;
+		config.sharedVictory ??= false;
+		config.neutral ??= false;
 		for (const i in config) {
 			next[i] = config[i];
 		}
@@ -2148,7 +2162,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	lib.element.content.yzs_addPlayerOL = async function (event, trigger, player) {
 		const result = {};
 		event.result = result;
-		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub, noDieAfter, noDieAfter2 } = event;
+		const { source, sourceSkill, target, rawPairs, isNext, animate, isControl, dieRemove, startCards, identity, noCheckResult, callback, isSub, noDieAfter, noDieAfter2, noIdentity, sharedVictory, neutral } = event;
 		const newPlayer = await game.addPlayerOL(target, ...rawPairs, isNext, { source, animate });
 		result.target = newPlayer;
 
@@ -2180,9 +2194,16 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		const cards = get.cards(startCards, true);
 		newPlayer.directgain(cards);
 		newPlayer._start_cards = cards;
-		game.broadcastAll((player, target, source, sourceSkill, identity, noCheckResult) => {
+		game.broadcastAll((player, target, source, sourceSkill, identity, noCheckResult, noIdentity, sharedVictory, neutral, dieRemove) => {
 			target._sourceSkill = sourceSkill;
-			if (!identity) {
+			target._yzsSharedVictory = sharedVictory;
+			target._yzsNeutral = neutral;
+			target._yzsRemoveWithOwner = dieRemove;
+			if (noIdentity) {
+				target.identity = identity = "yzs_noIdentity";
+				lib.translate.yzs_noIdentity = "无";
+				lib.translate.yzs_noIdentity2 = "无身份";
+			} else if (!identity) {
 				identity = (target.identity = (identity => {
 					switch (identity) {
 						case "zhu":
@@ -2205,13 +2226,16 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				lib.translate[identity] = "仆";
 			}
 
-			const goon = player !== game.me && target !== game.me &&
-				player.node?.identity?.classList.contains("guessing") && !player.identityShown;
+			const goon = !noIdentity && (sharedVictory ? source.identity !== "zhu" :
+				player !== game.me && target !== game.me && player.node?.identity?.classList.contains("guessing") && !player.identityShown);
 			if (goon) {
 				if (target.identityShown) delete target.identityShown;
 				if (target.node?.identity && !target.node.identity.classList.contains("guessing")) {
 					target.node.identity.classList.add("guessing");
 				}
+			} else {
+				target.identityShown = true;
+				target.node.identity.classList.remove("guessing");
 			}
 			// setIdentity会用lib.translate覆盖显示
 			const pRaw = player?.node?.identity?.firstChild?.innerHTML;
@@ -2219,10 +2243,10 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			const pDefault = player?.identity ? String(get.translation(player.identity)) : "";
 			const isCustomLabel = !!pText && pText !== pDefault;
 			target.setIdentity(goon ? "cai" : undefined);
-			if (!goon && isCustomLabel) {
+			if (!goon && !noIdentity && !sharedVictory && isCustomLabel) {
 				if (target.node?.identity?.firstChild) {
 					target.node.identity.firstChild.innerHTML = pRaw;
-					const pColor = p?.node?.identity?.dataset?.color;
+					const pColor = player?.node?.identity?.dataset?.color;
 					if (pColor) target.node.identity.dataset.color = pColor;
 				}
 				if (target.node?.dieidentity) {
@@ -2237,7 +2261,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			}
 			if (source?.side || (game.me && game.me.side) || get.mode() == 'versus') {
 				target.side = source.side;
-				target.node.identity.firstChild.innerHTML = source.node.identity.firstChild.innerHTML;
+				if (!noIdentity && !sharedVictory) target.node.identity.firstChild.innerHTML = source.node.identity.firstChild.innerHTML;
 				target.node.identity.dataset.color = source.node.identity.dataset.color;
 			}
 			target.skillH = [];
@@ -2252,50 +2276,139 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				/*target.node.identity.firstChild.innerHTML = player.node.identity.firstChild.innerHTML;*/
 				target.node.identity.dataset.color = source.node.identity.dataset.color;
 			}
+			if (neutral) {
+				// 每只中立召唤物使用独立的阵营值，既不加入任一方，也不与其他中立物自动结盟。
+				target.side = "yzs_neutral_" + target.playerid;
+				target.node.identity.dataset.color = "white";
+			}
 			if (noCheckResult) {
 				target._noCheckResult = true;
 			}
 			if (_status.yzs_addPlayerOL) {
+				game.yzs_wrapSummonDeath?.(target);
 				return;
 			}
 			_status.yzs_addPlayerOL = true;
 			//检测游戏胜负
+			const getResultOwner = current => {
+				if (["identity", "doudizhu", "versus", "single"].includes(get.mode()) && current?.isNoPlayer_OnionCells_yzs) {
+					return current.storage?.OnionCells_yzs_source || current._source || current;
+				}
+				return current;
+			};
+			const getVictoryPlayer = current => current?._yzsSharedVictory || current?._yzsNeutral
+				? current._source : getResultOwner(current);
+			// 判定期间排除无身份召唤物，合并复制体及内奸的同胜负召唤物，随后恢复真实座位。
+			const withResultPlayers = callback => {
+				const players = game.players;
+				const dead = game.dead;
+				const alive = [];
+				const restored = [];
+				for (const current of players) {
+					if (current._yzsSharedVictory && !players.includes(current._source) &&
+						(get.mode() === "versus" || current._yzsRemoveWithOwner ||
+							get.mode() === "doudizhu" && current._source === game.zhu)) continue;
+					// 斗地主以存活人数判定地主胜利，己方召唤物也须合并；地主死亡仍立即判负。
+					const owner = current._yzsSharedVictory && (get.mode() === "doudizhu" ||
+						get.mode() === "identity" && current.identity === "nei")
+						? current._source : getResultOwner(current);
+					if (owner === current && current._noCheckResult) continue;
+					if (!alive.includes(owner)) alive.push(owner);
+				}
+				try {
+					for (const current of alive) {
+						if (players.includes(current)) continue;
+						for (const name of ["isAlive", "isDead"]) {
+							restored.push([current, name, Object.getOwnPropertyDescriptor(current, name)]);
+							current[name] = () => name === "isAlive";
+						}
+					}
+					game.players = alive;
+					game.dead = dead.filter(current => !alive.includes(current));
+					return callback();
+				} finally {
+					game.players = players;
+					game.dead = dead;
+					for (const [current, name, descriptor] of restored) {
+						if (descriptor) Object.defineProperty(current, name, descriptor);
+						else delete current[name];
+					}
+				}
+			};
+			const isSingleAlly = (current, owner) => current === owner || (current._source === owner && !current._noCheckResult);
+			const origin_checkOnlineResult = game.checkOnlineResult;
+			const runResultCheck = callback => {
+				if (_status.over) return;
+				const over = game.over;
+				const me = game.me;
+				let projectedMe;
+				let overArgs;
+				let result;
+				// game.over 必须在真实名单恢复后执行，否则正在操控召唤物的客机会漏收结算。
+				game.over = (...args) => { overArgs = args; };
+				try {
+					result = withResultPlayers(() => {
+						const player = getVictoryPlayer(me._trueMe || me);
+						// 中立召唤物的操控者仍按本体阵营获得结果，不按中立阵营判负。
+						if (me._yzsNeutral || me._yzsSharedVictory) {
+							projectedMe = player;
+							game.me = player;
+						}
+						const result = callback();
+						if (overArgs && typeof overArgs[0] === "boolean" &&
+							["identity", "doudizhu"].includes(get.mode()) && _status.mode !== "purple" &&
+							!_status.brawl?.checkResult && typeof origin_checkOnlineResult === "function") {
+							// 军争本地判定直接读 dead 样式，用同一模式的联机判定统一房主与客机结果。
+							overArgs[0] = origin_checkOnlineResult.call(game, player);
+						}
+						return result;
+					});
+				} finally {
+					game.over = over;
+					if (projectedMe && game.me === projectedMe) game.me = me;
+				}
+				if (overArgs) return over.apply(game, overArgs);
+				return result;
+			};
 			if (typeof game.checkResult === "function") {
 				const origin_checkResult = game.checkResult;
-				game.checkResult = function () {
-					const player = game.me._trueMe || game.me;
-					if (get.mode() == "single") {
-						if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-							game.over(true);
-						} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-							game.over(false);
+				game.checkResult = function (...args) {
+					return runResultCheck(() => {
+						const player = getVictoryPlayer(game.me._trueMe || game.me);
+						if (get.mode() === "single") {
+							if (!game.players.some(current => isSingleAlly(current, player))) game.over(false);
+							else if (game.players.every(current => isSingleAlly(current, player))) game.over(true);
+							return;
 						}
-						return;
-					}
-					const targets = game.players.filter(i => i._noCheckResult);
-					game.players.removeArray(targets);
-					origin_checkResult();
-					game.players.addArray(targets);
+						return origin_checkResult.apply(this, args);
+					});
 				};
 			}
-			if (typeof game.checkOnlineResult === "function") {
-				const origin_checkOnlineResult = game.checkOnlineResult;
-				game.checkOnlineResult = function (player) {
-					if (player._noCheckResult) {
-						return false;
-					}
-					if (get.mode() == "single") {
-						if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-							game.over(true);
-						} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-							game.over(false);
+			if (get.mode() === "versus") {
+				// 对决直接在死亡回调判胜。召唤物自身死亡不消耗队伍替补，也不触发主将阵亡。
+				game.yzs_wrapSummonDeath = current => {
+					const original = current.dieAfter;
+					if (typeof original !== "function" || original._yzsResultWrapped) return;
+					current.dieAfter = function (...args) {
+						if (this._noCheckResult || this._yzsSharedVictory) return;
+						return runResultCheck(() => original.apply(this, args));
+					};
+					current.dieAfter._yzsResultWrapped = true;
+				};
+				for (const current of [lib.element.player, ...game.players, ...game.dead]) {
+					game.yzs_wrapSummonDeath(current);
+				}
+			}
+			if (typeof origin_checkOnlineResult === "function") {
+				game.checkOnlineResult = function (player, ...args) {
+					const owner = getVictoryPlayer(player);
+					if (owner === player && player._noCheckResult) return false;
+					return withResultPlayers(() => {
+						if (get.mode() == "single") {
+							return game.players.some(current => isSingleAlly(current, owner));
 						}
-						return;
-					}
-					const targets = game.players.filter(i => i._noCheckResult);
-					game.players.removeArray(targets);
-					origin_checkOnlineResult();
-					game.players.addArray(targets);
+						return origin_checkOnlineResult.call(this, owner, ...args);
+					});
 				};
 			}
 			//敌友判定
@@ -2304,8 +2417,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				const origin_getFriends = lib.element.player.getFriends;
 				const getFriends = function (func, includeDie) {
 					const player = this;
+					if (player._yzsNeutral) return [];
 					return [...origin_getFriends.apply(this, arguments), ...game[includeDie ? "filterPlayer2" : "filterPlayer"](target => (target["_source"] || target) === (player["_source"] || player))]
-						.filter(i => i !== player || func === true)
+						.filter(i => !i._yzsNeutral && (i !== player || func === true))
 						.unique()
 						.sortBySeat(player);
 				};
@@ -2315,6 +2429,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (typeof lib.element.player.isFriendOf === "function") {
 				const origin_isFriendOf = lib.element.player.isFriendOf;
 				const isFriendOf = function (player) {
+					if (this._yzsNeutral || player._yzsNeutral) return false;
 					if ((this["_source"] || this) === (player["_source"] || player)) {
 						return true;
 					}
@@ -2326,7 +2441,10 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (typeof lib.element.player.getEnemies === "function") {
 				const origin_getEnemies = lib.element.player.getEnemies;
 				const getEnemies = function (func, includeDie) {
-					if (this["_source"]) {
+					if (this._yzsNeutral) {
+						return game[includeDie ? "filterPlayer2" : "filterPlayer"](target => target !== this &&
+							(target === this._source || this.storage.yzs_NeutralAttitude?.get(target) > 0));
+					} else if (this["_source"]) {
 						return this["_source"].getEnemies(func, includeDie);
 					} else {
 						const player = this;
@@ -2344,7 +2462,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				lib.element.player.getEnemies = getEnemies;
 				[...game.players, ...game.dead].forEach(i => (i.getEnemies = getEnemies));
 			}
-		}, player, newPlayer, source, sourceSkill, identity, noCheckResult);
+		}, player, newPlayer, source, sourceSkill, identity, noCheckResult, noIdentity, sharedVictory, neutral, dieRemove);
 		if (callback) {
 			await callback(event, newPlayer);
 		}
@@ -2365,16 +2483,27 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	}
 	lib.element.content.yzs_removePlayerOL = async function (event, trigger, player) {
 		const { target, source, animate, callback } = event;
-		if (_status.yzs_autoswap?.[target.playerid])delete _status.yzs_autoswap[target.playerid];
 		await game.removePlayerOL(target, { animate });
 		if (callback) {
-			await callback(event, newPlayer);
+			await callback(event, target);
 		}
 	};
 	game.removePlayerOL = async function (player, config = {}) {
-		if (get.itemtype(player) != "player") {
+		if (_status.over || get.itemtype(player) != "player" || player.removed) {
 			return;
 		}
+		game.yzs_restoreSummonControl(player);
+		// 交还控制权可能交换 playerid，必须在交换后清理被移除座位的控制关系。
+		game.broadcastAll(target => {
+			const links = _status.yzs_autoswap;
+			if (!links) return;
+			delete links[target.playerid];
+			for (const ids of Object.values(links)) {
+				for (let i = ids.length - 1; i >= 0; i--) {
+					if (ids[i] === target.playerid) ids.splice(i, 1);
+				}
+			}
+		}, player);
 		const cards = player.getCards("hejsx");
 		if (cards.length) {
 			game.log(player, "将", cards, "置入弃牌堆");
@@ -2437,6 +2566,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			player2.previousSeat.nextSeat = player2.nextSeat;
 			game.players.remove(player2);
 			game.dead.remove(player2);
+			if (_status.connectMode) delete lib.playerOL[player2.playerid];
 			if (animate == false) {
 				animate = () => new Promise((resolve) => {
 					resolve();
@@ -2543,7 +2673,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		};
 		game.broadcast(removePlayer, player, config, get.copy(lib.configOL));
 		await removePlayer(player, config, get.copy(lib.configOL));
-		player.dieAfter();
+		// 已移除的同胜负召唤物不再广播身份揭示（其 playerid 已从客机映射删除）。
+		if (player._yzsSharedVictory) game.checkResult?.();
+		else player.dieAfter?.();
 		return player;
 	}
 

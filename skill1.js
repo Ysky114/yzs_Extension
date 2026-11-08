@@ -8867,7 +8867,7 @@ const skills = {
 					}
 					await player.disableJudge();
 				}
-			    await player.yzs_addPlayerOL(target, "jifengbaoxiang_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true,callback })
+			    await player.yzs_addPlayerOL(target, "jifengbaoxiang_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true, noIdentity: true, noDieAfter: true, callback })
 			}
 		}
 	},
@@ -8975,7 +8975,7 @@ const skills = {
 					global:"dieAfter"
 				},
 				filter(event, player) {
-					return event.player.hasSkill("yangfanqihang_yzs")
+					return !_status.over && !event.reserveOut && !player.removed && event.player === player._source;
 				},
 				async content(event, trigger, player) {
 					await player.removeSkill("ciyuanchaoyue_yzs_effect")
@@ -9000,7 +9000,8 @@ const skills = {
 					player: ["dieBefore"]
 				},
 				async content(event, trigger, player) {
-					trigger.nodieAfter = true;
+					trigger.noDieAfter = true;
+					trigger.noDieAfter2 = true;
 				},
 			},
 			dying: {

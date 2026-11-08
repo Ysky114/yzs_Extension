@@ -1641,9 +1641,14 @@ const skills = {
 			source: "damageBegin1"
 		},
 		filter(event, player) {
-			return event.num > 0;
+			if (event.num <= 0) return false;
+			if (event.player == player) return !player.hasSkill("huimiezitai_yzs_ban1");
+			else if (event.source == player) return !player.hasSkill("huimiezitai_yzs_ban2")
+			return true;
 		},
 		async content(event, trigger, player) {
+			if (trigger.player == player) player.addTempSkill("huimiezitai_yzs_ban1");
+			else if (trigger.source == player) player.addTempSkill("huimiezitai_yzs_ban2")
 			const cards = await game.cardsGotoOrdering(get.cards(2)).cards,
 				cardx = player.getExpansions("buxijinjun_yzs"),
 				numbers = cardx.map(card => get.number(card)).toUniqued();
@@ -2137,7 +2142,7 @@ const skills = {
 				}
 				await player.disableJudge();
 			}
-			await player.yzs_addPlayerOL(target, "ciyuanzhimen_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true, callback })
+			await player.yzs_addPlayerOL(target, "ciyuanzhimen_yzs", null, true, { startCards: 0, dieRemove: true, noCheckResult: true, noIdentity: true, noDieAfter: true, callback })
 		}
 	},
 	door_auto_yzs: {
@@ -2611,7 +2616,7 @@ const skills = {
 					global: "dieAfter"
 				},
 				filter(event, player) {
-					return event.player.hasSkill("tiangongkaiwu_yzs")
+					return !_status.over && !event.reserveOut && !player.removed && event.player === player._source;
 				},
 				async content(event, trigger, player) {
 					await player.removeSkill("ciyuanchaoyue_yzs_effect")
@@ -2679,7 +2684,8 @@ const skills = {
 					player: ["dieBefore"]
 				},
 				async content(event, trigger, player) {
-					trigger.nodieAfter = true;
+					trigger.noDieAfter = true;
+					trigger.noDieAfter2 = true;
 				},
 			},
 			dying: {
@@ -8774,7 +8780,7 @@ const skills = {
 				.forResult();
 			if (!result.bool) return;
 			const pos = result.targets[0];
-			await player.yzs_addPlayerOL(pos, "MrDragon_yzs", null, true, { isControl:true,noCheckResult: true})
+			await player.yzs_addPlayerOL(pos, "MrDragon_yzs", null, true, { isControl: true, sharedVictory: true })
 		},
 		async dieRemove(event, trigger, player) {
 			if (_status.roundStart == player) _status.roundStart = player.next;

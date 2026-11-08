@@ -719,8 +719,7 @@ const skills = {
 			return player.maxHp - player.countCards("h") > 2;
 		},
 		async content(event, trigger, player) {
-			player.yzs_addPP(2);
-			await player.drawTo(player.maxHp);
+			await player.draw(player.maxHp);
 			await player.loseHp();
 		}
 	},
@@ -853,27 +852,64 @@ const skills = {
 		intro: {
 			content(storage, player) {
 				if (storage) {
-					return `转换技：反转：你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【赫】`;
+					return `转换技：反转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【赫】`;
 				}
-				return `转换技：顺转：你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【苍】并令本技能本回合失效`;
+				return `转换技：顺转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【苍】并令本技能本回合失效`;
 			},
 		},
 		enable: "phaseUse",
 		filter(event, player) {
 			return player.countMark("yzs_PP") > 0;
 		},
-		async content(event, trigger, player) {
-			player.changeZhuanhuanji("yzs_canghe");
-			const num = player.countMark("yzs_PP");
-			player.yzs_removePP(num);
-			player.getStat().card.sha = 0;
-			if (player.storage.yzs_canghe) {
-				player.tempBanSkill("yzs_canghe")
-				await player.gain(game.createCard("yzs_cang", "black", num), "gain2", "bySelf")
-			} else {
-				await player.gain(game.createCard("yzs_he", "red", num), "gain2", "bySelf")
-			}
-		}
+		chooseButton: {
+			dialog(event, player) {
+				let num = player.countMark("yzs_PP");
+				const list = [];
+				for (let i = 1; i <= num; i++) {
+					list.push(i)
+				}
+				let str = player.getStorage("yzs_canghe") ? `消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的【赫】`
+					: `消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的【苍】并令本技能本回合失效`
+				return ui.create.dialog(str, [list, "tdnodes"], "hidden");
+			},
+			select: 1,
+			filter(button) {
+				return true;
+			},
+			check(button) {
+				return button.link;
+			},
+			prompt(links, player) {
+				const items = links;
+				const cost = links[0];
+				const storage = player.getStorage("yzs_canghe");
+				if(storage) {
+					return `消耗${cost}点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为${cost}(${player.countMark("yzs_PP")})的【赫】`;
+				}
+				return `消耗${cost}点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为${cost}(${player.countMark("yzs_PP")})的【苍】并令本技能本回合失效`;
+			},
+			backup(links, player) {
+				return {
+					links: links,
+					filterCard: () => false,
+					selectCard: -1,
+					//manualConfirm: true,
+					ai1: () => 1,
+					async content(event, trigger, player) {
+						player.changeZhuanhuanji("yzs_canghe");
+						const num = lib.skill.yzs_canghe_backup.links[0];;
+						player.yzs_removePP(num);
+						player.getStat().card.sha = 0;
+						if (player.storage.yzs_canghe) {
+							player.tempBanSkill("yzs_canghe")
+							await player.gain(game.createCard("yzs_cang", "black", num), "gain2", "bySelf")
+						} else {
+							await player.gain(game.createCard("yzs_he", "red", num), "gain2", "bySelf")
+						}
+					},
+				}
+			},
+		},
 	},
 	yzs_xushici: {
 		Effect: async function (player, target) {

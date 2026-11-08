@@ -2958,7 +2958,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				},
 				getSummon(player) {
 					// 调离只是不参与当前结算，仍占用其主人的召唤名额。
-					return game.findPlayer(cur => !cur.removed && cur.name == "Makora_yzs" && lib.card.moxuluo_yzs.getOwner(cur) == player, true);
+					return game.findPlayer(cur => !cur.removed && cur.name == "Makora_yzs" && cur.storage?.moxuluo_yzs_source === player, true);
 				},
 				isDestroyed(player) {
 					return !!player.storage.moxuluo_yzs_dead || !!player.storage.shizhongyingfashu_yzs_break?.includes("moxuluo_yzs");
@@ -2984,7 +2984,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					if (summoned) {
 						if (target != summoned) return;
 						await target.recover(3);
-						if (target.isDead() || target.removed) return;
+						if (_status.over || target.isDead() || target.removed) return;
 						const hundunyutiaohe_yzs = {};
 						for (const item of lib.card.moxuluo_yzs.adaptationStorage) {
 							const value = target.storage[item];
@@ -2995,6 +2995,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							owner.setStorage("Makora_yzs", hp);
 							owner.setStorage("Makora_yzs_hundunyutiaohe_yzs", adaptation);
 						}, player, target.hp, hundunyutiaohe_yzs);
+						game.yzs_restoreSummonControl(target);
 						if (_status.roundStart == target) _status.roundStart = target.next;
 						if (lib.playerOL) delete lib.playerOL[target.playerid];
 						game.broadcastAll(player => {
@@ -3034,7 +3035,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							}
 						});
 					} else {
-						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true, dieRemove: false, noCheckResult: true }).forResult()
+						let result = await player.yzs_addPlayerOL(target, "Makora_yzs", null, true, { startCards: 4, isControl: true, dieRemove: true, sharedVictory: true }).forResult()
 						if (!result?.target) return;
 						const Makora = result.target;
 						game.broadcastAll(function (Makora, owner, hp, adaptation) {
@@ -3058,7 +3059,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 							.when({ global: "die" })
 							.filter((evt, player2) => {
 								if (evt.reserveOut || player2.removed) return false;
-								return evt.player == lib.card.moxuluo_yzs.getOwner(player2) || evt.player == player2;
+								return evt.player == player2;
 							})
 							.assign({
 								forceDie: true,
@@ -3069,53 +3070,15 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					}
 				},
 				async dieRemove(event, trigger, player) {
-					if (trigger.reserveOut || player.removed) return;
+					if (_status.over || trigger.reserveOut || player.removed || trigger.player !== player) return;
 					const owner = lib.card.moxuluo_yzs.getOwner(player);
-					// 主人死亡只清理召唤物；魔虚罗本人死亡才永久禁止其主人再召唤。
+					// 卡牌魔虚罗由 yzs_dieRemove 统一清理；只有它本人死亡才永久禁止再次召唤。
 					if (trigger.player == player && owner) {
 						game.broadcastAll(function (owner) {
 							owner.setStorage("moxuluo_yzs_dead", true);
 							owner.markAuto("shizhongyingfashu_yzs_break", "moxuluo_yzs");
 						}, owner);
 					}
-					if (_status.roundStart == player) _status.roundStart = player.next;
-					if (lib.playerOL) delete lib.playerOL[player.playerid];
-					game.broadcastAll(player => {
-						if (game.players.includes(player)) {
-							player.previous.next = player.next;
-							player.next.previous = player.previous;
-						}
-						game.players.remove(player);
-						game.dead.remove(player);
-						if (player.seatNum == 1) player.nextSeat.setSeatNum(1);
-						player.nextSeat.previousSeat = player.previousSeat;
-						player.previousSeat.nextSeat = player.nextSeat;
-						player.delete();
-						player.removed = true;
-						setTimeout(() => player.removeAttribute("style"), 500);
-					}, player);
-					game.broadcastAll(() => {
-						ui.arena.setNumber(game.players.concat(game.dead).length);
-						let SeatNumStart = game.players.concat(game.dead).find(current => current.seatNum == 1);
-						let pos = 0,
-							target = game.me.nextSeat;
-						for (let x = 0; x < game.countPlayer2(null, true); x++) {
-							if (target == game.me) break;
-							pos++;
-							target.dataset.position = pos;
-							target = target.nextSeat;
-						}
-						if (SeatNumStart) {
-							let SeatNum = 1,
-								Seat = SeatNumStart;
-							for (let i = 0; i < game.countPlayer2(null, true); i++) {
-								SeatNum++;
-								Seat = Seat.nextSeat;
-								if (Seat == SeatNumStart) break;
-								Seat.setSeatNum(SeatNum);
-							}
-						}
-					});
 				},
 			},
 			yzs_Girlyheart_equip1: {

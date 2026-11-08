@@ -14,7 +14,7 @@ import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99";
+const EXTENSION_VERSION = "0.99.1";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -668,11 +668,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"yzs_QianWitch",
-						"yzs_ItadoriYuji",
-						"yzs_Mahito",
-						"yzs_Ishigoriryu",
-						"yzs_Kenjaku",
 					]
 				},
 				{
@@ -681,19 +676,6 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"GojoSatoru_yzs",
-						"YoungGojo_yzs",
-						"Irumyuui_yzs",
-						"Linie_yzs",
-						"Yan_yzs",
-						"shenfu_Limu_yzs",
-						"KinMiho_yzs",
-						"SCP173_yzs",
-						"Ren_yzs",
-						"Macht_yzs",
-						"yzs_JoGo",
-						"Ren_yzs",
-						"JiLiangJiTao_yzs"
 					]
 				},
 			];

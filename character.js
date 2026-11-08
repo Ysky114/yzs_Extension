@@ -555,8 +555,7 @@ const characters = {
 	Patriot_yzs: {
 		sex: "male",
 		group: "qun",
-		hp: 3,
-		maxHp:4,
+		hp: 4,
 		skills: ["buxijinjun_yzs", "huimiezitai_yzs", "jiandun_yzs"],
 		names: "博卓卡斯替",
 		img: "extension/一中杀/image/Patriot_yzs.png",

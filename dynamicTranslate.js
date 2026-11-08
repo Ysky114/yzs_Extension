@@ -1,7 +1,7 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
 	yzs_canghe(player) {
-		let str = `转换技：每回合开始时重置本技能。出牌阶段，你可消耗所有${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
+		let str = `转换技：每回合开始时重置本技能。出牌阶段，你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
 		if (player.storage.yzs_canghe) str += `顺转：【苍】，并令本技能本回合失效；<font color="#ff4444">反转：【赫】</font>。`;
 		else str += `<font color="#44b6ff">顺转：【苍】，并令本技能本回合失效</font>；反转：【赫】。`;
 		str += `<br>你可对其他角色使用【苍/赫】，效果改为弃置目标角色此牌点数张牌，然后目标角色获得此牌，然后若其手牌中有同点数的${get.poptip("yzs_cang")}和${get.poptip("yzs_he")}，你弃置之并对其发动${get.poptip("yzs_xushici")}。`

@@ -3801,10 +3801,25 @@ const skills = {
 					const pos = trigger.player;
 					pos.clearMark("OnionCells_yzs")
 					const callback = async function (event, player) {
-						game.broadcastAll((Onion) => {
+						game.broadcastAll((Onion, owner) => {
 							Onion.isNoPlayer_OnionCells_yzs = true;
-						}, player)
-						player.setStorage("OnionCells_yzs_source", event.player);
+							Onion.storage.OnionCells_yzs_source = owner;
+							// 对决直接在 dieAfter 中结算或换将，等本体及其全部复制体死亡后再走该流程。
+							if (get.mode() === "versus") {
+								if (!owner.yzs_onionDieAfter) {
+									owner.yzs_onionDieAfter = owner.dieAfter;
+									owner.dieAfter = function (...args) {
+										if (game.players.some(current => current.isNoPlayer_OnionCells_yzs &&
+											current.storage.OnionCells_yzs_source === this)) return;
+										return this.yzs_onionDieAfter.apply(this, args);
+									};
+								}
+								Onion.dieAfter = function (...args) {
+									if (owner.isAlive()) return;
+									return owner.dieAfter(...args);
+								};
+							}
+						}, player, event.player)
 						player.addSkill("OnionCells_yzs_view")
 						if (!get.attitude_OnionCells_yzs) {
 							get.attitude_OnionCells_yzs = get.attitude;
@@ -3892,59 +3907,6 @@ const skills = {
 			for (let target of result.targets) {
 				target.addMark("OnionCells_yzs")
 			}
-			if (!_status.OnionCells_yzs) {
-				if (!game.checkResult_OnionCells_yzs) {
-					game.checkResult_OnionCells_yzs = game.checkResult;
-					game.checkResult = function () {
-						const all = game.players.concat(game.dead);
-						const origin_Onion = all.filter(i => i.hasSkill("OnionCells_yzs"))[0];//最初的洋葱怪人
-						if (!origin_Onion.origin_isAlive) {
-							origin_Onion.origin_isAlive = origin_Onion.isAlive
-						}
-						origin_Onion.isAlive = function () {
-							if (game.players.includes(this)) {
-								return true;
-							}
-							return this.origin_isAlive()
-						}
-						const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-						const targets = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);
-						const hasRemain = game.players.some(i => i.isNoPlayer_OnionCells_yzs);//是否还有剩余的洋葱怪人
-						game.players.removeArray(targets);
-						if (isDead && hasRemain) game.players.add(origin_Onion);
-						game.checkResult_OnionCells_yzs();
-						if (isDead && hasRemain) game.players.remove(origin_Onion);
-						game.players.addArray(targets);
-						origin_Onion.isAlive = origin_Onion.origin_isAlive;
-					};
-				}
-				if (!game.checkOnlineResult_OnionCells_yzs) {
-					game.checkOnlineResult_OnionCells_yzs = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						const all = game.players.concat(game.dead);
-						const origin_Onion = all.filter(i => i.hasSkill("OnionCells_yzs"))[0];//最初的洋葱怪人
-						if (!origin_Onion.origin_isAlive) {
-							origin_Onion.origin_isAlive = origin_Onion.isAlive
-							origin_Onion.isAlive = function () {
-								if (game.hasPlayer(i => i.isNoPlayer_OnionCells_yzs)) return true;
-								return this.origin_isAlive()
-							}
-						}
-						const isDead = !game.players.includes(origin_Onion);//最初的洋葱怪人是否已经死亡
-						const targets = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);
-						const hasRemain = game.players.filter(i => i.isNoPlayer_OnionCells_yzs);//是否还有剩余的洋葱怪人
-						game.players.removeArray(targets);
-						if (isDead && hasRemain) game.players.add(origin_Onion);
-						game.checkOnlineResult_OnionCells_yzs();
-						if (isDead && hasRemain) game.players.remove(origin_Onion);
-						game.players.addArray(targets);
-						origin_Onion.isAlive = origin_Onion.origin_isAlive;
-					};
-				}
-				game.broadcastAll(() => {
-					_status.OnionCells_yzs = true;
-				})
-			}
 		},
 	},
 	Quirk_yzs: {
@@ -3960,25 +3922,17 @@ const skills = {
 		direct: true,
 		popup: true,
 		trigger: {
-			player: "useCardAfter"
+			player: "useCard",
 		},
 		filter(event, player) {
-			if (get.type(event.card) != "trick") return false;
-			if (event.getParent(2).name == "Absurd_yzs") return false;
-			return true;
+			return get.type(event.card) == "trick" 
 		},
+		num: 1,
 		async content(event, trigger, player) {
-			const card = player.storage.Absurd_yzs;
-			player.storage.Absurd_yzs = trigger.card;
-			player.markSkill("Absurd_yzs")
-			player.addTip("Absurd_yzs", "荒诞 " + get.translation(trigger.card.name), false);
-			if (card?.name) {
-				const info = lib.card[card.name]
-				if (info.notarget) return;
-				if (!player.hasUseTarget(card.name)) return;
-				await player.chooseUseTarget(card.name, true);
-			}
-		}
+			const { num } = get.info(event.name);
+			game.log(trigger.card, "额外结算", `#g${get.cnNumber(num)}`, "次");
+			trigger.effectCount += num;
+		},
 	},
 	//圣白莲
 	chaoren_yzs: {

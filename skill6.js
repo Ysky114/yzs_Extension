@@ -18,7 +18,9 @@ const skills = {
 			global: ["dieAfter"],
 		},
 		filter(event, player) {
-			return !event.reverseOut && (event.player == player || event.player == player._source);
+			if (_status.over) return false;
+			return !event.reserveOut && !event.reverseOut && (event.player == player ||
+				(event.player == player._source && !player.isNoPlayer_OnionCells_yzs));
 		},
 		async content(event, trigger, player) {
 			const next = game.createEvent("yzs_dieRemove_after", false, trigger);
@@ -26,6 +28,9 @@ const skills = {
 			next.forceDie = true;
 			next.forceOut = true;
 			next.setContent(async (event, trigger, player) => {
+				if (_status.over) return;
+				// 最后一只复制体死亡后仍保留其客机连接，供后续阵营结算发送面板。
+				if (player.isNoPlayer_OnionCells_yzs && (player === game.me || player.isOnline2())) return;
 				await player.yzs_removePlayerOL();
 			})
 			trigger.next.remove(next);
@@ -63,20 +68,21 @@ const skills = {
 		popup: false,
 		silent: true,
 		filter: function (event, player) {
-			if (!_status.yzs_autoswap[player.playerid]) return false;
+			if (_status.over || !_status.yzs_autoswap?.[player.playerid]) return false;
 			if (event.autochoose && event.autochoose()) return false;
 			//if (lib.filter.wuxieSwap(event)) return false;
 			return true;
 		},
 		async content(event, trigger, player) {
 			const links = _status.yzs_autoswap[player.playerid];
+			if (_status.over || !links) return;
 			if (trigger.name == 'die') {
 				const map = lib.playerOL ?? game.playerMap;
 				for (const id of links) {
 					const current = map[id];
-					if (current.isAlive() && current != player) {
+					if (current?.isAlive() && current != player) {
 						game.broadcastAll((die) => {
-							if (game.me.playerid != die.playerid) return;
+							if (_status.over || game.me.playerid != die.playerid) return;
 							let evt = _status.event && _status.event.getParent ? _status.event.getParent("chooseToUse") : null;
 							if (evt) {
 								evt.endButton?.close();
@@ -109,6 +115,7 @@ const skills = {
 				const map = lib.playerOL ?? game.playerMap;
 				for (const id of links) {
 					const current = map[id];
+					if (!current) continue;
 					if (_status.connectMode) {
 						if ((current.isOnline2() || current == game.me) && current != player) {
 							game.yzs_swapPlayerOL(current, player);
@@ -3201,7 +3208,7 @@ const skills = {
 					return player.maxHp > 8 && !player.countMark("yunyu_yzs_summon")
 				},
 				async content(event, trigger, player) {
-					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, false, { startCards:0,isControl: true, dieRemove: false }).forResult();
+					let result = await player.yzs_addPlayerOL(player, "Faputa_yzs", null, false, { startCards: 0, isControl: true, dieRemove: false, sharedVictory: true }).forResult();
 					if (!result?.target) return;
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
@@ -5797,98 +5804,19 @@ const skills = {
 			});
 			await new Promise(r => setTimeout(r, 6000))
 
-			const result = {};
+			// 与其他召唤物共用结算入口，避免调伏仪式重新覆盖联机判胜函数。
+			const result = await player.yzs_addPlayerOL(player, "Makora_yzs", null, true, {
+				startCards: 0,
+				dieRemove: false,
+				noCheckResult: true,
+				noIdentity: true,
+				neutral: true,
+				noDieAfter: true,
+				animate: false,
+			}).forResult();
 			event.result = result;
-			const animate = false;
-			const newPlayer = await game.addPlayerOL(player, ...["Makora_yzs", null], true, { source: player, animate });
-			result.target = newPlayer;
-			player.setStorage("tiaofuyishi_yzs_kill", newPlayer)
-			//	newPlayer.addSkill("yzs_dieRemove");
-			newPlayer.dieAfter = function () { }
-			newPlayer.dieAfter2 = function () { }
-			newPlayer.storage.isSub = true;
-			newPlayer._start_cards = [];
-			game.broadcastAll((player, target, source, sourceSkill, identity, noCheckResult) => {
-				target._sourceSkill = sourceSkill;
-				target.identity = "neutral";
-				if (!lib.translate[identity]) {
-					lib.translate[identity] = "野";
-				}
-				target.setIdentity();
-				if (get.mode() == 'guozhan') {
-					if (target.name2 == undefined) target.name2 = target.name1;
-				}
-				if (source?.side || (game.me && game.me.side) || get.mode() == 'versus') {
-					target.side = "neutral";
-					target.node.identity.firstChild.innerHTML = "中";
-					target.node.identity.dataset.color = "white";
-				}
-				target.skillH = [];
-				target.storage.zhibi = [];
-				target.storage.stratagem_expose = [];
-				target.storage.stratagem_fury = 0;
-				if (typeof source.ai?.shown === "number" && target.ai) {
-					target.ai.shown = source.ai.shown;
-				}
-				target._noCheckResult = true;
-				if (typeof game.checkResult === "function") {
-					const origin_checkResult = game.checkResult;
-					game.checkResult = function () {
-						const player = game.me._trueMe || game.me;
-						if (get.mode() == "single") {
-							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(true);
-							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(false);
-							}
-							return;
-						}
-						const targets = game.players.filter(i => i._noCheckResult);
-						game.players.removeArray(targets);
-						origin_checkResult();
-						game.players.addArray(targets);
-					};
-				}
-				if (typeof game.checkOnlineResult === "function") {
-					const origin_checkOnlineResult = game.checkOnlineResult;
-					game.checkOnlineResult = function (player) {
-						if (player._noCheckResult) {
-							return false;
-						}
-						if (get.mode() == "single") {
-							if (game.players.every(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(true);
-							} else if (!game.players.some(i => (i["_source"] == player && !i._noCheckResult) || i == player)) {
-								game.over(false);
-							}
-							return;
-						}
-						const targets = game.players.filter(i => i._noCheckResult);
-						game.players.removeArray(targets);
-						origin_checkOnlineResult();
-						game.players.addArray(targets);
-					};
-				}
-				if (_status.yzs_addPlayerOL) {
-					return;
-				}
-				_status.yzs_addPlayerOL = true;
-	
-				//敌友判定
-				target.getFriends = function (func, includeDie) {
-					const player = this;
-					return []
-				};
-				target.isFriendOf = function (player) {
-					return false;
-				};
-				target.getEnemies = function (func, includeDie) {
-					return [this.source, ...game[includeDie ? "filterPlayer2" : "filterPlayer"](i => {
-						return player.storage.yzs_NeutralAttitude.has(trigger.source) > 0;
-					})]
-				};
-
-			}, player, newPlayer, player, event.name, "neutral", true);
+			const newPlayer = result.target;
+			player.setStorage("tiaofuyishi_yzs_kill", newPlayer);
 
 			const Makora = newPlayer;
 			Makora.addSkill("rg_treasure_ban");
