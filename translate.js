@@ -2107,13 +2107,13 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_zhoulingcaoshu_info: `每回合限1次：需要时，你可视为使用【无懈可击】或【闪】。你响应牌后，将之扣置于角色牌上，你可如手牌般使用或打出因此扣置的牌。`,
 
 	yzs_xiaohuoban: `小伙伴`,
-	yzs_xiaohuoban_info: `锁定技：每轮开始时，你选择至多X名角色，其获得${get.poptip("yzs_duoquliwu")}至本轮结束，然后获得1张${get.poptip("yzs_gift")}（X为场上死亡人数+1）。`,
+	yzs_xiaohuoban_info: `锁定技：每轮开始时，你令至多X名角色依次获得1张${get.poptip("yzs_gift")}，然后你再选择至多X名角色，其获得${get.poptip("yzs_duoquliwu")}至本轮结束（X为场上死亡人数+1）。`,
 	yzs_duoquliwu: `夺取礼物`,
 	yzs_duoquliwu_info: `锁定技：对有${get.poptip("yzs_gift")}且不为“蕾蒂希娅”的其他角色造成伤害时，获得其全部【礼物】，并令伤害+X(获得的【礼物】数)。`,
 	yzs_songniliwu: `送你礼物`,
-	yzs_songniliwu_info: `每回合限1次：你造成伤害后获得1张${get.poptip("yzs_gift")}，然后可给予受伤角色1张牌以刷新本技能。`,
+	yzs_songniliwu_info: `每回合限1次：你对其他角色造成伤害后获得1张${get.poptip("yzs_gift")}，然后可给予受伤角色1张牌以刷新本技能。`,
 	yzs_jingxilihe: `惊喜礼盒`,
-	yzs_jingxilihe_info:`出牌阶段限1次：你选择1名其他角色，其选择：①获得你1张手牌；②你视为对其使用【决斗】。`,
+	yzs_jingxilihe_info: `出牌阶段限1次：你选择1名其他角色，你获得2张${get.poptip("yzs_gift")}，然后其选择：①获得你1张手牌；②你视为对其使用【决斗】。然后你弃置因此获得的【礼物】。`,
 };
 
 export default translates;

@@ -14,7 +14,7 @@ import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.2";
+const EXTENSION_VERSION = "0.99.2.1";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {

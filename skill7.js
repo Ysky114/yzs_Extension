@@ -3726,9 +3726,20 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			global: "roundStart",
 		},
 		async content(event, trigger, player) {
-			let num = game.dead.length + 1;
-			await player.gain(cards, "gain2", "bySelf");
-			let result = await player.chooseTarget([1, num], `选择至多${num}名角色获得${get.poptip("yzs_duoquliwu")}至本轮结束`)
+			const num = game.dead.length + 1;
+			const giftResult = await player.chooseTarget([1, num], `选择至多${num}名角色，令其依次各获得1张${get.poptip("yzs_gift")}`)
+				.set("filterTarget", (card, player, target) => {
+					return !target.hasSkill("hidden_yzs") || player == target;
+				})
+				.set("ai", target => get.attitude(get.event().player, target))
+				.forResult();
+			if (giftResult?.bool && giftResult.targets?.length) {
+				for (const target of giftResult.targets.sortBySeat()) {
+					if (target.isIn()) await target.gain(game.createCard("yzs_gift", "red", 1), "gain2", "bySelf");
+				}
+			}
+			if (!player.isIn()) return;
+			const result = await player.chooseTarget([1, num], `选择至多${num}名角色获得${get.poptip("yzs_duoquliwu")}至本轮结束`)
 				.set("filterTarget", (card, player, target) => {
 					return !target.hasSkill("hidden_yzs") || player == target;
 				})
@@ -3738,9 +3749,8 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				})
 				.forResult();
 			if (result?.bool && result?.targets?.length) {
-				for (let target of result.targets) {
-					target.addTempSkill("yzs_duoquliwu", { global: "roundEnd" })
-					await player.gain(game.createCard("yzs_gift", "red", 1), "gain2", "bySelf");
+				for (const target of result.targets) {
+					if (target.isIn()) target.addTempSkill("yzs_duoquliwu", { global: "roundEnd" });
 				}
 			}
 		},
@@ -3773,11 +3783,11 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			source: "damageAfter",
 		},
 		filter(event, player) {
-			return event.num > 0;
+			return event.num > 0 && event.player !== player;
 		},
 		async content(event, trigger, player) {
 			await player.gain(game.createCard("yzs_gift", "red", 1), "gain2", "bySelf");
-			if (!player.isIn() || !trigger.player.isIn() || trigger.player == player) return;
+			if (!player.isIn() || !trigger.player.isIn()) return;
 			let result = await player.chooseToGive(1, trigger.player, "he", `你可给予${get.translation(trigger.player)}1张牌以刷新${get.poptip("yzs_songniliwu")}`).forResult();
 			if (result?.bool&&result.cards?.length) {
 				player.refreshSkill("yzs_songniliwu");
@@ -3792,21 +3802,29 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		selectCard: -1,
 		selectTarget: 1,
 		filterTarget(card, player, target) {
-			return target != player && !target.hasSkill("hidden_yzs") &&
-				(player.countGainableCards(target, "h") > 0 || player.canUse({ name: "juedou", isCard: true }, target));
+			return target != player && !target.hasSkill("hidden_yzs");
 		},
 		async content(event, trigger, player) {
 			const target = event.target;
 			if (!player.isIn() || !target.isIn()) return;
-			const duel = { name: "juedou", isCard: true };
-			const canDuel = player.canUse(duel, target);
-			const prompt = canDuel ? `获得${get.translation(player)}1张手牌，否则其视为对你使用【决斗】` : `获得${get.translation(player)}1张手牌`;
-			const result = player.countGainableCards(target, "h") > 0 ?
-				await target.gainPlayerCard(1, player, !canDuel, "h", prompt).forResult()
-				: { bool: false };
-			if (!result?.bool && canDuel && player.isIn() && target.isIn() && player.canUse(duel, target)) {
-				await player.useCard(duel, target, false);
+			const cards = [game.createCard("yzs_gift", "red", 1), game.createCard("yzs_gift", "red", 1)];
+			const gain = player.gain(cards, "gain2", "bySelf");
+			gain.gaintag.add("yzs_jingxilihe");
+			await gain;
+			if (player.isIn() && target.isIn()) {
+				const duel = { name: "juedou", isCard: true };
+				const canDuel = player.canUse(duel, target);
+				const prompt = canDuel ? `获得${get.translation(player)}1张手牌，否则其视为对你使用【决斗】` : `获得${get.translation(player)}1张手牌`;
+				const result = player.countGainableCards(target, "h") > 0 ?
+					await target.gainPlayerCard(1, player, !canDuel, "h", prompt).forResult()
+					: { bool: false };
+				if (!result?.bool && canDuel && player.isIn() && target.isIn() && player.canUse(duel, target)) {
+					await player.useCard(duel, target, false);
+				}
 			}
+			// 按本次生成的牌及获得标记筛选；转移给其他角色后即不再由本技能弃置。
+			const remaining = player.getCards("h", card => cards.includes(card) && card.hasGaintag("yzs_jingxilihe"));
+			if (remaining.length) await player.discard(remaining);
 		}
 	},
 }

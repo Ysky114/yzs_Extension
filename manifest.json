@@ -1,6 +1,6 @@
 {
-  "version": "0.99.2",
-  "update": "0.99.2新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙",
+  "version": "0.99.2.1",
+  "update": "0.99.2.1新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -695,7 +695,7 @@
     "character.js": "71c14a9f328398b22150efd94fa534f935774ba4",
     "dynamicTranslate.js": "259f0239aa7b8d2421fced99d86db63a319ea81c",
     "extension.css": "569dcf6bab5e306372478014b08c0de9bd48c57b",
-    "extension.js": "540dee998d5c3fdfdbc31da24edb38c3b3c8bb6b",
+    "extension.js": "528791e22e51ed5da1108393f5a797150d87167c",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "a6e998bb6faea2770a447aa3059a7f95d7d06a6a",
     "genManifest.js": "0746a1eda7890eacb2a67d05758a293a12b3cd7f",
@@ -1097,8 +1097,8 @@
     "skill4.js": "69664488de93fc62d8dca8f7dd413c711abd3e4c",
     "skill5.js": "ce589312ab203b7c6578fd30ddcb9ef7ee0cd387",
     "skill6.js": "e14498de34ac2a61e2dc62b35b262f22d6e0ffd2",
-    "skill7.js": "086a0ebede9652933db92a47857670ce953a7c49",
-    "translate.js": "693df4cf422fc8f6faaeab152bfd248847a8b37e",
+    "skill7.js": "e5f11963a836eea8fa22804e6e77ae55f754ea87",
+    "translate.js": "da29c1f334c7c83fcdc241aaab7448eee85f19f4",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }
 }
