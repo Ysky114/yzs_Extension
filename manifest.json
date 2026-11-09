@@ -1,6 +1,6 @@
 {
-  "version": "0.99.1",
-  "update": "0.99.1新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙",
+  "version": "0.99.2",
+  "update": "0.99.2新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -691,11 +691,11 @@
     "audio/輝く針の小人族　～ Little Princess.mp3": "9ad641211d8a023da6256c48095ba396958283d1",
     "audio/雨爱.mp3": "dd0902a361b41b31649b033bfc5d6bb327496f7b",
     "audio/霹靂.mp3": "f3fe69877b0d87b0977a0cdea1c3206a1982c599",
-    "card.js": "debcadd1073f6095062911e25e3c0c51c6155f1e",
-    "character.js": "0bcb798dc183de34ee5307ae39ff656c1ba258d5",
+    "card.js": "64a72932a34d14a2c8d868fdc3d68c6af4a099bc",
+    "character.js": "71c14a9f328398b22150efd94fa534f935774ba4",
     "dynamicTranslate.js": "259f0239aa7b8d2421fced99d86db63a319ea81c",
     "extension.css": "569dcf6bab5e306372478014b08c0de9bd48c57b",
-    "extension.js": "938e6a04e44a3c413f43a82ffcf0c384b32f2a58",
+    "extension.js": "540dee998d5c3fdfdbc31da24edb38c3b3c8bb6b",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "a6e998bb6faea2770a447aa3059a7f95d7d06a6a",
     "genManifest.js": "0746a1eda7890eacb2a67d05758a293a12b3cd7f",
@@ -850,6 +850,7 @@
     "image/card/yuanlu_yzs.png": "746199ac87100c2f39094466efc527a101e8ebf5",
     "image/card/yudenghuozhong_yzs.png": "2ea8920f57bca0a91d80c6736502927ec7273773",
     "image/card/yuquan_yzs.png": "6f608a2b869b09e5bea67c0c3135f1101f28b2e1",
+    "image/card/yzs_gift.png": "7bafa2a4786f17db936179a44eff03ad51bebb4c",
     "image/Cayuu_yzs.png": "9e78682c2b308c00b476f82f5997202c033c4861",
     "image/ChainsawCock_yzs.png": "3f57a36c9dbff9bdbb81b3bca92e4b299cefdebc",
     "image/changzhang_yzs.png": "17821122dde0a130ff335628fffd609f89cda4e8",
@@ -1073,6 +1074,7 @@
     "image/yzs_ItadoriYuji.png": "5786fa7311574a89b8179dce86cd06057fd52f79",
     "image/yzs_JoGo.png": "da1ddb3975a9e75af3214df924cd352f2715d6a5",
     "image/yzs_Kenjaku.png": "cb3535436d4d4e272ba29500061afa28fea23fb7",
+    "image/yzs_Laetitia.png": "1ef1af174c62b4edab99267456ef1a113b26685f",
     "image/yzs_Mahito.png": "9d1c04fbbcea23d35f0d70378d6c6610ef2ca6de",
     "image/yzs_Mazhikang.png": "6e856d45fb940dd24c1d75e26c632d77b001468e",
     "image/yzs_QianSaint.png": "07026872b584f24ee256c9ac450da2492fb4fc99",
@@ -1095,8 +1097,8 @@
     "skill4.js": "69664488de93fc62d8dca8f7dd413c711abd3e4c",
     "skill5.js": "ce589312ab203b7c6578fd30ddcb9ef7ee0cd387",
     "skill6.js": "e14498de34ac2a61e2dc62b35b262f22d6e0ffd2",
-    "skill7.js": "34f468b9d62057feb4d2cd2e4a8a0da3447da320",
-    "translate.js": "c35e3466c32e0a4a0fe40fd3cd240c76f25e5678",
+    "skill7.js": "086a0ebede9652933db92a47857670ce953a7c49",
+    "translate.js": "693df4cf422fc8f6faaeab152bfd248847a8b37e",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }
 }

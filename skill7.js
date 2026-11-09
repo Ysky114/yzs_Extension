@@ -3693,5 +3693,121 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			result: { player: 1 },
 		},
 	},
+	//蕾蒂希娅
+	yzs_xiaohuoban: {
+		derivation: ["yzs_duoquliwu"],
+		init: function (player, skill) {
+			game.addGlobalSkill("yzs_xiaohuoban_global");
+		},
+		subSkill: {
+			global: {
+				forced: true,
+				priority: 124,
+				popup: false,
+				trigger: {
+					player: "phaseDiscardAfter",
+				},
+				filter(event, player) {
+					return event.cards?.some(card => card.name == "yzs_gift");
+				},
+				async content(event, trigger, player) {
+					const cards = trigger.cards.filter(card => card.name == "yzs_gift");
+					player.addMark("yzs_xiaohuoban", cards.length, false);
+					game.log(player, "增加了", cards.length, "层“心梗”");
+					if (player.countMark("yzs_xiaohuoban") >= 3) await player.die();
+				},
+			},
+		},
+		locked: true,
+		forced: true,
+		nobracket: true,
+		priority: 48,
+		trigger: {
+			global: "roundStart",
+		},
+		async content(event, trigger, player) {
+			let num = game.dead.length + 1;
+			await player.gain(cards, "gain2", "bySelf");
+			let result = await player.chooseTarget([1, num], `选择至多${num}名角色获得${get.poptip("yzs_duoquliwu")}至本轮结束`)
+				.set("filterTarget", (card, player, target) => {
+					return !target.hasSkill("hidden_yzs") || player == target;
+				})
+				.set("ai", (target2) => {
+					const player2 = get.event().player;
+					return get.attitude(player2, target2);
+				})
+				.forResult();
+			if (result?.bool && result?.targets?.length) {
+				for (let target of result.targets) {
+					target.addTempSkill("yzs_duoquliwu", { global: "roundEnd" })
+					await player.gain(game.createCard("yzs_gift", "red", 1), "gain2", "bySelf");
+				}
+			}
+		},
+	},
+	yzs_duoquliwu: {
+		locked: true,
+		forced:true,
+		nobracket: true,
+		priority:-9,
+		trigger: {
+			source:"damageBegin1"
+		},
+		filter(event, player) {
+			if ([event.player.name, event.player.name1, event.player.name2].includes("yzs_Laetitia")) return false;
+			return event.player.countCards("h", { name: "yzs_gift" })>0&&event.player!=player;
+		},
+		async content(event, trigger, player) {
+			const cards = trigger.player.getCards("h", { name: "yzs_gift" });
+			await player.gain(cards.slice(), trigger.player, "giveAuto");
+			trigger.num += cards.length;
+		}
+	},
+	yzs_songniliwu: {
+		nobracket: true,
+		usable: 1,
+		forced: true,
+		locked:false,
+		priority: -1,
+		trigger: {
+			source: "damageAfter",
+		},
+		filter(event, player) {
+			return event.num > 0;
+		},
+		async content(event, trigger, player) {
+			await player.gain(game.createCard("yzs_gift", "red", 1), "gain2", "bySelf");
+			if (!player.isIn() || !trigger.player.isIn() || trigger.player == player) return;
+			let result = await player.chooseToGive(1, trigger.player, "he", `你可给予${get.translation(trigger.player)}1张牌以刷新${get.poptip("yzs_songniliwu")}`).forResult();
+			if (result?.bool&&result.cards?.length) {
+				player.refreshSkill("yzs_songniliwu");
+			}
+		}
+	},
+	yzs_jingxilihe: {
+		nobracket: true,
+		enable: "phaseUse",
+		usable: 1,
+		filterCard: () => false,
+		selectCard: -1,
+		selectTarget: 1,
+		filterTarget(card, player, target) {
+			return target != player && !target.hasSkill("hidden_yzs") &&
+				(player.countGainableCards(target, "h") > 0 || player.canUse({ name: "juedou", isCard: true }, target));
+		},
+		async content(event, trigger, player) {
+			const target = event.target;
+			if (!player.isIn() || !target.isIn()) return;
+			const duel = { name: "juedou", isCard: true };
+			const canDuel = player.canUse(duel, target);
+			const prompt = canDuel ? `获得${get.translation(player)}1张手牌，否则其视为对你使用【决斗】` : `获得${get.translation(player)}1张手牌`;
+			const result = player.countGainableCards(target, "h") > 0 ?
+				await target.gainPlayerCard(1, player, !canDuel, "h", prompt).forResult()
+				: { bool: false };
+			if (!result?.bool && canDuel && player.isIn() && target.isIn() && player.canUse(duel, target)) {
+				await player.useCard(duel, target, false);
+			}
+		}
+	},
 }
 export default skills;

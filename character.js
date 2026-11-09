@@ -1798,6 +1798,7 @@ const characters = {
 		skills: ["yzs_chengjie", "yzs_shenpan", "yzs_jianshi","yzs_ezhao"],
 		names: "小鸟&高鸟&大鸟",
 		img: "extension/一中杀/image/yzs_ThreeBirds.png",
+		BGM: "Second",
 	},
 
 	yzs_ThreeBirds2: {
@@ -1875,6 +1876,16 @@ const characters = {
 		img: "extension/一中杀/image/yzs_Kenjaku.png",
 		BGM: "AIZO",
 		hasHiddenSkill: true,
+	},
+
+	yzs_Laetitia: {
+		sex: "female",
+		group: "shu",
+		hp: 3,
+		skills: ["yzs_xiaohuoban", "yzs_songniliwu", "yzs_jingxilihe"],
+		names: "蕾蒂希娅",
+		img: "extension/一中杀/image/yzs_Laetitia.png",
+		BGM: "Second",
 	},
 };
 
@@ -2052,7 +2063,8 @@ const characterTitles = {
 	yzs_ItadoriSukuna:`史上最强咒术师`,
 	yzs_Mahito: `真正的诅咒`,
 	yzs_Ishigoriryu: `飞机头大炮`,
-	yzs_Kenjaku:`千年操盘手`,
+	yzs_Kenjaku: `千年操盘手`,
+	yzs_Laetitia:`渴望朋友的小魔女`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2202,8 +2214,9 @@ const characterIntros = {
 	yzs_ItadoriYuji:`虎杖悠仁，日本漫画《咒术回战》及其衍生作品的主人公。虎杖仁与香织之子、虎杖倭助之孙，就读于宫城县杉泽第三高中。他中等身高，有着浅棕色眼眸和粉色头发，成为两面宿傩容器后获得第二双眼睛。性格重视生命价值，具备超人般的体魄与咒力操控天赋，能感知灵魂形态。日常喜欢卡拉OK、漫画和电视节目，擅长模仿秀，偏爱盖饭与面食。<br>因在灵异现象研究会活动中吞下特级咒物两面宿傩的手指，虎杖成为其宿主，并以特殊体质压制宿傩意识。他本应被处以极刑，经五条悟介入改为缓期执行，随后转入东京咒术高专，习得以咒力包裹拳头的攻击方式。少年院任务中，虎杖首次死亡后通过束缚契约复活。涩谷事变中，他在目睹七海建人牺牲后彻底掌握迳庭拳，并在与真人的决战中接连打出多次黑闪。此后参与死灭回游，与日车宽见合作修改规则，并借助天使术式剥离宿傩灵魂。决战前一个月，他自行领悟反转术式治愈损伤，又从胀相处习得赤血操术强化攻击力。虎杖曾通过植入不存在记忆从胀相手下逃生，并与东堂葵结为挚友，共同对抗特级咒灵。与宿傩决战临近尾声时，他施展了领域展开。最终决战中，虎杖接过日车宽见的处刑人之剑，对抗两面宿傩并见证其消散。2086年，虎杖成为这个时代唯一仍活跃在世间的特级咒术师；在续作《咒术回战 Modulo》中，他掌握了与宿傩一样的原版“御厨子”，并计划永远改变日本咒术师社会`,
 	yzs_ItadoriSukuna:`两面宿傩，日本漫画《咒术回战》及其衍生作品中的角色。千年前的诅咒之王，附身在虎杖悠仁的体内。本性好自由，不喜受任何人束缚，行动全凭心意，是真正的自由主义者`,
 	yzs_Mahito: `真人整体形象是一名约二十岁的青年男子，身形高挑，常着黑袍，蓝色中长发、异色瞳（左眼蓝色，右眼黄色），脸上和身上布满黑色缝合线—其身体由不同人类的身体部位缝合而成，因此受伤流出的是与人类一样的红色血液，而非漏瑚等咒灵的紫色血液。他性格天真残忍，视人类为实验品，以扭曲灵魂为乐，兼具孩子气与冷酷，善伪装，对同伴重情义，把战斗当作游戏。真人作为特级咒灵，初登场于幼鱼与逆罚篇，利用吉野顺平实验术式“无为转变”，诱杀七海建人未果，后教唆顺平复仇，又将其粗暴改造致死，也因此发现虎杖悠仁能够攻击自己的灵魂。京都交流会篇，他趁机偷走宿傩手指与咒胎九相图。宵祭时，他击杀机械丸本体与幸吉。涩谷事变中，他释放改造人袭击民众，参与围攻五条悟，后与虎杖、七海、钉崎等人激战，重创钉崎、杀死七海，最终被虎杖与东堂葵联手用黑闪击败。濒死之际，真人被羂索吸收，术式被夺走而彻底消失。死后，他在灵魂轮回通道先后见到宿傩与多年后的虎杖，试图对抗时被瞬间击败，最终孤独留在虚无之中。真人是纯粹之恶的化身，以残忍反衬主角对生命的珍视，推动虎杖成长，揭露人咒对立，是探讨人性恶意的重要载体`,
-	yzs_Ishigoriryu: `石流龙是漫画《咒术回战》及其衍生作品中的角色。作为仙台结界四天王之一，拥有“泳者”中最强的咒力输出能力。其为400年前的古代术师，以飞机头形象示人，酷爱甜点，曾活跃于陆奥地区，后通过受肉复活参与现代“死灭回游”争夺战 [1]。作为擅长火力压制的战斗狂，其生得术式「咒力放出」能将头发化为炮筒发射极强的「冰沙冲击波」，并掌握领域展开实现必中攻击。在仙台结界与乌鹭亨子、杜鲁夫·拉克达瓦拉、黑沐死形成四方制衡，因乙骨忧太介入打破平衡后展开混战。最终因乙骨忧太复制乌鹭亨子的空间操控术式逆转石流龙的「冰沙冲击波」攻击而导致石流龙落败，后与乙骨达成分数转让协议。感知到宿傩降临主动挑战，未及发动术式即被斩杀。其毕生执着于战斗，在与诅咒之王的对决中迎来终局。`,
-	yzs_Kenjaku: ``,
+	yzs_Ishigoriryu: `石流龙是漫画《咒术回战》及其衍生作品中的角色。作为仙台结界四天王之一，拥有“泳者”中最强的咒力输出能力。其为400年前的古代术师，以飞机头形象示人，酷爱甜点，曾活跃于陆奥地区，后通过受肉复活参与现代“死灭回游”争夺战。作为擅长火力压制的战斗狂，其生得术式「咒力放出」能将头发化为炮筒发射极强的「冰沙冲击波」，并掌握领域展开实现必中攻击。在仙台结界与乌鹭亨子、杜鲁夫·拉克达瓦拉、黑沐死形成四方制衡，因乙骨忧太介入打破平衡后展开混战。最终因乙骨忧太复制乌鹭亨子的空间操控术式逆转石流龙的「冰沙冲击波」攻击而导致石流龙落败，后与乙骨达成分数转让协议。感知到宿傩降临主动挑战，未及发动术式即被斩杀。其毕生执着于战斗，在与诅咒之王的对决中迎来终局。`,
+	yzs_Kenjaku: `羂索是漫画《咒术回战》及其衍生作品中的反派角色，作为存活千年的神秘术师，策划了“死灭回游”游戏，并主导日本咒灵动乱。其以“咒力最优化”为目标，长期操控咒术界高层、诅咒师、咒灵等多方势力，通过换脑术式历经千年布局，旨在推动全人类与天元融合实现进化`,
+	yzs_Laetitia: `蕾蒂希娅是游戏《脑叶公司》中登场的HE级异想体，编号O-01-67。其外形表现为皮肤苍白的人形小女孩，灰色头发搭配红色蕾丝发带，辫子上系有金色铃铛，红色瞳孔尤为醒目。身穿红白色裙子，领口系红色蝴蝶结，脚穿红色童鞋搭配黑色过膝袜，行动时呈现机械般的僵硬感，收容单元内伴随八音盒声效。蕾蒂希娅通过恶作剧试图为周围带来欢笑，并称“最能让我感到开心的事儿，就是大家为我的小小恶作剧一起哈哈大笑啦！”。建议由专职保姆负责与其进行沟通工作`,
 
 };
 const characterReplaces = {
@@ -2215,7 +2228,8 @@ const characterSort = {
 	stormPack_yzs: ["JiLiangJiTao_yzs", "lianhua_yzs", "yagamiLight_yzs", "Noir_yzs", "Floris_yzs", "Seele_Vollerei_yzs", "NatsukiSubaru_yzs",
 		"TimeThief_yzs", "Patriot_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Reze_yzs", "Ren_yzs", "Alastor_yzs", "TimeGuard_yzs", "LoverW_yzs",
 		"Frisk_yzs", "Yan_yzs", "DarkKnight_yzs", "BaiLu_yzs", "HaiWeier_yzs", "DomenicoPucci_yzs", "Rafau_yzs", "Arlecchino_yzs", "GunTwins_yzs",
-		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs", "GoldenOrly_yzs", "yzs_Elysia", "yzs_DanHeng","yzs_ThreeBirds"],
+		"Tanya_yzs", "KunYee_yzs", "WangQian_yzs", "WhiteSnake_EnricoPucci_yzs", "GoldenOrly_yzs", "yzs_Elysia", "yzs_DanHeng", "yzs_ThreeBirds",
+	    "yzs_Laetitia"],
 	otherworldPack_yzs: ["jealous_witch_yzs", "wuyingYFY_yzs", "Cana_yzs", "Lazy_twins_yzs", "chenxu_yzs", "AngryFeng_yzs", "Unbelieve_xiangzi_yzs",
 		"Halo_yzs", "lianjinzhencai_yzs", "weaponmaster_yzs", "ChainsawCock_yzs", "Qianmian_Limu_yzs", "EastYang_yzs", "Denglanxitaro_yzs",
 		"Zhonghuang_yzs", "Xiangbolin_yzs", "cunhe_yzs", "tangjiheChao_yzs", "AdmiredWitch_yzs", "Innocent_xiangzi_yzs", "DreamWitch_yzs",

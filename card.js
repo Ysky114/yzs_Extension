@@ -3111,7 +3111,6 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				loseDelay: false,
 				skills: ["yzs_wuxiaxian_wuxian_skill"],
 			},
-			//苍
 			yzs_cang: {
 				audio: "ext:一中杀/audio/card",
 				fullskin: true,
@@ -3159,7 +3158,6 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					}
 				},
 			},
-			//赫
 			yzs_he: {
 				Effect: function (player, target, sizeMultiplier = 1) {
 					if (!player || !target) return;
@@ -3318,6 +3316,56 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 								}
 							}
 						}
+					}
+				},
+			},
+			yzs_gift: {
+				fullskin: true,
+				type: "trick",
+				cardcolor: "red",
+				toself: true,
+				canBenefit(player) {
+					return [player.name, player.name1, player.name2].includes("yzs_Laetitia") || player.hasSkill("yzs_duoquliwu");
+				},
+				enable(event, player) {
+					return true;
+				},
+				savable(card, player, dying) {
+					return dying == player;
+				},
+				ai: {
+					basic: {
+						order: 7,
+						useful: 4.5,
+						value(card, player) {
+							if (lib.card.yzs_gift.canBenefit(player)) return player.isDamaged() ? 9 : 6;
+							// 已弃置两张时，避免 AI 优先弃掉会令自己死亡的第三张。
+							return player.countMark("yzs_xiaohuoban") >= 2 ? 10 : 1;
+						},
+					},
+					result: {
+						target(player, target) {
+							if (!lib.card.yzs_gift.canBenefit(target)) return -2;
+							return target.isDamaged() ? 3 : 1;
+						}
+					},
+					tag: {
+						save: 1,
+						recover: 1,
+						draw: 1,
+					},
+				},
+				image: "ext:一中杀/image/card/yzs_gift.png",
+				selectTarget: -1,
+				filterTarget: (card, player, target) => player == target,
+				allowMultiple: false,
+				async content(event, trigger, player) {
+					const target = event.target;
+					if (lib.card.yzs_gift.canBenefit(target)) {
+						await target.recover();
+						await target.draw();
+					} else {
+						await target.loseHp();
 					}
 				},
 			},
@@ -4675,6 +4723,8 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			yzs_he_info: `出牌阶段对你自己使用。你摸2张牌。`,
 			yzs_wuxiaxian_wuxian: `无限`,
 			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
+			yzs_gift: `礼物`,
+			yzs_gift_info: `出牌阶段或你濒死时，对你自己使用：若你为“蕾蒂希娅”或你有${get.poptip("yzs_duoquliwu")}，你恢复1点体力并摸1张牌；否则你失去1点体力。你累计于弃牌阶段弃置此牌数≥3后死亡。`,
 		},
 		list: [
 			["spade", 1, "juedou"], ["spade", 1, "shandian"], ["spade", 1, "guding"], ["spade", 1, "wugu"],
