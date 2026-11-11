@@ -2201,7 +2201,7 @@ const skills = {
 			player.logSkill("baoTa_yzs_RadiantTreasure")
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/coin.mp3");
 			const card = await player.draw().forResult()
@@ -2210,7 +2210,7 @@ const skills = {
 				player.tempBanSkill(event.name);
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, "effect/coin_cost.mp3");
 			}
@@ -2597,7 +2597,7 @@ const skills = {
 				async content(event, trigger, player) {
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/chickun.wav");
 					player.gain(trigger.cards, "gain2");
@@ -2744,7 +2744,7 @@ const skills = {
 			if (!event.targets || !event.targets.length) return;
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/chicken_you_are_so_beautiful.mp3");
 
@@ -2854,7 +2854,7 @@ const skills = {
 						evt.xueke_yzs_change = true;
 					}
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Chino2_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Chino2_yzs.png");
 					}, player)
 					player.addSkill("shikong_yzs");
 					if (player != _status.currentPhase) return;
@@ -2986,7 +2986,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Chino_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Chino_yzs.png");
 					}, player)
 					//		player.removeSkill("shikong_yzs");
 				},
@@ -3260,7 +3260,7 @@ const skills = {
 							player.addTip("yanmie_yzs", "湮灭 ≤" + player.storage.xierlast_used, false);
 						}
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Seele_Vollerei2_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Seele_Vollerei2_yzs.png");
 						}, player)
 					} else {
 						player.storage.status_avatar = player.storage.twins.life;
@@ -3272,7 +3272,7 @@ const skills = {
 							player.addTip("chuangsheng_yzs", "创生 ≥" + player.storage.xierlast_used, false);
 						}
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Seele_Vollerei_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Seele_Vollerei_yzs.png");
 						}, player)
 					}
 					game.broadcastAll(function (current) {
@@ -3568,11 +3568,11 @@ const skills = {
 				async content(event, trigger, player) {
 					player.removeMark("shuangsheng_yzs", 5, false)
 					if (lib.config.background_audio) {
-						game.playAudio("effect", "recover");
+						game.yzs_playAudio("effect", "recover");
 					}
 					game.broadcast(function () {
 						if (lib.config.background_audio) {
-							game.playAudio("effect", "recover");
+							game.yzs_playAudio("effect", "recover");
 						}
 					});
 					if (player.hujia < 2) await player.changeHujia(2 - player.hujia);
@@ -4705,7 +4705,7 @@ const skills = {
 							let index = Math.ceil(Math.random() * 3)
 							let path = `ext:一中杀/audio/skill/Zoltraak_yzs_use${index}.mp3`
 							game.broadcastAll((path) => {
-								game.playAudio(path);
+								game.yzs_playAudio(path);
 							}, path);
 							return;
 						}
@@ -4965,9 +4965,9 @@ const skills = {
 			if (game.hasPlayer(cur => get.translation(cur).includes("芙莉莲"))) {
 				game.broadcastAll(function (current) {
 					_status.tempMusic = `ext:一中杀/audio/Zoltraak.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 
-					var background = document.createElement("img");
+					var background = game.yzs_createEffectMedia("img");
 					background.className = "background";
 					window._currentDynamicBackground = background;
 					Object.assign(background, {
@@ -4992,19 +4992,19 @@ const skills = {
 						background.style.opacity = "1";
 					}, 50)
 
-					ui.backgroundMusic.addEventListener('ended', () => {
+					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 
 					}, { once: true });
 				}, player);
 			} else {
 				game.broadcastAll(() => {
 					_status.tempMusic = `ext:一中杀/audio/Zoltraak.mp3`;
-					game.playBackgroundMusic();
-					ui.backgroundMusic.addEventListener('ended', () => {
+					game.yzs_playBackgroundMusic();
+					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					}, { once: true });
 				});
 			}
@@ -6489,10 +6489,10 @@ const skills = {
 					game.broadcastAll(() => {
 						if (_status.tempMusic == `ext:一中杀/audio/Memento.mp3`) return;
 						_status.tempMusic = `ext:一中杀/audio/Memento.mp3`;
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					});
 					var next = player.phaseUse();
@@ -6556,10 +6556,10 @@ const skills = {
 					game.broadcastAll(() => {
 						if (_status.tempMusic == `ext:一中杀/audio/STYX HELIX.mp3`) return;
 						_status.tempMusic = `ext:一中杀/audio/STYX HELIX.mp3`;
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					});
 				}
@@ -8710,7 +8710,7 @@ const skills = {
 		async content(event, trigger, player) {
 			player.awakenSkill("yangfanqihang_yzs");
 			game.broadcastAll((player,event) => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -8737,14 +8737,14 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
 				setTimeout(() => {
 					video.style.opacity = "1";
 				}, 50)
-				if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/cunhe2_yzs.png");
+				if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/cunhe2_yzs.png");
 			}, player,event);
 			await new Promise(r => setTimeout(r, 5875))
 			const card = get.cards(2);
@@ -10946,7 +10946,7 @@ const skills = {
 				let damageAudioInfo = "effect/damage_ice.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				game.broadcastAll(function (target) {
@@ -10959,7 +10959,7 @@ const skills = {
 						overlay.style.height = '100%'; // 覆盖头部区域
 						overlay.style.backgroundSize = "cover";
 						overlay.style.opacity = 0.7;
-						overlay.style.backgroundImage = "url('extension/一中杀/image/background/yzsIce_skill.png')"; // 替换为你自己的图片路径
+						game.yzs_setBackgroundImage(overlay, "extension/一中杀/image/background/yzsIce_skill.png", true); // 替换为你自己的图片路径
 						overlay.style.backgroundRepeat = 'no-repeat';
 						overlay.style.backgroundPosition = 'center top';
 						overlay.style.zIndex = '10';
@@ -11034,7 +11034,7 @@ const skills = {
 			let damageAudioInfo = "effect/damage_ice.mp3";
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, damageAudioInfo);
 			await trigger.player.addSkill("yzsIce_skill")

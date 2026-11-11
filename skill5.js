@@ -87,7 +87,7 @@ const skills = {
 							player.addTip("Foolyanmie_yzs", "湮灭 ≤" + player.storage.xierlast_used, false);
 						}
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Seele_Vollerei2_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Seele_Vollerei2_yzs.png");
 						}, player)
 					} else {
 						player.storage.status_avatar = player.storage.twins.life;
@@ -99,7 +99,7 @@ const skills = {
 							player.addTip("Foolchuangsheng_yzs", "创生 ≥" + player.storage.xierlast_used, false);
 						}
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Seele_Vollerei_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Seele_Vollerei_yzs.png");
 						}, player)
 					}
 					game.broadcastAll(function (current) {
@@ -511,11 +511,11 @@ const skills = {
 				async content(event, trigger, player) {
 					player.removeMark("Foolshuangsheng_yzs", 6, false)
 					if (lib.config.background_audio) {
-						game.playAudio("effect", "recover");
+						game.yzs_playAudio("effect", "recover");
 					}
 					game.broadcast(function () {
 						if (lib.config.background_audio) {
-							game.playAudio("effect", "recover");
+							game.yzs_playAudio("effect", "recover");
 						}
 					});
 					player.setMark("Foolshuangsheng_yzs_shengling", 2, false)
@@ -793,7 +793,7 @@ const skills = {
 					await player.modedDiscard(event.cards);
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/coin_cost.mp3");
 					lib.skill.FreeMarket_yzs.BuyIn(player);
@@ -842,7 +842,7 @@ const skills = {
 					let bool = await lib.skill.FreeMarket_yzs.sell(player, event)
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/coin.mp3");
 					if (bool && price > 0) await player.draw(price)
@@ -1069,7 +1069,7 @@ const skills = {
 			}
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/coin_cost.mp3");
 			lib.skill.FreeMarket_yzs.BuyIn(player);
@@ -1135,9 +1135,9 @@ const skills = {
 			}
 			game.broadcastAll(function (current) {
 				_status.tempMusic = `ext:一中杀/audio/今宵は飄逸なエゴイスト.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 
-				var background = document.createElement("img");
+				var background = game.yzs_createEffectMedia("img");
 				background.className = "background";
 				window._currentDynamicBackground = background;
 				Object.assign(background, {
@@ -1162,9 +1162,9 @@ const skills = {
 					background.style.opacity = "1";
 				}, 50)
 
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 
 				}, { once: true });
 			}, player);
@@ -1227,7 +1227,7 @@ const skills = {
 						player.storage.FreeMarket_yzs.remove(sell);
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, "effect/coin_cost.mp3");
 						if (player.storage.FreeMarket_yzs.length) player.markSkill("FreeMarket_yzs");
@@ -1252,7 +1252,7 @@ const skills = {
 					let bool = await lib.skill.FreeMarket_yzs.sell(player, event)
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/coi.mp3");
 					if (bool && price > 0) await player.draw(price)
@@ -1939,9 +1939,9 @@ const skills = {
 			player.awakenSkill("SubterraneanSun_yzs")
 			game.broadcastAll(function (current) {
 				_status.tempMusic = `ext:一中杀/audio/灵知的太阳信仰 ～ Nuclear Fusion.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 
-				var background = document.createElement("img");
+				var background = game.yzs_createEffectMedia("img");
 				background.className = "background";
 				window._currentDynamicBackground = background;
 				Object.assign(background, {
@@ -1966,9 +1966,9 @@ const skills = {
 					background.style.opacity = "1";
 				}, 50)
 
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 
 				}, { once: true });
 			}, player);
@@ -2205,10 +2205,10 @@ const skills = {
 						}
 						if (_status.tempMusic == `ext:一中杀/audio/怪獣2.mp3`) return false;
 						_status.tempMusic = `ext:一中杀/audio/怪獣1.mp3`;
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					}, player.name);
 					player.addMark("guanxing_yzs_awake", 1, false)
@@ -2237,10 +2237,10 @@ const skills = {
 					game.broadcastAll(() => {
 						if (_status.tempMusic == `ext:一中杀/audio/怪獣2.mp3`) return false;
 						_status.tempMusic = `ext:一中杀/audio/怪獣2.mp3`;
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					});
 					player.addMark("guanxing_yzs_awake", 1, false)
@@ -3171,7 +3171,7 @@ const skills = {
 		async content(event, trigger, player) {
 			player.clearMark("Passion_yzs", false);
 			game.broadcastAll(() => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -3198,7 +3198,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -4136,7 +4136,7 @@ const skills = {
 				return;
 			}
 			game.broadcastAll(() => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -4163,7 +4163,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -4763,7 +4763,7 @@ const skills = {
 
 					game.broadcastAll(() => {
 						ui.backgroundMusic.pause();
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -4790,7 +4790,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -4823,14 +4823,14 @@ const skills = {
 						const wtw = player;
 						game.broadcastAll((player) => {
 							_status.tempMusic = `ext:一中杀/audio/虚式茈.mp3`;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 							//	var music = lib.config.background_music;
 							//	if (music && music != "music_off") ui.backgroundMusic.play();
-							ui.backgroundMusic.addEventListener('ended', () => {
+							game.yzs_onBackgroundMusicEnd(() => {
 								delete _status.tempMusic;
-								game.playBackgroundMusic();
+								game.yzs_playBackgroundMusic();
 							}, { once: true });
-							var video = document.createElement("VIDEO");
+							var video = game.yzs_createEffectMedia("VIDEO");
 							video.className = "anime";
 
 							Object.assign(video, {
@@ -4857,7 +4857,7 @@ const skills = {
 							video.addEventListener("ended", () => {
 								video.style.opacity = "0";
 								setTimeout(() => {
-									document.body.removeChild(video);
+									video.remove();
 								}, 1000)//1s后移除视频
 							})
 							document.body.appendChild(video);
@@ -4892,7 +4892,7 @@ const skills = {
 						await new Promise(r => setTimeout(r, 2000))
 						wtw.chat("会赢的")
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/wuxiaxianshushi_yzs2.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/wuxiaxianshushi_yzs2.MP3");
 						});
 					}
 					await pos.yzs_addPlayerOL(pos, "GojoSatoru_yzs", null, true, { isControl:true,targetx: player, startCards: 4, dieRemove: false, noDieAfter: false, noDieAfter2: false, callback,log:false })
@@ -4994,8 +4994,8 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
 
 						// 2. 调用播放逻辑
-						game.playBackgroundMusic();
-						var video = document.createElement("VIDEO");
+						game.yzs_playBackgroundMusic();
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -5022,7 +5022,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -5989,7 +5989,7 @@ const skills = {
 					trigger.player.playEffectOL(lib.skill.jie_yzs.Effect);
 					if (trigger.player.name == "GojoSatoru_yzs" && player.name == "MegumiSukuna_yzs") {
 						game.broadcastAll(() => {
-							var video = document.createElement("VIDEO");
+							var video = game.yzs_createEffectMedia("VIDEO");
 							video.className = "anime";
 
 							Object.assign(video, {
@@ -6016,7 +6016,7 @@ const skills = {
 							video.addEventListener("ended", () => {
 								video.style.opacity = "0";
 								setTimeout(() => {
-									document.body.removeChild(video);
+									video.remove();
 								}, 1000)//1s后移除视频
 							})
 							document.body.appendChild(video);
@@ -6146,12 +6146,12 @@ const skills = {
 			if (base <= request) {
 				game.broadcastAll(
 					() => {
-						game.playAudio("ext:一中杀/audio/skill/zao_yzs1.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/zao_yzs1.mp3");
 					},
 				);
 			} else {
 				game.broadcastAll(() => {
-					var video = document.createElement("VIDEO");
+					var video = game.yzs_createEffectMedia("VIDEO");
 					video.className = "anime";
 					ui.backgroundMusic.pause();
 					Object.assign(video, {
@@ -6180,7 +6180,7 @@ const skills = {
 						var music = lib.config.background_music;
 						if (music && music != "music_off") ui.backgroundMusic.play();
 						setTimeout(() => {
-							document.body.removeChild(video);
+							video.remove();
 						}, 1000)//1s后移除视频
 					})
 					document.body.appendChild(video);
@@ -6237,7 +6237,7 @@ const skills = {
 					await player.discard(event.cards);
 				//	player.tempBanSkill("fumoyuchuzi_yzs", { global: "roundStart" })
 					const animation = () => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -6264,7 +6264,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -6276,29 +6276,22 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
 
 						// 2. 调用播放逻辑
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 
 						// 3. 核心修改：等待音频加载并跳转时间
 						if (ui.backgroundMusic) {
-							// 如果音频已经加载完成（通常是本地资源），直接跳转
-							if (ui.backgroundMusic.readyState >= 2) {
-								ui.backgroundMusic.currentTime = 50;
-							} else {
-								// 否则监听加载完成事件
-								ui.backgroundMusic.addEventListener('canplay', function () {
-									this.currentTime = 50;
-								}, { once: true });
-							}
-							ui.backgroundMusic.addEventListener('ended', () => {
+							// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+							game.yzs_seekBackgroundMusic(50);
+							game.yzs_onBackgroundMusicEnd(() => {
 								_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
-								game.playBackgroundMusic();
+								game.yzs_playBackgroundMusic();
 							}, { once: true });
 						}
 					};
 					if (trigger.ExpandPlayerList?.some(target => target.name == "GojoSatoru_yzs")) {
 						const index = Math.ceil(2 * Math.random());
 						game.broadcastAll((index) => {
-							var video = document.createElement("VIDEO");
+							var video = game.yzs_createEffectMedia("VIDEO");
 							video.className = "anime";
 							Object.assign(video, {
 								src: lib.assetURL +	`/extension/一中杀/image/background/五条宿傩领域对拼0${index}.MP4`,
@@ -6324,7 +6317,7 @@ const skills = {
 							video.addEventListener("ended", () => {
 								video.style.opacity = "0";
 								setTimeout(() => {
-									document.body.removeChild(video);
+									video.remove();
 								}, 1000)//1s后移除视频
 							})
 							document.body.appendChild(video);
@@ -6362,7 +6355,7 @@ const skills = {
 		async content(event, trigger, player) {
 	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -6389,7 +6382,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -6401,22 +6394,15 @@ const skills = {
 				_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 
 				// 3. 核心修改：等待音频加载并跳转时间
 				if (ui.backgroundMusic) {
-					// 如果音频已经加载完成（通常是本地资源），直接跳转
-					if (ui.backgroundMusic.readyState >= 2) {
-						ui.backgroundMusic.currentTime = 50;
-					} else {
-						// 否则监听加载完成事件
-						ui.backgroundMusic.addEventListener('canplay', function () {
-							this.currentTime = 50;
-						}, { once: true });
-					}
-					ui.backgroundMusic.addEventListener('ended', () => {
+					// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+					game.yzs_seekBackgroundMusic(50);
+					game.yzs_onBackgroundMusicEnd(() => {
 						_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					}, { once: true });
 				}
 
@@ -6497,7 +6483,7 @@ const skills = {
 							evt.fakeforce = false;
 						}, player)
 						if (_status.connectMode) {
-							game.yzs_swapPlayerOL(player, current);
+							await game.yzs_swapPlayerOL(player, current);
 						} else {
 							if (player == game.me) game.swapPlayerAuto(current);
 						};
@@ -6513,7 +6499,7 @@ const skills = {
 					const current = map[id];
 					if (_status.connectMode) {
 						if ((current.isOnline2() || current == game.me) && current != player) {
-							game.yzs_swapPlayerOL(current, player);
+							await game.yzs_swapPlayerOL(current, player);
 							break;
 						};
 					} else if (current == game.me && !_status.auto) {
@@ -6534,7 +6520,7 @@ const skills = {
 		},
 		Effect: function (player) {
 			// 1. 创建图片元素并设置基础样式
-			const img = document.createElement('img');
+			const img = game.yzs_createEffectMedia('img');
 			img.src = lib.assetURL + "/extension/一中杀/image/hundunyutiaohe_yzs.png",
 				img.style.position = 'absolute';
 			img.style.left = '50%';
@@ -6906,7 +6892,7 @@ const skills = {
 			player.awakenSkill(event.name);
 			player.removeSkill(event.name)
 			game.broadcastAll(function (current) {
-				ui.background.setBackgroundImage('extension/一中杀/image/background/challenger_yzs.png');
+				game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/challenger_yzs.png');
 			}, player)
 			if (trigger.name == "phase" && game.phaseNumber !== 0)player.insertPhase();
 		},
@@ -6945,7 +6931,7 @@ const skills = {
 							evt.fakeforce = false;
 						}, player)
 						if (_status.connectMode) {
-							game.yzs_swapPlayerOL(player, current);
+							await game.yzs_swapPlayerOL(player, current);
 						} else {
 							if (player == game.me) game.swapPlayerAuto(current);
 						};
@@ -6961,7 +6947,7 @@ const skills = {
 					const current = map[id];
 					if (_status.connectMode) {
 						if ((current.isOnline2() || current == game.me) && current != player) {
-							game.yzs_swapPlayerOL(current, player);
+							await game.yzs_swapPlayerOL(current, player);
 							break;
 						};
 					} else if (current == game.me && !_status.auto) {
@@ -7067,7 +7053,7 @@ const skills = {
 					if (!player.countMark("wuxiaxianshushi_yzs_die")) return;
 					player.clearMark("wuxiaxianshushi_yzs_die",false)
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/GojoSatoru_yzs.png");
 					}, player)
 					for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
 						target.chat("真的假的？")
@@ -7088,7 +7074,7 @@ const skills = {
 				async content(event, trigger, player) {
 					player.addMark("wuxiaxianshushi_yzs_die",1,false)
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs_die.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/GojoSatoru_yzs_die.png");
 					}, player)
 					let name = get.translation(trigger.source);
 					if (trigger.source.hasSkill("zuzhouzhiwang_yzs")) name = "宿傩"
@@ -7564,7 +7550,7 @@ const skills = {
 			}
 			if (event.baseDamage >= 3&&player.name!="YoungGojo_yzs") {
 				game.broadcastAll(() => {
-					var video = document.createElement("VIDEO");
+					var video = game.yzs_createEffectMedia("VIDEO");
 					video.className = "anime";
 
 					Object.assign(video, {
@@ -7591,7 +7577,7 @@ const skills = {
 					video.addEventListener("ended", () => {
 						video.style.opacity = "0";
 						setTimeout(() => {
-							document.body.removeChild(video);
+							video.remove();
 						}, 1000)//1s后移除视频
 					})
 					document.body.appendChild(video);
@@ -7602,7 +7588,7 @@ const skills = {
 				});
 			} else {
 				game.broadcastAll(() => {
-					var video = document.createElement("VIDEO");
+					var video = game.yzs_createEffectMedia("VIDEO");
 					video.className = "anime";
 
 					Object.assign(video, {
@@ -7629,7 +7615,7 @@ const skills = {
 					video.addEventListener("ended", () => {
 						video.style.opacity = "0";
 						setTimeout(() => {
-							document.body.removeChild(video);
+							video.remove();
 						}, 1000)//1s后移除视频
 					})
 					document.body.appendChild(video);
@@ -7693,7 +7679,7 @@ const skills = {
 					await player.discard(event.cards);
 		//			player.tempBanSkill("wuliangkongchu_yzs", { global: "roundStart" })
 					const animation = () => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -7720,7 +7706,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -7729,16 +7715,16 @@ const skills = {
 						}, 50)
 						if (_status.tempMusic == `ext:一中杀/audio/雨爱.mp3`) return;
 						_status.tempMusic = `ext:一中杀/audio/雨爱.mp3`;
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							_status.tempMusic = `ext:一中杀/audio/AIZO.mp3`;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					}
 					if (trigger.ExpandPlayerList?.some(target => target.name == "MegumiSukuna_yzs")) {
 						const index = Math.ceil(2 * Math.random());
 						game.broadcastAll((index) => {
-							var video = document.createElement("VIDEO");
+							var video = game.yzs_createEffectMedia("VIDEO");
 							video.className = "anime";
 							Object.assign(video, {
 								src: lib.assetURL + `/extension/一中杀/image/background/五条宿傩领域对拼0${index}.MP4`,
@@ -7764,7 +7750,7 @@ const skills = {
 							video.addEventListener("ended", () => {
 								video.style.opacity = "0";
 								setTimeout(() => {
-									document.body.removeChild(video);
+									video.remove();
 								}, 1000)//1s后移除视频
 							})
 							document.body.appendChild(video);
@@ -7803,7 +7789,7 @@ const skills = {
 		async content(event, trigger, player) {
 //			player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -7830,7 +7816,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -7839,10 +7825,10 @@ const skills = {
 				}, 50)
 				if (_status.tempMusic == `ext:一中杀/audio/雨爱.mp3`) return;
 				_status.tempMusic = `ext:一中杀/audio/雨爱.mp3`;
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_playBackgroundMusic();
+				game.yzs_onBackgroundMusicEnd(() => {
 					_status.tempMusic = `ext:一中杀/audio/AIZO.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 			}
 			let result = await player.yzs_ExpandDomain(event.name, "thunder", event.cards.length, animation).forResult();
@@ -8195,7 +8181,7 @@ const skills = {
 				_status.TheWorld_yzs = false;
 				document.documentElement.style.filter = "none";
 				//↑消除之前技能里的黑白等效果
-				game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 				//↑播放时停结束的语音
 				game.delay(3);
 				var music = lib.config.background_music;
@@ -8217,13 +8203,13 @@ const skills = {
 			if (!_status.TheWorld_yzs) {
 				game.broadcastAll((player) => {
 					_status.TheWorld_yzs = true;
-					game.playAudio("ext:一中杀/audio/skill/TheWorldEnter.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldEnter.mp3");
 					ui.backgroundMusic.pause();
 					player.$skill("THE WORLD", "legend", "thunder");
 					var imagePath = lib.assetURL + "/extension/一中杀/image/background/timeStop.gif";
 					var duration = 4000;
 
-					var img = document.createElement("img");
+					var img = game.yzs_createEffectMedia("img");
 					img.src = imagePath;
 
 					// 改进的样式设置
@@ -8254,7 +8240,7 @@ const skills = {
 						img.style.opacity = 0;
 						setTimeout(function () {
 							if (img.parentNode) {
-								img.parentNode.removeChild(img);
+								img.remove();
 							}
 						}, 1000);
 					}, duration);
@@ -8287,7 +8273,7 @@ const skills = {
 							_status.TheWorld_yzs = false;
 							document.documentElement.style.filter = "none";
 							//↑消除之前技能里的黑白等效果
-							game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 							//↑播放时停结束的语音
 							game.delay(3);
 							var music = lib.config.background_music;
@@ -8347,7 +8333,7 @@ const skills = {
 						_status.TheWorld_yzs = false;
 						document.documentElement.style.filter = "none";
 						//↑消除之前技能里的黑白等效果
-						game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 						//↑播放时停结束的语音
 						game.delay(3);
 						var music = lib.config.background_music;
@@ -8448,7 +8434,7 @@ const skills = {
 					player.removeSkill("shuangzizhoufu_yzs_awake")
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/AIZO.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					});
 				}
 			}
@@ -8470,13 +8456,13 @@ const skills = {
 		async content(event, trigger, player) {
 			player.awakenSkill(event.name);
 			game.broadcastAll(function (current) {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/ZeninMaki_yzs2.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/ZeninMaki_yzs2.png");
 			}, player)
 			player.addSkill("shuangzizhoufu_yzs_awake")
-			await player.changeHujia(-player.hujia, "lose");
-			await player.turnOver();
+			const num = player.hujia;
+			await player.changeHujia(-num, "lose");
 			if (player.maxHp < 6) await player.gainMaxHp(6 - player.maxHp);
-			await player.recoverTo(player.maxHp);
+			await player.recover(num);
 		}
 	},
 	tianyubaojun_yzs: {
@@ -8694,7 +8680,7 @@ const skills = {
 						var damageAudioInfo = "ext:一中杀/audio/skill/toushezhoufa_yzs_draw5.mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						player.chat("你永远都不可能比得过甚尔。能够与甚尔比肩的人是我！")
@@ -8712,7 +8698,7 @@ const skills = {
 				async content(event, trigger, player) {
 					let index=Math.floor(Math.random()*4)+1
 					game.broadcastAll((index) => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -8739,7 +8725,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -8770,7 +8756,7 @@ const skills = {
 					var damageAudioInfo = "ext:一中杀/audio/skill/toushezhoufa_yzs_die.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 					player.chat("真残忍啊。你这家伙，难道没有心吗？")
@@ -9574,7 +9560,7 @@ const skills = {
 				async content(event, trigger, player) {
 					player.awakenSkill(event.name);
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/YoungGojo_yzs2.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/YoungGojo_yzs2.png");
 					}, player)
 					player.awakenSkill('yuzhe_yzs');
 					player.addMark("yuzhe_yzs", 1, false)
@@ -9582,14 +9568,14 @@ const skills = {
 						let toji = game.filterPlayer(cur => cur.name == "FushiguroToji_yzs")
 						toji[0].chat("真的假的？")
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake.MP3");
 							setTimeout(() => {
-								game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
 							}, 8000)
 						}, player);
 					} else {
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
 						})
 					}
 					await player.addSkill(['fanzhuanshushi_yzs',"xushici_yzs"]);

@@ -12,9 +12,10 @@ import skills7 from "./skill7.js";
 import translates from "./translate.js";
 import dynamicTranslates from "./dynamicTranslate.js";
 import update from "./update.js";
+import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.2.1";
+const EXTENSION_VERSION = "0.99.2.3";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -23,6 +24,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 		editable:false,
 		arenaReady() { },
 		async precontent() {
+			installMediaGuards(lib, game, ui, _status);
 			let version = "1.11.3"
 			const cur = lib.version.split('.').map(Number);
 			const req = version.split('.').map(Number);
@@ -589,8 +591,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			lib.init.js(path, "card");
 			//武将评级
 			lib.arenaReady.push(function () {
-				//至臻：在此填写武将 ID。与其他名单重复时优先显示至臻。
-				const pj_prestige = ["NatsukiSubaru_yzs", "DarkKnight_yzs", "yzs_Elysia", "jealous_witch_yzs", "Qianmian_Limu_yzs",
+				//至臻
+				const pj_prestige = ["NatsukiSubaru_yzs", "DarkKnight_yzs",  "jealous_witch_yzs", "Qianmian_Limu_yzs",
 					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"];
 				//传说 SSS
 				var pj_sss = ["HuangJOJO_yzs", "WZZS_lilixin_yzs", "Zbro_yzs", "OnionMan_yzs", "Noir_yzs", "WangQian_yzs", "Lazy_twins_yzs", "Cayuu_yzs", 
@@ -606,24 +608,24 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					 "Guanjun_yzs",  "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
 					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
 					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs", 
-					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs",
+					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia",
 				];
 				//精品 S
 				var pj_s = [
 					"shenfu_Limu_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
 					"JiLiangJiTao_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs", "Stark_yzs",
-					 "WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs",  "Unbelieve_xiangzi_yzs", "weaponmaster_yzs", "ChainsawCock_yzs",
+					 "WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs",  "Unbelieve_xiangzi_yzs",  "ChainsawCock_yzs",
 					 "tangjiheChao_yzs",  "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
 					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", 
-					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Aura_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
+					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
 					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",
 					"yzs_Kenjaku"
 				];
 				//平凡
 				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", 
 					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs", "APPLe_yzs", "changzhang_yzs",
-					"chenxu_yzs", "lianjinzhencai_yzs", "Remilia_Scarlet_yzs", "TimeGuard_yzs",];
+					"chenxu_yzs", "lianjinzhencai_yzs", "TimeGuard_yzs", "weaponmaster_yzs",];
 
 				lib.rank.rarity.prestige ??= [];
 				lib.rank.rarity.prestige.addArray(pj_prestige);
@@ -677,6 +679,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
+						"CMoon_EnricoPucci_yzs",
+						"SCP079_yzs",
+						"SCP106_yzs"
 					]
 				},
 			];

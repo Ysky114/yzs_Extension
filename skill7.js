@@ -44,7 +44,7 @@ const skills = {
 				if (inside.includes(game.me)) {
 					let img = document.getElementById(id);
 					if (img) return;
-					img = document.createElement("img");
+					img = game.yzs_createEffectMedia("img");
 					img.id = id; // 给图片加上唯一标识
 					img.src = imagePath;
 					img.style.position = "fixed";
@@ -606,8 +606,8 @@ const skills = {
 					player.playEffectOL(lib.skill.Sacrifice_yzs.Effect);
 					game.broadcastAll(function (current) {
 						_status.tempMusic = `ext:一中杀/audio/Second.mp3`;
-						game.playBackgroundMusic();
-						ui.background.setBackgroundImage('extension/一中杀/image/background/yzs_ezhao.jpg');
+						game.yzs_playBackgroundMusic();
+						game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/yzs_ezhao.jpg');
 					}, player)
 					//player.removeSkill("yzs_ezhao");
 					await player.reinitCharacter(player.name1, 'yzs_ThreeBirds2');
@@ -775,7 +775,7 @@ const skills = {
 					if (!player.countMark("wuxiaxianshushi_yzs_die")) return;
 					player.clearMark("wuxiaxianshushi_yzs_die", false)
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/GojoSatoru_yzs.png");
 					}, player)
 					for (let target of game.filterPlayer(cur => cur.hasSkill("zuzhouzhiwang_yzs"))) {
 						target.chat("真的假的？")
@@ -796,7 +796,7 @@ const skills = {
 				async content(event, trigger, player) {
 					player.addMark("wuxiaxianshushi_yzs_die", 1, false)
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/GojoSatoru_yzs_die.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/GojoSatoru_yzs_die.png");
 					}, player)
 					let name = get.translation(trigger.source);
 					if (trigger.source.hasSkill("zuzhouzhiwang_yzs")) name = "宿傩"
@@ -1268,7 +1268,7 @@ const skills = {
 			}
 			if (!event.targets?.length) {
 				game.broadcastAll(() => {
-					var video = document.createElement("VIDEO");
+					var video = game.yzs_createEffectMedia("VIDEO");
 					video.className = "anime";
 
 					Object.assign(video, {
@@ -1295,7 +1295,7 @@ const skills = {
 					video.addEventListener("ended", () => {
 						video.style.opacity = "0";
 						setTimeout(() => {
-							document.body.removeChild(video);
+							video.remove();
 						}, 1000)//1s后移除视频
 					})
 					document.body.appendChild(video);
@@ -1306,7 +1306,7 @@ const skills = {
 				});
 			} else if (player.name != "GojoSatoru_yzs") {
 				game.broadcastAll(() => {
-					var video = document.createElement("VIDEO");
+					var video = game.yzs_createEffectMedia("VIDEO");
 					video.className = "anime";
 
 					Object.assign(video, {
@@ -1333,7 +1333,7 @@ const skills = {
 					video.addEventListener("ended", () => {
 						video.style.opacity = "0";
 						setTimeout(() => {
-							document.body.removeChild(video);
+							video.remove();
 						}, 1000)//1s后移除视频
 					})
 					document.body.appendChild(video);
@@ -1405,7 +1405,7 @@ const skills = {
 				async content(event, trigger, player) {
 					player.awakenSkill(event.name);
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/YoungGojo_yzs2.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/YoungGojo_yzs2.png");
 					}, player)
 					player.awakenSkill('yzs_yuzhe_dying');
 					player.addMark("yzs_yuzhe_dying", 1, false)
@@ -1413,14 +1413,14 @@ const skills = {
 						let toji = game.filterPlayer(cur => cur.name == "FushiguroToji_yzs")
 						toji[0].chat("真的假的？")
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake.MP3");
 							setTimeout(() => {
-								game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
 							}, 8000)
 						}, player);
 					} else {
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yuzhe_yzs_awake1.MP3");
 						})
 					}
 					player.removeSkill("yzs_yuzhe")
@@ -1726,7 +1726,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						let num = game.roundNumber;
@@ -1799,7 +1799,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						let num = game.roundNumber;
@@ -1874,7 +1874,7 @@ const skills = {
 				await player.gain(player.getEquips(1).concat(player.getEquips(2)));
 				await player.useSkill("yzs_xiebeng_awake");
 				game.broadcastAll(function (current) {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/yzs_QianSaint.png");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/yzs_QianSaint.png");
 				}, player)
 				await player.recoverTo(player.maxHp);
 				await player.removeSkills("yzs_xiebeng");
@@ -1979,7 +1979,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.discard(player.getDiscardableCards(player, "ej"));
@@ -2039,7 +2039,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.discard(player.getDiscardableCards(player, "ej"));
@@ -2127,7 +2127,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_chuilian_mahito.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				}
@@ -2236,7 +2236,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_jintingquan1.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				}
@@ -2486,7 +2486,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_jintingquan2.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				for (let target of game.filterPlayer()) {
@@ -2544,9 +2544,9 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					}
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 							_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}
 					}, damageAudioInfo);
 					if (player.identity == "zhu") player.addSkill("BossRule_yzs")
@@ -2633,7 +2633,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_qikuo_buff_use.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				}
@@ -2689,15 +2689,15 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_qikuo1.mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 								_status.tempMusic = `ext:一中杀/audio/Malevolent Shrine.mp3`;
-								game.playBackgroundMusic();
+								game.yzs_playBackgroundMusic();
 							}
 						}, damageAudioInfo);
 						if (target.name == "FushiguroMegumi_yzs") {
 							game.broadcastAll(function (current) {
-								if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/FushiguroMegumi_yzs2.png");
-								var video = document.createElement("VIDEO");
+								if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/FushiguroMegumi_yzs2.png");
+								var video = game.yzs_createEffectMedia("VIDEO");
 								video.className = "anime";
 
 								Object.assign(video, {
@@ -2724,7 +2724,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 								video.addEventListener("ended", () => {
 									video.style.opacity = "0";
 									setTimeout(() => {
-										document.body.removeChild(video);
+										video.remove();
 									}, 1000)//1s后移除视频
 								})
 								document.body.appendChild(video);
@@ -2738,7 +2738,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						player.addMark("yzs_qikuo_nosukuna",1,false)
 						if (_status.connectMode) {
 							if ((player.isOnline2() || player == game.me) && player != target) {
-								game.yzs_swapPlayerOL(player, target);
+								await game.yzs_swapPlayerOL(player, target);
 							};
 						} else if (player == game.me && !_status.auto && player != target) {
 							game.swapPlayerAuto(target);
@@ -2834,7 +2834,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					var damageAudioInfo = "ext:一中杀/audio/skill/yzs_wuweizhuanbian_sukuna.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 					target.chat("给我有点自知之明，蠢货！")
@@ -2914,10 +2914,10 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_tuisheng_zibiyuandunguo.mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
-						await player.recover(2);
+					//	await player.recover(2);
 					}
 					if (player.maxHp >= 8 && !player.countMark("yzs_tuisheng_bianshajilingti")) {
 						player.addMark("yzs_tuisheng_bianshajilingti", 1, false)
@@ -2925,7 +2925,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						var damageAudioInfo = "ext:一中杀/audio/skill/yzs_tuisheng_bianshajilingti.mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						player.yzs_tuisheng_expandEquip =function (params) {
@@ -3058,7 +3058,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					await player.discard(event.cards);
 			//		player.tempBanSkill("yzs_zibiyuandunguo", { global: "roundStart" })
 					const animation = () => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -3085,7 +3085,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -3097,21 +3097,14 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 						_status.tempMusic = `ext:一中杀/audio/自闭圆顿裹.mp3`;
 
 						// 2. 调用播放逻辑
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 						if (ui.backgroundMusic) {
-							// 如果音频已经加载完成（通常是本地资源），直接跳转
-							if (ui.backgroundMusic.readyState >= 2) {
-								ui.backgroundMusic.currentTime = 77;
-							} else {
-								// 否则监听加载完成事件
-								ui.backgroundMusic.addEventListener('canplay', function () {
-									this.currentTime = 77;
-								}, { once: true });
-							}
+							// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+							game.yzs_seekBackgroundMusic(77);
 						}
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					}
 					trigger.addExpandPlayer(player, "yzs_zibiyuandunguo", "thunder", event.cards.length, animation)
@@ -3142,7 +3135,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			player.awakenSkill(event.name);
 	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -3169,7 +3162,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -3181,21 +3174,14 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				_status.tempMusic = `ext:一中杀/audio/自闭圆顿裹.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 				if (ui.backgroundMusic) {
-					// 如果音频已经加载完成（通常是本地资源），直接跳转
-					if (ui.backgroundMusic.readyState >= 2) {
-						ui.backgroundMusic.currentTime = 77;
-					} else {
-						// 否则监听加载完成事件
-						ui.backgroundMusic.addEventListener('canplay', function () {
-							this.currentTime = 77;
-						}, { once: true });
-					}
+					// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+					game.yzs_seekBackgroundMusic(77);
 				}
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 			}
 			let result = await player.yzs_ExpandDomain(event.name, "thunder", event.cards.length, animation).forResult();
@@ -3514,7 +3500,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang.mp3";
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, damageAudioInfo);
 			player.$fullscreenpop("狱门疆  开门","fire")
@@ -3524,14 +3510,14 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang1.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				await new Promise(r => setTimeout(r, 2000))
 				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang2.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				await new Promise(r => setTimeout(r, 13000))
@@ -3539,13 +3525,13 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				player.$damage()
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, "effect/damage2.mp3");
 				var damageAudioInfo = "ext:一中杀/audio/skill/yzs_yumenjiang3.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 			}
@@ -3627,13 +3613,26 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			prompt(links) { return "视为使用或打出" + get.translation(links[0][2]); },
 		},
 		getRespondedCards(event) {
-			if (!event.respondTo) return [];
-			const [source, card] = event.respondTo;
-			const matches = evt => evt.name == "useCard" && evt.player == source && evt.card == card;
-			const original = event.getParent(matches, true) || game.getGlobalHistory("useCard", matches).slice(-1)[0];
-			// 响应事件的 cards 是响应牌；应取被响应那次用牌事件的底牌。
-			const cards = original ? original.cards : (card.cards || (get.itemtype(card) == "card" ? [card] : []));
-			return (cards || []).filter(card => ["o", "d"].includes(get.position(card, true)));
+			let cards;
+			if (event.respondTo) {
+				const [source, card] = event.respondTo;
+				const matches = evt => evt.name == "useCard" && evt.player == source && evt.card == card;
+				const original = event.getParent(matches, true) || game.getGlobalHistory("useCard", matches).slice(-1)[0];
+				// 响应事件的 cards 是响应牌；应取被响应那次用牌事件的底牌。
+				cards = original ? original.cards : (card.cards || (get.itemtype(card) == "card" ? [card] : []));
+			} else {
+				if (event.name != "useCard" || event.card?.name != "wuxie") return [];
+				// 判定阶段的无懈没有 respondTo，只取最近一次无懈所响应的判定事件。
+				// 不能直接向上找 phaseJudge，否则无懈另一张无懈时会误取外层延时锦囊。
+				const wuxie = event.getParent("_wuxie", true);
+				if (wuxie?.triggername != "phaseJudge" || wuxie._trigger?.name != "phaseJudge") return [];
+				const card = wuxie._trigger.card;
+				if (!card) return [];
+				// 虚拟判定牌只收取实体底牌，不将判定区用于显示的替身牌扣置。
+				cards = card[card.cardSymbol]?.cards ?? card.cards ??
+					(get.itemtype(card) == "card" && !card.isViewAsCard ? [card] : []);
+			}
+			return Array.from(new Set(cards || [])).filter(card => ["o", "d"].includes(get.position(card, true)));
 		},
 		marktext: "咒",
 		intro: {
@@ -3716,6 +3715,13 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 					game.log(player, "增加了", cards.length, "层“心梗”");
 					if (player.countMark("yzs_xiaohuoban") >= 3) await player.die();
 				},
+			},
+		},
+		markimage: 'extension/一中杀/image/yzs_xiaohuoban.png',
+		intro: {
+			name: "心梗",
+			content: function (storage, player) {
+				return "当前有" + player.countMark("yzs_xiaohuoban") + "层“心梗”，达到3层后你将死亡";
 			},
 		},
 		locked: true,

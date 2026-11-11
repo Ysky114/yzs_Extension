@@ -295,6 +295,23 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		};
 		lib.message.server.chat._yzsChatSenderFixed = true;
 	}
+	// 控制权只能在旧的联机选择已回复后转交。tempUnwait 是中间结果，不释放等待。
+	if (!lib.element.player.unwait._yzsControlWaiters) {
+		const originalUnwait = lib.element.player.unwait;
+		const waiters = new Set();
+		const notify = () => {
+			for (const check of Array.from(waiters)) check();
+		};
+		lib.element.player.unwait = function (...args) {
+			try {
+				return originalUnwait.apply(this, args);
+			} finally {
+				notify();
+			}
+		};
+		lib.element.player.unwait._yzsControlWaiters = waiters;
+		lib.onover.push(notify);
+	}
 	// 联机瞬发接口
     Object.assign(lib.message.server, {
         yzs_shunfaji(name) {
@@ -308,17 +325,37 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
        }
 	});
 	Object.assign(game, {
+		yzs_waitForControlIdle(...players) {
+			return new Promise(resolve => {
+				const waiters = lib.element.player.unwait._yzsControlWaiters;
+				const check = () => {
+					const pending = players.some(player => {
+						const result = lib.node?.torespond?.[player.playerid];
+						return result === "_noname_waiting" || typeof result === "function" && result._noname_waiting;
+					});
+					if (!_status.over && pending) return;
+					waiters.delete(check);
+					resolve();
+				};
+				waiters.add(check);
+				check();
+			});
+		},
 		// 移除被操控的召唤物前将连接交还本体（允许本体已死），保留其后续结算接收者。
-		yzs_restoreSummonControl(target) {
+		async yzs_restoreSummonControl(target) {
 			if (_status.over) return;
 			const source = target._source;
 			if (!source || !game.players.concat(game.dead).includes(source)) return;
 			if (target !== game.me && !target.isOnline2()) return;
-			if (_status.connectMode) game.yzs_swapPlayerOL(target, source);
+			if (_status.connectMode) await game.yzs_swapPlayerOL(target, source);
 			else if (target === game.me) game.swapPlayerAuto(source);
 		},
-		yzs_swapPlayerOL(player, target) {
+		async yzs_swapPlayerOL(player, target) {
 			if (_status.over || game.online || !_status.connectMode || player == target || !player || !target) return;
+			await game.yzs_waitForControlIdle(player, target);
+			if (_status.over || player.removed || target.removed) return;
+			// 等待期间可能断线；双方都已没有操作者时，不再迁移离线连接。
+			if (player !== game.me && target !== game.me && !player.isOnline2() && !target.isOnline2()) return;
 
 			const [playerid, targetid] = [player.playerid, target.playerid];
 			// 昵称跟随连接；nameol 只是截断后的显示文本，不能作为聊天昵称的数据源。
@@ -331,34 +368,33 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			const playerInfo = controllerInfo(player);
 			const targetInfo = controllerInfo(target);
 			[target.ws, player.ws] = [player.ws, target.ws];
-
-			lib.wsOL[targetid] = player.ws?.ws;
-			lib.wsOL[playerid] = target.ws?.ws;
-
-			// 先取快照再交换，防止双方同名触发器相互覆盖，导致死亡清理或控制技能丢失。
-			const hooks = Object.entries(lib.hook).filter(([key]) => key.startsWith(playerid + "_") || key.startsWith(targetid + "_"));
-			for (const [key] of hooks) delete lib.hook[key];
-			for (const [key, value] of hooks) {
-				const fromPlayer = key.startsWith(playerid + "_");
-				lib.hook[(fromPlayer ? targetid : playerid) + key.slice((fromPlayer ? playerid : targetid).length)] = value;
-			}
+			// 角色编号、触发器与选择结果的键保持不变；Client.id 指向该连接当前操控的角色。
+			// NodeWS.wsid / lib.wsOL 属于真实网络连接，切换角色时不能改写。
+			if (player.ws) player.ws.id = playerid;
+			if (target.ws) target.ws.id = targetid;
 
 			game.broadcastAll((player, target, playerid, targetid, playerInfo, targetInfo) => {
-				const controlled = game.me === player ? target : game.me === target ? player : null;
-				// 先更新映射和昵称，再触发切视角/取消托管的回调及其可能发送的聊天消息。
-				[player.playerid, target.playerid] = [targetid, playerid];
-				lib.playerOL[targetid] = player;
-				lib.playerOL[playerid] = target;
+				// 客机以连接身份定位操作者，避免已偏离的显示视角反过来覆盖联机身份。
+				const controlled = game.online
+					? game.onlineID === playerid ? target : game.onlineID === targetid ? player : null
+					: game.me === player ? target : game.me === target ? player : null;
+				if (game.onlinezhu === playerid) game.onlinezhu = targetid;
+				else if (game.onlinezhu === targetid) game.onlinezhu = playerid;
 				for (const [current, info] of [[player, targetInfo], [target, playerInfo]]) {
 					current.nickname = info.nickname;
 					current.isAuto = info.isAuto;
 					current.setNickname(info.nickname + (info.offline ? " - 离线" : info.isAuto ? " - 托管" : ""));
 				}
 				if (!_status.over && controlled && !game.observe) {
-					// onlineID 必须指向本人连接当前操控的座位；房间 wsid 不随座位改变。
-					if (game.online) game.onlineID = controlled.playerid;
+					if (game.online) {
+						game.onlineID = controlled.playerid;
+						if (Array.isArray(lib.config.reconnect_info)) {
+							lib.config.reconnect_info[1] = game.onlineID;
+							game.saveConfig("reconnect_info", lib.config.reconnect_info);
+						}
+					}
 					game.swapPlayerAuto(controlled);
-					if (_status.auto) ui.click.auto('forced');
+					// 托管状态跟随连接保留，不在切换过程中发送额外的 unauto 请求。
 				}
 			}, player, target, playerid, targetid, playerInfo, targetInfo);
 		}
@@ -658,7 +694,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				alignItems: 'center'
 			});
 
-			const gifImg = document.createElement('img');
+			const gifImg = game.yzs_createEffectMedia('img');
 			gifImg.src = imagePath;
 			Object.assign(gifImg.style, {
 				width: '100%',
@@ -833,7 +869,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			if (_status.tempMusic != player.storage.removeBgmOL) return;
 			game.broadcastAll(() => {
 				delete _status.tempMusic;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			});
 			delete player.storage.removeBgmOL;
 			player.markSkill("removeBgmOL")
@@ -847,7 +883,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		async content(event,trigger,player) {
 			game.broadcastAll(() => {
 				delete _status.tempMusic;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			});
 			delete player.storage.removeBgmOL;
 			player.markSkill("removeBgmOL")
@@ -860,7 +896,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		//path例："ext:一中杀/audio/End Like This.mp3"
 		game.broadcastAll((path) => {
 			_status.tempMusic = path;
-			game.playBackgroundMusic();
+			game.yzs_playBackgroundMusic();
 		},path);
 		player.addTempSkill("removeBgmOL", expire)
 		player.setStorage("removeBgmOL", path);
@@ -918,7 +954,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 
 		// 2. 广播创建图片
 		game.broadcastAll((imagePath, zIndex, id) => {
-			var img = document.createElement("img");
+			var img = game.yzs_createEffectMedia("img");
 			img.id = id; // 给图片加上唯一标识
 			img.src = imagePath;
 			img.style.position = "fixed";
@@ -1012,7 +1048,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	//联机更换武将图
 	lib.element.player.changeAvatarImageOL = function (path) {
 		game.broadcastAll(function (current, path) {
-			if (current.node.avatar) current.node.avatar.setBackgroundImage(path); //例："extension/一中杀/image/Unbelieve_xiangzi_yzs.png"
+			if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, path); //例："extension/一中杀/image/Unbelieve_xiangzi_yzs.png"
 		}, this, path)
 	};
 
@@ -1022,16 +1058,16 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		if (!loop) {
 			game.broadcastAll((path) => {
 				_status.tempMusic = path;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			},path);
 			return;
 		}
 		game.broadcastAll((path) => {
 			_status.tempMusic = path;
-			game.playBackgroundMusic();
-			ui.backgroundMusic.addEventListener('ended', () => {
+			game.yzs_playBackgroundMusic();
+			game.yzs_onBackgroundMusicEnd(() => {
 				delete _status.tempMusic;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, { once: true });
 		},path);
 	}
@@ -1051,7 +1087,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 
 		game.broadcastAll((path, duration, zIndex, pos) => {
 			var imagePath = lib.assetURL + path;
-			var img = document.createElement("img");
+			var img = game.yzs_createEffectMedia("img");
 			img.src = imagePath;
 			img.style.position = "fixed";
 			img.style.left = "0";
@@ -1097,7 +1133,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				img.style.transition = "opacity 1s ease-out";
 				img.style.opacity = 0;
 				setTimeout(function () {
-					if (img.parentNode) img.parentNode.removeChild(img);
+					if (img.parentNode) img.remove();
 				}, 1100);
 			}, duration);
 		}, path, duration, zIndex, pos);
@@ -1106,7 +1142,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	//联机播放视频
 	lib.game.playVideoOL = function (path, zIndex = "0", loop = false) {
 		game.broadcastAll((path, zIndex, loop) => {
-			var video = document.createElement("VIDEO");
+			var video = game.yzs_createEffectMedia("VIDEO");
 			video.className = "anime";
 			Object.assign(video, {
 				src: lib.assetURL + path,//例："/extension/一中杀/image/background/SSF_Nightmare_yzs_start.MP4"
@@ -1133,7 +1169,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//播放完毕1s后移除视频
 				})
 			}
@@ -1606,7 +1642,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				}
 				game.broadcastAll(function (damageAudioInfo2) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo2);
+						game.yzs_playAudio(damageAudioInfo2);
 					}
 				}, damageAudioInfo);
 			} else {
@@ -1620,7 +1656,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				}
 				game.broadcastAll(function (damageAudioInfo2) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo2);
+						game.yzs_playAudio(damageAudioInfo2);
 					}
 				}, damageAudioInfo);
 			}
@@ -1635,7 +1671,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					damageAudioInfo += "_" + index + ".mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				} else {
@@ -1643,7 +1679,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					damageAudioInfo += "_" + index + ".mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				}
@@ -1793,11 +1829,11 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			return;
 		}
 		if (lib.config.background_audio) {
-			game.playAudio("effect", "loseHp");
+			game.yzs_playAudio("effect", "loseHp");
 		}
 		game.broadcast(function () {
 			if (lib.config.background_audio) {
-				game.playAudio("effect", "loseHp");
+				game.yzs_playAudio("effect", "loseHp");
 			}
 		});
 		game.log(player, "失去了" + get.cnNumber(num) + "点体力");
@@ -1882,11 +1918,11 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		if (num > 0||event.overflow>0) {
 			delete event.filterStop;
 			if (lib.config.background_audio) {
-				game.playAudio("effect", "recover");
+				game.yzs_playAudio("effect", "recover");
 			}
 			game.broadcast(function () {
 				if (lib.config.background_audio) {
-					game.playAudio("effect", "recover");
+					game.yzs_playAudio("effect", "recover");
 				}
 			});
 			game.broadcastAll(function (player2) {
@@ -2492,8 +2528,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		if (_status.over || get.itemtype(player) != "player" || player.removed) {
 			return;
 		}
-		game.yzs_restoreSummonControl(player);
-		// 交还控制权可能交换 playerid，必须在交换后清理被移除座位的控制关系。
+		await game.yzs_restoreSummonControl(player);
+		if (_status.over || player.removed) return;
+		// 交还控制权完成后，才可清理被移除角色的控制关系和联机映射。
 		game.broadcastAll(target => {
 			const links = _status.yzs_autoswap;
 			if (!links) return;
@@ -2860,7 +2897,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				game.broadcastAll(function (lines) {
 					if (!lib.config.background_audio) return;
 					for (let audio of lines) {
-						game.playAudio(audio);
+						game.yzs_playAudio(audio);
 					}
 				}, lines);
 			}
@@ -2873,7 +2910,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 					_status._yzsDomainCount = count;
 					_status._yzsDomainPlayer = player;
 					const node = ui.create.div(".background.upper.domain");
-					node.setBackgroundImage(formattedPath);
+					game.yzs_setBackgroundImage(node, formattedPath, true);
 					node.style.backgroundSize = "cover";
 					node.style.backgroundRepeat = "no-repeat";
 					node.style.backgroundPosition = "center";
@@ -3040,7 +3077,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			await game.broadcastAll(
 				(formattedPath, storm, skill, player) => {
 					const node = ui.create.div(".background.upper.storm");
-					node.setBackgroundImage(formattedPath);
+					game.yzs_setBackgroundImage(node, formattedPath, true);
 					node.style.backgroundSize = "cover";
 					node.style.backgroundRepeat = "no-repeat";
 					node.style.backgroundPosition = "center";
@@ -3136,7 +3173,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			await game.broadcastAll(
 				(formattedPath, storm, skill, player) => {
 					const node = ui.create.div(".background.upper.storm");
-					node.setBackgroundImage(formattedPath);
+					game.yzs_setBackgroundImage(node, formattedPath, true);
 					node.style.backgroundSize = "cover";
 					node.style.backgroundRepeat = "no-repeat";
 					node.style.backgroundPosition = "center";
@@ -3309,7 +3346,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 						avatarSetter(src);
 						game.saveConfig("skin", lib.config.skin);
 					});
-					button.setBackgroundImage(src);
+					game.yzs_setBackgroundImage(button, src);
 					const skinCaption = ui.create.caption(`<div class="text" data-nature=shenmm style="font-size: 12px">${get.translation(skinname.slice(0, -4))}</div>`, button);
 					skinCaption.style.left = "1px";
 					skinCaption.style.bottom = "-1px";

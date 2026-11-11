@@ -800,10 +800,10 @@ const skills = {
 						await player.loseMaxHp(num);
 						await player.changeHujia(2, "gain");
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Unbelieve_xiangzi_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Unbelieve_xiangzi_yzs.png");
 							_status.tempMusic = `ext:一中杀/audio/RYUKYUVANIA V2.mp3`;
-							game.playBackgroundMusic();
-							ui.background.setBackgroundImage('extension/一中杀/image/background/zhenyi_yzs.png');
+							game.yzs_playBackgroundMusic();
+							game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/zhenyi_yzs.png');
 						}, player)
 					}
 					if (!player.storage.disabledhandcard || !player.storage.disabledequip || !player.storage.disabledjudge) player.flashAvatar("chunzhen_yzs", "Unbelieve_xiangzi_yzs");
@@ -884,10 +884,10 @@ const skills = {
 						await player.loseMaxHp(num);
 						await player.changeHujia(2, "gain");
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Unbelieve_xiangzi_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Unbelieve_xiangzi_yzs.png");
 							_status.tempMusic = `ext:一中杀/audio/RYUKYUVANIA V2.mp3`;
-							game.playBackgroundMusic();
-							ui.background.setBackgroundImage('extension/一中杀/image/background/zhenyi_yzs.png');
+							game.yzs_playBackgroundMusic();
+							game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/zhenyi_yzs.png');
 						}, player)
 					}
 					if (!player.storage.disabledhandcard || !player.storage.disabledequip || !player.storage.disabledjudge) player.flashAvatar("chunzhen_yzs", "Unbelieve_xiangzi_yzs");
@@ -1448,12 +1448,12 @@ const skills = {
 				async content(event, trigger, player) {
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/End Like This.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 						//把屏幕变黑白
 						document.documentElement.style.filter = "grayscale(70%)";
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					});
 					player.addSkill("buxijinjun_yzs_removeBGM");
@@ -1635,6 +1635,7 @@ const skills = {
 			}
 		},
 		forced: true,
+		usable:2,
 		locked: true,
 		trigger: {
 			player: "damageBegin3",
@@ -1642,8 +1643,8 @@ const skills = {
 		},
 		filter(event, player) {
 			if (event.num <= 0) return false;
-			if (event.player == player) return !player.hasSkill("huimiezitai_yzs_ban1");
-			else if (event.source == player) return !player.hasSkill("huimiezitai_yzs_ban2")
+		//	if (event.player == player) return !player.hasSkill("huimiezitai_yzs_ban1");
+		//	else if (event.source == player) return !player.hasSkill("huimiezitai_yzs_ban2")
 			return true;
 		},
 		async content(event, trigger, player) {
@@ -3192,7 +3193,7 @@ const skills = {
 					game.broadcastAll(
 						() => {
 							game.createDanMu("哈哈哈哈", 300, 5)
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_start_laugh.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_start_laugh.mp3");
 						},
 					);
 					game.broadcastAll(() => {
@@ -3240,16 +3241,16 @@ const skills = {
 				async content(event, trigger, player) {
 					if (player.countMark("Finale_yzs") > 0) {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
 						});
 					}
 					if (player.hp > player.maxHp/2) {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage1.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage1.MP3");
 						});
 					} else {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
 						});
 					}
 				}
@@ -3271,7 +3272,7 @@ const skills = {
 					const index = Math.floor(Math.random() * 4) + 1;
 					const bgm = "SSF_Nightmare_yzs_sound" + index;
 					game.broadcastAll((player, bgm) => {
-						game.playAudio("ext:一中杀/audio/skill/" + bgm + ".MP3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/" + bgm + ".MP3");
 					}, player, bgm);
 				}
 			},
@@ -3290,9 +3291,9 @@ const skills = {
 				async content(event, trigger, player) {
 					const bgm = "SSF_Nightmare_yzs1"
 					game.broadcastAll((player, bgm) => {
-						if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+						if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 						ui.backgroundMusic.pause();
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -3318,12 +3319,12 @@ const skills = {
 						})
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
-							if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
-							ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+							if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
+							game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 							_status.tempMusic = "ext:一中杀/audio/" + bgm + ".MP3";
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -3376,23 +3377,23 @@ const skills = {
 					game.broadcastAll((player) => {
 						ui.backgroundMusic.pause();
 						player.$damage();
-						game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
-						game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
 						setTimeout(function () {
 							player.$damage();
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.mp3");
 						}, 2000);
 						setTimeout(function () {
 							player.$damage();
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.mp3");
 						}, 4000);
 						setTimeout(function () {
 							player.$damage();
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage2.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_damage3.MP3");
 						}, 6000);
 						setTimeout(function () {
-							if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_final.png");
+							if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_final.png");
 						}, 17000);
 					}, player);
 					await new Promise(r => setTimeout(r, 17000))
@@ -3401,7 +3402,7 @@ const skills = {
 					await player.recover(player.maxHp - player.hp);
 					game.broadcastAll((player) => {
 						setTimeout(function () {
-							if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_final2.png");
+							if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_final2.png");
 						}, 3000);
 					}, player);
 					await new Promise(r => setTimeout(r, 3000))
@@ -3438,7 +3439,7 @@ const skills = {
 					};
 					game.broadcastAll(
 						() => {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_start_laugh.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_start_laugh.mp3");
 						},
 					);
 					game.broadcastAll(() => {
@@ -3513,7 +3514,7 @@ const skills = {
 					}, 32500);
 					game.broadcastAll((player) => {
 						setTimeout(function () {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_final_flash.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_final_flash.MP3");
 							let flash = document.createElement('div');
 							flash.style.cssText = `
 							position: fixed;
@@ -3556,8 +3557,8 @@ const skills = {
 							}, 500);
 						}, 14000);
 						setTimeout(function () {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_final_flash2.MP3");
-							if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_final_flash2.MP3");
+							if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 							// 振动效果
 							const styleId = 'player-shake-style';
 							let style = document.createElement('style');
@@ -3578,7 +3579,7 @@ const skills = {
 							player.classList.add('player-shaking');
 
 							setTimeout(() => {
-								ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png');
+								game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png');
 								player.classList.remove('player-shaking');
 								if (style.parentNode) {
 									style.parentNode.removeChild(style);
@@ -3823,8 +3824,8 @@ const skills = {
 					const skill = list[index] + "_test";
 					game.broadcastAll((player, skill) => {
 						ui.backgroundMusic.pause();
-						if (player.node.avatar) player.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
-						game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+						if (player.node.avatar) game.yzs_setBackgroundImage(player.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+						game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
 						//把屏幕变黑 - CSS动画版本
 						let overlay = document.createElement('div');
 						overlay.id = 'skill-dark-overlay';
@@ -3858,7 +3859,7 @@ const skills = {
 						document.body.appendChild(overlay);
 
 						setTimeout(() => {
-							ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png');
+							game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png');
 							overlay.style.animation = 'fadeFromBlack 1.5s ease-in-out forwards';
 							// 动画结束后移除
 							setTimeout(() => {
@@ -3879,12 +3880,12 @@ const skills = {
 						player.addMark("Finale_yzs", false);
 						game.broadcastAll(() => {
 							_status.tempMusic = `ext:一中杀/audio/Finale.mp3`;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						});
 						var targets = game.filterPlayer(current => current != player);
 						//耐心
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_patience_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_patience_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到耐心浸润着心智")
 						for (let target of targets) {
@@ -3894,7 +3895,7 @@ const skills = {
 						await game.delayx();
 						//勇气
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_courage_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_courage_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到勇气贯穿了脊梁")
 						for (let target of targets) {
@@ -3904,7 +3905,7 @@ const skills = {
 						await game.delayx();
 						//诚实
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_honesty_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_honesty_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到正直依附在双肩")
 						for (let target of targets) {
@@ -3914,7 +3915,7 @@ const skills = {
 						await game.delayx();
 						//毅力
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_perseverance_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_perseverance_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到毅力振奋了躯干")
 						for (let target of targets) {
@@ -3924,7 +3925,7 @@ const skills = {
 						await game.delayx();
 						//仁慈
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_kindness_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_kindness_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到仁慈涌进了心灵")
 						for (let target of targets) {
@@ -3934,7 +3935,7 @@ const skills = {
 						await game.delayx();
 						//正义
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_justice_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_justice_test.png");
 						}, player);
 						player.$fullscreenpop("*你感到正义充斥着双拳")
 						for (let target of targets) {
@@ -3943,7 +3944,7 @@ const skills = {
 						}
 						await game.delayx();
 						game.broadcastAll((current) => {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_justice_test.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_justice_test.png");
 						}, player);
 						player.$fullscreenpop("*你充满了决心！")
 						for (let target of targets) {
@@ -3951,12 +3952,12 @@ const skills = {
 						}
 						await game.delayx();
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+							game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 							var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 							var duration = 1200;
 
-							var img = document.createElement("img");
+							var img = game.yzs_createEffectMedia("img");
 							img.src = imagePath;
 
 							// 改进的样式设置
@@ -3984,12 +3985,12 @@ const skills = {
 							img.style.transition = "opacity 1s ease-out";
 
 							setTimeout(function () {
-								ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
-								if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+								game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+								if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 								img.style.opacity = 0;
 								setTimeout(function () {
 									if (img.parentNode) {
-										img.parentNode.removeChild(img);
+										img.remove();
 									}
 								}, 1000);
 							}, duration);
@@ -4097,9 +4098,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_patience_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_patience_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_patience_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_patience_test_record");
 			player.markSkill("SixSouls_yzs_patience_test_record")
@@ -4158,12 +4159,12 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 				// 改进的样式设置
 				img.style.position = "fixed";
@@ -4184,16 +4185,16 @@ const skills = {
 				// 确保图片在视口最前方
 				img.style.transition = "opacity 1s ease-out";
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -4217,9 +4218,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_courage_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_courage_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_courage_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_courage_test_record");
 			player.markSkill("SixSouls_yzs_courage_test_record")
@@ -4262,13 +4263,13 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
 
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 
 				// 改进的样式设置
@@ -4296,16 +4297,16 @@ const skills = {
 				img.style.transition = "opacity 1s ease-out";
 
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -4328,9 +4329,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_honesty_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_honesty_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_honesty_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_honesty_test_record");
 			player.markSkill("SixSouls_yzs_honesty_test_record")
@@ -4370,13 +4371,13 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
 
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 
 				// 改进的样式设置
@@ -4404,16 +4405,16 @@ const skills = {
 				img.style.transition = "opacity 1s ease-out";
 
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -4447,9 +4448,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_perseverance_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_perseverance_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_perseverance_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_perseverance_test_record");
 			player.markSkill("SixSouls_yzs_perseverance_test_record")
@@ -4485,13 +4486,13 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
 
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 
 				// 改进的样式设置
@@ -4519,16 +4520,16 @@ const skills = {
 				img.style.transition = "opacity 1s ease-out";
 
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -4553,9 +4554,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_kindness_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_kindness_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_kindness_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_kindness_test_record");
 			player.markSkill("SixSouls_yzs_kindness_test_record")
@@ -4609,13 +4610,13 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
 
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 
 				// 改进的样式设置
@@ -4643,16 +4644,16 @@ const skills = {
 				img.style.transition = "opacity 1s ease-out";
 
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -4686,9 +4687,9 @@ const skills = {
 		direct: true,
 		async content(event, trigger, player) {
 			game.broadcastAll((current) => {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SixSouls_yzs_justice_test.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SixSouls_yzs_justice_test.png");
 				_status.tempMusic = `ext:一中杀/audio/skill/SixSouls_yzs_justice_test.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			}, player);
 			await player.addSkill("SixSouls_yzs_justice_test_record");
 			player.markSkill("SixSouls_yzs_justice_test_record")
@@ -4732,13 +4733,13 @@ const skills = {
 			const finale = _status.SixSouls_yzs?.length > 5 ? true : false;
 			game.broadcastAll((bgm, current, finale) => {
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
+				game.yzs_playAudio("ext:一中杀/audio/skill/SSF_Nightmare_yzs_phase.MP3");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs_phase.gif");
 				if (finale) return;
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/SSF_Nightmare_yzs_phase.png";
 				var duration = 1200;
 
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 
 				// 改进的样式设置
@@ -4766,16 +4767,16 @@ const skills = {
 				img.style.transition = "opacity 1s ease-out";
 
 				setTimeout(function () {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/SSF_Nightmare_yzs.gif");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/SSF_Nightmare_yzs.gif");
 					img.style.opacity = 0;
 					setTimeout(function () {
 						if (img.parentNode) {
-							img.parentNode.removeChild(img);
+							img.remove();
 						}
 					}, 1000);
-					ui.background.setBackgroundImage('extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
+					game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/SSF_Nightmare_yzs.jpg');
 					_status.tempMusic = `ext:一中杀/audio/` + bgm + `.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, duration);
 			}, bgm, player, finale);
 			await new Promise(r => setTimeout(r, 1200))
@@ -6896,11 +6897,11 @@ const skills = {
 			if (loser == player) {
 				if (get.translation(winner).includes("芙莉莲")) {
 					game.broadcastAll(() => {
-						game.playAudio("ext:一中杀/audio/skill/tianping_yzs_lose2.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/tianping_yzs_lose2.mp3");
 					});
 				} else {
 					game.broadcastAll(() => {
-						game.playAudio("ext:一中杀/audio/skill/tianping_yzs_lose1.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/tianping_yzs_lose1.mp3");
 					});
 				}
 			}
@@ -6936,7 +6937,7 @@ const skills = {
 					return loser.inRange(current2) && lib.filter.targetEnabled(card, loser, current2);
 				})) return;
 				game.broadcastAll(() => {
-					game.playAudio("ext:一中杀/audio/skill/tianping_yzs_lose3.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/tianping_yzs_lose3.mp3");
 				});
 				await winner.useCard({ name: "jiedao", isCard: true}, loser)
 			} 
@@ -7910,22 +7911,22 @@ const skills = {
 			if (player.hp != 1) return;
 			player.popup("BOOM！")
 			game.broadcastAll(() => {
-				game.playAudio("ext:一中杀/audio/skill/fuse_yzs.MP3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/fuse_yzs.MP3");
 			});
 			await new Promise(r => setTimeout(r, 1000))
 			game.broadcastAll(function (current) {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Reze_yzs2.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Reze_yzs2.png");
 			}, player)
 			game.broadcastAll((current) => {
-				game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
 			}, player);
 			player.playEffectOL(lib.skill.boom_yzs.Effect);
 			if (game.hasPlayer(cur => cur.hasSkill("boom_yzs_damaged") && cur != player)) {
 				game.broadcastAll(function (current) {
 					_status.tempMusic = `ext:一中杀/audio/MONTAGEM CORAL.mp3`;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 
-					var background = document.createElement("img");
+					var background = game.yzs_createEffectMedia("img");
 					background.className = "background";
 					window._currentDynamicBackground = background;
 					Object.assign(background, {
@@ -7950,9 +7951,9 @@ const skills = {
 						background.style.opacity = "1";
 					}, 50)
 
-					ui.backgroundMusic.addEventListener('ended', () => {
+					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					}, { once: true });
 				}, player)
 			}
@@ -7984,7 +7985,7 @@ const skills = {
 				},
 				async content(event, trigger, player) {
 					game.broadcastAll((current) => {
-						game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
 					}, trigger.player);
 					trigger.player.playEffectOL(lib.skill.boom_yzs.Effect);
 				}
@@ -8010,7 +8011,7 @@ const skills = {
 					if (_status.currentPhase != player) {
 						player.line(_status.currentPhase)
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/boom_yzs_use.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/boom_yzs_use.MP3");
 
 							// 创建效果元素
 							const effect = document.createElement('div');
@@ -8056,7 +8057,7 @@ const skills = {
 					else {
 						let index=Math.floor((3*Math.random()))+1
 						game.broadcastAll((index) => {
-							game.playAudio(`ext:一中杀/audio/skill/boom_yzs_use${index}.MP3`);
+							game.yzs_playAudio(`ext:一中杀/audio/skill/boom_yzs_use${index}.MP3`);
 						},index);
 					}
 					await _status.currentPhase.damage("fire");
@@ -8217,7 +8218,7 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			game.broadcastAll(function (current) {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Reze_yzs.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Reze_yzs.png");
 			}, player)
 			player.removeSkill("boom_yzs");
 			await player.recover();
@@ -8723,7 +8724,7 @@ const skills = {
 									evt.fakeforce = false;
 								}, player)
 								if (_status.connectMode) {
-									game.yzs_swapPlayerOL(player, current);
+									await game.yzs_swapPlayerOL(player, current);
 								} else {
 									if(player==game.me)game.swapPlayerAuto(current);
 								};
@@ -8739,7 +8740,7 @@ const skills = {
 							const current = map[id];
 							if (_status.connectMode) {
 								if ((current.isOnline2() || current == game.me) && current != player) {
-									game.yzs_swapPlayerOL(current, player);
+									await game.yzs_swapPlayerOL(current, player);
 									break;
 								};
 							} else if (current == game.me && !_status.auto) {
@@ -9732,7 +9733,7 @@ const skills = {
 			if (lib.skill[name + "_skill"]) await player.addAdditionalSkills("huanwu_yzs", name + "_skill");
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, `effect/${lib.card[name].subtype}.mp3`);
 			await player.useCard(cards, { name: cost_data[0], isCard: false,nature:cost_data[1] }, targets[0]);
@@ -9789,10 +9790,10 @@ const skills = {
 			game.broadcastAll(() => {
 				if (_status.tempMusic == `ext:一中杀/audio/INSANE.mp3`) return;
 				_status.tempMusic = `ext:一中杀/audio/INSANE.mp3`;
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_playBackgroundMusic();
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 			});
 			await player.draw();

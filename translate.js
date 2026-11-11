@@ -843,7 +843,7 @@ const translates = {
 	你进入濒死时，可恢复体力至下限，并将牌堆顶恢复量张牌加入【源晶】，然后令${get.poptip("jiandun_yzs")}本回合失效。<br>
     出牌阶段结束时，若你有同点数的【源晶】，你死亡。`,
 	huimiezitai_yzs: "毁灭姿态",
-	huimiezitai_yzs_info: `锁定技：每回合各限1次：你造成或受到非零伤害时亮出牌堆顶2张牌，获得其中与【源晶】点数不同的牌，然后令伤害+X(剩余牌数)<br>
+	huimiezitai_yzs_info: `锁定技：每回合限2次：你造成或受到非零伤害时亮出牌堆顶2张牌，获得其中与【源晶】点数不同的牌，然后令伤害+X(剩余牌数)<br>
     出牌阶段限1次：你用任意张手牌替换等量张【源晶】。`,
 	jiandun_yzs: "坚盾",
 	jiandun_yzs_info: `其他角色受到伤害时，若伤害来源不为你，你可弃置1张【杀】，然后无效之并受到伤害来源造成的等量点伤害。`,
@@ -1097,7 +1097,7 @@ const translates = {
 	tanbao_yzs_info: `你摸牌时，若你手牌数≤手牌上限，你可多摸至多2张，然后你展示所摸的牌，若其中有♠，你受到1点无来源伤害，或弃置等量张手牌。`,
 
 	zhenglv_yzs: `征旅`,
-	zhenglv_yzs_info: `锁定技：场上角色的出牌阶段限1次：其视为对你使用【借刀杀人】，若你因此造成伤害，你与其依次摸1张牌并可弃1张牌，你记录其所弃牌的点数。`,
+	zhenglv_yzs_info: `锁定技：场上角色的出牌阶段限1次：其视为对你使用【借刀杀人】，若你因此造成伤害，其摸2张牌并可正面向上给予你1张牌，你记录其给予牌的点数。`,
 	zhuxiang_yzs: `铸像`,
 	zhuxiang_yzs_info: `${get.poptip("eternalSkill_yzs")}：场上角色指定或成为【杀】的目标后，若之点数你记录过，你可令其摸1张牌，然后其可弃1张手牌以令之不可响应。`,
 	yongyi_yzs: `勇毅`,
@@ -1213,17 +1213,17 @@ const translates = {
 	此回合内你视为拥有${get.poptip("wusheng")}${get.poptip("paoxiao")}且使用牌仅可指定你或你本回合标记过的角色为目标。`,
 
 	haiyi_yzs: `骇移`,
-	haiyi_yzs_info: `隐匿技：你于自己回合内登场后，获得场上任意张装备。<br>一张目标不包含你的牌结算后，你摸1张牌，然后若你手牌数＞=手牌上限，你弃1张牌，若为装备牌则你对使用者造成1点伤害，然后本技能本回合失效。`,
+	haiyi_yzs_info: `隐匿技：你于自己回合内登场后，获得场上任意张装备。<br>一张目标不包含你的牌结算后，你摸1张牌，然后若你手牌数≥手牌上限，你弃1张牌，若为装备牌则你对使用者造成1点伤害，然后本技能本回合失效。`,
 
-	jianshi_yzs: `骇入`,
-	jianshi_yzs_info: `隐匿技：你于自己回合内登场后，获得弃牌堆中至多2张任意牌。<br>其他角色的手牌对你可见。其他角色摸牌前，你观看牌堆顶等量张牌并可与你的手牌任意交换，然后你可获得其区域内1张牌，则本回合你不可再发动本效果。`,
+	hairu_yzs: `骇入`,
+	hairu_yzs_info: `隐匿技：你于自己回合内登场后，可与1名其他角色交换手牌。<br>其他角色的手牌对你可见。<br>出牌阶段每名角色限1次：你可与1名与你手牌数之差≤1的其他角色交换手牌。`,
 
 	chuyi_yzs: `除疫`,
-	chuyi_yzs_info: `隐匿技：你于自己回合内登场后，你可视为使用不可响应的普通【杀】。<br>你令场上角色恢复体力时，可令恢复值+2，然后若其不为你且你已对其发动过本技能，你可令其死亡。你的【杀】造成伤害时可改为令受伤角色濒死。`,
+	chuyi_yzs_info: `隐匿技：你于自己回合内登场后，你可视为使用无距离限制的普通【杀】。<br>你令场上角色恢复体力时，可令恢复值+2，然后若其不为你且你已对其发动过本技能，你可令其死亡。你的【杀】造成伤害时可改为令受伤角色濒死。`,
 
 	fuqu_yzs: `腐躯`,
-	fuqu_yzs_info: `你未装备防具时，视为装备【藤甲】。<br>
-	每公轮限1次：其他角色回合开始时，你可获得其各区域1张牌并令其选择：①失去1点体力；②自己手牌上限-2并令你本回合调离。`,
+	fuqu_yzs_info: `隐匿技：你登场时，可获得当前回合角色区域内的1张牌，本回合结束时你可使用1张牌。<br>你未装备防具时，视为装备【藤甲】。<br>
+	你造成过伤害的回合结束后，你可隐匿。`,
 
 	LightContainmentBreak_yzs: `收容失效`,
 	LightContainmentBreak_yzs_info: `锁定技：游戏开始时你抽取X个随机的SCP（X为场上角色数，仅你可见）。每公轮开始时，你将武将牌替换为任意一个SCP，然后隐匿。`,
@@ -1737,7 +1737,7 @@ const translates = {
 
 	shuangzizhoufu_yzs: `双子咒缚`,
 	shuangzizhoufu_yzs_info: `锁定技：你受到非致命伤害时无视护甲。<br>你恢复体力后，若你护甲值<体力上限，你获得1点护甲。<br>
-    觉醒技：结束阶段，若你体力值为1且有护甲，你失去所有护甲，然后翻面并觉醒：你增加体力上限至6并恢复全部体力。`,
+    觉醒技：结束阶段，若你体力值为1且有护甲，你失去所有护甲，然后觉醒：你增加体力上限至6，然后恢复失去护甲数点体力。`,
 	shuangzizhoufu_yzs_awake:`天与暴君`,
 	tianyubaojun_yzs: `天与暴君`,
 	tianyubaojun_yzs_info: `锁定技：你的摸牌数、出【杀】数和手牌上限为X（X为你体力上限）。`,
@@ -1828,7 +1828,7 @@ const translates = {
 	choudie_yzs_disc: `碟`,
 	choudie_yzs_disc_info:`持有者出牌阶段可移去任意张【碟】以检索等量张锦囊牌`,
 	miyu_yzs: `密语`,
-	miyu_yzs_info:`锁定技：你每回合使用或打出第质数张牌时摸1张牌。<br>
+	miyu_yzs_info:`锁定技：你每回合使用或打出第一或质数张牌时摸1张牌。<br>
     觉醒技：回合结束后，若你本局已使用过14张牌，你觉醒：你恢复全部体力、本局摸牌数+1、然后更换人物牌至${get.poptip({
 		id: "character_CMoon_EnricoPucci_yzs",
 		name: "神父·新月",
@@ -1836,19 +1836,20 @@ const translates = {
 		dialog: "characterDialog",
 	})}。`,
 
+	yzs_fanzhuan: `翻转`,
+	yzs_fanzhuan_info:`你对其他角色造成伤害时，可改为令其翻面。若其因此翻至正面，其受到3点无来源伤害。`,
 	Gravity_yzs: `重力`,
-	Gravity_yzs_info: ` 锁定技：场上角色计算距离时仅可往下家方向计算。<br>你对其他角色造成伤害后可令其翻面。<br>
-    限定技：每回合开始时，你可摸2张牌，然后反转回合执行顺序。你获得${get.poptip("Singularity_yzs_position")}后刷新本技能。`,
+	Gravity_yzs_info: `锁定技：每轮开始时，你执行额外回合。此回合内你使用牌无距离限制，且使用牌结算后可与其中1名目标角色交换座次。`,
 	Singularity_yzs: `奇点`,
-	Singularity_yzs_info: `觉醒技：你登场时，令一号位角色获得${get.poptip("Singularity_yzs_position")}标记。<br>
-	每回合结束时，若你持有【位置】，你觉醒：恢复全部体力、本局摸牌数+1、更换人物牌至${get.poptip({
+	Singularity_yzs_info: `觉醒技：你的回合结束时，若你无手牌：
+	恢复全部体力、本局摸牌数+1、更换人物牌至${get.poptip({
 		id: "character_MadeInHeaven_EnricoPucci_yzs",
 		name: "神父·天堂制造",
 		type: "character",
 		dialog: "characterDialog",
 	})}并执行额定回合。`,
 	Singularity_yzs_position: `位置`,
-	Singularity_yzs_position_info: `持有者造成或受到伤害或死亡时，将本标记移至其上家`,
+	Singularity_yzs_position_info: `通往天堂的正确位置`,
 
 	mingji_yzs: `铭记`,
 	mingji_yzs_info: `每名角色每回合限1次，场上角色成为实体即时牌的目标时，若其无【忆】或【忆】牌名均不同，其可将之正面向上扣置为自己的【忆】，然后取消此目标。`,

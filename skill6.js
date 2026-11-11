@@ -6,6 +6,8 @@ import {
 	ai,
 	_status
 } from "../../noname.js";
+// 奇点的秘密位置仅由结算端保存，不写入角色标记、storage 或联机同步数据。
+const yzsSingularityPositions = new WeakMap();
 /** @type { importCharacterConfig['skill'] } */
 const skills = {
 	yzs_dieRemove: {
@@ -101,7 +103,7 @@ const skills = {
 							delete ui.swap;
 						}, player)
 						if (_status.connectMode) {
-							game.yzs_swapPlayerOL(player, current);
+							await game.yzs_swapPlayerOL(player, current);
 						} else {
 							if (player == game.me) game.swapPlayerAuto(current);
 						};
@@ -118,7 +120,7 @@ const skills = {
 					if (!current) continue;
 					if (_status.connectMode) {
 						if ((current.isOnline2() || current == game.me) && current != player) {
-							game.yzs_swapPlayerOL(current, player);
+							await game.yzs_swapPlayerOL(current, player);
 							break;
 						};
 					} else if (current == game.me && !_status.auto && current != player) {
@@ -371,7 +373,7 @@ const skills = {
 				//	game.log(trigger.player.judging[0])
 					if (get.suit(trigger.player.judging[0], player) == "spade" && get.number(trigger.player.judging[0], player) > 1 && get.number(trigger.player.judging[0], player) < 10) {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
 						});
 					}
 					event.result = await player.chooseCard(`${get.translation(trigger.player)}的${trigger.judgestr || ""}判定为${get.translation(trigger.player.judging[0])}，${get.prompt(event.skill)}`, "h", (card) => {
@@ -470,7 +472,7 @@ const skills = {
 	//		game.log(trigger.result.card)
 			if (get.suit(trigger.result.card, player) == "spade" && get.number(trigger.result.card, player) > 1 && get.number(trigger.result.card, player) < 10) {
 				game.broadcastAll(() => {
-					game.playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/tiandu_yzs.MP3");
 				});
 			}
 			player.changeZhuanhuanji("tiandu_yzs");
@@ -509,7 +511,7 @@ const skills = {
 			buff: {
 				onremove(player) {
 					game.broadcastAll(function (current) {
-						if (current.name == "KunYee_yzs" && current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana_yzs.png");
+						if (current.name == "KunYee_yzs" && current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Cana_yzs.png");
 					}, player)
 					if (player.node.avatar && player.node.avatar.overlayElement_cangyao_yzs) {
 						player.node.avatar.overlayElement_cangyao_yzs.remove();
@@ -571,7 +573,7 @@ const skills = {
 			if (player.hasSkill("zhenjian_yzs_ban") && player.hasSkill("cangxingzhan_yzs_ban")) {
 				player.addTempSkill("cangyao_yzs_buff", "phaseUseAfter")
 				game.broadcastAll(function (current) {
-					if (current.name == "KunYee_yzs" && current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/KunYee_yzs2.png");
+					if (current.name == "KunYee_yzs" && current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/KunYee_yzs2.png");
 				}, player)
 				game.broadcastAll(function (target) {
 					if (target.node.avatar && !target.node.avatar.overlayElement_cangyao_yzs) {
@@ -1038,7 +1040,7 @@ const skills = {
 			const pos = event.targets[0];
 			await player.turnOver();
 			game.broadcastAll(() => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 				Object.assign(video, {
 					src: lib.assetURL + "/extension/一中杀/image/background/xuansi_yzs.MP4",
@@ -1064,7 +1066,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -2407,7 +2409,7 @@ const skills = {
 						}
 						return true;
 					}
-					return isPrime(count)
+					return count === 1 || isPrime(count);
 				},
 				async content(event, trigger, player) {
 					await player.draw();
@@ -2431,7 +2433,7 @@ const skills = {
 					const path = `ext:一中杀/audio/skill/miyu_yzs_${list[num - 1]}.MP3`;
 					player.popup(list[num])
 					game.broadcastAll((path) => {
-						game.playAudio(path);
+						game.yzs_playAudio(path);
 					}, path);
 				}
 			}
@@ -2470,104 +2472,125 @@ const skills = {
 			player.awakenSkill("miyu_yzs");
 			game.broadcastAll(() => {
 				_status.tempMusic = `ext:一中杀/audio/Crucified.mp3`;
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_playBackgroundMusic();
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 			});
 			await player.recoverTo(player.maxHp);
 			player.addSkill("miyu_yzs_draw");
 			await player.reinitCharacter(player.name1, 'CMoon_EnricoPucci_yzs');
-			let target = game.players.filter(cur => cur.getSeatNum() == 1);
-			target = target[0];
-			target.setMark("Singularity_yzs_position", 1, false);
 		}
 	},
 	//新月
+	yzs_fanzhuan: {
+		trigger: { source: "damageBegin2" },
+		filter(event, player) {
+			return event.player != player && event.player.isIn() && event.num > 0;
+		},
+		logTarget: "player",
+		prompt2: "防止本次伤害，改为令目标翻面；若其因此翻至正面，其受到3点无来源伤害",
+		check(event, player) {
+			return get.attitude(player, event.player) < 0;
+		},
+		async content(event, trigger, player) {
+			trigger.cancel();
+			const target = trigger.player;
+			const wasTurnedOver = target.isTurnedOver();
+			await target.turnOver();
+			if (wasTurnedOver && !target.isTurnedOver() && target.isIn()) {
+				await target.damage(3, "nosource", "nocard");
+			}
+		},
+	},
 	Gravity_yzs: {
-		global: "Gravity_yzs_global",
-		group: ["Gravity_yzs_damage"],
+		locked: true,
+		forced: true,
+		priority: 10,
+		trigger: { global: "roundStart" },
+		group: ["Gravity_yzs_start"],
+		async content(event, trigger, player) {
+			// roundStart 属于尚未开始行动的常规回合。将流程加入该回合的子队列，
+			// 等本次轮首技能全部结算后执行，而非用 insertPhase 排到整个回合之后。
+			const next = game.createEvent("Gravity_yzs_round", false, trigger);
+			next.player = player;
+			next.forceDie = true;
+			next.includeOut = true;
+			next.setContent(async (event, trigger, player) => {
+				const history = game.getGlobalHistory();
+				// 保留来源以跳过新一轮判断，并由 phaseBegin 授予联机临时技能。
+				// 此子队列也会依次结算奇点等技能在重力回合后插入的回合。
+				const phase = player.phase("Gravity_yzs");
+				let suspendedPhaseNumber = false;
+				phase.pushHandler("onPhase", (phase, option) => {
+					if (phase.step == 1 && option.state == "begin" && !suspendedPhaseNumber) {
+						// 常规回合已预先计数，先暂存这一次计数，保证首回合少摸牌等判断正确。
+						// 等 phaseBefore 结束后再调整，避免重触 game.phaseNumber == 0 的开局技能。
+						suspendedPhaseNumber = true;
+						game.phaseNumber--;
+					}
+				});
+				try {
+					await phase;
+				} finally {
+					if (suspendedPhaseNumber) game.phaseNumber++;
+				}
+				if (game.getGlobalHistory() === history) return;
+				// 原回合已在 roundStart 之前初始化过历史，恢复时不会再次初始化。
+				// 保留轮首与额外回合的旧记录，另开一段，避免串用出牌次数和伤害记录。
+				_status.globalHistory.push({ cardMove: [], custom: [], useCard: [], changeHp: [], everything: [] });
+				for (const current of game.players.concat(game.dead)) {
+					current.actionHistory.push({
+						useCard: [], respond: [], skipped: [], lose: [], gain: [],
+						sourceDamage: [], damage: [], custom: [], useSkill: [],
+					});
+					current.stat.push({ card: {}, skill: {}, triggerSkill: {} });
+				}
+			});
+		},
 		subSkill: {
-			global: {
-				charlotte: true,
-				ai: {
-					right_hand: true,
-				}
-			},
-			damage: {
-				locked: true,
-				trigger: {
-					source: "damageBegin1"
-				},
-				priority: 1,
+			start: {
+				forced: true,
+				silent: true,
+				popup: false,
+				firstDo: true,
+				priority: 100,
+				trigger: { player: "phaseBegin" },
 				filter(event, player) {
-					return true;
-				},
-				prompt2: `你对其他角色造成伤害后可令其翻面`,
-				logTarget: "player",
-				check(event, player) {
-					if (event.player.isTurnedOver()) {
-						return get.attitude(player, event.player) > 0;
-					} else {
-						return get.attitude(player, event.player) <= 0;
-					}
+					return event.skill == "Gravity_yzs";
 				},
 				async content(event, trigger, player) {
-					await trigger.player.turnOver();
-				}
+					// 临时技能随原生技能状态同步，客机无需查找额外回合的父事件。
+					// 若回合被中止，下一回合开始前也会清理，避免效果残留。
+					player.addTempSkill("Gravity_yzs_swap", { player: "phaseAfter", global: "phaseBeforeStart" });
+				},
 			},
-			limited: {
-				nopop: true,
-				limited: true,
-				skillAnimation: false,
-				priority: 64,
-				trigger: {
-					global: "phaseBefore"
+			swap: {
+				charlotte: true,
+				direct: true,
+				mod: {
+					targetInRange: () => true,
 				},
-				audio: "ext:一中杀/audio/skill:2",
-				prompt2: `每回合开始时，你可摸2张牌，然后反转回合执行顺序`,
+				trigger: { player: "useCardAfter" },
+				filter(event, player) {
+					return event.targets?.some(target => target != player && target.isIn());
+				},
 				async content(event, trigger, player) {
-					await player.draw(2);
-					// 1. 获取所有玩家（存活 + 死亡），按座位号从小到大排序
-					let players = game.players.concat(game.dead);
-					players.sortBySeat();
-
-					// 2. 首尾交换座位
-					const len = players.length;
-					const toSwapList = [];
-					for (let i = 0; i < Math.floor(len / 2); i++) {
-						const p1 = players[i];
-						const p2 = players[len - 1 - i];
-						toSwapList.push([p1, p2]);
-					}
-
-					// 3. 广播交换（也可以直接在当前客户端循环调用 swapSeat，视你扩展的结构而定）
-					game.broadcastAll(list => {
-						for (const [p1, p2] of list) {
-							game.swapSeat(p1, p2, false);
-						}
-					}, toSwapList);
-					if (trigger.name === "phase" && !trigger.player.isZhu2() && trigger.player !== players[0] && !trigger._finished) {
-						trigger.finish();
-						trigger._triggered = 5;
-						const evt = players[0].insertPhase();
-						delete evt.skill;
-						const evt2 = trigger.getParent();
-						if (evt2.name == "phaseLoop" && evt2._isStandardLoop) {
-							evt2.player = players[0];
-						}
-						//跳过新回合的phaseBefore
-						evt.pushHandler("onPhase", (event, option) => {
-							if (event.step === 0 && option.state === "begin") {
-								event.step = 1;
-							}
-						});
-					}
-				}
+					const targets = trigger.targets.filter(target => target != player && target.isIn());
+					const result = await player.chooseTarget("重力：你可与此牌的一名目标角色交换座次", (card, player, target) => {
+						return get.event().GravityTargets.includes(target);
+					}).set("GravityTargets", targets).set("ai", () => Math.random()).forResult();
+					const target = result.targets?.[0];
+					if (!result.bool || !targets.includes(target) || !target.isIn() || !player.isIn()) return;
+					player.logSkill("Gravity_yzs", target);
+					game.broadcastAll((player, target) => game.swapSeat(player, target), player, target);
+					// 只在重力实际换座之后发出；其他换座技能不会触发奇点。
+					event.GravityTarget = target;
+					await event.trigger("yzsGravitySwapAfter");
+				},
 			},
 		},
-		locked: true,
 	},
 	Singularity_yzs: {
 		group: ["Singularity_yzs_start"],
@@ -2589,48 +2612,24 @@ const skills = {
 				forced: true,
 				popup: false,
 			},
-			position: {
+			start: {
 				charlotte: true,
 				forced: true,
+				silent: true,
 				popup: false,
-				marktext: "位",
-				intro: {
-					content: "持有者造成或受到伤害或死亡时，将本标记移至其上家",
-				},
-				priority: 3,
-				trigger: {
-					player: ["damageBegin3", "dieBefore"],
-					source: "damageBegin1"
-				},
+				firstDo: true,
+				priority: 100,
+				trigger: { global: "roundStart" },
 				filter(event, player) {
-					return player.countMark("Singularity_yzs_position") > 0;
+					return !player.awakenedSkills.includes("Singularity_yzs") && game.hasPlayer(target => target != player);
 				},
 				async content(event, trigger, player) {
-					const target = player.getPrevious();
-					if (target) {
-						player.clearMark("Singularity_yzs_position", false);
-						target.setMark("Singularity_yzs_position", 1, false);
-						if (target.hasSkill("Gravity_yzs_limited") && target.awakenedSkills.includes("Gravity_yzs_limited")) {
-							target.restoreSkill("Gravity_yzs_limited");
-						}
-					}
-				}
-			},
-			start: {
-				forced: true,
-				priority: 333,
-				trigger: {
-					global: "phaseBefore",
-					player: "enterGame",
+					const target = game.filterPlayer(target => target != player).randomGet();
+					if (!target) return;
+					if (!yzsSingularityPositions.has(player)) yzsSingularityPositions.set(player, new Set());
+					// 累积保留以前的位置，不向任何玩家展示或广播选中的角色。
+					yzsSingularityPositions.get(player).add(target);
 				},
-				filter(event, player) {
-					return (event.name != "phase" || game.phaseNumber == 0);
-				},
-				async content(event, trigger, player) {
-					let target = game.players.filter(cur => cur.getSeatNum() == 1);
-					target = target[0];
-					target.setMark("Singularity_yzs_position", 1, false);
-				}
 			},
 		},
 		locked: true,
@@ -2638,18 +2637,17 @@ const skills = {
 		forced: true,
 		priority: 2,
 		trigger: {
-			global: "phaseEnd"
+			player: "phaseAfter"
 		},
 		filter(event, player) {
-			return player.countMark("Singularity_yzs_position") > 0;
+			return player.countCards("h")==0&& !player.awakenedSkills.includes("Singularity_yzs")
 		},
 		async content(event, trigger, player) {
 			player.awakenSkill("Singularity_yzs");
-			player.clearMark("Singularity_yzs_position", false);
 			game.broadcastAll(() => {
 				ui.backgroundMusic.pause();
-				game.playAudio(`ext:一中杀/audio/skill/Singularity_yzs.MP3`);
-				var video = document.createElement("VIDEO");
+				game.yzs_playAudio(`ext:一中杀/audio/skill/Singularity_yzs.MP3`);
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -2676,9 +2674,9 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 						_status.tempMusic = `ext:一中杀/audio/Crucified.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -2690,8 +2688,11 @@ const skills = {
 			await new Promise(r => setTimeout(r, 6000))
 			await player.recoverTo(player.maxHp);
 			player.addSkill("Singularity_yzs_draw");
-			await player.reinitCharacter(player.name1, 'MadeInHeaven_EnricoPucci_yzs');
-			player.insertPhase();
+			const name = player.name2 == "CMoon_EnricoPucci_yzs" ? player.name2 : player.name1;
+			await player.reinitCharacter(name, 'MadeInHeaven_EnricoPucci_yzs');
+			const phase = player.insertPhase("Singularity_yzs");
+			// 额定回合参与正常轮次判断，不保留额外回合的 skill 标识。
+			delete phase.skill;
 		}
 	},
 	//古明地觉
@@ -3071,7 +3072,7 @@ const skills = {
 								game.log("响应牌数最多者为：", cur)
 								game.broadcastAll(function () {
 									if (lib.config.background_audio) {
-										game.playAudio("effect/flappybird_score.wav");
+										game.yzs_playAudio("effect/flappybird_score.wav");
 									}
 								});
 								await cur.draw(3);
@@ -3212,8 +3213,8 @@ const skills = {
 					if (!result?.target) return;
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/SAN-KEN「The Three SAGES」.mp3`;
-						game.playBackgroundMusic();
-						var background = document.createElement("img");
+						game.yzs_playBackgroundMusic();
+						var background = game.yzs_createEffectMedia("img");
 						background.className = "background";
 						window._currentDynamicBackground = background;
 						Object.assign(background, {
@@ -3238,9 +3239,9 @@ const skills = {
 							background.style.opacity = "1";
 						}, 50)
 
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					});
 					player.addMark("yunyu_yzs_summon", 1, false)
@@ -3274,12 +3275,12 @@ const skills = {
 					if (result2?.bool && result2?.targets?.length) {
 						if (result2.targets[0] == player) {
 							game.broadcastAll((current) => {
-								game.playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon1.MP3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon1.MP3");
 							}, player);
 							await player.loseMaxHp(Math.ceil(player.maxHp / 2));
 						} else {
 							game.broadcastAll((current) => {
-								game.playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon2.MP3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/yunyu_yzs_summon2.MP3");
 							}, player);
 							await target.turnOver();
 						}
@@ -3857,7 +3858,7 @@ const skills = {
 				leftCurtain.style.transform = 'translateX(-100%)';
 				rightCurtain.style.transform = 'translateX(100%)';
 				if (lib.config.background_audio) {
-					game.playAudio("effect/throw_flower1.mp3");
+					game.yzs_playAudio("effect/throw_flower1.mp3");
 				}
 			}, 1600);
 
@@ -5601,7 +5602,7 @@ const skills = {
 					await player.discard(event.cards);
 			//		player.tempBanSkill("qianheanyiting_yzs", { global: "roundStart" })
 					const animation = () => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -5628,7 +5629,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -5640,10 +5641,10 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/qianheanyiting_yzs.mp3`;
 
 						// 2. 调用播放逻辑
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 
 					}
@@ -5676,7 +5677,7 @@ const skills = {
 			player.awakenSkill(event.name);
 	//		player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -5703,7 +5704,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -5715,10 +5716,10 @@ const skills = {
 				_status.tempMusic = `ext:一中杀/audio/qianheanyiting_yzs.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_playBackgroundMusic();
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 
 			}
@@ -5790,7 +5791,7 @@ const skills = {
 
 			game.log(player, '开启了“魔虚罗”的调伏仪式');
 			game.broadcastAll(() => {
-				game.playAudio("ext:一中杀/audio/skill/tiaofuyishi_yzs1.MP3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/tiaofuyishi_yzs1.MP3");
 			});
 			player.$fullscreenpop("布瑠部", "thunder")
 			await new Promise(r => setTimeout(r, 1300))
@@ -5800,7 +5801,7 @@ const skills = {
 				ui.background.style.transition = 'none';
 				ui.background.style.filter = 'brightness(0.3)';
 				ui.backgroundMusic.pause();
-				game.playAudio("ext:一中杀/audio/skill/tiaofuyishi_yzs2.MP3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/tiaofuyishi_yzs2.MP3");
 			});
 			await new Promise(r => setTimeout(r, 6000))
 
@@ -5823,7 +5824,7 @@ const skills = {
 			Makora.addSkill("yzs_NeutralAttitude")
 
 			game.broadcastAll(() => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				//	video.className = "anime";
 
 				Object.assign(video, {
@@ -5852,14 +5853,14 @@ const skills = {
 					setTimeout(() => {
 						var music = lib.config.background_music;
 						if (music && music != "music_off") ui.backgroundMusic.play();
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
 				setTimeout(() => {
 					video.style.opacity = "1";
 					setTimeout(() => {
-						ui.background.setBackgroundImage('extension/一中杀/image/background/tiaofuyishi_yzs.jpg');
+						game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/tiaofuyishi_yzs.jpg');
 					}, 500)
 				}, 50)
 
@@ -7404,7 +7405,7 @@ const skills = {
 				async content(event, trigger, player) {
 					trigger.source.chat("自豪吧，你很强！")
 					game.broadcastAll((current) => {
-						game.playAudio("ext:一中杀/audio/skill/yzs_ronghuo_die.MP3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/yzs_ronghuo_die.MP3");
 					}, player);
 				}
 			},
@@ -7611,11 +7612,11 @@ const skills = {
 					trigger.baseDamage += trigger.card.storage.yzs_yun - 1;
 					if (trigger.card.storage.yzs_yun > 2&&trigger.targets?.some(target => ["MegumiSukuna_yzs", "RyomenSukuna_yzs"].includes(target.name))) {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/yzs_yun_use1.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yzs_yun_use1.MP3");
 						}, player);
 					} else if (trigger.targets?.some(target => ["GojoSatoru_yzs"].includes(target.name))) {
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/yzs_yun_use2.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yzs_yun_use2.MP3");
 						}, player);
 					}
 				},
@@ -7657,11 +7658,11 @@ const skills = {
 					event.result.card.storage = { yzs_yun: suits.length };
 					if (suits.length > 2) {
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yzs_yun1.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yzs_yun1.MP3");
 						}, player);
 					} else {
 						game.broadcastAll((current) => {
-							game.playAudio("ext:一中杀/audio/skill/yzs_yun2.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/yzs_yun2.MP3");
 						}, player);
 					}
 				},
@@ -7720,7 +7721,7 @@ const skills = {
 					await player.discard(event.cards);
 				//	player.tempBanSkill("yzs_gaiguantieweishan", { global: "roundStart" })
 					const animation = () => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -7747,7 +7748,7 @@ const skills = {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -7759,10 +7760,10 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
 
 						// 2. 调用播放逻辑
-						game.playBackgroundMusic();
-						ui.backgroundMusic.addEventListener('ended', () => {
+						game.yzs_playBackgroundMusic();
+						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
-							game.playBackgroundMusic();
+							game.yzs_playBackgroundMusic();
 						}, { once: true });
 					}
 					trigger.addExpandPlayer(player, "yzs_gaiguantieweishan", "fire", event.cards.length, animation)
@@ -7793,7 +7794,7 @@ const skills = {
 			player.awakenSkill(event.name);
 		//	player.tempBanSkill(event.name, { global: "roundStart" })
 			const animation = () => {
-				var video = document.createElement("VIDEO");
+				var video = game.yzs_createEffectMedia("VIDEO");
 				video.className = "anime";
 
 				Object.assign(video, {
@@ -7820,7 +7821,7 @@ const skills = {
 				video.addEventListener("ended", () => {
 					video.style.opacity = "0";
 					setTimeout(() => {
-						document.body.removeChild(video);
+						video.remove();
 					}, 1000)//1s后移除视频
 				})
 				document.body.appendChild(video);
@@ -7832,10 +7833,10 @@ const skills = {
 				_status.tempMusic = `ext:一中杀/audio/霹靂.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
-				ui.backgroundMusic.addEventListener('ended', () => {
+				game.yzs_playBackgroundMusic();
+				game.yzs_onBackgroundMusicEnd(() => {
 					delete _status.tempMusic;
-					game.playBackgroundMusic();
+					game.yzs_playBackgroundMusic();
 				}, { once: true });
 			}
 			let result = await player.yzs_ExpandDomain(event.name, "fire", event.cards.length, animation).forResult();

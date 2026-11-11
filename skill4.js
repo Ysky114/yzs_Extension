@@ -290,10 +290,10 @@ const skills = {
 					player.addSkill("shuyu_yzs_tao")
 					if (game.hasPlayer(cur => get.translation(cur).includes("雷古"))) {
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/shuyu_yzs_Reg.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/shuyu_yzs_Reg.png");
 						}, player)
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/shuyu_yzs_Reg.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/shuyu_yzs_Reg.mp3");
 						});
 					}
 				}
@@ -1261,7 +1261,7 @@ const skills = {
 			if (!goon) return;
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/flappybird_score.wav");
 			let revive = Math.random() * (game.dead.length + 1 - player.countMark("rg_treasure_revive")) > 0.9;
@@ -2775,10 +2775,10 @@ const skills = {
 			const callback = async function (event, player) {
 				game.broadcastAll(() => {
 					_status.tempMusic = `ext:一中杀/audio/神々が恋した幻想郷.mp3`;
-					game.playBackgroundMusic();
-					ui.backgroundMusic.addEventListener('ended', () => {
+					game.yzs_playBackgroundMusic();
+					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					}, { once: true });
 				});
 				const disables = [];
@@ -3430,7 +3430,7 @@ const skills = {
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/mengxiangfengyin_yzs.gif";
 				//弄一个变量在后面用于决定多长时间后消除屏幕特效
 				var duration = 1800;
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 				img.style.position = "fixed";
 				img.style.left = "0";
@@ -3455,25 +3455,18 @@ const skills = {
 				document.body.appendChild(img);
 				img.style.transition = "opacity 1s ease-out";
 				setTimeout(function () {
-					img.parentNode.removeChild(img);
+					img.remove();
 				}, duration);
 
 				_status.tempMusic = `ext:一中杀/audio/神々が恋した幻想郷.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 
 				// 3. 核心修改：等待音频加载并跳转时间
 				if (ui.backgroundMusic) {
-					// 如果音频已经加载完成（通常是本地资源），直接跳转
-					if (ui.backgroundMusic.readyState >= 2) {
-						ui.backgroundMusic.currentTime = 15;
-					} else {
-						// 否则监听加载完成事件
-						ui.backgroundMusic.addEventListener('canplay', function () {
-							this.currentTime = 15;
-						}, { once: true });
-					}
+					// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+					game.yzs_seekBackgroundMusic(15);
 				}
 			}, player);
 			await new Promise(r => setTimeout(r, 1800))
@@ -3551,7 +3544,7 @@ const skills = {
 				if (inside.includes(game.me)) {
 					let img = document.getElementById(id);
 					if (img) return;
-					img = document.createElement("img");
+					img = game.yzs_createEffectMedia("img");
 					img.id = id; // 给图片加上唯一标识
 					img.src = imagePath;
 					img.style.position = "fixed";
@@ -5473,11 +5466,11 @@ const skills = {
 			trigger.cancel();
 			player.skip("phaseDiscard");
 			game.broadcastAll(function (current) {
-				if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/bianzhuang_yzs.png");
+				if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/bianzhuang_yzs.png");
 			}, player)
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/chicken_you_are_so_beautiful.mp3");
 			player.addTempSkill("shiyoubing_yzs", { player: "phaseBegin" })
@@ -5529,7 +5522,7 @@ const skills = {
 			await player.modedDiscard(event.cards);
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/chickun.wav");
 			if (player != _status.currentPhase) {
@@ -5559,7 +5552,7 @@ const skills = {
 			}
 			if (player.countMark("shiyoubing_yzs") >= 2) {
 				game.broadcastAll(function (current) {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/DaZuo_yzs.png");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/DaZuo_yzs.png");
 				}, player)
 				player.removeSkill("shiyoubing_yzs")
 				for (let target of game.filterPlayer(cur => cur.countMark("kending_yzs_mark"))) {
@@ -6306,11 +6299,11 @@ const skills = {
 			player.playEffectOL(lib.skill.GodgivenSwordsmanship_yzs.Effect);
 			player.popup("升级")
 			if (lib.config.background_audio) {
-				game.playAudio("effect", "recover");
+				game.yzs_playAudio("effect", "recover");
 			}
 			game.broadcast(function () {
 				if (lib.config.background_audio) {
-					game.playAudio("effect", "recover");
+					game.yzs_playAudio("effect", "recover");
 				}
 			});
 			if (player.countMark("GodgivenSwordsmanship_yzs_lv") >= 20 && player.hasSkill("ThunderWithMe_yzs") && !player.isTempBanned("ThunderWithMe_yzs")) {
@@ -7153,7 +7146,7 @@ const skills = {
 							var imagePath = lib.assetURL + "/extension/一中杀/image/background/shantianji_yzs.png";
 							var duration = 2000;
 
-							var img = document.createElement("img");
+							var img = game.yzs_createEffectMedia("img");
 							img.src = imagePath;
 
 							img.style.position = "fixed";
@@ -7181,7 +7174,7 @@ const skills = {
 								img.style.opacity = "0";
 								setTimeout(function () {
 									if (img.parentNode) {
-										img.parentNode.removeChild(img);
+										img.remove();
 									}
 								}, 1000); // 等待1秒过渡完成后再移除
 							}, duration);
@@ -7378,7 +7371,7 @@ const skills = {
 					if (trigger.source) {
 						if (get.translation(trigger.source).includes("莉涅")) {
 							game.broadcastAll(() => {
-								game.playAudio("ext:一中杀/audio/skill/qieyong_yzs_Linie.mp3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/qieyong_yzs_Linie.mp3");
 							});
 						}
 					}
@@ -8321,7 +8314,7 @@ const skills = {
 					event.cards = player.getEquips(3).concat(player.getEquips(4));
 					game.broadcastAll(function () {
 						if (lib.config.background_audio) {
-							game.playAudio(`effect/equip3.mp3`);
+							game.yzs_playAudio(`effect/equip3.mp3`);
 						}
 					});
 					await player.discard(event.cards)
@@ -8343,7 +8336,7 @@ const skills = {
 				async content(event, trigger, player) {
 					game.broadcastAll(function () {
 						if (lib.config.background_audio) {
-							game.playAudio(`effect/equip3.mp3`);
+							game.yzs_playAudio(`effect/equip3.mp3`);
 						}
 					});
 					let next = player.addToExpansion(get.cards(4), player, "gain2")
@@ -8383,7 +8376,7 @@ const skills = {
 					if (result.bool && result.links) {
 						game.broadcastAll(function () {
 							if (lib.config.background_audio) {
-								game.playAudio(`effect/equip3.mp3`);
+								game.yzs_playAudio(`effect/equip3.mp3`);
 							}
 						});
 						let tag = result.links[0].hasGaintag("bili_yzs") ? "bili_yzs_down" : "bili_yzs"
@@ -8464,7 +8457,7 @@ const skills = {
 			}
 			game.broadcastAll(function () {
 				if (lib.config.background_audio) {
-					game.playAudio(`effect/equip3.mp3`);
+					game.yzs_playAudio(`effect/equip3.mp3`);
 				}
 			});
 			await target.equip(card);
@@ -8544,7 +8537,7 @@ const skills = {
 			if (result.bool && result.links) {
 				game.broadcastAll(function () {
 					if (lib.config.background_audio) {
-						game.playAudio(`effect/equip3.mp3`);
+						game.yzs_playAudio(`effect/equip3.mp3`);
 					}
 				});
 				let tag = result.links[0].hasGaintag("bili_yzs") ? "bili_yzs_down" : "bili_yzs"
@@ -9951,7 +9944,7 @@ const skills = {
 			if (!event.target.isLinked()) {
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, "effect/damage_thunder.MP3");
 				event.target.playEffectOL(lib.skill.chaodaoti_yzs.Effect);
@@ -9999,7 +9992,7 @@ const skills = {
 				async content(event, trigger, player) {
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/damage_thunder.MP3");
 					player.playEffectOL(lib.skill.chaodaoti_yzs.Remove);
@@ -10139,7 +10132,7 @@ const skills = {
 			if (result.bool) {
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, "effect/damage_thunder.MP3");
 				trigger.target.addSkill("jingdianmabi_yzs_effect");

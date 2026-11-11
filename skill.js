@@ -89,7 +89,7 @@ const skills = {
 			game.broadcastAll(function (bgms) {
 				if (!lib.config.extension_一中杀_yzs_bgm) return ;
 				lib.config.all.background_music = bgms;
-				game.playBackgroundMusic()
+				game.yzs_playBackgroundMusic()
 			}, bgms);
 		},
 	},
@@ -388,7 +388,7 @@ const skills = {
 						var imagePath = lib.assetURL + "/extension/一中杀/image/wangzhan_yzs.png";
 						var duration = 1500;
 
-						var img = document.createElement("img");
+						var img = game.yzs_createEffectMedia("img");
 						img.src = imagePath;
 
 						// 设置图片样式 - 竖向图片居中显示
@@ -420,7 +420,7 @@ const skills = {
 							img.style.opacity = "0";
 							setTimeout(function () {
 								if (img.parentNode) {
-									img.parentNode.removeChild(img);
+									img.remove();
 								}
 							}, 1000); // 等待1秒过渡完成后再移除
 						}, duration);
@@ -428,7 +428,7 @@ const skills = {
 					}, player);
 				}
 				game.broadcastAll(() => {
-					game.playAudio("ext:一中杀/audio/skill/wangzhan_yzs.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/wangzhan_yzs.mp3");
 				});
 				result.targets[0].damage(Math.max(player.countMark("wangzhan_yzs") - 1, 0))
 			}
@@ -908,7 +908,7 @@ const skills = {
 					_status.huangjinzhixing_yzs = false;
 					document.documentElement.style.filter = "none";
 					//↑消除之前技能里的黑白等效果
-					game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 					//↑播放时停结束的语音
 					game.delay(3);
 					var music = lib.config.background_music;
@@ -938,7 +938,7 @@ const skills = {
 					_status.huangjinzhixing_yzs = false;
 					document.documentElement.style.filter = "none";
 					//↑消除之前技能里的黑白等效果
-					game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 					//↑播放时停结束的语音
 					game.delay(3);
 					var music = lib.config.background_music;
@@ -954,14 +954,14 @@ const skills = {
 				if (player.getHistory("useSkill", evt => evt.skill == "huangjinzhixing_yzs").length == 1) {
 					game.broadcastAll((player) => {
 						_status.huangjinzhixing_yzs = true;
-						game.playAudio("ext:一中杀/audio/skill/huangjinzhixing_yzs.mp3");
-						game.playAudio("ext:一中杀/audio/skill/TheWorldEnter.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/huangjinzhixing_yzs.mp3");
+						game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldEnter.mp3");
 						ui.backgroundMusic.pause();
 						player.$skill("THE WORLD", "legend", "thunder");
 						var imagePath = lib.assetURL + "/extension/一中杀/image/background/timeStop.gif";
 						var duration = 4000;
 
-						var img = document.createElement("img");
+						var img = game.yzs_createEffectMedia("img");
 						img.src = imagePath;
 
 						// 改进的样式设置
@@ -992,7 +992,7 @@ const skills = {
 							img.style.opacity = 0;
 							setTimeout(function () {
 								if (img.parentNode) {
-									img.parentNode.removeChild(img);
+									img.remove();
 								}
 							}, 1000);
 						}, duration);
@@ -1025,7 +1025,7 @@ const skills = {
 								_status.huangjinzhixing_yzs = false;
 								document.documentElement.style.filter = "none";
 								//↑消除之前技能里的黑白等效果
-								game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 								//↑播放时停结束的语音
 								game.delay(3);
 								var music = lib.config.background_music;
@@ -1038,10 +1038,10 @@ const skills = {
 					if (_status.tempMusic != `ext:一中杀/audio/Jotaro's Theme.mp3`) {
 						game.broadcastAll(() => {
 							_status.tempMusic = `ext:一中杀/audio/Jotaro's Theme.mp3`;
-							game.playBackgroundMusic();
-							ui.backgroundMusic.addEventListener('ended', () => {
+							game.yzs_playBackgroundMusic();
+							game.yzs_onBackgroundMusicEnd(() => {
 								delete _status.tempMusic;
-								game.playBackgroundMusic();
+								game.yzs_playBackgroundMusic();
 							}, { once: true });
 						});
 					}
@@ -1054,7 +1054,7 @@ const skills = {
 					_status.huangjinzhixing_yzs = false;
 					document.documentElement.style.filter = "none";
 					//↑消除之前技能里的黑白等效果
-					game.playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
+					game.yzs_playAudio("ext:一中杀/audio/skill/TheWorldExit.mp3");
 					//↑播放时停结束的语音
 					game.delay(3);
 					var music = lib.config.background_music;
@@ -1123,7 +1123,7 @@ const skills = {
 					if (result.suit == get.suit(trigger.card)) {
 						game.broadcastAll(function () {
 							if (lib.config.background_audio) {
-								game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
 							}
 						});
 						trigger.player.playEffectOL(lib.skill.boom_yzs.Effect);
@@ -1213,7 +1213,7 @@ const skills = {
 					player.clearMark("BitetheDust_awaken_yzs")
 					game.broadcastAll(() => {
 						_status.tempMusic = `ext:一中杀/audio/killer.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 					});
 					player.addSkill("normal_life_yzs");
 				},
@@ -1271,11 +1271,11 @@ const skills = {
 		},
 		async content(event, trigger, player) {
 			game.broadcastAll((player) => {
-				game.playAudio("ext:一中杀/audio/skill/BitetheDust_yzs.mp3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/BitetheDust_yzs.mp3");
 				var imagePath = lib.assetURL + "/extension/一中杀/image/background/BitetheDust_yzs.gif";
 				//弄一个变量在后面用于决定多长时间后消除屏幕特效
 				var duration = 4110;
-				var img = document.createElement("img");
+				var img = game.yzs_createEffectMedia("img");
 				img.src = imagePath;
 				img.style.position = "fixed";
 				img.style.left = "0";
@@ -1300,8 +1300,8 @@ const skills = {
 				document.body.appendChild(img);
 				img.style.transition = "opacity 1s ease-out";
 				setTimeout(function () {
-					img.parentNode.removeChild(img);
-					game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
+					img.remove();
+					game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
 				}, duration);
 			}, player);
 			await new Promise(r => setTimeout(r, 4110))
@@ -1309,19 +1309,12 @@ const skills = {
 				_status.tempMusic = `ext:一中杀/audio/Great Days.mp3`;
 
 				// 2. 调用播放逻辑
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 
 				// 3. 核心修改：等待音频加载并跳转时间
 				if (ui.backgroundMusic) {
-					// 如果音频已经加载完成（通常是本地资源），直接跳转
-					if (ui.backgroundMusic.readyState >= 2) {
-						ui.backgroundMusic.currentTime = time;
-					} else {
-						// 否则监听加载完成事件
-						ui.backgroundMusic.addEventListener('canplay', function () {
-							this.currentTime = time;
-						}, { once: true });
-					}
+					// 资源预检通过、实际音轨就绪后再跳转，避免误跳转旧曲目。
+					game.yzs_seekBackgroundMusic(time);
 				}
 			},164);
 			if (trigger.player == player) {
@@ -1355,7 +1348,7 @@ const skills = {
 						overlay.style.width = '100%';
 						overlay.style.height = '100%'; // 覆盖头部区域
 						overlay.style.backgroundSize = "cover";
-						overlay.style.backgroundImage = "url('extension/一中杀/image/background/BitetheDust_yzs.png')"; // 替换为你自己的图片路径
+						game.yzs_setBackgroundImage(overlay, "extension/一中杀/image/background/BitetheDust_yzs.png", true); // 替换为你自己的图片路径
 						overlay.style.backgroundSize = 'contain';
 						overlay.style.backgroundRepeat = 'no-repeat';
 						overlay.style.backgroundPosition = 'center top';
@@ -1409,7 +1402,7 @@ const skills = {
 						}, target);
 						game.broadcastAll(function () {
 							if (lib.config.background_audio) {
-								game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
+								game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
 							}
 						});
 						await target.die();
@@ -1537,7 +1530,7 @@ const skills = {
 					if (trigger.getParent()?.name == "first_bomb_yzs_damage") return;
 					game.broadcastAll(function () {
 						if (lib.config.background_audio) {
-							game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.mp3");
 						}
 					});
 					trigger.player.playEffectOL(lib.skill.boom_yzs.Effect);
@@ -1694,13 +1687,13 @@ const skills = {
 				init: function (player) {
 					if (player.name != "shenChangzhang_yzs") return;
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/shenChangzhang_yzs2.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/shenChangzhang_yzs2.png");
 					}, player)
 				},
 				onremove(player) {
 					if (player.name != "shenChangzhang_yzs") return;
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/shenChangzhang_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/shenChangzhang_yzs.png");
 					}, player)
 				},
 				locked: true,
@@ -1825,7 +1818,7 @@ const skills = {
 						player.$damage()
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, "effect/damage2.mp3");
 						await player.gain(event.cards)
@@ -1975,14 +1968,14 @@ const skills = {
 				if (cards.some(card => get.suit(card, false) == "spade")) {
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/lose.mp3");
 					player.skip("phaseUse")
 				} else if (num2 == 3) {
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, "effect/throw_flower1.mp3");
 				}
@@ -2286,7 +2279,7 @@ const skills = {
 			player.line(trigger.player);
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/throw_wine2.mp3");
 			await trigger.player.chooseUseTarget({ name: "jiu" }, true, "noTargetDelay", "nodelayx");
@@ -2377,7 +2370,7 @@ const skills = {
 			player.$damage()
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/damage2.mp3");
 			await player.loseMaxHp();
@@ -4120,7 +4113,7 @@ const skills = {
 					damageAudioInfo += index + ".mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 					player.addMark("blessing_yzs_used", 1, false);
@@ -4529,7 +4522,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						if (num > 0) await player.draw(num);
@@ -4557,7 +4550,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.changeHujia(num);
@@ -4586,7 +4579,7 @@ const skills = {
 							damageAudioInfo += index + ".mp3";
 							game.broadcastAll(function (damageAudioInfo) {
 								if (lib.config.background_audio) {
-									game.playAudio(damageAudioInfo);
+									game.yzs_playAudio(damageAudioInfo);
 								}
 							}, damageAudioInfo);
 							var next = player.chooseUseTarget("sha", true);
@@ -4614,18 +4607,18 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.addSkill("wushen_yzs");
 						game.log(player, "变身武神");
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana2_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Cana2_yzs.png");
 						}, player)
 						player.playEffectOL(lib.skill.GodgivenSwordsmanship_yzs.Effect);
 						player.popup("武神")
 						if (lib.config.background_audio) {
-							game.playAudio("effect", "recover");
+							game.yzs_playAudio("effect", "recover");
 						}
 					},
 					list: [player],
@@ -4654,7 +4647,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						if (num > 0) await player.draw(num);
@@ -4682,7 +4675,7 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.changeHujia(num);
@@ -4711,7 +4704,7 @@ const skills = {
 							damageAudioInfo += index + ".mp3";
 							game.broadcastAll(function (damageAudioInfo) {
 								if (lib.config.background_audio) {
-									game.playAudio(damageAudioInfo);
+									game.yzs_playAudio(damageAudioInfo);
 								}
 							}, damageAudioInfo);
 							var next = player.chooseUseTarget("sha", true);
@@ -4739,18 +4732,18 @@ const skills = {
 						damageAudioInfo += index + ".mp3";
 						game.broadcastAll(function (damageAudioInfo) {
 							if (lib.config.background_audio) {
-								game.playAudio(damageAudioInfo);
+								game.yzs_playAudio(damageAudioInfo);
 							}
 						}, damageAudioInfo);
 						await player.addSkill("wushen_yzs");
 						game.log(player, "变身武神");
 						game.broadcastAll(function (current) {
-							if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana2_yzs.png");
+							if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Cana2_yzs.png");
 						}, player)
 						player.playEffectOL(lib.skill.GodgivenSwordsmanship_yzs.Effect);
 						player.popup("武神")
 						if (lib.config.background_audio) {
-							game.playAudio("effect", "recover");
+							game.yzs_playAudio("effect", "recover");
 						}
 					},
 					list: [player],
@@ -4888,14 +4881,14 @@ const skills = {
 				damageAudioInfo += index + ".mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				player.addMark("HolyBlessing_yzs_wushen", get.info("HolyBlessing_yzs_wushen").sing, false);
 				player.addSkill("wushen_yzs");
 				game.log(player, "变身武神");
 				game.broadcastAll(function (current) {
-					if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana2_yzs.png");
+					if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Cana2_yzs.png");
 				}, player)
 			}
 		}
@@ -4916,7 +4909,7 @@ const skills = {
 				firstDo: true,
 				async content(event, trigger, player) {
 					game.broadcastAll(function (current) {
-						if (current.node.avatar) current.node.avatar.setBackgroundImage("extension/一中杀/image/Cana_yzs.png");
+						if (current.node.avatar) game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/Cana_yzs.png");
 					}, player)
 					game.log(player, "武神效果结束");
 					player.removeSkill("wushen_yzs");
@@ -6068,7 +6061,7 @@ const skills = {
 					setTimeout(() => {
 						whiteOverlay.style.background = 'rgba(255, 255, 255, 0)';
 						_status.tempMusic = `ext:一中杀/audio/Battle Against A True Hero.mp3`;
-						game.playBackgroundMusic();
+						game.yzs_playBackgroundMusic();
 						// 完全透明后移除元素
 						setTimeout(() => {
 							if (whiteOverlay.parentNode) {
@@ -6771,7 +6764,7 @@ const skills = {
 		async content(event, trigger, player) {
 			game.broadcastAll(() => {
 				_status.tempMusic = `ext:一中杀/audio/MEGALOVANIA.mp3`;
-				game.playBackgroundMusic();
+				game.yzs_playBackgroundMusic();
 			});
 			var card = game.createCard2("XZgun_yzs");
 			player.$gain2(card, false);
@@ -6977,7 +6970,7 @@ const skills = {
 			player.$damagepop(-2 * trigger.num,"water")
 			game.broadcastAll(function (damageAudioInfo) {
 				if (lib.config.background_audio) {
-					game.playAudio(damageAudioInfo);
+					game.yzs_playAudio(damageAudioInfo);
 				}
 			}, "effect/damage2.mp3");
 			player.addMark("XZblade_yzs_skill",2*trigger.num,false)
@@ -7043,7 +7036,7 @@ const skills = {
 					var damageAudioInfo = "ext:一中杀/audio/skill/SSF_Nightmare_yzs_sound3.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 				}
@@ -7062,7 +7055,7 @@ const skills = {
 					var damageAudioInfo = "ext:一中杀/audio/skill/SSF_Nightmare_yzs_sound3.mp3";
 					game.broadcastAll(function (damageAudioInfo) {
 						if (lib.config.background_audio) {
-							game.playAudio(damageAudioInfo);
+							game.yzs_playAudio(damageAudioInfo);
 						}
 					}, damageAudioInfo);
 					trigger.num++;
@@ -7159,7 +7152,7 @@ const skills = {
 				var damageAudioInfo = "ext:一中杀/audio/skill/judge_yzs.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				target.targets[0].clearMark("judgeEyes_yzs");
@@ -7509,7 +7502,7 @@ const skills = {
 		async content(event, trigger, player) {
 			game.broadcastAll(function (current) {
 				if (current.node.avatar) {
-					current.node.avatar.setBackgroundImage("extension/一中杀/image/yagamiLight2_yzs.png");
+					game.yzs_setBackgroundImage(current.node.avatar, "extension/一中杀/image/yagamiLight2_yzs.png");
 				}
 			}, player)
 			trigger.cancel();
@@ -8565,7 +8558,7 @@ const skills = {
 			player: "discardBegin"
 		},
 		filter(event, player) {
-			return event.getParent().name == "burnlife_yzs" || event.getParent().name == "burnlife_yzs_buff"
+			return event.getParent().name == "burnlife_yzs_backup" || event.getParent().name == "burnlife_yzs_buff"
 		},
 		async content(event, trigger, player) {
 			trigger.cancel();
@@ -8951,7 +8944,7 @@ const skills = {
 			await event.target.changeHujia(2);
 			await event.target.addSkill("bianda_yzs_buff");
 			game.broadcastAll(() => {
-				game.playAudio("ext:一中杀/audio/skill/bianda_yzs1.mp3");
+				game.yzs_playAudio("ext:一中杀/audio/skill/bianda_yzs1.mp3");
 			})
 			game.broadcastAll(async function (current, scale) {
 				let numberOfPlayers = ui.arena.dataset.number;
@@ -9217,8 +9210,8 @@ const skills = {
 				}
 				_status.jieyicunfashi_yzs_awaken = true;
 				_status.tempMusic = `ext:一中杀/audio/輝く針の小人族　～ Little Princess.mp3`;
-				game.playBackgroundMusic();
-				ui.background.setBackgroundImage('extension/一中杀/image/background/jieyicunfashi_yzs_awaken.png');
+				game.yzs_playBackgroundMusic();
+				game.yzs_setBackgroundImage(ui.background, 'extension/一中杀/image/background/jieyicunfashi_yzs_awaken.png');
 			});
 		}
 	},
@@ -9404,7 +9397,7 @@ const skills = {
 				let damageAudioInfo = "effect/damage_ice.mp3";
 				game.broadcastAll(function (damageAudioInfo) {
 					if (lib.config.background_audio) {
-						game.playAudio(damageAudioInfo);
+						game.yzs_playAudio(damageAudioInfo);
 					}
 				}, damageAudioInfo);
 				game.broadcastAll(function (target) {
@@ -9417,7 +9410,7 @@ const skills = {
 						overlay.style.height = '100%'; // 覆盖头部区域
 						overlay.style.backgroundSize = "cover";
 						overlay.style.opacity = 0.7;
-						overlay.style.backgroundImage = "url('extension/一中杀/image/background/yzsIce_skill.png')"; // 替换为你自己的图片路径
+						game.yzs_setBackgroundImage(overlay, "extension/一中杀/image/background/yzsIce_skill.png", true); // 替换为你自己的图片路径
 						overlay.style.backgroundRepeat = 'no-repeat';
 						overlay.style.backgroundPosition = 'center top';
 						overlay.style.zIndex = '10';

@@ -470,7 +470,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						}
 						if (event.num - 1 - damagetargets.length == 0) return;
 						game.broadcastAll(() => {
-							game.playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
+							game.yzs_playAudio("ext:一中杀/audio/skill/first_bomb_yzs_damage.MP3");
 						});
 						event.target.playEffectOL(lib.skill.boom_yzs.Effect);
 						await event.target.damage(event.num - 1 - damagetargets.length, "fire", "nosource")
@@ -1900,7 +1900,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				async content(event, trigger, player) {
 					game.trySkillAudio("bagua_skill")
 					if (player.name == "GojoSatoru_yzs") game.broadcastAll(() => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -1927,7 +1927,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
@@ -2116,7 +2116,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 				async content(event, trigger, player) {
 					game.trySkillAudio("rw_bagua_skill")
 					if (player.name == "GojoSatoru_yzs") game.broadcastAll(() => {
-						var video = document.createElement("VIDEO");
+						var video = game.yzs_createEffectMedia("VIDEO");
 						video.className = "anime";
 
 						Object.assign(video, {
@@ -2143,7 +2143,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 						video.addEventListener("ended", () => {
 							video.style.opacity = "0";
 							setTimeout(() => {
-								document.body.removeChild(video);
+								video.remove();
 							}, 1000)//1s后移除视频
 						})
 						document.body.appendChild(video);
