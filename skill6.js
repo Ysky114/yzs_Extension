@@ -2409,7 +2409,7 @@ const skills = {
 						}
 						return true;
 					}
-					return count === 1 || isPrime(count);
+					return  isPrime(count);
 				},
 				async content(event, trigger, player) {
 					await player.draw();
@@ -2487,10 +2487,11 @@ const skills = {
 	yzs_fanzhuan: {
 		trigger: { source: "damageBegin2" },
 		filter(event, player) {
-			return event.player != player && event.player.isIn() && event.num > 0;
+			return event.player != player && event.player.isIn() && event.notLink() && event.num > 0&&event.card?.name=="sha";
 		},
 		logTarget: "player",
-		prompt2: "防止本次伤害，改为令目标翻面；若其因此翻至正面，其受到3点无来源伤害",
+		frequent:true,
+		prompt2: "你使用【杀】对其他角色造成伤害时，可改为令失去2点体力",
 		check(event, player) {
 			return get.attitude(player, event.player) < 0;
 		},
@@ -2498,10 +2499,7 @@ const skills = {
 			trigger.cancel();
 			const target = trigger.player;
 			const wasTurnedOver = target.isTurnedOver();
-			await target.turnOver();
-			if (wasTurnedOver && !target.isTurnedOver() && target.isIn()) {
-				await target.damage(3, "nosource", "nocard");
-			}
+			await target.loseHp(2);
 		},
 	},
 	Gravity_yzs: {
@@ -7495,13 +7493,19 @@ const skills = {
 				},
 			},
 			zhuque: {
+				nobracket: true,
+				equipSkill: true,
 				trigger: {
 					player: "useCard1",
 				},
 				filter(event, player) {
+					if (!player.hasEmptySlot(1) || !lib.card.zhuque || player.hasSkillTag("unequip_equip1")) {
+						return false;
+					}
 					if (event.card.name === "sha" && !game.hasNature(event.card)) {
 						return true;
 					}
+					return false;
 				},
 				audio: "zhuque_skill",
 				check(event, player) {
@@ -7530,9 +7534,25 @@ const skills = {
 						});
 					}
 				},
+				mod: {
+					attackRangeBase(player2) {
+						var num = lib.card?.zhuque?.distance?.attackFrom;
+						if (typeof num != "number" || !player2.hasEmptySlot(1)) {
+							return;
+						}
+						return Math.max(player2.getEquipRange(player2.getCards("e")), 1 - num);
+					},
+				},
 			}
 		},
 		priority: -5,
+		locked: true,
+		init(player2, skill) {
+			player2.addExtraEquip(skill, "zhuque", true, (player3) => player3.hasEmptySlot(1) && lib.card.zhuque);
+		},
+		onremove(player2, skill) {
+			player2.removeExtraEquip(skill);
+		},
 		forced: true,
 		audio: "ext:一中杀/audio/skill:3",
 		trigger: {

@@ -1828,7 +1828,7 @@ const translates = {
 	choudie_yzs_disc: `碟`,
 	choudie_yzs_disc_info:`持有者出牌阶段可移去任意张【碟】以检索等量张锦囊牌`,
 	miyu_yzs: `密语`,
-	miyu_yzs_info:`锁定技：你每回合使用或打出第一或质数张牌时摸1张牌。<br>
+	miyu_yzs_info:`锁定技：你每回合使用或打出第质数张牌时摸1张牌。<br>
     觉醒技：回合结束后，若你本局已使用过14张牌，你觉醒：你恢复全部体力、本局摸牌数+1、然后更换人物牌至${get.poptip({
 		id: "character_CMoon_EnricoPucci_yzs",
 		name: "神父·新月",
@@ -1837,7 +1837,7 @@ const translates = {
 	})}。`,
 
 	yzs_fanzhuan: `翻转`,
-	yzs_fanzhuan_info:`你对其他角色造成伤害时，可改为令其翻面。若其因此翻至正面，其受到3点无来源伤害。`,
+	yzs_fanzhuan_info:`你使用【杀】对其他角色造成伤害时，可改为令失去2点体力。`,
 	Gravity_yzs: `重力`,
 	Gravity_yzs_info: `锁定技：每轮开始时，你执行额外回合。此回合内你使用牌无距离限制，且使用牌结算后可与其中1名目标角色交换座次。`,
 	Singularity_yzs: `奇点`,
@@ -1995,7 +1995,7 @@ const translates = {
 	yzs_ronghuo: `熔火`,
 	visible_yzs_ronghuo:`熔火`,
 	yzs_ronghuo_info: `锁定技：你为来源或受伤角色的伤害结算后，你摸伤害量张牌。若为火焰伤害，则明置之，这些牌不计入手牌上限，且可当做【桃】或【无中生有】使用。<br>
-	你使用普通【杀】时，可将之改为火【杀】。`,
+	你未装备武器时，视为装备${get.poptip("zhuque")}。`,
 	yzs_yun: `陨`,
 	yzs_yun_info: `结束阶段，你可将任意张牌当做【火攻】使用，此牌伤害为底牌花色数。`,
 	yzs_gaiguantieweishan: `盖棺铁围山`,

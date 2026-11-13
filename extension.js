@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.2.3";
+const EXTENSION_VERSION = "0.99.2.4";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {

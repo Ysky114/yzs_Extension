@@ -852,9 +852,9 @@ const skills = {
 		intro: {
 			content(storage, player) {
 				if (storage) {
-					return `转换技：反转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【赫】`;
+					return `转换技：反转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的【赫】`;
 				}
-				return `转换技：顺转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数(${player.countMark("yzs_PP")})的【苍】并令本技能本回合失效`;
+				return `转换技：顺转：你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的【苍】并令本技能本回合失效`;
 			},
 		},
 		enable: "phaseUse",

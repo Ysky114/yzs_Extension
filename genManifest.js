@@ -11,7 +11,7 @@ if (!versionMatch) {
 	throw new Error('无法读取 extension.js 的 EXTENSION_VERSION，请使用点分数字字符串，例如 const EXTENSION_VERSION = "0.98.11";');
 }
 const VERSION = versionMatch[2];
-const UPDATE_NOTE = `${VERSION}新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙`; // 发布时修改更新说明，版本号自动添加
+const UPDATE_NOTE = `${VERSION}`; // 发布时修改更新说明，版本号自动添加
 
 // 递归获取所有文件相对路径
 function walkDir(dir, baseDir, fileList = []) {

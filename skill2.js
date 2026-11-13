@@ -5143,11 +5143,11 @@ const skills = {
 		async changeCiYuan(player, event) {
 			if (player.countMark("ErWangSaid_yzs")) {
 				player.clearMark("ErWangSaid_yzs", false);
-				player.removeTip("ErWangSaid_yzs");
+		//		player.removeTip("ErWangSaid_yzs");
 			}
 			else {
 				player.addMark("ErWangSaid_yzs", 1, false);
-				player.addTip("ErWangSaid_yzs", "“里”次元 ", false);
+			//	player.addTip("ErWangSaid_yzs", "“里”次元 ", false);
 			}
 			if (!player.hasSkill("ErWangSaid_yzs")) return;
 			/*
@@ -5199,7 +5199,7 @@ const skills = {
 					}
 					for (let target of players) {
 						target.addMark("ErWangSaid_yzs", 1, false);
-						target.addTip("ErWangSaid_yzs", "“里”次元 ", false);
+					//	target.addTip("ErWangSaid_yzs", "“里”次元 ", false);
 					}
 				},
 			},
@@ -5291,6 +5291,13 @@ const skills = {
 				async content(event, trigger, player) {
 					await player.draw(3);
 				},
+			},
+		},
+		marktext: "里",
+		intro: {
+			nocount:true,
+			mark(dialog, content, player) {
+				dialog.addText("当前处于“里”次元");
 			},
 		},
 		locked: true,
