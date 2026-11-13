@@ -1,6 +1,6 @@
 {
-  "version": "0.99.2.3",
-  "update": "0.99.2.3新增蓄能技，五条悟重做，新增虎杖悠仁、真人、石流龙",
+  "version": "0.99.2.4",
+  "update": "0.99.2.4",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -695,11 +695,11 @@
     "character.js": "022a68c874e1482a4b868c14809f387be0e426c3",
     "dynamicTranslate.js": "259f0239aa7b8d2421fced99d86db63a319ea81c",
     "extension.css": "569dcf6bab5e306372478014b08c0de9bd48c57b",
-    "extension.js": "b6029aa2c581012f7544e75932211e74ab74adfd",
+    "extension.js": "c2d18a6c128730e9066895e7a09fd182119162c2",
     "func/media.js": "a000704e60b824bf78b13587c85de21145c190a1",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "ae7ead135a57bb9fe4b9be9036293fc61245c217",
-    "genManifest.js": "0746a1eda7890eacb2a67d05758a293a12b3cd7f",
+    "genManifest.js": "e49744911954659960ac787e4cf60f0bc286ae76",
     "image/AdmiredWitch_yzs.png": "7aa1424e93435d7ae1a0e8822773f929e588e8de",
     "image/aiqi_yzs_discard.png": "6dbb7e741cc9dd7f50ec0613dd533c6b8ccb4fbb",
     "image/AiSi_yzs.png": "4a242b4c265fa10cdf36b61f7935a2adf11df43c",
@@ -1094,13 +1094,13 @@
     "README.md": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     "skill.js": "1d6d0bbdf0189917fe023ce1808ef8e143aeea07",
     "skill1.js": "ad2e84504f7b577a6b913798bd629191933441a2",
-    "skill2.js": "e0e819d49953da5e6480f10d8c81be9387a70b5a",
+    "skill2.js": "8e767508b91a2ce4af4d74632cef303304f65623",
     "skill3.js": "e7e4bad80914f0242532c7decac7e08015a4d24f",
     "skill4.js": "19636a7a364b39ec6ad95e3c6f4254d6cd368062",
     "skill5.js": "812f0f0c5b3ee0120a60a83fc892977fdc200931",
-    "skill6.js": "04ea9e98009ac47f02a3b0872e6e10c117739594",
-    "skill7.js": "322d835511fd2f0fef4ed6227d42136cf2e1f944",
-    "translate.js": "8fd78db11f1d0951a909557b8e92048ccf11485a",
+    "skill6.js": "c2fe7859b7c3bf11ded070d2c617d1e54af3dfa8",
+    "skill7.js": "5c172061c494938da3640476821338b8727adda7",
+    "translate.js": "04943d048a509d41310bf1a1622ad37c6173b22f",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }
 }
