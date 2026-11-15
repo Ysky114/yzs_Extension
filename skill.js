@@ -7329,7 +7329,7 @@ const skills = {
 				locked: true,
 				forced: true,
 				trigger: {
-					global: "roundStart",
+					global: "roundEnd",
 				},
 				priority: 114515,
 				filter(event, player) {
@@ -7508,7 +7508,7 @@ const skills = {
 			trigger.cancel();
 			game.log(player, "使命失败");
 			player.addSkill("xinsega_yzs_dn")
-			await player.loseMaxHp(Math.ceil(player.maxHp / 2));
+			await player.loseMaxHp(Math.floor(player.maxHp / 2));
 			let num = player.maxHp - player.hp;
 			if (num > 0) await player.recover(num);
 			player.awakenSkill("xinsega_yzs");

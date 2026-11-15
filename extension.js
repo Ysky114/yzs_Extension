@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.2.4";
+const EXTENSION_VERSION = "0.99.3";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -44,6 +44,77 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				else delete lib.config.customBackgroundMusic[`ext:一中杀/audio/${name}.mp3`]
 			}
 			game.saveConfig("customBackgroundMusic", lib.config.customBackgroundMusic)
+			//武将评级
+			lib.arenaReady.push(function () {
+				//至臻
+				const pj_prestige = ["NatsukiSubaru_yzs", "DarkKnight_yzs", "jealous_witch_yzs", "Qianmian_Limu_yzs",
+					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"];
+				//传说 SSS
+				var pj_sss = ["HuangJOJO_yzs", "WZZS_lilixin_yzs", "Zbro_yzs", "OnionMan_yzs", "Noir_yzs", "WangQian_yzs", "Lazy_twins_yzs", "Cayuu_yzs",
+					"LilyCommie_yzs", "LawfulXu_yzs", "toothFairy_yzs", "Halo_yzs", "LightCB_yzs", "FushiguroToji_yzs", "AomanSzy_yzs", "Yan_yzs", "KinMiho_yzs",
+					"FengCthulhu_yzs",
+				];
+				//史诗 SS
+				var pj_ss = [
+					"Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Floris_yzs",
+					"Seele_Vollerei_yzs", "TimeThief_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Ren_yzs", "BaiLu_yzs", "HaiWeier_yzs", "Rafau_yzs",
+					"GunTwins_yzs", "Cana_yzs", "AngryFeng_yzs", "Zhonghuang_yzs", "AdmiredWitch_yzs", "yzs_Youmu", "cunhe_yzs", "Patriot_yzs",
+					"DimensionWitch_yzs", "LegolaShuang_yzs", "LiTong_yzs", "VanXiongYong_yzs", "Tanya_yzs",
+					"Guanjun_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
+					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
+					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs",
+					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia",
+				];
+				//精品 S
+				var pj_s = [
+					"shenfu_Limu_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
+					"JiLiangJiTao_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs", "Stark_yzs",
+					"WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs", "Unbelieve_xiangzi_yzs", "ChainsawCock_yzs",
+					"tangjiheChao_yzs", "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
+					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
+					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs",
+					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
+					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",
+					"yzs_Kenjaku", "yzs_GetoSuguru"
+				];
+				//平凡
+				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs",
+					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs", "APPLe_yzs", "changzhang_yzs",
+					"chenxu_yzs", "lianjinzhencai_yzs", "TimeGuard_yzs", "weaponmaster_yzs",];
+
+				lib.rank.rarity.prestige ??= [];
+				lib.rank.rarity.prestige.addArray(pj_prestige);
+				lib.translate.prestige = "至臻";
+				const originalGetRarity = game.getRarity;
+				game.getRarity = function (name) {
+					if (lib.rank.rarity.prestige.includes(name)) return "prestige";
+					return originalGetRarity.apply(this, arguments);
+				};
+				const originalCreateRarity = ui.create.rarity;
+				ui.create.rarity = function (button) {
+					if (game.getRarity(button.link) !== "prestige") {
+						return originalCreateRarity.apply(this, arguments);
+					}
+					if (!lib.config.show_rarity) return;
+					const intro = button.node.intro;
+					intro.classList.add("showintro");
+					intro.dataset.nature = "prestigem";
+					intro.textContent = get.translation("prestige");
+				};
+
+				for (var i = 0; i < pj_sss.length; i++) {
+					lib.rank.rarity.legend.push(pj_sss[i]);
+				}
+				for (var i = 0; i < pj_ss.length; i++) {
+					lib.rank.rarity.epic.push(pj_ss[i]);
+				}
+				for (var i = 0; i < pj_s.length; i++) {
+					lib.rank.rarity.rare.push(pj_s[i]);
+				}
+				for (var i = 0; i < pj_a.length; i++) {
+					lib.rank.rarity.junk.push(pj_a[i]);
+				}
+			});
 			//冰【杀】
 			if (game.addNature) {
 				game.addNature("yzsIce", "冻", {
@@ -589,77 +660,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 			};
 			//卡牌
 			lib.init.js(path, "card");
-			//武将评级
-			lib.arenaReady.push(function () {
-				//至臻
-				const pj_prestige = ["NatsukiSubaru_yzs", "DarkKnight_yzs",  "jealous_witch_yzs", "Qianmian_Limu_yzs",
-					"Xiangbolin_yzs", "ChenDao_yzs", "Tenshi_yzs", "Sakuya_yzs", "UsamiSumireko_yzs"];
-				//传说 SSS
-				var pj_sss = ["HuangJOJO_yzs", "WZZS_lilixin_yzs", "Zbro_yzs", "OnionMan_yzs", "Noir_yzs", "WangQian_yzs", "Lazy_twins_yzs", "Cayuu_yzs", 
-					"LilyCommie_yzs", "LawfulXu_yzs", "toothFairy_yzs", "Halo_yzs", "LightCB_yzs", "FushiguroToji_yzs", "AomanSzy_yzs", "Yan_yzs", "KinMiho_yzs",
-					"FengCthulhu_yzs",
-				];
-				//史诗 SS
-				var pj_ss = [
-					 "Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Floris_yzs",
-					"Seele_Vollerei_yzs", "TimeThief_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Ren_yzs",  "BaiLu_yzs", "HaiWeier_yzs", "Rafau_yzs",
-					"GunTwins_yzs", "Cana_yzs", "AngryFeng_yzs", "Zhonghuang_yzs", "AdmiredWitch_yzs", "yzs_Youmu", "cunhe_yzs", "Patriot_yzs", 
-					"DimensionWitch_yzs", "LegolaShuang_yzs",  "LiTong_yzs", "VanXiongYong_yzs", "Tanya_yzs",
-					 "Guanjun_yzs",  "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
-					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
-					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs", 
-					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia",
-				];
-				//精品 S
-				var pj_s = [
-					"shenfu_Limu_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
-					"JiLiangJiTao_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs", "Stark_yzs",
-					 "WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs",  "Unbelieve_xiangzi_yzs",  "ChainsawCock_yzs",
-					 "tangjiheChao_yzs",  "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
-					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
-					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs", 
-					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
-					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",
-					"yzs_Kenjaku"
-				];
-				//平凡
-				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs", 
-					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs", "APPLe_yzs", "changzhang_yzs",
-					"chenxu_yzs", "lianjinzhencai_yzs", "TimeGuard_yzs", "weaponmaster_yzs",];
 
-				lib.rank.rarity.prestige ??= [];
-				lib.rank.rarity.prestige.addArray(pj_prestige);
-				lib.translate.prestige = "至臻";
-				const originalGetRarity = game.getRarity;
-				game.getRarity = function (name) {
-					if (lib.rank.rarity.prestige.includes(name)) return "prestige";
-					return originalGetRarity.apply(this, arguments);
-				};
-				const originalCreateRarity = ui.create.rarity;
-				ui.create.rarity = function (button) {
-					if (game.getRarity(button.link) !== "prestige") {
-						return originalCreateRarity.apply(this, arguments);
-					}
-					if (!lib.config.show_rarity) return;
-					const intro = button.node.intro;
-					intro.classList.add("showintro");
-					intro.dataset.nature = "prestigem";
-					intro.textContent = get.translation("prestige");
-				};
-
-				for (var i = 0; i < pj_sss.length; i++) {
-					lib.rank.rarity.legend.push(pj_sss[i]);
-				}
-				for (var i = 0; i < pj_ss.length; i++) {
-					lib.rank.rarity.epic.push(pj_ss[i]);
-				}
-				for (var i = 0; i < pj_s.length; i++) {
-					lib.rank.rarity.rare.push(pj_s[i]);
-				}
-				for (var i = 0; i < pj_a.length; i++) {
-					lib.rank.rarity.junk.push(pj_a[i]);
-				}
-			});
 		},
 		content: function (config, pack) {
 			//【更新说明】
@@ -670,7 +671,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				},
 				{
 					type: "players", data: [
-						"yzs_Laetitia"
+						"yzs_Laetitia",
+						"yzs_GetoSuguru"
 					]
 				},
 				{
@@ -681,7 +683,9 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					type: "players", data: [
 						"CMoon_EnricoPucci_yzs",
 						"SCP079_yzs",
-						"SCP106_yzs"
+						"SCP106_yzs",
+						"yzs_ThreeBirds",
+						"yzs_JoGo"
 					]
 				},
 			];

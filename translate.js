@@ -208,7 +208,8 @@ const translates = {
 	yzs_Mahito: `真人`,
 	yzs_Ishigoriryu: `石流龙`,
 	yzs_Kenjaku: `羂索`,
-	yzs_Laetitia:`蕾蒂希娅`,
+	yzs_Laetitia: `蕾蒂希娅`,
+	yzs_GetoSuguru:`夏油杰`,
 
     // 技能台词
 
@@ -409,7 +410,7 @@ const translates = {
 	juece_yzs_info:`你不因此失去手牌后可摸1张牌，并分配或置底1张手牌，然后若你手牌数或本技能本回合发动次数>体力上限，本回合本技能失效。`,
 	xinsega_yzs: "新世界",
 	xinsega_yzs_dn:"新世界",
-	xinsega_yzs_info: `使命技：失败：你即将死亡时：你扣除一半体力上限并恢复全部体力，此后每公轮结束时你视为使用【死亡笔记】。`,
+	xinsega_yzs_info: `使命技：失败：你即将死亡时：你扣除一半体力上限(向下取整)并恢复全部体力，此后每公轮结束时你视为使用【死亡笔记】。`,
 	zhitui_yzs_global: "质推",
 
 	animal_yzs: "动物牌",
@@ -2041,7 +2042,7 @@ const translates = {
 	yzs_ezhao: `厄兆`,
 	yzs_ezhao_info: `锁定技：每项限1次：准备阶段，你删除【惩戒/审判/监视】的首句描述。均删除后，失去本技能并获得${get.poptip("yzs_zhongmo")}。`,
 	yzs_zhongmo: `终末`,
-	yzs_zhongmo_info: `锁定技：你受到伤害时，若此伤害≥你体力值，改为扣除1点体力上限并摸2张牌。你体力上限下降至4/2时，失去【惩戒/审判/监视】其中一个技能。`,
+	yzs_zhongmo_info: `锁定技：你进入濒死时，可失去【惩戒/审判/监视】其中一个技能，然后恢复体力至2点并摸3张牌。`,
 
 	yzs_SixEyes: `六眼`,
 	yzs_SixEyes_info: `锁定技：每公轮开始时，你可摸体力上限张牌，然后失去1点体力`,
@@ -2115,6 +2116,11 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_songniliwu_info: `每回合限1次：你对其他角色造成伤害后获得1张${get.poptip("yzs_gift")}，然后可给予受伤角色1张牌以刷新本技能。`,
 	yzs_jingxilihe: `惊喜礼盒`,
 	yzs_jingxilihe_info: `出牌阶段限1次：你选择1名其他角色，你获得2张${get.poptip("yzs_gift")}，然后其选择：①获得你1张手牌；②你视为对其使用【决斗】。然后你弃置因此获得的【礼物】。`,
+
+	yzs_kuxia: `苦夏`,
+	yzs_kuxia_info: `使命技：其他角色成为【杀】的目标时，若你不为目标或使用者，你可转移目标给你。若你未响应此【杀】，本技能本轮失效。<br>失败：有角色死亡后：你获得${get.poptip("yzs_baiguiyexing")}。`,
+	yzs_baiguiyexing: `百鬼夜行`,
+	yzs_baiguiyexing_info:`限定技：出牌阶段，你可选择1名其他角色。由其开始，你对每名其他角色依次执行流程：你与其需对对方使用1张牌，否则弃置1张牌。你两项均不能执行时，终止本流程。`,
 };
 
 export default translates;
