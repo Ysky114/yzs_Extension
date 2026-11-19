@@ -396,7 +396,7 @@ const dynamicTranslates = {
 		return `出牌阶段限${player.countMark("CrimsonShadow_yzs") + 1}次：你摸1张牌，然后视为使用${get.poptip("wugu")}，因此获得红色牌的其他角色于本回合不可使用或打出牌。`
 	},
 	MadeInAbyss_yzs(player){
-		let str = `${get.poptip("zhuanlunji_yzs")}：你使用或打出牌时，若之点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>`;
+		let str = `转换技：你使用或打出牌时，若之为本回合你使用或打出的首张牌，或点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>`;
 		if (player.countMark("MadeInAbyss_yzs") == 0) str += `<font color="#ffeac2">①重铸1张牌</font> `
 		else str += `①重铸1张牌 `
 		if (player.countMark("MadeInAbyss_yzs") == 1) str += `<font color="#ffeac2">②弃置1张牌</font> `

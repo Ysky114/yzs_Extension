@@ -787,7 +787,7 @@ const characters = {
 	Frieren_yzs: {
 		sex: "female",
 		group: "wei",
-		hp: 3,
+		hp: 4,
 		skills: ["tonglv_yzs", "cangfa_yzs","tanbao_yzs"],
 		names: "芙莉莲",
 		img: "extension/一中杀/image/Frieren_yzs.png",

@@ -6750,13 +6750,8 @@ const skills = {
 			if (!event.targets?.length) return false;
 			return true;
 		},
-		frequent: true,
-		check(event, player) {
-			return true;
-		},
-		async content(event, trigger, player) {
-			let card = false;
-			let result = await player.chooseToDiscard(`你可摸或弃1张牌并展示之（不弃则摸），<br>若之花色为${get.translation(get.suit(trigger.card, false))}，令${get.translation(trigger.player)}摸或弃1张牌；否则本技能本回合失效`)
+		async cost(event, trigger, player) {
+			event.result = await player.chooseToDiscard([0,1],`你可摸或弃1张牌并展示之（不弃则摸），<br>若之花色为${get.translation(get.suit(trigger.card, false))}，令${get.translation(trigger.player)}摸或弃1张牌；否则本技能本回合失效`)
 				.set("ai", (card) => {
 					const player = get.event().player;
 					const target = get.event().target;
@@ -6772,9 +6767,13 @@ const skills = {
 				})
 				.set("suit", get.suit(trigger.card, false))
 				.set("target", trigger.player)
+				.set("chooseonly", true)
 				.forResult();
-			if (result?.bool && result.cards?.length) {
-				card = result.cards[0];
+		},
+		async content(event, trigger, player) {
+			let card = false;
+			if (event.cards?.length) {
+				card = event.cards[0];
 			} else {
 				let result2 = await player.draw().forResult();
 				if (result2.cards?.length) {

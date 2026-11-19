@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.3";
+const EXTENSION_VERSION = "0.99.3.1";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -56,26 +56,25 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				];
 				//史诗 SS
 				var pj_ss = [
-					"Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Floris_yzs",
+					"Jovanlin_yzs", "lianhua_yzs", "yagamiLight_yzs", "Floris_yzs", "yzs_Kenjaku", "yzs_GetoSuguru",
 					"Seele_Vollerei_yzs", "TimeThief_yzs", "QiGongMaster_yzs", "yinBochen_yzs", "Ren_yzs", "BaiLu_yzs", "HaiWeier_yzs", "Rafau_yzs",
 					"GunTwins_yzs", "Cana_yzs", "AngryFeng_yzs", "Zhonghuang_yzs", "AdmiredWitch_yzs", "yzs_Youmu", "cunhe_yzs", "Patriot_yzs",
-					"DimensionWitch_yzs", "LegolaShuang_yzs", "LiTong_yzs", "VanXiongYong_yzs", "Tanya_yzs",
+					"DimensionWitch_yzs", "LegolaShuang_yzs", "LiTong_yzs", "VanXiongYong_yzs", "Tanya_yzs", "SCP096_yzs",
 					"Guanjun_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
 					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
-					"Riko_yzs", "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs",
+					 "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs",
 					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia",
 				];
 				//精品 S
 				var pj_s = [
 					"shenfu_Limu_yzs", "Chino_yzs", "ChengGuixiang_yzs", "BoFengShuiKun_yzs", "YanLaFeng_yzs", "yzs_Mazhikang",
 					"JiLiangJiTao_yzs", "Reze_yzs", "Alastor_yzs", "LoverW_yzs", "DomenicoPucci_yzs", "Arlecchino_yzs", "Stark_yzs",
-					"WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs", "Unbelieve_xiangzi_yzs", "ChainsawCock_yzs",
+					"WhiteSnake_EnricoPucci_yzs", "wuyingYFY_yzs", "Unbelieve_xiangzi_yzs", "ChainsawCock_yzs", "Riko_yzs",
 					"tangjiheChao_yzs", "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
 					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs",
-					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP096_yzs", "SCP173_yzs",
-					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",
-					"yzs_Kenjaku", "yzs_GetoSuguru"
+					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs",  "SCP173_yzs",
+					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",		
 				];
 				//平凡
 				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs",

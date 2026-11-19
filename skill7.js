@@ -3032,13 +3032,14 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			}
 		},
 		locked: true,
+		forced:true,
 		audio: "ext:一中杀/audio/skill:3",
 		priority: 80,
 		trigger: {
 			player: "recoverBegin"
 		},
 		filter(event, player) {
-			return player.maxHp < 8;
+			return player.maxHp < 8 && !player.isDying();
 		},
 		prompt2(event, player) {
 			return `你即将恢复${event.num}点体力。你可改为增加1点体力上限`

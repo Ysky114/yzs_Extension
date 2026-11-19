@@ -1,6 +1,6 @@
 {
-  "version": "0.99.3",
-  "update": "0.99.3",
+  "version": "0.99.3.1",
+  "update": "0.99.3.1",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -699,10 +699,10 @@
     "audio/雨爱.mp3": "dd0902a361b41b31649b033bfc5d6bb327496f7b",
     "audio/霹靂.mp3": "f3fe69877b0d87b0977a0cdea1c3206a1982c599",
     "card.js": "613bda48e5608b2b515c5965c63176ba0372b179",
-    "character.js": "ed45e4739779bbcaa00e2d267368ccd3fa4f112c",
-    "dynamicTranslate.js": "259f0239aa7b8d2421fced99d86db63a319ea81c",
+    "character.js": "497e0943ee5545ac35cab87eec0f48f019582751",
+    "dynamicTranslate.js": "bfbf3cd949210386cd4cc21fbce77414b9a1e357",
     "extension.css": "569dcf6bab5e306372478014b08c0de9bd48c57b",
-    "extension.js": "a54e9ea30737fdcf8331e1760b67b2e8c6d3093b",
+    "extension.js": "d250c2fb8dd8ee16e9122050a234d5b800e01433",
     "func/media.js": "a000704e60b824bf78b13587c85de21145c190a1",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "ae7ead135a57bb9fe4b9be9036293fc61245c217",
@@ -1107,12 +1107,12 @@
     "skill.js": "dd9918554f3d4c88e03c5c920ab7361dc3158caa",
     "skill1.js": "ad2e84504f7b577a6b913798bd629191933441a2",
     "skill2.js": "8e767508b91a2ce4af4d74632cef303304f65623",
-    "skill3.js": "e7e4bad80914f0242532c7decac7e08015a4d24f",
+    "skill3.js": "aa3b7eceb9aa28819b272494ac5a5b7b6eb3a78c",
     "skill4.js": "19636a7a364b39ec6ad95e3c6f4254d6cd368062",
     "skill5.js": "812f0f0c5b3ee0120a60a83fc892977fdc200931",
-    "skill6.js": "c2fe7859b7c3bf11ded070d2c617d1e54af3dfa8",
-    "skill7.js": "e459d9fc01c21e3f78fceca2db834b7ced0a5fe9",
-    "translate.js": "418aeb3970c3cfbf145a0960ec87e8712835217e",
+    "skill6.js": "0a0c09118dda104321458688885618096abbb7ce",
+    "skill7.js": "50f9b07c88c9f1a6f609f33275d970bf613a1ebd",
+    "translate.js": "2e176ed8a39478f436aaf4c51bb34d741eb5bec1",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }
 }

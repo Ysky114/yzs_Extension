@@ -4750,7 +4750,7 @@ const skills = {
 	//莉可
 	MadeInAbyss_yzs: {
 		derivation: ["BlazeLeap_yzs", "YourWorth_yzs"],
-		group: ["MadeInAbyss_yzs_draw", "MadeInAbyss_yzs_renew", "MadeInAbyss_yzs_end"],
+		group: ["MadeInAbyss_yzs_renew", "MadeInAbyss_yzs_end"],
 		subSkill: {
 			record: {
 				onremove(player, skill) {
@@ -4848,6 +4848,7 @@ const skills = {
 			if (!player.countMark("MadeInAbyss_yzs_record")) {
 				player.setMark("MadeInAbyss_yzs_record", Math.max(number, 1), false)
 				player.addTip("MadeInAbyss_yzs_record", "来自深渊 ≤" + player.countMark("MadeInAbyss_yzs_record"), false);
+				await player.draw();
 				if (number == 1) {
 					player.setMark("MadeInAbyss_yzs", (player.countMark("MadeInAbyss_yzs") + 1) % 7, false);
 					player.popup(`深界${get.cnNumber(player.countMark("MadeInAbyss_yzs") + 1)}层`)

@@ -1171,9 +1171,9 @@ const translates = {
 失败：牌堆洗切后：你失去【自由意志】，此后【指令】被达成后你分配1点伤害。`,
 	
 	MadeInAbyss_yzs: `来自深渊`,
-	MadeInAbyss_yzs_info: `转换技：你使用或打出牌时，若之点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>
+	MadeInAbyss_yzs_info: `转换技：你使用或打出牌时，若之为本回合你使用或打出的首张牌，或点数≤本回合你使用或打出的上张牌，摸1张牌，否则你：<br>
 <font color="#ffeac2">①重铸1张牌</font> ②弃置1张牌 ③弃置全部手牌 ④失去2点体力 ⑤翻至背面 ⑥失去全部通常技和体力 ⑦死亡。<br>
-然后若之点数为A，转换至下一项。你摸牌数为当前项序号。<br>
+然后若之点数为A，转换至下一项。<br>
     转换至②/⑤时，你获得${get.poptip("BlazeLeap_yzs")}/${get.poptip("YourWorth_yzs")}。<br>
     出牌阶段若当前项为⑦，你可失去本技能，然后令任意名角色重新加入游戏（无初始手牌）。`,
 	BlazeLeap_yzs: `无尽锤`,
@@ -1838,7 +1838,7 @@ const translates = {
 	})}。`,
 
 	yzs_fanzhuan: `翻转`,
-	yzs_fanzhuan_info:`你使用【杀】对其他角色造成伤害时，可改为令失去2点体力。`,
+	yzs_fanzhuan_info:`你使用【杀】对其他角色造成伤害时，可改为令其失去2点体力。`,
 	Gravity_yzs: `重力`,
 	Gravity_yzs_info: `锁定技：每轮开始时，你执行额外回合。此回合内你使用牌无距离限制，且使用牌结算后可与其中1名目标角色交换座次。`,
 	Singularity_yzs: `奇点`,
@@ -2086,7 +2086,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_suhun: `塑魂`,
 	yzs_suhun_info: `出牌阶段，你可弃置任意角色装备区内1张牌，然后令其恢复或失去1点体力。若弃置的不为因${get.poptip("yzs_wuweizhuanbian")}而装备的牌，本技能本阶段失效。`,
 	yzs_tuisheng: `蜕生`,
-	yzs_tuisheng_info: `锁定技：你恢复体力时，若你体力上限<8，可改为增加1点体力上限。你体力上限首次增加至6/8时，获得${get.poptip("yzs_zibiyuandunguo")}/${get.poptip("yzs_bianshajilingti")}。`,
+	yzs_tuisheng_info: `锁定技：你不于濒死状态下恢复体力时，若你体力上限<8，增加1点体力上限。你体力上限首次增加至6/8时，获得${get.poptip("yzs_zibiyuandunguo")}/${get.poptip("yzs_bianshajilingti")}。`,
 	yzs_zibiyuandunguo: `自闭圆顿裹`,
 	yzs_zibiyuandunguo_info: `限定技：${get.poptip("lingyuzhankai_yzs")}：你使用的【杀】无视防具且不可响应。其他角色回合结束时，你视为对其使用普通【杀】。`,
 	yzs_zibiyuandunguo_skill: `自闭圆顿裹`,
@@ -2120,7 +2120,8 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_kuxia: `苦夏`,
 	yzs_kuxia_info: `使命技：其他角色成为【杀】的目标时，若你不为目标或使用者，你可转移目标给你。若你未响应此【杀】，本技能本轮失效。<br>失败：有角色死亡后：你获得${get.poptip("yzs_baiguiyexing")}。`,
 	yzs_baiguiyexing: `百鬼夜行`,
-	yzs_baiguiyexing_info:`限定技：出牌阶段，你可选择1名其他角色。由其开始，你对每名其他角色依次执行流程：你与其需对对方使用1张牌，否则弃置1张牌。你两项均不能执行时，终止本流程。`,
+	yzs_baiguiyexing_info: `限定技：出牌阶段，你可选择1名其他角色。由其开始，你对每名其他角色依次执行流程：你与其需对对方使用1张牌，否则弃置1张牌。你两项均不能执行时，终止本流程。`,
+
 };
 
 export default translates;
