@@ -3543,7 +3543,12 @@ const skills = {
 			game.broadcastAll((imagePath, zIndex, id, inside) => {
 				if (inside.includes(game.me)) {
 					let img = document.getElementById(id);
-					if (img) return;
+					if (img) {
+						clearTimeout(img._yzsRemoveTimer);
+						delete img._yzsRemoveTimer;
+						img.style.opacity = "1";
+						return;
+					}
 					img = game.yzs_createEffectMedia("img");
 					img.id = id; // 给图片加上唯一标识
 					img.src = imagePath;
@@ -3559,13 +3564,14 @@ const skills = {
 					img.style.transition = "opacity 0.5s ease-out";
 					document.body.appendChild(img);
 					setTimeout(() => {
-						img.style.opacity = "1";
+						if (!img._yzsRemoveTimer && img.isConnected) img.style.opacity = "1";
 					}, 50);
 				} else {
 					let img = document.getElementById(id);
 					if (img) {
 						img.style.opacity = "0";
-						setTimeout(() => {
+						clearTimeout(img._yzsRemoveTimer);
+						img._yzsRemoveTimer = setTimeout(() => {
 							img.remove(); // 渐隐后移除
 						}, 600);
 					}

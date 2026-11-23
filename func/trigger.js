@@ -866,7 +866,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 		forceOut: true,
 		popup: false,
 		onremove(player) {
-			if (_status.tempMusic != player.storage.removeBgmOL) return;
+			if (!player.storage.removeBgmOL || _status.tempMusic != player.storage.removeBgmOL) return;
 			game.broadcastAll(() => {
 				delete _status.tempMusic;
 				game.yzs_playBackgroundMusic();
@@ -878,7 +878,7 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			player: "die"
 		},
 		filter(event, player) {
-			return _status.tempMusic = player.storage.removeBgmOL;
+			return !!player.storage.removeBgmOL && _status.tempMusic === player.storage.removeBgmOL;
 		},
 		async content(event,trigger,player) {
 			game.broadcastAll(() => {
@@ -915,7 +915,8 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				var img = document.getElementById(id);
 				if (img) {
 					img.style.opacity = "0";
-					setTimeout(() => {
+					clearTimeout(img._yzsRemoveTimer);
+					img._yzsRemoveTimer = setTimeout(() => {
 						img.remove(); // 渐隐后移除
 					}, 600);
 				}
@@ -935,7 +936,8 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 				var img = document.getElementById(id);
 				if (img) {
 					img.style.opacity = "0";
-					setTimeout(() => {
+					clearTimeout(img._yzsRemoveTimer);
+					img._yzsRemoveTimer = setTimeout(() => {
 						img.remove(); // 渐隐后移除
 					}, 600);
 				}
@@ -948,12 +950,20 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 	//联机切换背景图片(持续时间到特定游戏时机或玩家死亡)
 	lib.element.player.addTempBackGroundOL = function (path, zIndex = "0", expire) {
 		const player = this;
+		const previousId = player.storage.removeBackGroundOL;
 		var imagePath = lib.assetURL + path;//例："/extension/一中杀/image/background/BitetheDust_yzs.gif"
 		// 创建一个唯一的ID来标识这个背景
 		var id = Math.random().toString(36).slice(-8);
 
 		// 2. 广播创建图片
-		game.broadcastAll((imagePath, zIndex, id) => {
+		game.broadcastAll((imagePath, zIndex, id, previousId) => {
+			// 同一角色再次换背景时清理旧节点，避免覆盖 storage 后旧背景无人移除。
+			const previous = previousId && document.getElementById(previousId);
+			if (previous) {
+				previous.style.opacity = "0";
+				clearTimeout(previous._yzsRemoveTimer);
+				previous._yzsRemoveTimer = setTimeout(() => previous.remove(), 600);
+			}
 			var img = game.yzs_createEffectMedia("img");
 			img.id = id; // 给图片加上唯一标识
 			img.src = imagePath;
@@ -969,9 +979,9 @@ window.yzs = function (lib, game, ui, get, ai, _status) {
 			img.style.transition = "opacity 0.5s ease-out";
 			document.body.appendChild(img);
 			setTimeout(() => {
-				img.style.opacity = "1";
+				if (!img._yzsRemoveTimer && img.isConnected) img.style.opacity = "1";
 			}, 50);
-		}, imagePath, zIndex, id);
+		}, imagePath, zIndex, id, previousId);
 
 		// 3. 将 ID 存入 player 的 storage 供后续调用
 		player.setStorage("removeBackGroundOL", id);

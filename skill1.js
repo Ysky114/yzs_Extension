@@ -4967,30 +4967,7 @@ const skills = {
 					_status.tempMusic = `ext:一中杀/audio/Zoltraak.mp3`;
 					game.yzs_playBackgroundMusic();
 
-					var background = game.yzs_createEffectMedia("img");
-					background.className = "background";
-					window._currentDynamicBackground = background;
-					Object.assign(background, {
-						src: lib.assetURL + "/extension/一中杀/image/background/Zoltraak.jpg",
-					})
-					Object.assign(background.style, {
-						position: "fixed",
-						left: "0",
-						top: "0",
-						width: "100%",
-						height: "100%",
-						objectFit: "cover",
-						minWidth: "100vw",
-						minHeight: "100vh",
-						opacity: "0",//透明度
-						pointerEvents: "none",//不阻挡点击事件
-						zIndex: "0",
-						transition: "opacity 0.5s ease-out",
-					})
-					document.body.appendChild(background);
-					setTimeout(() => {
-						background.style.opacity = "1";
-					}, 50)
+					game.yzs_setMusicBackground("/extension/一中杀/image/background/Zoltraak.jpg");
 
 					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
@@ -5002,9 +4979,13 @@ const skills = {
 				game.broadcastAll(() => {
 					_status.tempMusic = `ext:一中杀/audio/Zoltraak.mp3`;
 					game.yzs_playBackgroundMusic();
+
+					game.yzs_setMusicBackground("/extension/一中杀/image/background/Zoltraak2.jpg");
+
 					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
 						game.yzs_playBackgroundMusic();
+
 					}, { once: true });
 				});
 			}

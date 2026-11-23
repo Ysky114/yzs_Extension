@@ -883,39 +883,11 @@ const skills = {
 					_status.tempMusic = `ext:一中杀/audio/KING.mp3`;
 					game.yzs_playBackgroundMusic();
 
-					var background = game.yzs_createEffectMedia("img");
-					background.className = "background";
-					window._currentDynamicBackground = background;
-					Object.assign(background, {
-						src: lib.assetURL + "/extension/一中杀/image/background/caijue_yzs.png",
-					})
-					Object.assign(background.style, {
-						position: "fixed",
-						left: "0",
-						top: "0",
-						width: "100%",
-						height: "100%",
-						objectFit: "cover",
-						minWidth: "100vw",
-						minHeight: "100vh",
-						opacity: "0",//透明度
-						pointerEvents: "none",//不阻挡点击事件
-						zIndex: "0",
-						transition: "opacity 0.5s ease-out",
-					})
-					document.body.appendChild(background);
-					setTimeout(() => {
-						background.style.opacity = "1";
-					}, 50)
+					game.yzs_setMusicBackground("/extension/一中杀/image/background/caijue_yzs.png");
 
 					game.yzs_onBackgroundMusicEnd(() => {
 						delete _status.tempMusic;
 						game.yzs_playBackgroundMusic();
-
-						background.style.opacity = "0";
-						setTimeout(() => {
-							background.remove();
-						}, 1000)//1s后移除视频
 
 					}, { once: true });
 				}, player)
@@ -1707,30 +1679,7 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/勇者.mp3`;
 						game.yzs_playBackgroundMusic();
 
-						var background = game.yzs_createEffectMedia("img");
-						background.className = "background";
-						window._currentDynamicBackground = background;
-						Object.assign(background, {
-							src: lib.assetURL + "/extension/一中杀/image/background/tonglv_yzs_start.png",
-						})
-						Object.assign(background.style, {
-							position: "fixed",
-							left: "0",
-							top: "0",
-							width: "100%",
-							height: "100%",
-							objectFit: "cover",
-							minWidth: "100vw",
-							minHeight: "100vh",
-							opacity: "0",//透明度
-							pointerEvents: "none",//不阻挡点击事件
-							zIndex: "0",
-							transition: "opacity 0.5s ease-out",
-						})
-						document.body.appendChild(background);
-						setTimeout(() => {
-							background.style.opacity = "1";
-						}, 50)
+						game.yzs_setMusicBackground("/extension/一中杀/image/background/tonglv_yzs_start.png");
 
 						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;
@@ -5361,30 +5310,7 @@ const skills = {
 						_status.tempMusic = `ext:一中杀/audio/Deep in Abyss.mp3`;
 						game.yzs_playBackgroundMusic();
 
-						var background = game.yzs_createEffectMedia("img");
-						background.className = "background";
-						window._currentDynamicBackground = background;
-						Object.assign(background, {
-							src: lib.assetURL + "/extension/一中杀/image/background/huozangpao_yzs_start.jpg",
-						})
-						Object.assign(background.style, {
-							position: "fixed",
-							left: "0",
-							top: "0",
-							width: "100%",
-							height: "100%",
-							objectFit: "cover",
-							minWidth: "100vw",
-							minHeight: "100vh",
-							opacity: "0",//透明度
-							pointerEvents: "none",//不阻挡点击事件
-							zIndex: "0",
-							transition: "opacity 0.5s ease-out",
-						})
-						document.body.appendChild(background);
-						setTimeout(() => {
-							background.style.opacity = "1";
-						}, 50)
+						game.yzs_setMusicBackground("/extension/一中杀/image/background/huozangpao_yzs_start.jpg");
 
 						game.yzs_onBackgroundMusicEnd(() => {
 							delete _status.tempMusic;

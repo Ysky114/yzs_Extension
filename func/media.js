@@ -167,23 +167,73 @@ export function installMediaGuards(lib, game, ui, _status) {
 		return audio;
 	};
 
+	function removeMusicBackground(request) {
+		const background = request?.background;
+		if (!background) return;
+		request.background = null;
+		clearTimeout(request.backgroundTimer);
+		background.style.opacity = "0";
+		// 闭包只持有旧节点，后来的背景不会被这个淡出计时器删除。
+		setTimeout(() => background.remove(), 500);
+	}
+
+	game.yzs_setMusicBackground = function (path) {
+		const request = musicRequest;
+		if (!request || request.cancelled || request.completed) return null;
+		removeMusicBackground(request);
+		const background = game.yzs_createEffectMedia("img");
+		request.background = background;
+		background.className = "background";
+		background.src = path;
+		Object.assign(background.style, {
+			position: "fixed", left: "0", top: "0", width: "100%", height: "100%",
+			objectFit: "cover", minWidth: "100vw", minHeight: "100vh", opacity: "0",
+			pointerEvents: "none", zIndex: "0", transition: "opacity 0.5s ease-out",
+		});
+		document.body.appendChild(background);
+		request.backgroundTimer = setTimeout(() => {
+			if (musicRequest === request && !request.cancelled && !request.completed && request.background === background) {
+				background.style.opacity = "1";
+			}
+		}, 50);
+		return background;
+	};
+
 	game.yzs_playBackgroundMusic = function () {
 		const music = _status.tempMusic || lib.config.background_music;
 		const previousSource = ui.backgroundMusic.getAttribute("src");
-		const request = { music, callbacks: [], readyCallbacks: [], ready: false, failed: false };
-		musicRequest?.cleanup?.();
+		const request = { music, callbacks: [], readyCallbacks: [], ready: false, started: false, failed: false, completed: false, cancelled: false, source: previousSource };
+		musicRequest?.cancel?.();
 		musicRequest = request;
-		const finish = event => {
-			if (musicRequest !== request) return;
-			request.cleanup?.();
-			for (const callback of request.callbacks.splice(0)) callback.call(ui.backgroundMusic, event);
+		const current = () => musicRequest === request && !request.cancelled;
+		const ownsSource = () => ui.backgroundMusic.getAttribute("src") === request.source;
+		const deliver = () => {
+			// 某个回调开始新曲目后，剩下的旧回调不能再清空新曲目的 tempMusic。
+			while (current() && request.callbacks.length) {
+				request.callbacks.shift().call(ui.backgroundMusic, request.endEvent);
+			}
 		};
-		const ended = event => { if (request.ready) finish(event); };
+		const finish = event => {
+			if (!current() || request.completed) return;
+			request.completed = true;
+			request.endEvent = event;
+			request.cleanup?.();
+			removeMusicBackground(request);
+			deliver();
+		};
+		const ended = event => {
+			if (!current() || !ownsSource()) return;
+			// 原生 ended 监听器会立刻重播并赋值 src。先处理本请求，避免它抢先切曲。
+			// 新曲目开始后才到达的旧 ended 事件，不代表当前音轨已经结束。
+			if (!ui.backgroundMusic.ended) { event.stopImmediatePropagation(); return; }
+			if (!request.ready || request.callbacks.length) event.stopImmediatePropagation();
+			if (request.ready) finish(event);
+		};
 		const failed = event => {
-			if (musicRequest !== request || request.failed) return;
+			if (!current() || request.completed) return;
 			request.failed = true;
 			finish(event);
-			if (musicRequest === request) {
+			if (current()) {
 				if (_status.tempMusic === music) delete _status.tempMusic;
 				if (previousSource && ui.backgroundMusic.getAttribute("src") !== previousSource) {
 					ui.backgroundMusic.src = previousSource;
@@ -192,27 +242,50 @@ export function installMediaGuards(lib, game, ui, _status) {
 			}
 		};
 		const canplay = event => {
-			if (musicRequest !== request || !request.ready) return;
-			for (const callback of request.readyCallbacks.splice(0)) callback.call(ui.backgroundMusic, event);
-		};
-		ui.backgroundMusic.addEventListener("ended", ended);
-		ui.backgroundMusic.addEventListener("canplay", canplay);
-		ui.backgroundMusic.addEventListener("error", failed);
-		request.cleanup = () => {
-			ui.backgroundMusic.removeEventListener("ended", ended);
-			ui.backgroundMusic.removeEventListener("canplay", canplay);
-			ui.backgroundMusic.removeEventListener("error", failed);
-		};
-		request.finish = finish;
-		if (typeof music !== "string" || !music.startsWith("ext:一中杀/") || lib.config.background_music === "music_off" || _status._aozhan) {
+			if (!current() || !request.started || !ownsSource() || ui.backgroundMusic.readyState < 2 || ui.backgroundMusic.currentSrc !== ui.backgroundMusic.src) return;
 			request.ready = true;
-			return game.playBackgroundMusic();
+			while (current() && request.readyCallbacks.length) request.readyCallbacks.shift().call(ui.backgroundMusic, event);
+		};
+		const error = event => {
+			// 预检期间播放器仍是旧曲目；它的 error 不能判定新音乐加载失败。
+			if (request.started && ownsSource() && ui.backgroundMusic.error) failed(event);
+		};
+		const loadstart = () => {
+			// 游戏设置或其他扩展直接换曲时，只撤销旧请求，不执行其换曲回调。
+			if (current() && !ownsSource()) request.cancel();
+		};
+		ui.backgroundMusic.addEventListener("ended", ended, true);
+		ui.backgroundMusic.addEventListener("canplay", canplay);
+		ui.backgroundMusic.addEventListener("error", error);
+		ui.backgroundMusic.addEventListener("loadstart", loadstart);
+		request.cleanup = () => {
+			ui.backgroundMusic.removeEventListener("ended", ended, true);
+			ui.backgroundMusic.removeEventListener("canplay", canplay);
+			ui.backgroundMusic.removeEventListener("error", error);
+			ui.backgroundMusic.removeEventListener("loadstart", loadstart);
+		};
+		request.cancel = () => {
+			request.cancelled = true;
+			request.cleanup();
+			request.callbacks.length = request.readyCallbacks.length = 0;
+			removeMusicBackground(request);
+		};
+		request.deliver = deliver;
+		const start = () => {
+			request.started = true;
+			game.playBackgroundMusic();
+			request.source = ui.backgroundMusic.getAttribute("src");
+			if (lib.config.background_music === "music_off" || _status._aozhan) finish(new Event("ended"));
+		};
+		if (typeof music !== "string" || !music.startsWith("ext:一中杀/") || lib.config.background_music === "music_off" || _status._aozhan) {
+			start();
+			return;
 		}
 		checkResource(music, "audio").then(ok => {
-			if (musicRequest !== request || (_status.tempMusic || lib.config.background_music) !== music) return;
+			if (!current()) return;
+			if ((_status.tempMusic || lib.config.background_music) !== music) return request.cancel();
 			if (ok) {
-				request.ready = true;
-				game.playBackgroundMusic();
+				start();
 			} else {
 				// 没有后续曲目时保留原音乐，避免缺文件导致背景音乐一直暂停。
 				failed(new Event("ended"));
@@ -223,13 +296,14 @@ export function installMediaGuards(lib, game, ui, _status) {
 	game.yzs_onBackgroundMusicEnd = function (callback) {
 		if (!musicRequest) return ui.backgroundMusic.addEventListener("ended", callback, { once: true });
 		const request = musicRequest;
+		if (request.cancelled) return;
 		request.callbacks.push(callback);
-		if (request.failed) Promise.resolve().then(() => request.finish(new Event("ended")));
+		if (request.completed) Promise.resolve().then(request.deliver);
 	};
 
 	game.yzs_seekBackgroundMusic = function (time) {
 		const request = musicRequest;
-		if (!request || request.failed) return;
+		if (!request || request.failed || request.cancelled || request.completed) return;
 		const seek = () => {
 			if (musicRequest === request) ui.backgroundMusic.currentTime = time;
 		};

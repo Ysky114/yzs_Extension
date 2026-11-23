@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.4.1";
+const EXTENSION_VERSION = "0.99.4.2";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -571,38 +571,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				lib.translate.cixiong_skill_info="当你使用【杀】指定目标角色后，你可以弃置一张手牌，令其选择一项：1.弃置一张手牌；2.令你摸一张牌。";
 				lib.translate.cixiong_info = "当你使用【杀】指定目标角色后，你可以弃置一张手牌，令其选择一项：1.弃置一张手牌；2.令你摸一张牌。";
 			}
-			//动态音乐图片兼容			
-			(function () {
-				// 1. 找到 HTML 音频元素的原型
-				var proto = HTMLAudioElement.prototype;
-				// 2. 获取原始的 src 描述符（从原型链获取）
-				var descriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
-				var oldSet = descriptor.set;
-
-				Object.defineProperty(proto, 'src', {
-					set: function (val) {
-						// 关键点：我们只拦截 ui.backgroundMusic 的 src 变化
-						// 避免误伤游戏中其他的音效（如技能声效、按钮点击声）
-						if (window.ui && this === ui.backgroundMusic) {
-							if (window._currentDynamicBackground) {
-								var bg = window._currentDynamicBackground;
-								bg.style.opacity = "0";
-								setTimeout(function () {
-									// 同样在这里加入判断
-									if (bg && bg.parentNode === document.body) {
-										document.body.removeChild(bg);
-									}
-								}, 500);
-								window._currentDynamicBackground = null;
-							}
-						}
-						// 3. 执行原始的赋值
-						return oldSet.apply(this, arguments);
-					},
-					get: descriptor.get,
-					configurable: true
-				});
-			})();
+			// 音乐背景由 func/media.js 按播放请求管理，不再拦截所有音频元素的 src。
 			// 导入角色
 			game.import('character', function () {
 				const banRarities = ["rare", "epic", "legend", "prestige"];
@@ -690,7 +659,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 						"SCP079_yzs",
 						"SCP106_yzs",
 						"yzs_ThreeBirds",
-						"yzs_JoGo"
+						"yzs_JoGo",
+						"yzs_Remilia_Scarlet"
 					]
 				},
 			];
