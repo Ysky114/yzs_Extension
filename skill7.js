@@ -2534,14 +2534,15 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				onremove: true,
 			},
 			count: {
+				popup: false,
 				forced: true,
 				priority: 29,
 				trigger: {
-					player: "taoBegin"
+					global: "taoBegin"
 				},
 				filter(event, player) {
 					if (player.countMark("yzs_qikuo_nosukuna")) return false;
-					return true
+					return event.target == player;
 				},
 				async content(event, trigger, player) {
 					player.addTempSkill("yzs_suzhou_count2");
@@ -2603,6 +2604,10 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		frequent: true,
 		check(event, player) {
+			return true;
+		},
+		filter(event, player) {
+			if (event.getParent().name == "giveup") return false;
 			return true;
 		},
 		async content(event, trigger, player) {
@@ -3032,7 +3037,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			}
 		},
 		locked: true,
-		forced:true,
+		forced: true,
 		audio: "ext:一中杀/audio/skill:3",
 		priority: 80,
 		trigger: {
@@ -3862,8 +3867,8 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		dutySkill: true,
 		derivation: "yzs_baiguiyexing",
 		trigger: { global: "useCardToTarget" },
-		priority:4,
-		group: ["yzs_kuxia_record", "yzs_kuxia_fail","yzs_kuxia_start"],
+		priority: 4,
+		group: ["yzs_kuxia_record", "yzs_kuxia_fail", "yzs_kuxia_start"],
 		filter(event, player) {
 			return player.isIn() && !player.storage.yzs_kuxia && !player.hasSkill("yzs_kuxia_blocked") &&
 				event.card.name === "sha" && event.player !== player && event.target !== player &&
@@ -4057,6 +4062,495 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			result: {
 				target(player, target) {
 					return -Math.max(1, player.countCards("h") - target.countCards("h"));
+				},
+			},
+		},
+	},
+	//蕾米莉亚
+	yzs_RedMagic: {
+	//	group: ["yzs_RedMagic_pp"],
+		subSkill: {
+			pp: {
+				name: "神术「吸血鬼幻想」",
+				priority: 91,
+				forced: true,
+				locked:false,
+				trigger: {
+					player: ["yzs_xixueBegin1", "yzs_SpeartheGungnirBegin1","yzs_VampireKissBegin1"]
+				},
+				async content(event, trigger, player) {
+					let results = await player.yzs_throw(6).forResult();
+					if (results?.bool && player.countMark("yzs_PP") < player.yzs_getPPLimit()) player.yzs_addPP()
+				},
+			},
+			backup: {
+
+			},
+		},
+		nobracket: true,
+		enable: ["phaseUse"],
+		usable:1,
+		filter(event, player) {
+			return player.hp > 0;
+		},
+		chooseButton: {
+			dialog(event, player) {
+				let dialog = ui.create.dialog(`出牌阶段限1次：你失去至多体力值点体力，然后摸等量张牌并获得等量点${get.poptip("yzs_PP")}`, "hidden");
+				let choiceList = [];
+				for (let i = 1; i <= player.hp; i++) {
+					choiceList.push(i);
+				}
+				dialog.add([choiceList, "tdnodes"]);
+				return dialog;
+			},
+			filter(button, player) {
+				return true;
+			},
+			check(button) {
+				const player = get.player();
+				if (button.link >= player.hp) return 0;
+				return button.link === Math.max(1, player.hp - 2) ? 2 : 1;
+			},
+			backup(links, player) {
+				const num = links[0];
+				return {
+					num: num,
+					filterCard: () => false,
+					selectCard: -1,
+					async content(event, trigger, player) {
+						const num = lib.skill.yzs_RedMagic_backup.num;
+						await player.loseHp(num);
+						if (!player.isIn()) return;
+						await player.draw(num);
+						if (player.isIn()) player.yzs_addPP(num);
+					}
+				};
+			},
+			prompt(links, player) {
+				const effect = links[0],
+					str = "###红魔法###";
+				return str + '<div class="text center">' + "出牌阶段限1次：你失去至多体力值点体力，然后摸等量张牌并获得等量点蓄能" + "</div>";
+			},
+		},
+		ai: {
+			order: 10,
+			result: {
+				player(player) {
+					return player.hp > 1 ? 1 : 0;
+				},
+			},
+		},
+	},
+	yzs_xixue: {
+		frequent: true,
+		priority: -6,
+		trigger: {
+			source:"damageAfter"
+		},
+		filter(event, player) {
+			return event.player != player && event.num > 0 && event.player.hp >= player.hp;
+		},
+		check(event, player) {
+			return true;
+		},
+		async content(event, trigger, player) {
+			await event.trigger("yzs_xixueBegin1");
+			await player.recover(trigger.num);
+		}
+	},
+	yzs_SpeartheGungnir: {
+		Effect: function (player, ...targets) {
+			lib.skill.yzs_SpeartheGungnir.playBloodEffect(player, targets, "spear");
+		},
+		// 两个技能共用血滴与画布；Effect 通过 playEffectOL 在各客户端独立计算头像坐标。
+		playBloodEffect(player, targets, kind) {
+			if (!player || typeof document === "undefined" || !document.body) return;
+			const canvas = document.createElement("canvas");
+			const ctx = canvas.getContext("2d");
+			if (!ctx) return;
+			canvas.className = "yzs-remilia-effect";
+			canvas.dataset.effect = kind;
+			canvas.setAttribute("aria-hidden", "true");
+			canvas.style.cssText = "position:fixed;left:0;top:0;width:100%;height:100%;z-index:99999;pointer-events:none;background:transparent;";
+			document.body.appendChild(canvas);
+			let bounds = canvas.getBoundingClientRect();
+			const point = current => {
+				if (!current?.isConnected) return null;
+				let rect = current.node?.avatar?.getBoundingClientRect();
+				if (!rect?.width || !rect.height) rect = current.getBoundingClientRect();
+				if (!rect.width || !rect.height) return null;
+				return { x: rect.left + rect.width / 2 - bounds.left, y: rect.top + rect.height / 2 - bounds.top, size: Math.min(rect.width, rect.height) };
+			};
+			if (!point(player) || !bounds.width || !bounds.height) {
+				canvas.remove();
+				return;
+			}
+			const destinations = [...new Set(targets)].filter(target => target !== player)
+				.map(target => ({ target, last: point(target) })).filter(item => item.last);
+			const duration = kind === "spear" ? (destinations.length ? 2200 : 1450) : kind === "kiss" ? 1800 : 850;
+			const particles = Array.from({ length: 48 }, (_, i) => ({
+				angle: i * 2.39996, radius: 48 + Math.random() * 65,
+				size: 2 + Math.random() * 3, phase: Math.random() * Math.PI * 2,
+			}));
+			const clamp = value => Math.max(0, Math.min(1, value));
+			const ease = value => { const p = clamp(value); return p * p * (3 - 2 * p); };
+			const mix = (a, b, p) => a + (b - a) * p;
+			const lerp = (a, b, p) => ({ x: mix(a.x, b.x, p), y: mix(a.y, b.y, p) });
+			const drop = (x, y, r, angle, opacity, pale = false) => {
+				if (opacity <= 0 || r <= 0) return;
+				ctx.save();
+				ctx.translate(x, y);
+				ctx.rotate(angle);
+				ctx.globalAlpha = clamp(opacity);
+				ctx.fillStyle = pale ? "#ff9da9" : "#d70d35";
+				ctx.shadowColor = "#ff214d";
+				ctx.shadowBlur = 7;
+				ctx.beginPath();
+				ctx.moveTo(0, -r * 2);
+				ctx.bezierCurveTo(r * 1.5, -r * 0.2, r, r, 0, r);
+				ctx.bezierCurveTo(-r, r, -r * 1.5, -r * 0.2, 0, -r * 2);
+				ctx.fill();
+				ctx.restore();
+			};
+			const glow = (p, radius, opacity) => {
+				ctx.save();
+				ctx.globalAlpha = clamp(opacity);
+				const color = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, radius);
+				color.addColorStop(0, "rgba(255,150,175,0.75)");
+				color.addColorStop(0.3, "rgba(212,9,54,0.35)");
+				color.addColorStop(1, "rgba(100,0,24,0)");
+				ctx.fillStyle = color;
+				ctx.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+				ctx.restore();
+			};
+			const ring = (p, radius, opacity, rotation = 0) => {
+				ctx.save();
+				ctx.translate(p.x, p.y);
+				ctx.rotate(rotation);
+				ctx.globalAlpha = clamp(opacity);
+				ctx.strokeStyle = "#f64c70";
+				ctx.shadowColor = "#ed1548";
+				ctx.shadowBlur = 9;
+				ctx.lineWidth = 1.5;
+				ctx.beginPath();
+				ctx.arc(0, 0, radius, 0, Math.PI * 2);
+				for (let i = 0; i < 8; i++) {
+					const angle = i * Math.PI / 4;
+					ctx.moveTo(Math.cos(angle) * (radius - 5), Math.sin(angle) * (radius - 5));
+					ctx.lineTo(Math.cos(angle) * (radius + 5), Math.sin(angle) * (radius + 5));
+				}
+				ctx.stroke();
+				ctx.restore();
+			};
+			const spear = (p, angle, scale, opacity, flying) => {
+				ctx.save();
+				ctx.translate(p.x, p.y);
+				ctx.rotate(angle);
+				ctx.scale(scale, scale);
+				ctx.globalAlpha = clamp(opacity);
+				ctx.shadowColor = "#ff1643";
+				ctx.shadowBlur = 16;
+				if (flying) {
+					const trail = ctx.createLinearGradient(-180, 0, 35, 0);
+					trail.addColorStop(0, "rgba(170,0,30,0)");
+					trail.addColorStop(1, "rgba(255,50,85,0.8)");
+					ctx.fillStyle = trail;
+					ctx.beginPath();
+					ctx.moveTo(-180, 0); ctx.lineTo(35, -8); ctx.lineTo(65, 0); ctx.lineTo(35, 8); ctx.closePath();
+					ctx.fill();
+				}
+				const metal = ctx.createLinearGradient(0, -12, 0, 12);
+				metal.addColorStop(0, "#720319"); metal.addColorStop(0.45, "#ff5576");
+				metal.addColorStop(0.55, "#ffe1e5"); metal.addColorStop(1, "#a30023");
+				ctx.fillStyle = metal;
+				ctx.fillRect(-105, -3, 145, 6);
+				ctx.beginPath();
+				ctx.moveTo(78, 0); ctx.lineTo(28, -15); ctx.lineTo(38, -4);
+				ctx.lineTo(18, -9); ctx.lineTo(25, 0); ctx.lineTo(18, 9);
+				ctx.lineTo(38, 4); ctx.lineTo(28, 15); ctx.closePath();
+				ctx.fill();
+				ctx.fillRect(-74, -6, 3, 12);
+				ctx.fillRect(-64, -6, 3, 12);
+				ctx.restore();
+			};
+			const heart = (p, scale, opacity, flap) => {
+				ctx.save();
+				ctx.translate(p.x, p.y);
+				ctx.scale(scale, scale);
+				ctx.globalAlpha = clamp(opacity);
+				ctx.shadowColor = "#fa255f"; ctx.shadowBlur = 13;
+				for (const side of [-1, 1]) {
+					ctx.save(); ctx.scale(side, 1);
+					ctx.fillStyle = "#720d36"; ctx.strokeStyle = "#fa638c"; ctx.lineWidth = 1;
+					ctx.beginPath(); ctx.moveTo(7, 1);
+					ctx.quadraticCurveTo(26, -25 - flap, 49, -20 - flap);
+					ctx.quadraticCurveTo(31, -12, 42, 7);
+					ctx.quadraticCurveTo(26, -5, 24, 12);
+					ctx.quadraticCurveTo(15, 3, 7, 13); ctx.closePath(); ctx.fill(); ctx.stroke();
+					ctx.restore();
+				}
+				const fill = ctx.createLinearGradient(0, -16, 0, 20);
+				fill.addColorStop(0, "#ff9cb4"); fill.addColorStop(0.4, "#e81b56"); fill.addColorStop(1, "#78051c");
+				ctx.fillStyle = fill; ctx.strokeStyle = "#ffc1d1";
+				ctx.beginPath(); ctx.moveTo(0, 20);
+				ctx.bezierCurveTo(-30, 1, -17, -24, 0, -10);
+				ctx.bezierCurveTo(17, -24, 30, 1, 0, 20); ctx.fill(); ctx.stroke();
+				ctx.restore();
+			};
+			let frame = 0, stopped = false;
+			const cleanup = () => {
+				if (stopped) return;
+				stopped = true;
+				cancelAnimationFrame(frame);
+				clearTimeout(timer);
+				window.removeEventListener("pagehide", cleanup);
+				canvas.remove();
+			};
+			// 后台标签页可能暂停动画帧，另设清理时限，避免留下画布。
+			const timer = setTimeout(cleanup, duration + 400);
+			window.addEventListener("pagehide", cleanup, { once: true });
+			const start = performance.now();
+			const draw = now => {
+				if (stopped) return;
+				const elapsed = now - start;
+				bounds = canvas.getBoundingClientRect();
+				const origin = point(player);
+				if (elapsed >= duration || !canvas.isConnected || !origin || !bounds.width || !bounds.height) return cleanup();
+				// 按画布实际屏幕尺寸绘制，兼容界面缩放和不同客户端座次布局。
+				const ratio = Math.min(window.devicePixelRatio || 1, 2);
+				const width = Math.round(bounds.width * ratio), height = Math.round(bounds.height * ratio);
+				if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+				ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+				ctx.clearRect(0, 0, bounds.width, bounds.height);
+				const scale = Math.max(0.65, Math.min(1.2, origin.size / 95));
+				const ends = destinations.map(item => (item.last = point(item.target) || item.last));
+				if (kind === "spear") {
+					const hub = { x: origin.x, y: origin.y - origin.size * 0.3 };
+					glow(origin, origin.size * 0.85, Math.sin(Math.PI * clamp(elapsed / 1250)) * 0.75);
+					for (let i = 0; i < particles.length; i++) {
+						const part = particles[i], spread = { x: origin.x + Math.cos(part.angle) * part.radius * scale, y: origin.y + Math.sin(part.angle) * part.radius * scale };
+						let p, opacity = 1, shrink = 1;
+						if (elapsed < 380) {
+							p = lerp(origin, spread, 1 - Math.pow(1 - clamp(elapsed / 380), 3));
+							opacity = clamp(elapsed / 100);
+						} else if (!ends.length) {
+							const back = ease((elapsed - 450) / 700);
+							p = lerp(spread, origin, back);
+							p.x += Math.sin(back * Math.PI * 2 + part.phase) * 16 * Math.sin(back * Math.PI) * scale;
+							opacity = 1 - back; shrink = 1 - back * 0.8;
+						} else {
+							const end = ends[i % ends.length], angle = Math.atan2(end.y - hub.y, end.x - hub.x);
+							const along = ((i * 37 % 177) - 100) * scale;
+							p = lerp(spread, { x: hub.x + Math.cos(angle) * along, y: hub.y + Math.sin(angle) * along }, ease((elapsed - 380) / 550));
+							opacity = 1 - ease((elapsed - 800) / 170);
+						}
+						drop(p.x, p.y, part.size * scale * shrink, part.angle + Math.PI / 2, opacity, i % 5 === 0);
+					}
+					if (!ends.length) ring(origin, origin.size * (0.65 - 0.35 * ease((elapsed - 750) / 650)), Math.sin(Math.PI * clamp((elapsed - 700) / 700)) * 0.75);
+					ends.forEach((end, index) => {
+						const angle = Math.atan2(end.y - hub.y, end.x - hub.x), launch = 970 + Math.min(index * 65, 300);
+						const flight = clamp((elapsed - launch) / 360), impact = (elapsed - launch - 360) / 480;
+						if (elapsed >= 530 && impact < 0) {
+							const tip = { x: end.x - Math.cos(angle) * 78 * scale, y: end.y - Math.sin(angle) * 78 * scale };
+							const p = lerp(hub, tip, flight * flight);
+							spear(p, angle, scale * (0.4 + 0.6 * ease((elapsed - 530) / 410)), ease((elapsed - 530) / 320), flight > 0);
+						} else if (impact >= 0 && impact < 1) {
+							glow(end, (40 + impact * 45) * scale, 1 - impact);
+							ring(end, (12 + impact * 48) * scale, 1 - impact, impact);
+							for (let j = 0; j < 12; j++) {
+								const part = particles[j], radius = part.radius * Math.sqrt(impact) * scale;
+								drop(end.x + Math.cos(part.angle) * radius, end.y + Math.sin(part.angle) * radius, part.size * scale, part.angle + Math.PI / 2, 1 - impact);
+							}
+						}
+					});
+				} else if (ends.length && kind === "kiss") {
+					const end = ends[0], dx = end.x - origin.x, dy = end.y - origin.y, length = Math.hypot(dx, dy) || 1;
+					const bend = Math.min(90 * scale, length * 0.22);
+					const path = (p, side) => ({ x: mix(origin.x, end.x, p) - dy / length * Math.sin(p * Math.PI) * bend * side, y: mix(origin.y, end.y, p) + dx / length * Math.sin(p * Math.PI) * bend * side });
+					ring(origin, origin.size * 0.65, Math.sin(Math.PI * clamp(elapsed / 900)) * 0.7, elapsed / 500);
+					for (let i = 0; i < 24; i++) {
+						for (const side of [-1, 1]) {
+							const progress = (elapsed - (side === 1 ? 200 : 420) - i * 15) / 850;
+							if (progress < 0 || progress > 1) continue;
+							const p = path(side === 1 ? progress : 1 - progress, side);
+							drop(p.x, p.y, (2 + i % 3) * scale, Math.atan2(dy, dx) + (side === 1 ? Math.PI / 2 : -Math.PI / 2), Math.sin(progress * Math.PI), side < 0);
+						}
+					}
+					const travel = ease((elapsed - 180) / 850), fade = 1 - ease((elapsed - 1250) / 450);
+					heart(path(travel, 1), scale * (0.6 + 0.4 * ease(elapsed / 350)), clamp(elapsed / 180) * fade, Math.sin(elapsed / 75) * 7);
+					glow(end, end.size * 0.7, Math.sin(Math.PI * clamp((elapsed - 850) / 850)) * 0.65);
+					ring(end, end.size * (0.4 + ease((elapsed - 900) / 700) * 0.3), Math.sin(Math.PI * clamp((elapsed - 800) / 900)) * 0.8, -elapsed / 600);
+				} else if (ends.length && kind === "bite") {
+					const end = ends[0], p = clamp(elapsed / 850), alpha = 1 - ease((elapsed - 430) / 420);
+					glow(end, end.size * 0.7, Math.sin(Math.PI * p) * 0.8);
+					for (const side of [-1, 1]) {
+						const x = end.x + side * 13 * scale, y = end.y - (1 - ease(elapsed / 220)) * 28 * scale;
+						ctx.save(); ctx.globalAlpha = alpha * clamp(elapsed / 80);
+						ctx.fillStyle = "#ffe9ee"; ctx.shadowColor = "#fb3761"; ctx.shadowBlur = 12;
+						ctx.beginPath(); ctx.moveTo(x - 6 * scale, y - 18 * scale); ctx.lineTo(x + 6 * scale, y - 18 * scale); ctx.lineTo(x, y + 7 * scale); ctx.closePath(); ctx.fill(); ctx.restore();
+						drop(x, end.y + 8 * scale + ease((elapsed - 200) / 650) * 25 * scale, 4 * scale, 0, alpha * clamp((elapsed - 150) / 100));
+					}
+				}
+				frame = requestAnimationFrame(draw);
+			};
+			frame = requestAnimationFrame(draw);
+		},
+		nobracket: true,
+		enable: "phaseUse",
+		position: "he",
+		discard: false,
+		lose: false,
+		delay: false,
+		complexCard: true,
+		complexSelect: true,
+		multitarget: true,
+		multiline: true,
+		getRecastCount(player) {
+			// 用同步的临时记录计算，不依赖客机可能缺失的历史记录。
+			return player.countMark("yzs_SpeartheGungnir_used") + 1;
+		},
+		getNumbers(cards, player) {
+			const numbers = { damage: 0, shan: 0, targets: 0 };
+			for (const card of cards) {
+				switch (get.type2(card, player)) {
+					case "basic": numbers.damage++; break;
+					case "trick": numbers.shan++; break;
+					case "equip": numbers.targets++; break;
+				}
+			}
+			return numbers;
+		},
+		filter(event, player) {
+			return player.countMark("yzs_PP") > 0 && player.countCards("he", card => player.canRecast(card)) >=
+				lib.skill.yzs_SpeartheGungnir.getRecastCount(player);
+		},
+		filterCard(card, player) {
+			return player.canRecast(card);
+		},
+		selectCard() {
+			return lib.skill.yzs_SpeartheGungnir.getRecastCount(get.player());
+		},
+		selectTarget() {
+			const player = get.player();
+			if (ui.selected.cards.length !== lib.skill.yzs_SpeartheGungnir.getRecastCount(player)) return 0;
+			const numbers = lib.skill.yzs_SpeartheGungnir.getNumbers(ui.selected.cards, player);
+			return numbers.shan > 0 ? numbers.targets : 0;
+		},
+		filterTarget(card, player, target) {
+			if (ui.selected.cards.length !== lib.skill.yzs_SpeartheGungnir.getRecastCount(player)) return false;
+			const numbers = lib.skill.yzs_SpeartheGungnir.getNumbers(ui.selected.cards, player);
+			if (!numbers.shan || !numbers.targets || target.hasSkill("hidden_yzs")) return false;
+			return player.canUse({ name: "sha", isCard: true, storage: { yzs_SpeartheGungnir: true } }, target, false);
+		},
+		check(card) {
+			return 6 - get.value(card);
+		},
+		async content(event, trigger, player) {
+			// 必须在重铸失去牌之前统计，避免离开原区域后牌的类型发生变化。
+			const numbers = lib.skill.yzs_SpeartheGungnir.getNumbers(event.cards, player);
+			player.yzs_removePP(1);
+			player.addTempSkill("yzs_SpeartheGungnir_used");
+			player.addMark("yzs_SpeartheGungnir_used", 1, false);
+			player.syncSkills();
+			player.playEffectOL(lib.skill.yzs_SpeartheGungnir.Effect, ...targets);
+			await event.trigger("yzs_SpeartheGungnirBegin1");
+			if (!player.isIn()) return;
+			await player.recast(event.cards);
+			if (!player.isIn()) return;
+			const card = { name: "sha", isCard: true, storage: { yzs_SpeartheGungnir: true } };
+			const targets = numbers.shan && numbers.targets ? event.targets.filter(target => target.isIn() && player.canUse(card, target, false)) : [];
+			if (!targets.length) return;
+			const next = player.useCard(card, targets, false);
+			next.addCount = false;
+			// 不能写成 damage || 1；扩展的伤害函数支持以 0 为初始伤害。
+			next.baseDamage = numbers.damage;
+			next.customArgs = { default: { shanRequired: numbers.shan } };
+			await next;
+		},
+		subSkill: {
+			used: {
+				charlotte: true,
+				onremove(player) {
+					// 原生 onremove: true 只删除本机存储，客机也必须同步清空次数。
+					game.broadcastAll(function (current) {
+						delete current.storage.yzs_SpeartheGungnir_used;
+					}, player);
+				},
+				mod: {
+					cardUsable(card) {
+						if (card.storage?.yzs_SpeartheGungnir) return Infinity;
+					},
+					targetInRange(card) {
+						if (card.storage?.yzs_SpeartheGungnir) return true;
+					},
+				},
+				ai: {
+					unequip: true,
+					unequip_ai: true,
+					skillTagFilter(player, tag, arg) {
+						const card = tag === "unequip_ai" ? (arg?.card || arg) : arg?.card;
+						return card?.storage?.yzs_SpeartheGungnir === true;
+					},
+				},
+			},
+		},
+		ai: {
+			order: 8,
+			result: {
+				player: 1,
+				target(player, target) {
+					const numbers = lib.skill.yzs_SpeartheGungnir.getNumbers(ui.selected.cards, player);
+					return numbers.damage ? get.damageEffect(target, player, target) : 0;
+				},
+			},
+		},
+	},
+	yzs_VampireKiss: {
+		Effect: function (player, target) {
+			lib.skill.yzs_SpeartheGungnir.playBloodEffect(player, [target], "kiss");
+		},
+		HitEffect: function (player, target) {
+			lib.skill.yzs_SpeartheGungnir.playBloodEffect(player, [target], "bite");
+		},
+		nobracket: true,
+		enable: "phaseUse",
+		filter(event, player) {
+			return player.countMark("yzs_PP") > 0 && game.hasPlayer(target =>
+				lib.skill.yzs_VampireKiss.filterTarget(null, player, target));
+		},
+		filterTarget(card, player, target) {
+			return target !== player && target.isIn() && !target.hasSkill("hidden_yzs") &&
+				target.countCards("h") < player.countCards("h");
+		},
+		selectTarget: 1,
+		async content(event, trigger, player) {
+			const target = event.target;
+			player.yzs_removePP(1);
+			await event.trigger("yzs_VampireKissBegin1");
+			if (!player.isIn() || !target.isIn()) return;
+			player.playEffectOL(lib.skill.yzs_VampireKiss.Effect, target);
+			await player.swapHandcards(target);
+			if (!player.isIn() || !target.isIn()) return;
+			const result = await player.chooseTarget(
+				"血吻：是否对" + get.translation(target) + "造成1点伤害？",
+				function (card, player, target) {
+					return target === get.event().sourcex && target.isIn();
+				}
+			).set("sourcex", target)
+				.set("selectTarget", 1)
+				.set("ai", target => get.damageEffect(target, get.player(), get.player()))
+				.forResult();
+			if (result.bool && result.targets?.includes(target) && player.isIn() && target.isIn()) {
+				player.playEffectOL(lib.skill.yzs_VampireKiss.HitEffect, target);
+				player.line(target, "red");
+				await target.damage(1, player);
+			}
+		},
+		ai: {
+			order: 7,
+			result: {
+				target(player, target) {
+					return target.hp <= 1 ? -3 : 1;
 				},
 			},
 		},

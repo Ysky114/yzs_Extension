@@ -1,5 +1,8 @@
 import { lib, game, ui, get, ai, _status } from "../../noname.js";
 const dynamicTranslates = {
+	yzs_SpeartheGungnir(player) {
+		return `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}并重铸X(${player.countMark("yzs_SpeartheGungnir_used") + 1})张牌，然后视为使用无次数距离限制且无视防具的、伤害/需响应数/目标数为被重铸牌中基本/锦囊/装备牌数的普通【杀】。（X为本技能本回合已发动次数+1）`
+	},
 	yzs_canghe(player) {
 		let str = `转换技：每回合开始时重置本技能。出牌阶段，你可消耗任意点${get.poptip("yzs_PP")}并刷新出【杀】数，然后获得1张点数为消耗蓄能数的：<br>`;
 		if (player.storage.yzs_canghe) str += `顺转：【苍】，并令本技能本回合失效；<font color="#ff4444">反转：【赫】</font>。`;

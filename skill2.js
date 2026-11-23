@@ -5869,6 +5869,8 @@ const skills = {
 				if (result?.bool) {
 					player.chat("收下吧 " + get.translation(result.targets[0]) + "，这是我最后的波纹了！")
 					await player.give(result.cards, result.targets[0]);
+				} else {
+					break;
 				}
 			}
 			await player.die(event);

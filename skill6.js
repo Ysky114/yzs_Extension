@@ -1609,6 +1609,31 @@ const skills = {
 					},
 				},
 			},
+			fuhei: {
+				priority: 214,
+				forced: true,
+				popup:false,
+				trigger: {
+					source:"damageBegin1"
+				},
+				filter(event, player) {
+					return get.translation(player.name).includes("伏黑甚尔")&&!player.countMark("ziqi_yzs_fuhei") && get.translation(event.player.name).includes("伏黑惠") && event.num >= event.player.hp;
+				},
+				async content(event, trigger, player) {
+					player.addMark("ziqi_yzs_fuhei");
+					trigger.cancel();
+					player.chat("你...叫什么名字？")
+					await new Promise(r => setTimeout(r, 2000))
+					trigger.player.chat("伏黑...")
+					await new Promise(r => setTimeout(r, 2000))
+					player.chat("不叫禅院啊...那就好")
+					await new Promise(r => setTimeout(r, 1000))
+					await player.useCard({ name: "sha", isCard: true }, player);
+				}
+			},
+		},
+		init: function (player, skill) {
+			player.addSkill("ziqi_yzs_fuhei");
 		},
 		locked: true,
 		priority: 11,

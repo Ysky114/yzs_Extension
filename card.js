@@ -4503,7 +4503,40 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			//苍
 			yzs_cang_buff: {
 				charlotte: true,
-				onremove: true,
+				init(player) {
+					lib.skill.yzs_cang_buff.updateEffect(player, true);
+				},
+				onremove(player) {
+					// 保留原 onremove: true 清除蓄积增伤的行为。
+					delete player.storage.yzs_cang_buff;
+					lib.skill.yzs_cang_buff.updateEffect(player, false);
+				},
+				updateEffect(player, enabled) {
+					game.broadcastAll((target, enabled) => {
+						if (!target.node) return;
+						for (const name of ["avatar", "avatar2"]) {
+							// 使用独立节点，避免覆盖或误删【酒】的红色遮罩。
+							const key = "yzs_cang_" + name;
+							const avatar = target.node[name];
+							let overlay = target.node[key];
+							if (!enabled || !avatar) {
+								overlay?.remove();
+								delete target.node[key];
+								continue;
+							}
+							if (overlay?.parentNode !== avatar) {
+								overlay?.remove();
+								overlay = ui.create.div(".playerjiu.yzs-cang-overlay", avatar);
+								target.node[key] = overlay;
+							}
+							Object.assign(overlay.style, {
+								background: "rgba(0, 140, 255, 0.3)",
+								borderRadius: "inherit",
+								pointerEvents: "none",
+							});
+						}
+					}, player, enabled);
+				},
 				forced: true,
 				popup:false,
 				priority: -23,

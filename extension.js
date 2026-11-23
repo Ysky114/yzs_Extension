@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.3.1";
+const EXTENSION_VERSION = "0.99.4.1";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -63,7 +63,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"Guanjun_yzs", "SukunaShinmyoumaru_yzs", "Akyuu_yzs", "Youmu_yzs", "Byakuren_yzs", "Reimu_yzs", "hunziKing_yzs",
 					"Mokou_yzs", "Reisen_yzs", "Getian_yzs", "KaalaBaauna_yzs", "YouBeier_yzs", "Fern_yzs", "Linie_yzs", "Innocent_xiangzi_yzs",
 					 "Reg_yzs", "Irumyuui_yzs", "yzs_JoGo", "SCP079_yzs", "DaZuo_yzs", "RatTiger_yzs", "yzs_DanHeng", "Frisk_yzs",
-					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia",
+					"yzs_Reimu", "yzs_ThreeBirds", "Macht_yzs", "Aura_yzs", "Remilia_Scarlet_yzs", "yzs_Elysia", "yzs_Remilia_Scarlet",
 				];
 				//精品 S
 				var pj_s = [
@@ -73,7 +73,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					"tangjiheChao_yzs", "DreamWitch_yzs", "jianSheng_yzs", "RenEmperor_yzs", "BDCheTianke_yzs", "VanXiongFeng_yzs",
 					"LeiChenjing_yzs", "yzs_DragonSlayerLLX", "Patchouli_Knowledge_yzs", "Marisa_yzs", "Onozuka_Komachi_yzs", "PhantomEnsemble_yzs",
 					"Yuyuko_yzs", "Okina_yzs", "Mamizou_yzs", "Yugi_yzs", "DoremySweet_yzs", "ReiujiUtsuho_yzs", "KomeijiSatori_yzs", "Flandre_yzs",
-					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs",  "SCP173_yzs",
+					"Marcus_yzs", "Himmel_yzs", "Serie_yzs", "Nanachi_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "SCP173_yzs",
 					"Faputa_yzs", "FushiguroMegumi_yzs", "Keiki_yzs", "Frieren_yzs", "yzs_QianWitch", "KunYee_yzs", "yzs_ItadoriYuji", "yzs_Mahito", "yzs_Ishigoriryu",		
 				];
 				//平凡
@@ -97,6 +97,12 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 					if (!lib.config.show_rarity) return;
 					const intro = button.node.intro;
 					intro.classList.add("showintro");
+					// 与 REACGN 的至臻外观一致，直接设置标签样式以支持不同选将布局。
+					intro.style.fontFamily = "yuanli";
+					intro.style.fontSize = "16px";
+					intro.style.bottom = "6px";
+					intro.style.left = "6px";
+					intro.style.textShadow = "rgb(200, 20, 20) 0px 0px 2px, rgb(200, 20, 20) 0px 0px 5px, rgb(200, 20, 20) 0px 0px 5px, rgb(200, 20, 20) 0px 0px 5px, black 0px 0px 1px";
 					intro.dataset.nature = "prestigem";
 					intro.textContent = get.translation("prestige");
 				};

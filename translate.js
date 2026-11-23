@@ -209,7 +209,8 @@ const translates = {
 	yzs_Ishigoriryu: `石流龙`,
 	yzs_Kenjaku: `羂索`,
 	yzs_Laetitia: `蕾蒂希娅`,
-	yzs_GetoSuguru:`夏油杰`,
+	yzs_GetoSuguru: `夏油杰`,
+	yzs_Remilia_Scarlet:`蕾米莉亚`,
 
     // 技能台词
 
@@ -2122,6 +2123,14 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_baiguiyexing: `百鬼夜行`,
 	yzs_baiguiyexing_info: `限定技：出牌阶段，你可选择1名其他角色。由其开始，你对每名其他角色依次执行流程：你与其需对对方使用1张牌，否则弃置1张牌。你两项均不能执行时，终止本流程。`,
 
+	yzs_RedMagic: `红魔法`,
+	yzs_RedMagic_info: `出牌阶段限1次：你失去至多体力值点体力，然后摸等量张牌并获得等量点${get.poptip("yzs_PP")}。`,
+	yzs_xixue: `吸血`,
+	yzs_xixue_info: `你对其他角色造成伤害后，若其体力值≥你，你可恢复伤害值点体力。`,
+	yzs_SpeartheGungnir: `神枪`,
+	yzs_SpeartheGungnir_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}并重铸X张牌，然后视为使用无次数距离限制且无视防具的、伤害/需响应数/目标数为被重铸牌中基本/锦囊/装备牌数的普通【杀】。（X为本技能本回合已发动次数+1）`,
+	yzs_VampireKiss: `血吻`,
+	yzs_VampireKiss_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}并与1名手牌数<你的角色交换手牌，然后你可对其造成1点伤害。`,
 };
 
 export default translates;
