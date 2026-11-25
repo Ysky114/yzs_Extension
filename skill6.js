@@ -2181,13 +2181,13 @@ const skills = {
 		locked: true,
 		banned: ["lisu", "sp_xiahoudun", "xushao", "jsrg_xushao", "zhoutai", "old_zhoutai", "shixie", "xin_zhoutai", "dc_shixie", "old_shixie"],
 		bannedType: ["Charlotte", "主公技", "觉醒技", "限定技", "隐匿技", "使命技", "锁定技", "转换技", "蓄力技", "蓄能技", "连招技"],
-		getSkills(characters2, player) {
+		getSkills(characters2, player, includeOwned = false) {
 			let skills2 = [];
 			for (let name of characters2) {
 				if (Array.isArray(get.character(name).skills)) {
 					for (let skill of get.character(name).skills) {
 						const categories = get.skillCategoriesOf(skill, player);
-						if (categories.some(type => lib.skill.choudie_yzs.bannedType.includes(type)) || player.hasSkill(skill)) continue;
+						if (categories.some(type => lib.skill.choudie_yzs.bannedType.includes(type)) || (!includeOwned && player.hasSkill(skill))) continue;
 						let info = get.info(skill);
 						if (info && (!info.unique || info.gainable)) {
 							skills2.add(skill);
@@ -2199,22 +2199,20 @@ const skills = {
 		},
 		addVisitors(characters2, player) {
 			player.addSkillBlocker("choudie_yzs");
-			game.log(player, "将", "#y" + get.translation(characters2), "加入了", "#g“碟”");
+			game.log(player, "将", characters2.length, "张人物牌暗置为", "#g“碟”");
 			game.broadcastAll(
 				function (player2, characters3) {
 					player2.tempname.addArray(characters3);
-					player2.$draw(
-						characters3.map(function (name) {
-							let cardname = "huashen_card_" + name;
-							lib.card[cardname] = {
-								fullimage: true,
-								image: "character:" + name
-							};
-							lib.translate[cardname] = get.rawName2(name);
-							return game.createCard(cardname, " ", " ");
-						}),
-						"nobroadcast"
-					);
+					const cards = characters3.map(function (name) {
+						let cardname = "huashen_card_" + name;
+						lib.card[cardname] = {
+							fullimage: true,
+							image: "character:" + name
+						};
+						lib.translate[cardname] = get.rawName2(name);
+						return game.createCard(cardname, " ", " ");
+					});
+					player2.$draw(player2.isUnderControl(true) ? cards : cards.length, "nobroadcast");
 				},
 				player,
 				characters2
@@ -2270,19 +2268,19 @@ const skills = {
 		forced: true,
 		priority: 19,
 		trigger: {
-			player: "useCardToPlayered",
-		},
-		filter(event, player) {
-			return !event.target.hasSkill("choudie_yzs_targeted")
+			player: "phaseZhunbeiBegin",
 		},
 		async content(event, trigger, player) {
-			trigger.target.addTempSkill("choudie_yzs_targeted");
 			player.addSkill("choudie_yzs_skill");
 			player.addSkill("choudie_yzs_disc");
 			if (!_status.characterlist) {
 				game.initCharacterList();
 			}
-			let characters2 = _status.characterlist.randomRemove(1);
+			const characters2 = _status.characterlist.filter(name =>
+				lib.skill.choudie_yzs.getSkills([name], player, true).length
+			).randomGets(2);
+			if (!characters2.length) return;
+			_status.characterlist.removeArray(characters2);
 			lib.skill.choudie_yzs.addVisitors(characters2, player);
 		}
 	},
@@ -2303,7 +2301,12 @@ const skills = {
 			const drawers = visitors.filter(function (name) {
 				return get.character(name).skills?.includes(get.sourceSkillFor(trigger));
 			});
-			event.drawers = drawers;
+			if (!drawers.length) return;
+			const result = drawers.length > 1
+				? await player.chooseButton(["光碟：移去一张拥有此技能的【碟】", [drawers, "character"]], true).forResult()
+				: { bool: true, links: drawers };
+			if (!result.bool || !result.links?.length) return;
+			event.drawers = result.links;
 			player.$throw(game.createCard("huashen_card_" + event.drawers[0], " ", " "))
 			lib.skill.choudie_yzs.removeVisitors(event.drawers, player);
 			game.log(player, "移去了", "#y" + get.translation(event.drawers[0]));

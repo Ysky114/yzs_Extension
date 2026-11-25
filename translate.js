@@ -1528,7 +1528,7 @@ const translates = {
 	wanfa_yzs: `万法`,
 	wanfa_yzs_info: `回合内每种牌名限1次：你可将手牌当做任意非延时锦囊牌使用，结算后目标角色获得${get.poptip("jiejie_yzs")}直至其下次受到【杀】造成的伤害后。`,
 	kanpo_yzs: `瞰破`,
-	kanpo_yzs_info: `锁定技：你使用非转化牌无视目标角色的${get.poptip("jiejie_yzs")}，结算后其失去【结界】。`,
+	kanpo_yzs_info: `锁定技：你使用非转化牌无视其他目标角色的${get.poptip("jiejie_yzs")}，结算后其失去【结界】。`,
 	jiejie_yzs: `结界`,
 	jiejie_yzs_info: `其他角色的锦囊牌对你无效。<br>结束阶段，你可失去本技能，然后摸2张牌。`,
 
@@ -1824,7 +1824,7 @@ const translates = {
 
 	choudie_yzs: `抽碟`,
 	choudie_yzs_disc_backup:`光碟`,
-	choudie_yzs_info: `锁定技：每回合你首次指定每名角色为目标后，抽取游戏外1张人物牌暗置于你人物牌旁，称为${get.poptip("choudie_yzs_disc")}。<br>
+	choudie_yzs_info: `锁定技：准备阶段，你抽取游戏外2张有通常技的人物牌暗置于你人物牌旁，称为${get.poptip("choudie_yzs_disc")}。<br>
     你可于对应时机移去【碟】，然后发动其上1个通常技。`,
 	choudie_yzs_skill:`光碟`,
 	choudie_yzs_disc: `碟`,

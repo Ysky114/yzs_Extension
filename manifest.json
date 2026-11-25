@@ -1,6 +1,6 @@
 {
-  "version": "0.99.4.2",
-  "update": "0.99.4.2",
+  "version": "0.99.4.3",
+  "update": "0.99.4.3",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -702,7 +702,7 @@
     "character.js": "ddc6eb836d74b67220aa9a223c72203c98a371e9",
     "dynamicTranslate.js": "335ee08dd38bf4f3c23b6c7900885bde4bad29f4",
     "extension.css": "0cdc14624cafc2af6871d789775ccc5334a4186d",
-    "extension.js": "c0a7806e8b2c62cf4c27e7a159b6155928893cfd",
+    "extension.js": "cccf2404f8d824e69fefb68fb0de535d109d15c8",
     "func/media.js": "bd862257174bbb7c520178b0cb25bafc693c0482",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "245265a9fadbd32721ee7b173ffc3a85992e0f94",
@@ -1109,11 +1109,11 @@
     "skill1.js": "479e5d7a60db9c7f99f5e74bd16e05127c553d3b",
     "skill2.js": "0ff3d55f58ac5bc9ed6dfce4bc75e8b66e02fd81",
     "skill3.js": "345f4b6abeb54b236cc98f1a379a9a760c84cba0",
-    "skill4.js": "8e0af4b6fbc9310c2441a556ff36178039bb3de0",
+    "skill4.js": "691b4911b65d49165812fe4894c4a60122031845",
     "skill5.js": "6187062ceb111dee4dab0530be662ba02c5fb08e",
-    "skill6.js": "84244bc70ea74ba41cd179f6852b4f198c1eeabe",
+    "skill6.js": "59cde69491cea8253d1ff7adc24ced82f1e28c09",
     "skill7.js": "f7f2d164804fce3ad01e7847bac6afa62b8459d4",
-    "translate.js": "6b3d3c59618b71b8c67f0f8d6836d38936cc2016",
+    "translate.js": "6b649b39f9a12e0db97dccf35f768d209118be01",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }
 }

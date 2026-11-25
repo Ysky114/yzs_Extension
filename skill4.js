@@ -9375,7 +9375,7 @@ const skills = {
 			return event.targets.filter(target => target.hasSkill("jiejie_yzs"))
 		},
 		filter(event, player, name) {
-			return event.card.isCard && event.targets?.some(target => target.hasSkill("jiejie_yzs"))
+			return event.target!=player&&event.card.isCard && event.targets?.some(target => target.hasSkill("jiejie_yzs"))
 		},
 		forced: true,
 		popup: true,
