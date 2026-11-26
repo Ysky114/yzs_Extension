@@ -1908,6 +1908,15 @@ const characters = {
 		img: "extension/一中杀/image/Remilia_Scarlet_yzs.png",
 		yzs_PP: 4,
 	},
+
+	yzs_TakabaFumihiko: {
+		sex: "male",
+		group: "wei",
+		hp: 4,
+		skills: ["yzs_chaorenshushi"],
+		names: "高羽史彦",
+		img: "extension/一中杀/image/yzs_TakabaFumihiko.jpg",
+	}
 };
 
 const characterSubstitutes = {
@@ -2087,7 +2096,8 @@ const characterTitles = {
 	yzs_Kenjaku: `千年操盘手`,
 	yzs_Laetitia: `渴望朋友的小魔女`,
 	yzs_GetoSuguru: `迷惘的咒术师`,
-	yzs_Remilia_Scarlet:`幼小的红月`,
+	yzs_Remilia_Scarlet: `幼小的红月`,
+	yzs_TakabaFumihiko:`欢乐喜剧人`,
 };
 const characterIntros = {
 	Enrico_Pucci_yzs: `恩里克·普奇，通称“普奇神父”，漫画《JOJO的奇妙冒险：石之海》及其衍生作品中的反派角色。他是前作的大BOSS，乔斯达家族的宿敌——迪奥·布兰度的挚友。与迪奥一同追求名为“天堂”的存在。普奇担任绿海豚街监狱的教诲师，对神学有充分的了解与研究。在迪奥被远征埃及的星尘十字军杀死后，普奇继承了他的理想，致力于实现迪奥所描绘过的“天堂”。为了得到到达天堂的方法，他设计陷害了空条徐伦，使其被判刑进入绿海豚街监狱，以此为诱饵迫使空条承太郎现身并夺取其记忆，引发了《石之海》的故事。`,
@@ -2241,7 +2251,9 @@ const characterIntros = {
 	yzs_Kenjaku: `羂索是漫画《咒术回战》及其衍生作品中的反派角色，作为存活千年的神秘术师，策划了“死灭回游”游戏，并主导日本咒灵动乱。其以“咒力最优化”为目标，长期操控咒术界高层、诅咒师、咒灵等多方势力，通过换脑术式历经千年布局，旨在推动全人类与天元融合实现进化`,
 	yzs_Laetitia: `蕾蒂希娅是游戏《脑叶公司》中登场的HE级异想体，编号O-01-67。其外形表现为皮肤苍白的人形小女孩，灰色头发搭配红色蕾丝发带，辫子上系有金色铃铛，红色瞳孔尤为醒目。身穿红白色裙子，领口系红色蝴蝶结，脚穿红色童鞋搭配黑色过膝袜，行动时呈现机械般的僵硬感，收容单元内伴随八音盒声效。蕾蒂希娅通过恶作剧试图为周围带来欢笑，并称“最能让我感到开心的事儿，就是大家为我的小小恶作剧一起哈哈大笑啦！”。建议由专职保姆负责与其进行沟通工作`,
 	yzs_GetoSuguru: `夏油杰，，是日本漫画《咒术回战》及其衍生作品中的角色，由樱井孝宏配音。生于1990年2月3日，原为四大特级咒术师之一，掌握术式「咒灵操术」，出身于非术师家庭。曾与五条悟并称最强，高专时期坚持保护普通人的理念，17岁时在经历了很多事件（包括灰原雄牺牲七海建人重伤，天内理子被盘星教雇佣伏黑甚尔杀害，五条悟和杰单独执行任务）后选择屠杀了112名村民叛离高专成为诅咒师。2007年叛逃后，夏油杰夺取盘星教并被称为「最恶的诅咒师」，意在消灭所有非术师并创造只有咒术师的世界（夏油杰称之为原因疗法）。2017年发动「百鬼夜行」，意在夺取乙骨忧太的特级咒灵祈本里香，因分散战力被乙骨重伤后被五条悟处决，终年27岁。遗体未被火化，遭羂索占据并操控，额头出现缝合线标记`,
-	yzs_Remilia_Scarlet:`蕾米莉亚·斯卡蕾特，系列作品《东方Project》中的角色，于《东方红魔乡》作为六面BOSS首次登场。她是居住在红魔馆的吸血鬼，是红魔馆的主人，拥有操纵命运程度的能力。虽然年龄有500岁，但是性格像小孩子一样幼稚任性，而且非常高傲。吸血鬼异变和红雾异变的发起者，在东方红魔乡中作为最终BOSS被击败后于东方萃梦想中首次成为自机角色。`,
+	yzs_Remilia_Scarlet: `蕾米莉亚·斯卡蕾特，系列作品《东方Project》中的角色，于《东方红魔乡》作为六面BOSS首次登场。她是居住在红魔馆的吸血鬼，是红魔馆的主人，拥有操纵命运程度的能力。虽然年龄有500岁，但是性格像小孩子一样幼稚任性，而且非常高傲。吸血鬼异变和红雾异变的发起者，在东方红魔乡中作为最终BOSS被击败后于东方萃梦想中首次成为自机角色。`,
+	yzs_TakabaFumihiko:`高羽史彦，男，芥见下下创作的漫画《咒术回战》及其衍生作品中的角色，是死灭回游的泳者之一，年龄35岁，曾是搞笑艺人。在死灭回游初期，高羽史彦登场帮助伏黑惠对抗古代术士。高羽史彦的术式名为“超人”，是确信能把人逗乐的想象变为现实的能力，但本人对此一无所知。在死灭回游中，得分0；在最终篇章，与乙骨忧太组队对抗羂索，高羽史彦发动术式将羂索带入喜剧演出中分散注意力，乙骨忧太趁机给予致命一击，导致羂索被斩首`,
+
 };
 const characterReplaces = {
 };
@@ -2268,7 +2280,8 @@ const characterSort = {
 	FrierenPack_yzs: ["YouBeier_yzs", "Fern_yzs", "Aura_yzs", "Linie_yzs", "Frieren_yzs", "Himmel_yzs", "Serie_yzs", "Macht_yzs", "Stark_yzs",],
 	MadeInAbyssPack_yzs: ["Riko_yzs", "Reg_yzs", "Nanachi_yzs", "Irumyuui_yzs","Faputa_yzs"],
 	JujutsuKaisenPack_yzs: ["ZeninMaki_yzs", "ZeninNaoya_yzs", "YoungGojo_yzs", "FushiguroToji_yzs", "RyomenSukuna_yzs", "GojoSatoru_yzs", "Makora_yzs",
-		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji", "yzs_ItadoriSukuna", "yzs_Mahito", "yzs_Ishigoriryu", "yzs_Kenjaku","yzs_GetoSuguru"],
+		"FushiguroMegumi_yzs", "yzs_JoGo", "yzs_ItadoriYuji", "yzs_ItadoriSukuna", "yzs_Mahito", "yzs_Ishigoriryu", "yzs_Kenjaku", "yzs_GetoSuguru",
+	"yzs_TakabaFumihiko"],
 	SCPPack_yzs: ["SCP096_yzs", "SCP173_yzs", "SCP079_yzs", "SCP049_yzs", "SCP106_yzs", "LightCB_yzs","SCP939_yzs"],
 	BOSSPack_yzs: ["SixSoulsFlowey_yzs", "MegumiSukuna_yzs"],
 	SpecialPack_yzs: [ "FoolSeele_Vollerei_yzs"],

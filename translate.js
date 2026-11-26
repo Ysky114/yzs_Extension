@@ -210,7 +210,8 @@ const translates = {
 	yzs_Kenjaku: `羂索`,
 	yzs_Laetitia: `蕾蒂希娅`,
 	yzs_GetoSuguru: `夏油杰`,
-	yzs_Remilia_Scarlet:`蕾米莉亚`,
+	yzs_Remilia_Scarlet: `蕾米莉亚`,
+	yzs_TakabaFumihiko:`高羽史彦`,
 
     // 技能台词
 
@@ -661,7 +662,7 @@ const translates = {
 	StardustReverie_yzs_info: `有四种花色的牌进入弃牌堆的回合结束时，你可摸1张牌，然后弃牌至手牌上限并获得弃牌数点${get.poptip("yzs_PP")}。
     出牌阶段，你可消耗1点${get.poptip("yzs_PP")}，将任意手牌当做【无中生有】使用。`,
 	IllusionStar_yzs: "幻象之星",
-	IllusionStar_yzs_info: `你成为其他角色的实体牌的目标时可展示全部手牌，若其中无此牌花色，你获得并无效此牌。 `,
+	IllusionStar_yzs_info: `每回合限1次：你成为其他角色的实体牌的目标时可展示全部手牌，若其中无此牌花色，你获得并无效此牌。 `,
 
 	Wonderful_Heaven_yzs: "有顶天变",
 	Wonderful_Heaven_yzs_info:`锁定技：游戏开始时你从牌堆顶检索4张花色不同的牌明置于人物牌旁，称为【要石】，花色需均不同。<br>
@@ -2075,7 +2076,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_suzhou: `宿咒`,
 	yzs_suzhou_info: `限定技：你即将死亡时，可获得${get.poptip("yzs_qikuo")}，然后恢复全部体力并摸牌至4张。`,
 	yzs_qikuo: `契阔`,
-	yzs_qikuo_info: `限定技：出牌阶段开始时，你可切换角色牌至“${get.poptip({
+	yzs_qikuo_info: `限定技：出牌阶段，你可切换角色牌至“${get.poptip({
 		id: "character_yzs_ItadoriSukuna",
 		name: "宿傩(虎杖悠仁)",
 		type: "character",
@@ -2131,6 +2132,9 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	yzs_SpeartheGungnir_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}并重铸X张牌，然后视为使用无次数距离限制且无视防具的、伤害/需响应数/目标数为被重铸牌中基本/锦囊/装备牌数的普通【杀】。（X为本技能本回合已发动次数+1）`,
 	yzs_VampireKiss: `血吻`,
 	yzs_VampireKiss_info: `出牌阶段，你可消耗1点${get.poptip("yzs_PP")}并与1名手牌数<你的角色交换手牌，然后你可对其造成1点伤害。`,
+
+	yzs_chaorenshushi: `超人术式`,
+	yzs_chaorenshushi_info:`每回合开始时，你随机抽取2张角色牌并扣置(至多12张)，然后你可移去其中至多2张，和当前回合角色依次获得其中的1个技能，直至本回合结束。`,
 };
 
 export default translates;

@@ -5084,7 +5084,7 @@ const skills = {
 			if (!result.bool) return
 			let has_spade = false;
 			game.trySkillAudio("bagua_skill");
-			game.trySkillAudio("MasterSpark_yzs");
+		//	game.trySkillAudio("MasterSpark_yzs");
 			let next = player.useCard({ name: "sha", isCard: true, nature: result.links[0][3], storage: { MasterSpark_yzs: true } }, event.cards, "MasterSpark_yzs", event.target);
 			for (let card of event.cards) {
 				if (get.suit(card) == "spade") has_spade = true;
@@ -5098,6 +5098,8 @@ const skills = {
 		}
 	},
 	StardustReverie_yzs: {
+		usable:1,
+		audio:"MasterSpark_yzs",
 		nobracket: true,
 		charlotte: true,
 		unique: true,

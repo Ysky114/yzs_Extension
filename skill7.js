@@ -3059,7 +3059,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			return player.maxHp - player.hp < 3 && event.num < 2;
 		},
 		async content(event, trigger, player) {
-			trigger.cancel();
+			//	trigger.cancel();
 			await player.gainMaxHp();
 		},
 	},
@@ -4074,15 +4074,15 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	},
 	//蕾米莉亚
 	yzs_RedMagic: {
-	//	group: ["yzs_RedMagic_pp"],
+		//	group: ["yzs_RedMagic_pp"],
 		subSkill: {
 			pp: {
 				name: "神术「吸血鬼幻想」",
 				priority: 91,
 				forced: true,
-				locked:false,
+				locked: false,
 				trigger: {
-					player: ["yzs_xixueBegin1", "yzs_SpeartheGungnirBegin1","yzs_VampireKissBegin1"]
+					player: ["yzs_xixueBegin1", "yzs_SpeartheGungnirBegin1", "yzs_VampireKissBegin1"]
 				},
 				async content(event, trigger, player) {
 					let results = await player.yzs_throw(6).forResult();
@@ -4095,7 +4095,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		nobracket: true,
 		enable: ["phaseUse"],
-		usable:1,
+		usable: 1,
 		filter(event, player) {
 			return player.hp > 0;
 		},
@@ -4151,7 +4151,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		frequent: true,
 		priority: -6,
 		trigger: {
-			source:"damageAfter"
+			source: "damageAfter"
 		},
 		filter(event, player) {
 			return event.player != player && event.num > 0 && event.player.hp >= player.hp;
@@ -4561,5 +4561,207 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			},
 		},
 	},
+	//高羽史彦
+	yzs_chaorenshushi: {
+		nobracket: true,
+		trigger: { global: "phaseBegin" },
+		forced: true,
+		onremove: true,
+		charlotte:true,
+		marktext: "将",
+		intro: {
+			mark(dialog, storage, player) {
+				if (!storage?.length) return "将池中没有角色牌";
+				if (player.isUnderControl(true)) {
+					const info = lib.skill.yzs_chaorenshushi;
+					dialog.addSmall([storage.map(name => [name, info.getSkills([name])]), info.$createButton]);
+				} else {
+					return "将池中有" + get.cnNumber(storage.length) + "张扣置的角色牌";
+				}
+			},
+			content(storage) {
+				return "将池中有" + get.cnNumber(storage?.length || 0) + "张扣置的角色牌";
+			},
+			markcount(storage) {
+				return storage?.length || 0;
+			},
+		},
+		getSkills(characters, player, used = []) {
+			const skills = [];
+			for (const name of characters) {
+				for (const skill of get.character(name).skills || []) {
+					const info = get.info(skill);
+					if (!info || ["unique", "charlotte", "superCharlotte", "equipSkill", "hiddenSkill"].some(tag => info[tag])) continue;
+					if (used.includes(skill) || skills.includes(skill) || player?.hasSkill(skill, "invisible", true, false)) continue;
+					skills.push(skill);
+				}
+			}
+			return skills;
+		},
+		getCharacters(player) {
+			const packs = (_status.connectMode ? lib.configOL.characterPack : lib.config.characters) || [];
+			// 按本体 game/package.js 的包名排除；sgscharacters 会被其他扩展追加，不能据此判定来源。
+			const builtin = new Set([
+				"standard", "shenhua", "extra", "yijiang", "refresh", "sp", "sp2", "newjiang",
+				"onlyOL", "yingbian", "clan", "huicui", "xianding", "mobile", "shiji", "sb",
+				"bingshi", "tw", "collab", "old", "offline", "jsrg", "sxrm", "sixiang",
+				"diy", "key", "boss", "guozhan", "chess", "stone",
+			]);
+			const characters = new Set();
+			for (const pack of packs) {
+				if (builtin.has(pack)) continue;
+				if (pack.startsWith("mode_") && !pack.startsWith("mode_extension_")) continue;
+				if (pack.startsWith("mode_extension_") && lib.config.all?.stockextension?.includes(pack.slice(15))) continue;
+				for (const name of Object.keys(lib.characterPack[pack] || {})) characters.add(name);
+			}
+			// false 保留局内同名武将；这里只使用本局启用的扩展包，且不占用公共将池。
+			return game.initCharacterList(false).filter(name => characters.has(name) && !player.getStorage("yzs_chaorenshushi").includes(name));
+		},
+		$createButton(item, type, position, noclick) {
+			// 技能列表随按钮数据发送，客机无需读取房主的历史或临时事件层。
+			const [name, skills] = item;
+			const node = ui.create.buttonPresets.character(name, "character", position, noclick);
+			const caption = ui.create.div(".yzs-chaorenshushi-skills", node);
+			Object.assign(caption.style, {
+				position: "absolute", left: "2px", right: "2px", bottom: "18px", top: "auto",
+				fontSize: "12px", lineHeight: "15px", textAlign: "left",
+				color: "white", textShadow: "1px 1px 2px black",
+				background: "rgba(0,0,0,0.55)", borderRadius: "3px", padding: "2px",
+				maxHeight: "calc(100% - 36px)", overflowY: "auto", wordBreak: "break-all",
+			});
+			for (const skill of skills) {
+				const line = ui.create.div(caption);
+				line.style.position = "relative";
+				line.textContent = "【" + get.translation(skill) + "】";
+			}
+			if (!skills.length) caption.textContent = "无可选技能";
+			node._customintro = function (dialog) {
+				dialog.add(get.translation(name));
+				for (const skill of skills) {
+					dialog.addText("【" + get.translation(skill) + "】：" + get.skillInfoTranslation(skill, null, false), false);
+				}
+				if (!skills.length) dialog.addText("无可选技能");
+			};
+			return node;
+		},
+		async chooseSkill(player, characters, used) {
+			const info = lib.skill.yzs_chaorenshushi;
+			while (player.isIn()) {
+				const data = characters.map(name => [name, info.getSkills([name], player, used)]);
+				if (!data.some(item => item[1].length)) return null;
+				const result = await player.chooseButton([
+					"超人术式：选择一张角色牌，再选择获得其一个技能",
+					[data, info.$createButton],
+				], true)
+					.set("characterSkills", Object.fromEntries(data))
+					.set("filterButton", button => get.event().characterSkills[button.link]?.length > 0)
+					.set("ai", button => Math.max(0, ...get.event().characterSkills[button.link].map(skill =>
+						get.skillRank(skill, get.player() === _status.currentPhase ? "in" : "out"))))
+					.forResult();
+				const character = result.links?.[0];
+				if (!result.bool || !characters.includes(character) || !player.isIn()) return null;
+				const choices = info.getSkills([character], player, used);
+				if (!choices.length) continue;
+				const result2 = await player.chooseControl(choices, "返回")
+					.set("characterCards", data)
+					.set("chosenCharacter", character)
+					.set("dialog", [
+						"超人术式：选择获得一个技能，直至本回合结束",
+						[function (dialog) {
+							const event = get.event();
+							dialog.add([event.characterCards, lib.skill.yzs_chaorenshushi.$createButton], true);
+							for (const button of dialog.buttons) {
+								button.classList.add(button.link === event.chosenCharacter ? "selectedx" : "unselectable");
+							}
+						}, "handle"],
+					])
+					.set("ai", () => {
+						const event = get.event();
+						const skills = event.controls.filter(skill => skill !== "返回");
+						const type = get.player() === _status.currentPhase ? "in" : "out";
+						return skills.sort((a, b) => get.skillRank(b, type) - get.skillRank(a, type))[0];
+					})
+					.forResult();
+				if (result2.control === "返回") continue;
+				if (player.isIn() && info.getSkills([character], player, used).includes(result2.control)) {
+					return { character, skill: result2.control };
+				}
+				return null;
+			}
+			return null;
+		},
+		async content(event, trigger, player) {
+			const skill = "yzs_chaorenshushi";
+			const info = lib.skill.yzs_chaorenshushi;
+			const drawn = info.getCharacters(player).randomGets(2);
+			if (drawn.length) {
+				player.markAuto(skill, drawn);
+				player.syncStorage(skill);
+				game.log(player, "扣置了", get.cnNumber(drawn.length), "张角色牌");
+				game.broadcastAll(function (player, characters) {
+					if (!player.isUnderControl(true)) {
+						player.$draw(characters.length, "nobroadcast");
+						return;
+					}
+					const cards = characters.map(name => {
+						const cardname = "yzs_chaorenshushi_card_" + name;
+						lib.card[cardname] = { fullimage: true, image: "character:" + name };
+						lib.translate[cardname] = get.rawName2(name);
+						return game.createCard(cardname, "", "");
+					});
+					player.$draw(cards, "nobroadcast");
+				}, player, drawn);
+			}
+			const pool = player.getStorage(skill).slice();
+			if (!pool.length || !player.isIn()) return;
+			const result = await player.chooseButton([
+				"超人术式：移去至多两张角色牌，或取消并保留将池",
+				[pool.map(name => [name, info.getSkills([name])]), info.$createButton],
+			], [1, Math.min(2, pool.length)])
+				.set("ai", button => {
+					const skills = lib.skill.yzs_chaorenshushi.getSkills([button.link], get.player());
+					return Math.max(0, ...skills.map(skill => get.skillRank(skill, "in")));
+				})
+				.forResult();
+			const removed = result.bool ? [...new Set(result.links || [])].filter(name => player.getStorage(skill).includes(name)).slice(0, 2) : [];
+			if (removed.length) {
+				player.unmarkAuto(skill, removed);
+				player.syncStorage(skill);
+				game.log(player, "移去了", get.cnNumber(removed.length), "张角色牌");
+				const used = [];
+				// 自己的回合也依次结算两次选技；第二次不能选择第一次获得的技能。
+				for (const target of [player, trigger.player]) {
+					if (!target?.isIn()) continue;
+					const result = await info.chooseSkill(target, removed, used);
+					if (!result) continue;
+					const chosen = result.skill;
+					used.push(chosen);
+					// 仅交给原生临时技能机制回收所选技能，不额外清理其衍生技能。
+					target.addTempSkill(chosen, { global: "phaseAfter" });
+					target.flashAvatar(skill, result.character);
+					target.popup(chosen);
+					game.log(target, "获得了技能", "#g【" + get.translation(chosen) + "】");
+				}
+			}
+			// 先完成移牌选技，再按实际剩余数量检查上限；取消选技也要执行。
+			const remaining = player.getStorage(skill).slice();
+			const excess = remaining.length - 12;
+			if (excess <= 0 || !player.isIn()) return;
+			const overflow = await player.chooseButton([
+				"超人术式：将池上限为12张，请移去" + get.cnNumber(excess) + "张角色牌",
+				[remaining.map(name => [name, info.getSkills([name])]), info.$createButton],
+			], true, excess)
+				.set("ai", button => {
+					const skills = lib.skill.yzs_chaorenshushi.getSkills([button.link], get.player());
+					return 1 / (1 + Math.max(0, ...skills.map(skill => get.skillRank(skill, "in"))));
+				})
+				.forResult();
+			if (overflow.bool && overflow.links?.length) {
+				player.unmarkAuto(skill, overflow.links);
+				player.syncStorage(skill);
+				game.log(player, "因将池超限移去了", get.cnNumber(overflow.links.length), "张角色牌");
+			}
+		},
+	}
 }
 export default skills;

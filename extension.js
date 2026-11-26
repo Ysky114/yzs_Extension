@@ -15,7 +15,7 @@ import update from "./update.js";
 import { installMediaGuards } from "./func/media.js";
 
 // 扩展版本唯一来源：更新检查、扩展信息和介绍共用，genManifest.js 自动读取。
-const EXTENSION_VERSION = "0.99.4.3";
+const EXTENSION_VERSION = "0.99.5.3";
 
 /** @type { importExtensionConfig } */
 game.import("extension", function (lib, game, ui, get, ai, _status) {
@@ -79,7 +79,7 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				//平凡
 				var pj_a = ["WaiJiaoDaChen_yzs", "ChenJiahao_yzs", "Denglanxitaro_yzs", "EastYang_yzs", "shenChangzhang_yzs", "LU_Captain_xiangsiniao_yzs", "IceGirl_yzs",
 					"Cirno_yzs", "Yorigami_twins_yzs", "Ibuki_Suika_yzs", "LilyWhite_yzs", "ZeninMaki_yzs", "SCP049_yzs", "SCP106_yzs", "SCP939_yzs", "APPLe_yzs", "changzhang_yzs",
-					"chenxu_yzs", "lianjinzhencai_yzs", "TimeGuard_yzs", "weaponmaster_yzs",];
+					"chenxu_yzs", "lianjinzhencai_yzs", "TimeGuard_yzs", "weaponmaster_yzs","yzs_TakabaFumihiko"];
 
 				lib.rank.rarity.prestige ??= [];
 				lib.rank.rarity.prestige.addArray(pj_prestige);
@@ -646,7 +646,8 @@ game.import("extension", function (lib, game, ui, get, ai, _status) {
 				{
 					type: "players", data: [
 						"yzs_Laetitia",
-						"yzs_GetoSuguru"
+						"yzs_GetoSuguru",
+						"yzs_TakabaFumihiko"
 					]
 				},
 				{

@@ -4468,8 +4468,8 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					player: "damageBegin3",
 				},
 				prompt2(event, player) {
-					const num = Math.pow(2 ,player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
-					return `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
+				//	const num = Math.pow(2 ,player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
+					return `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗2点${get.poptip("yzs_PP")}，无效之。`
 				},
 				filter(event, player) {
 					if (event.source?.hasSkill("wuxiaxianshushi_yzs_ban")) return false;
@@ -4755,7 +4755,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 			yzs_he: `赫`,
 			yzs_he_info: `出牌阶段对你自己使用。你摸2张牌。`,
 			yzs_wuxiaxian_wuxian: `无限`,
-			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗1点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`,
+			yzs_wuxiaxian_wuxian_info: `${get.poptip("yzs_PPSkill")}：若当前未处于其他角色的领域内，你受到伤害时，可消耗2点${get.poptip("yzs_PP")}，无效之。`,
 			yzs_gift: `礼物`,
 			yzs_gift_info: `出牌阶段或你濒死时，对你自己使用：若你为“蕾蒂希娅”或你有${get.poptip("yzs_duoquliwu")}，你恢复1点体力并摸1张牌；否则你失去1点体力。你累计于弃牌阶段弃置此牌数≥3后死亡。`,
 		},
