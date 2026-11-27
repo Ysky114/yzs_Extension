@@ -369,7 +369,7 @@ const dynamicTranslates = {
 	},
 	zaoxingshu_yzs(player) {
 		const storage = player.storage.zaoxingshu_yzs;
-		if (!storage || !storage.length) return `锁定技：你使用的非伤害牌不可响应。<br>每回合每种牌名限1次：
+		if (!storage || !storage.length) return `锁定技：你使用的非伤害牌不可响应。<br>每轮每种牌名限1次：
 		需要时，你可视为使用<span class="bluetext">【无中生有】</span>。你因此获得牌时，展示之并将其中任意个即时牌名加入上述描述。每加入1个基本牌名，你扣除1点体力上限。`;
 		let str = `锁定技：你使用的非伤害牌不可响应。<br>每回合每种牌名限1次：
 		需要时，你可视为使用`;

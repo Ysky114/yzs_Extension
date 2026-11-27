@@ -4075,7 +4075,7 @@ const skills = {
 							return !target.hasSkill("hidden_yzs") && !target.hasSkill("ReverseInvoker_yzs_targeted")
 						})
 						.set("prompt", `你可弃2张牌并令1名本轮未因此指定过的角色执行回合`)
-						.set("prompt2", `此回合结束后其翻面，然后你可重复本操作。`)
+						.set("prompt2", `此回合结束后其翻面`)
 						.set("filterCard", lib.filter.cardDiscardable)
 						.set("selectCard", 2)
 						.set("position", "he")

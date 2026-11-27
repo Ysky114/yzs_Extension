@@ -2222,13 +2222,13 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		async content(event, trigger, player) {
 			let target = player;
-			await target.draw();
+			await target.draw(2);
 			let result =
 				target.countDiscardableCards("h", target) < 1
 					? { bool: false }
 					: await target
-						.chooseToDiscard('h', "锤炼", `你可弃1张手牌`)
-						.set("forced", false)
+						.chooseToDiscard('h', "锤炼", `你需弃1张手牌，并记录此牌点数`)
+						.set("forced", true)
 						.set("ai", card => {
 							const player = get.event().player;
 							const target = get.event().target;
@@ -3279,6 +3279,23 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 	},
 	//石流龙
 	yzs_GraniteBlast: {
+		group: ["yzs_GraniteBlast_damage"],
+		subSkill: {
+			damage: {
+				priority: -21,
+				forced: true,
+				locked: false,
+				trigger: {
+					player:"damageAfter"
+				},
+				filter(event, player) {
+					return event.num > 0;
+				},
+				async content(event, trigger, player) {
+					player.yzs_addPP(trigger.num);
+				}
+			}
+		},
 		nobracket: true,
 		locked: false,
 		yzs_PPSkill: true,
@@ -3619,11 +3636,19 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			// 使用与打出共用本回合计数；stat 会随联机选牌状态同步。
 			return (player.getStat("skill").yzs_zhoulingcaoshu_backup || 0) > 0;
 		},
+		canConvert(player, name, event) {
+			return player.hasCard(card => {
+				if (game.checkMod(card, player, "unchanged", "cardEnabled2", player) === false) return false;
+				return !event || event.filterCard(get.autoViewAs({ name }, [card]), player, event);
+			}, "h");
+		},
 		filter(event, player) {
-			return !event.responded && !lib.skill.yzs_zhoulingcaoshu.hasUsed(player) && ["wuxie", "shan"].some(name => event.filterCard({ name, isCard: true }, player, event));
+			const info = lib.skill.yzs_zhoulingcaoshu;
+			return !event.responded && !info.hasUsed(player) && ["wuxie", "shan"].some(name => info.canConvert(player, name, event));
 		},
 		hiddenCard(player, name) {
-			return ["wuxie", "shan"].includes(name) && !lib.skill.yzs_zhoulingcaoshu.hasUsed(player);
+			const info = lib.skill.yzs_zhoulingcaoshu;
+			return ["wuxie", "shan"].includes(name) && !info.hasUsed(player) && info.canConvert(player, name);
 		},
 		chooseButton: {
 			dialog() {
@@ -3631,21 +3656,24 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 			},
 			filter(button, player) {
 				const evt = get.event().getParent();
-				return evt.filterCard({ name: button.link[2], isCard: true }, player, evt);
+				return lib.skill.yzs_zhoulingcaoshu.canConvert(player, button.link[2], evt);
 			},
 			check() { return 1; },
 			backup(links) {
 				return {
 					audio: "ext:一中杀/audio/skill:1",
-					filterCard: () => false,
-					selectCard: -1,
-					viewAs: { name: links[0][2], isCard: true },
+					filterCard: true,
+					position: "h",
+					selectCard: 1,
+					viewAs: { name: links[0][2] },
+					check(card) { return 6 - get.value(card); },
 					async precontent(event, trigger, player) {
-						if (lib.skill.yzs_zhoulingcaoshu.hasUsed(player)) event.result.cancel = true;
+						const cards = event.result.cards || [];
+						if (lib.skill.yzs_zhoulingcaoshu.hasUsed(player) || cards.length !== 1 || !player.getCards("h").includes(cards[0])) event.result.cancel = true;
 					},
 				};
 			},
-			prompt(links) { return "视为使用或打出" + get.translation(links[0][2]); },
+			prompt(links) { return "将一张手牌当" + get.translation(links[0][2]) + "使用"; },
 		},
 		getRespondedCards(event) {
 			let cards;
@@ -3723,7 +3751,10 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		},
 		ai: {
 			respondShan: true,
-			skillTagFilter(player) { return !lib.skill.yzs_zhoulingcaoshu.hasUsed(player); },
+			skillTagFilter(player) {
+				const info = lib.skill.yzs_zhoulingcaoshu;
+				return !info.hasUsed(player) && info.canConvert(player, "shan");
+			},
 			result: { player: 1 },
 		},
 	},
@@ -3975,7 +4006,7 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 				locked: true,
 				forced: true,
 				filter(event, player) {
-					return game.hasPlayer(cur => get.translation(cur).includes("五条悟"))
+					return (event.name != "phase" || game.phaseNumber == 0) &&game.hasPlayer(cur => get.translation(cur).includes("五条悟"))
 				},
 				async content(event, trigger, player) {
 					game.broadcastAll(function (current) {
@@ -4572,15 +4603,11 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		intro: {
 			mark(dialog, storage, player) {
 				if (!storage?.length) return "将池中没有角色牌";
-				if (player.isUnderControl(true)) {
-					const info = lib.skill.yzs_chaorenshushi;
-					dialog.addSmall([storage.map(name => [name, info.getSkills([name])]), info.$createButton]);
-				} else {
-					return "将池中有" + get.cnNumber(storage.length) + "张扣置的角色牌";
-				}
+				const info = lib.skill.yzs_chaorenshushi;
+				dialog.addSmall([storage.map(name => [name, info.getSkills([name])]), info.$createButton]);
 			},
 			content(storage) {
-				return "将池中有" + get.cnNumber(storage?.length || 0) + "张扣置的角色牌";
+				return "将池中有" + get.cnNumber(storage?.length || 0) + "张明置的角色牌";
 			},
 			markcount(storage) {
 				return storage?.length || 0;
@@ -4693,23 +4720,20 @@ ${get.poptip("yzs_shengjie")}吟唱-1。若你不为“钟映暄”，本回合�
 		async content(event, trigger, player) {
 			const skill = "yzs_chaorenshushi";
 			const info = lib.skill.yzs_chaorenshushi;
-			const drawn = info.getCharacters(player).randomGets(2);
+			const drawn = info.getCharacters(player).randomGets(1);
 			if (drawn.length) {
 				player.markAuto(skill, drawn);
 				player.syncStorage(skill);
-				game.log(player, "扣置了", get.cnNumber(drawn.length), "张角色牌");
+				game.log(player, "明置了角色牌", "#y" + get.translation(drawn));
 				game.broadcastAll(function (player, characters) {
-					if (!player.isUnderControl(true)) {
-						player.$draw(characters.length, "nobroadcast");
-						return;
-					}
 					const cards = characters.map(name => {
 						const cardname = "yzs_chaorenshushi_card_" + name;
 						lib.card[cardname] = { fullimage: true, image: "character:" + name };
 						lib.translate[cardname] = get.rawName2(name);
 						return game.createCard(cardname, "", "");
 					});
-					player.$draw(cards, "nobroadcast");
+					game.addVideo("gainCard", player, get.cardsInfo(cards));
+					player.$gain(cards, false, false);
 				}, player, drawn);
 			}
 			const pool = player.getStorage(skill).slice();

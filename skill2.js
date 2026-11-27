@@ -1635,7 +1635,7 @@ const skills = {
 			}
 		},
 		forced: true,
-		usable:2,
+	//	usable:2,
 		locked: true,
 		trigger: {
 			player: "damageBegin3",

@@ -6241,14 +6241,6 @@ const skills = {
 						return lib.filter.cardEnabled.apply(this, arguments);
 					}).forResult();
 				},
-				ai: {
-					order: 8,
-					result: {
-						player: 1
-					},
-					expose: 0.3,
-					threaten: 1.2,
-				},
 
 			},
 			sha: {
@@ -7469,7 +7461,7 @@ const skills = {
 					skillTagFilter(player, tag, arg) {
 						if (!player.hasCard(function (card) {
 							return card.hasGaintag("visible_yzs_ronghuo");
-						}, "h") || player.isTempBanned("Zoltraak_yzs")) {
+						}, "h") || player.isTempBanned("yzs_ronghuo")) {
 							return false;
 						}
 						return true
@@ -7571,22 +7563,27 @@ const skills = {
 		async content(event, trigger, player) {
 			trigger.yzs_ronghuo = true;
 			let result = await player.draw(Math.min(trigger.num,5)).forResult();
-			if (result?.cards?.length && trigger.hasNature("fire")) {
-				const next = game.createEvent("faceUpCard");
-				next.player = player;
-				next.cards = result.cards;
-				next.skill = "yzs_ronghuo";
-				next.setContent(async (event, trigger, player) => {
-					const { cards } = event;
-					game.log(player, "明置了", cards);
-					game.addCardKnower(
-						cards,
-						game.filterPlayer(() => true)
-					);
-					game.broadcastAll(cards => {
-						cards.forEach(card => card.addGaintag("visible_yzs_ronghuo"));
-					}, cards);
-				});
+			if (result?.cards?.length) {
+				game.broadcastAll(cards => {
+					cards.forEach(card => card.addGaintag("yzs_ronghuo"));
+				}, result.cards);
+				if (trigger.hasNature("fire")) {
+					const next = game.createEvent("faceUpCard");
+					next.player = player;
+					next.cards = result.cards;
+					next.skill = "yzs_ronghuo";
+					next.setContent(async (event, trigger, player) => {
+						const { cards } = event;
+						game.log(player, "明置了", cards);
+						game.addCardKnower(
+							cards,
+							game.filterPlayer(() => true)
+						);
+						game.broadcastAll(cards => {
+							cards.forEach(card => card.addGaintag("visible_yzs_ronghuo"));
+						}, cards);
+					});
+				}
 			}
 		},
 		mod: {
@@ -7606,12 +7603,12 @@ const skills = {
 				}
 			},
 			ignoredHandcard(card, player) {
-				if (card.hasGaintag("visible_yzs_ronghuo")) {
+				if (card.hasGaintag("yzs_ronghuo")) {
 					return true;
 				}
 			},
 			cardDiscardable(card, player, name) {
-				if (name === "phaseDiscard" && card.hasGaintag("visible_yzs_ronghuo")) {
+				if (name === "phaseDiscard" && card.hasGaintag("yzs_ronghuo")) {
 					return false;
 				}
 			},

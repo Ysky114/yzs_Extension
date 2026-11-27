@@ -1703,7 +1703,7 @@ const characters = {
 	FushiguroMegumi_yzs: {
 		sex: "male",
 		group: "qun",
-		hp: 3,
+		hp: 4,
 		skills: ["shizhongying_yzs", "zongying_yzs","qianheanyiting_yzs","tiaofuyishi_yzs"],
 		names: "伏黑惠",
 		img: "extension/一中杀/image/FushiguroMegumi_yzs.png",
@@ -1870,7 +1870,7 @@ const characters = {
 	yzs_Kenjaku: {
 		sex: "male",
 		group: "qun",
-		hp: 3,
+		hp: 4,
 		skills: ["yzs_huannaoshushi", "yzs_yumenjiang"],
 		names: "羂索",
 		img: "extension/一中杀/image/yzs_Kenjaku.png",
@@ -1891,7 +1891,7 @@ const characters = {
 	yzs_GetoSuguru: {
 		sex: "male",
 		group: "wei",
-		hp: 3,
+		hp: 4,
 		skills: ["yzs_zhoulingcaoshu", "yzs_kuxia"],
 		names: "夏油杰",
 		img: "extension/一中杀/image/yzs_GetoSuguru.png",

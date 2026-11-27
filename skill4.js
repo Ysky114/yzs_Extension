@@ -1150,7 +1150,7 @@ const skills = {
 					},
 					async precontent(event, trigger, player) {
 						player.logSkill("zaoxingshu_yzs");
-						player.addTempSkill("zaoxingshu_yzs_used");
+						player.addTempSkill("zaoxingshu_yzs_used", {global:"roundEnd"});
 						player.markAuto("zaoxingshu_yzs_used", [event.result.card.name]);
 					},
 				};
