@@ -1,6 +1,6 @@
 {
-  "version": "0.99.5.4",
-  "update": "0.99.5.4",
+  "version": "0.99.5.5",
+  "update": "0.99.5.5",
   "files": {
     "audio/AIZO.mp3": "384bb588dcf01ab56528df3d9c8ee2abe04b376d",
     "audio/Battle Against A True Hero.mp3": "6c05c4dc356a87b1d7d138dedcf9109ae931134e",
@@ -698,11 +698,11 @@
     "audio/輝く針の小人族　～ Little Princess.mp3": "9ad641211d8a023da6256c48095ba396958283d1",
     "audio/雨爱.mp3": "dd0902a361b41b31649b033bfc5d6bb327496f7b",
     "audio/霹靂.mp3": "f3fe69877b0d87b0977a0cdea1c3206a1982c599",
-    "card.js": "ffdcfc1ccd40ca4ebdad539c6a212d76bd238872",
+    "card.js": "505de593fe70621f58b1cb24b3e48ea1a74f30a8",
     "character.js": "b68bc6d9d1c8e5edbf733823157ddd53660ed673",
     "dynamicTranslate.js": "45e030b54340c377da692674bbef9ad132d5978b",
     "extension.css": "0cdc14624cafc2af6871d789775ccc5334a4186d",
-    "extension.js": "f24731833ed9516c8abf23d087c461641937fa60",
+    "extension.js": "878f8f97d96daf403f034d6be0fcd36761e6bfad",
     "func/media.js": "bd862257174bbb7c520178b0cb25bafc693c0482",
     "func/settle.js": "98f23bec72188b521b71fdff6eb1bde7a51cbb24",
     "func/trigger.js": "245265a9fadbd32721ee7b173ffc3a85992e0f94",
@@ -1107,13 +1107,13 @@
     "LICENSE": "8624bcdae55baeef00cd11d5dfcfa60f68710a02",
     "README.md": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     "skill.js": "dd9918554f3d4c88e03c5c920ab7361dc3158caa",
-    "skill1.js": "34a6f362c2363e30fde779505dbdb9c5390faddc",
+    "skill1.js": "be8141e8760dcb9c9405a8ffaa6109a3ae1acbe4",
     "skill2.js": "ec6390f28d6b4d7ab2ea55b22197423468fc4aa8",
     "skill3.js": "19c1dca85e2fcff0801119025b3e671a7c1772ab",
     "skill4.js": "bf0038b4c33fa96779703335f3cccf015e76a22a",
     "skill5.js": "6187062ceb111dee4dab0530be662ba02c5fb08e",
     "skill6.js": "7ebf9b53b6c1c16ca08342c95ccc8cbdfa358af7",
-    "skill7.js": "06c3f91a84f205cbfd8de0a86c428b636d4a9f2d",
+    "skill7.js": "bfc2db2c969596c634d272307a9333b6ba23b074",
     "translate.js": "c0c9714afa597d994e114434abd74c61ca0c371c",
     "update.js": "eebba2bdf073b4b94bb2cccb8777424f17f8ef29"
   }

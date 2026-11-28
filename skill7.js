@@ -776,15 +776,15 @@ const skills = {
 				},
 				check(event, player) {
 					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
-					return event.num >= num
+					return event.num >= 2
 				},
 				prompt2(event, player) {
 					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
-					return `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗${num}点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
+					return `${get.poptip("yzs_PPSkill")}：你受到伤害时，可消耗2点${get.poptip("yzs_PP")}，无效之，然后本技能本回合消耗翻倍。`
 				},
 				async content(event, trigger, player) {
 					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
-					player.yzs_removePP(num)
+					player.yzs_removePP(2)
 					trigger.cancel();
 					player.addTempSkill("yzs_wuxiaxian_wuxian_skill_mark");
 					player.addMark("yzs_wuxiaxian_wuxian_skill_mark", 1, false)

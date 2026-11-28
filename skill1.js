@@ -5085,7 +5085,7 @@ const skills = {
 			let has_spade = false;
 			game.trySkillAudio("bagua_skill");
 		//	game.trySkillAudio("MasterSpark_yzs");
-			let next = player.useCard({ name: "sha", isCard: true, nature: result.links[0][3], storage: { MasterSpark_yzs: true } }, event.cards, "MasterSpark_yzs", event.target);
+			let next = player.useCard({ name: "sha", isCard: true, nature: result.links[0][3], storage: { MasterSpark_yzs: true } }, event.cards, event.target);
 			for (let card of event.cards) {
 				if (get.suit(card) == "spade") has_spade = true;
 				if (get.suit(card) == "heart") next.baseDamage = 2;

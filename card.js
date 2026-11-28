@@ -4489,7 +4489,7 @@ game.import("card", function (lib, game, ui, get, ai, _status) {
 					}
 					const num = Math.pow(2, player.countMark("yzs_wuxiaxian_wuxian_skill_mark"))
 			//		game.log(num)
-					if (player.countMark("yzs_PP") < num) return false;
+					if (player.countMark("yzs_PP") < 2) return false;
 					return true;
 				},
 				async content(event, trigger, player) {
